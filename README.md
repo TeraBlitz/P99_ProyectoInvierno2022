@@ -1,9 +1,9 @@
 # P99_ProyectoInvierno2022
-Juntas:
+###Juntas:
 Daily meeting Medio dia(12:00AM)
 Weekly show of progress (viernes 6PM a discutir con el cliente) 
-Trello: 
+###Trello: 
 https://trello.com/b/xFmZ8xjz/p99-invierno-2022
-Miembros:
+###Miembros:
 Raul Flores
 
