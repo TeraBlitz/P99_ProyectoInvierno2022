@@ -5,5 +5,5 @@ Weekly show of progress (viernes 6PM a discutir con el cliente)
 Retrospectiva de la semana (Despues de la junta con el cliente)  
 Sprint planing (despues de la retrospectiva)
 ### Miembros:
-Raul Flores (terablitz@hotmail.com)
+Raul Flores (terablitz@hotmail.com)  
 Nicolás Herrera (a01114972@tec.mx)
