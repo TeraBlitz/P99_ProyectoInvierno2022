@@ -6,3 +6,5 @@ Retrospectiva de la semana (Despues de la junta con el cliente)
 Sprint planing (despues de la retrospectiva)
 ### Miembros:
 Raul Flores (terablitz@hotmail.com)
+
+Bernardo de la Sierra Rábago (bdelasierrar@gmail.com)
