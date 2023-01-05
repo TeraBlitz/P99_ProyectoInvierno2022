@@ -6,4 +6,4 @@ Retrospectiva de la semana (Despues de la junta con el cliente)
 Sprint planing (despues de la retrospectiva)
 ### Miembros:
 Raul Flores (terablitz@hotmail.com)
-Adrian Eduardo Treviño Peña (eduardotrevinop@yahoo.com.mx)
+Adrian Eduardo Treviño Peña (eduardotrevinop@yahoo.com.mx)  
