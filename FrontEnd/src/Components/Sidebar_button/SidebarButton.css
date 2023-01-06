@@ -1,0 +1,6 @@
+.SidebarButton{
+    border: 1px solid black;
+    width: 90%;
+    height: fit-content;
+    margin-bottom: 10px;
+}
