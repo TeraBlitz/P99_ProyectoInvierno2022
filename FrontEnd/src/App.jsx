@@ -14,8 +14,11 @@ function App() {
             <Box sx={{
                 width: 'calc(100%-240px)',
                 padding: '15px',
+                height: '120vh',
+                position: 'relative',
             }}>
-                <IconButton sx={{ bgcolor: 'primary.light', height: 'fit-content', borderRadius: 1, display: { xs: 'block', sm: 'none' }, marginBottom: '10px' }} onClick={() => setOpen(!open)}>
+
+                <IconButton sx={{ bgcolor: 'primary.light', height: 'fit-content', borderRadius: 1, display: { xs: 'block', sm: 'none' }, position: 'sticky', top: '3px' }} onClick={() => setOpen(!open)}>
                     <MenuIcon />
                 </IconButton>
                 {content}
