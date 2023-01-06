@@ -4,7 +4,7 @@ import ListItemText from '@mui/material/ListItemText';
 
 function SidebarButton(props) {
     const handleClick = () => {
-        props.setContent(props.title)
+        props.setContent(props.content)
         props.setOpen(false)
 
     }

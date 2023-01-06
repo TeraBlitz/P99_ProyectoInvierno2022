@@ -1,7 +1,6 @@
 import { Button, IconButton, MenuItem, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import './App.css'
-import { styled } from '@mui/material/styles'
 import Sidebar from './Components/Sidebar/Sidebar.jsx'
 import { Box } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
@@ -20,9 +19,7 @@ function App() {
                 <IconButton sx={{ bgcolor: 'primary.light', height: 'fit-content', borderRadius: 1, display: { xs: 'block', sm: 'none' }, marginBottom: '10px' }} onClick={() => setOpen(!open)}>
                     <MenuIcon />
                 </IconButton>
-                <Typography variant='h5'>
-                    {content}
-                </Typography>
+                {content}
             </Box>
 
         </Box>
