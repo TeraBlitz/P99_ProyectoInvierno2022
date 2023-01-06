@@ -1,6 +1,6 @@
 import React from 'react'
 import Box from '@mui/material/Box'
-import { Drawer, List, ListItemButton } from '@mui/material'
+import { Drawer, List } from '@mui/material'
 import SidebarButton from '../Sidebar_button/SidebarButton'
 
 
@@ -18,6 +18,8 @@ function Sidebar(props) {
 
         </List >
     )
+
+
     return (
         <Box>
             <Drawer variant="permanent" sx={{ width: '240px', height: '100vh', display: { xs: 'none', sm: 'block' } }}>
