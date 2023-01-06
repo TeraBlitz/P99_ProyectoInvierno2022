@@ -2,7 +2,6 @@ import React from 'react'
 import Box from '@mui/material/Box'
 import { Drawer, List } from '@mui/material'
 import SidebarButton from '../Sidebar_button/SidebarButton'
-import RegistroClasesUsuario from '../../Pages/RegistroClasesUsuario/RegistroClasesUsuario'
 
 
 function Sidebar(props) {
@@ -13,7 +12,7 @@ function Sidebar(props) {
     //     setOpen: props.setOpen
     const listItems = (
         <List sx={{ bgcolor: 'primary.light', width: '240px', height: '100vh' }}>
-            <SidebarButton content={RegistroClasesUsuario} title='Registro Clases' setContent={props.setContent} setOpen={props.setOpen} />
+            <SidebarButton content='Registro Clases' title='Registro Clases' setContent={props.setContent} setOpen={props.setOpen} />
 
             <SidebarButton title='Other Component' content='hi everyone' setContent={props.setContent} setOpen={props.setOpen} />
 
