@@ -7,4 +7,6 @@ Sprint planing (despues de la retrospectiva)
 ### Miembros:
 Raul Flores (terablitz@hotmail.com)  
 Jorge Tato (jorgetato1999@gmail.com)  
+  
+  Bernardo de la Sierra Rábago (bdelasierrar@gmail.com)
 
