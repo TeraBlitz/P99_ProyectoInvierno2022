@@ -1,32 +1,29 @@
 import React from 'react'
-import './Sidebar.css'
-import Box from '@mui/material/Box';
-import List from '@mui/material/List';
-import SidebarButton from '../Sidebar_button/SidebarButton';
+import Box from '@mui/material/Box'
+import { Drawer, List, ListItemButton } from '@mui/material'
+import SidebarButton from '../Sidebar_button/SidebarButton'
 
 
 function Sidebar(props) {
-    const themes = {
-        sidebar: {
-            minWidth: { xs: '80%', sm: '50%', md: '15%', lg: '15%', xl: '100%' },
-            height: '100%',
-            display: 'block',
-            bgcolor: 'primary.light',
-        },
-        noSidebar: {
-            maxWidth: '0px',
-            display: 'none'
-        }
-    }
+    const listItems = (
+        <List sx={{ bgcolor: 'primary.light', width: '240px', height: '100vh' }}>
+            <SidebarButton title='hello' setContent={props.setContent} setOpen={props.setOpen} />
+            <SidebarButton title='world' setContent={props.setContent} setOpen={props.setOpen} />
+
+        </List>
+    )
     return (
-        <Box sx={props.sidebar ? themes.sidebar : themes.noSidebar}>
-            <List component="nav">
-                <SidebarButton title="hello" setContent={props.setContent} />
-                <SidebarButton title="world" setContent={props.setContent} />
+        <Box>
 
+            <Drawer variant="permanent" sx={{ width: '240px', height: '100vh', display: { xs: 'none', sm: 'block' } }}>
+                {listItems}
 
-            </List>
-        </Box >
+            </Drawer>
+            <Drawer variant="temporary" open={props.open} onClose={() => props.setOpen(false)} sx={{ width: '240px', height: '100vh', display: { xs: 'block', sm: 'none' } }}>
+                {listItems}
+
+            </Drawer>
+        </Box>
     )
 }
 

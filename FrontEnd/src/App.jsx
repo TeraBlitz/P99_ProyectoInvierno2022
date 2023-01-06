@@ -1,33 +1,31 @@
+import { Button, IconButton, MenuItem, Typography } from '@mui/material'
 import React, { useState } from 'react'
-import Sidebar from './Components/Sidebar/Sidebar'
 import './App.css'
+import { styled } from '@mui/material/styles'
+import Sidebar from './Components/Sidebar/Sidebar.jsx'
+import { Box } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
-import Box from '@mui/material/box'
 
 function App() {
-    const [content, setContent] = useState("Content")
-    const [sidebar, setSidebar] = useState(false)
-
-
+    const [open, setOpen] = useState(false)
+    const [content, setContent] = useState('content')
     return (
-        <main>
-            <Sidebar setContent={setContent} sidebar={sidebar} />
-            <div className='Container__div--content'>
-                <Box onClick={() => setSidebar(!sidebar)} sx={{
+        <Box sx={{ display: 'flex' }}>
+            <Sidebar open={open} setOpen={setOpen} setContent={setContent} />
+            <Box sx={{
+                width: 'calc(100%-240px)',
+                padding: '15px',
+            }}>
 
-                    bgcolor: 'primary.light',
-                    width: '25px',
-                    height: '25px',
-                    padding: '2px',
-                    borderRadius: 2
-
-                }}>
+                <IconButton sx={{ bgcolor: 'primary.light', height: 'fit-content', borderRadius: 1, display: { xs: 'block', sm: 'none' }, marginBottom: '10px' }} onClick={() => setOpen(!open)}>
                     <MenuIcon />
-                </Box>
+                </IconButton>
+                <Typography variant='h5'>
+                    {content}
+                </Typography>
+            </Box>
 
-                <h1>{content}</h1>
-            </div>
-        </main >
+        </Box>
     )
 }
 
