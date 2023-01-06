@@ -1,4 +1,4 @@
-import { Button, IconButton, MenuItem, Typography } from '@mui/material'
+import { IconButton } from '@mui/material'
 import React, { useState } from 'react'
 import './App.css'
 import Sidebar from './Components/Sidebar/Sidebar.jsx'
@@ -15,13 +15,11 @@ function App() {
                 width: 'calc(100%-240px)',
                 padding: '15px',
             }}>
-
                 <IconButton sx={{ bgcolor: 'primary.light', height: 'fit-content', borderRadius: 1, display: { xs: 'block', sm: 'none' }, marginBottom: '10px' }} onClick={() => setOpen(!open)}>
                     <MenuIcon />
                 </IconButton>
                 {content}
             </Box>
-
         </Box>
     )
 }
