@@ -1,9 +1,19 @@
 import React from 'react'
-import './SidebarButton.css'
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import { Divider } from '@mui/material';
 
 function SidebarButton(props) {
+    const handleClick = () => {
+        props.setContent(props.content)
+        props.setOpen(false)
+
+    }
+
     return (
-        <div className='SidebarButton' onClick={() => props.setContent(props.title)}>{props.title}</div>
+        <ListItemButton onClick={() => handleClick()}>
+            <ListItemText>{props.title}</ListItemText>
+        </ListItemButton>
     )
 }
 
