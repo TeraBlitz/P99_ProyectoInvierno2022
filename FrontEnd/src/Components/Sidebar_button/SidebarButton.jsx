@@ -5,8 +5,7 @@ import { Divider } from '@mui/material';
 
 function SidebarButton(props) {
     const handleClick = () => {
-        props.setContent(props.content)
-        props.setOpen(false)
+        props.changeContent(props.content)
 
     }
 

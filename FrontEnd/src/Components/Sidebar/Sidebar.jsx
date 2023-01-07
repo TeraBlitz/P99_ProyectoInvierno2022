@@ -9,16 +9,12 @@ import RegistroClasesAlumnos from '../../Pages/RegistroClasesAlumnos/RegistroCla
 function Sidebar(props) {
     // Atributos Sidebar Button : 
     //     Title: El nombre que va a salir en la Sidebar 
-    //     Content: El componente que va a salir como contenido 
+    //     content: El nombre que le pusiste en Pages To Render al componente en App.jsx
     //     setContent: props.setContent
     //     setOpen: props.setOpen
     const listItems = (
         <List sx={{ bgcolor: 'info.main', width: '240px', height: '100vh', spacingY: '10px' }}>
-            <SidebarButton content={RegistroClasesAlumnos} title='Registro Clases' setContent={props.setContent} setOpen={props.setOpen} />
-
-
-            <SidebarButton title='Other Component' content='hi everyone' setContent={props.setContent} setOpen={props.setOpen} />
-
+            <SidebarButton content='RegistroClasesAlumnos' title='Registro Clases' setOpen={props.setOpen} changeContent={props.changeContent} />
         </List >
     )
 
@@ -28,7 +24,7 @@ function Sidebar(props) {
             <Drawer variant="permanent" sx={{ width: '240px', height: '100vh', display: { xs: 'none', sm: 'block' } }}>
                 {listItems}
             </Drawer>
-            <Drawer variant="temporary" open={props.open} onClose={() => props.setOpen(false)} sx={{ width: '240px', height: '100vh', display: { xs: 'block', sm: 'none' } }}>
+            <Drawer variant="temporary" open={props.open} onClose={() => props.changeDrawerState()} sx={{ width: '240px', height: '100vh', display: { xs: 'block', sm: 'none' } }}>
                 {listItems}
             </Drawer>
         </Box>
