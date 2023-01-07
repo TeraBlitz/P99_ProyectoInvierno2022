@@ -2,6 +2,7 @@ import React from 'react'
 import Box from '@mui/material/Box'
 import { Drawer, List } from '@mui/material'
 import SidebarButton from '../Sidebar_button/SidebarButton'
+import ShowClass from '../AdministratorClassRegister/ShowClass'
 
 
 function Sidebar(props) {
@@ -15,6 +16,9 @@ function Sidebar(props) {
             <SidebarButton content='Registro Clases' title='Registro Clases' setContent={props.setContent} setOpen={props.setOpen} />
 
             <SidebarButton title='Other Component' content='hi everyone' setContent={props.setContent} setOpen={props.setOpen} />
+
+            <SidebarButton title='Registro de clases: administrador' content={ <ShowClass />}
+            setContent={props.setContent} setOpen={props.setOpen} />
 
         </List >
     )
