@@ -5,40 +5,34 @@ import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment';
 import StudentProfile from './StudentProfile';
 
+// Possible function to get user data, this goes in another file
+const fetchUserInfo = () => {
+    //const res = await fetch(`http://localhost:3000/${userID}`);
+    //const userData = res.json();
+    // Cambiar 'tipo' a un valor distinto a Student para ver el perfil de administrador
+    const userData = {
+        'nombre': 'Juan', 'apellido': 'Perez Perez', 'matricula': 'A01',
+        'correo': 'juan@gmail.com', 'telefono': '0000000000', 'lada':'52', 'tipo': 'admin',
+        'curp': 'OEAF771012HMCRGR09', 'escolaridad': 'Secundaria', 'ultima_escuela':'CBTIS',
+        'estado':'Nuevo Leon', 'ciudad':'Monterrey', 'colonia': 'Centro' 
+    };
+    return userData; 
+};
+
 const Profile = ({userID}) =>{
+    
+    const [isEditing, setIsEditing] = useState(true)
+    const [userInfo, setUserInfo] = useState(fetchUserInfo)
 
     useEffect(() => {
         const getUserInfo = () =>{
-          const userData = fetchUserInfo();
-          setUserInfo(userData);
+            const userData = fetchUserInfo();
+            setUserInfo(userData);
         }
         getUserInfo();
-      }, []);
-
-    // Possible function to get user data
-    const fetchUserInfo = () => {
-        //const res = await fetch(`http://localhost:3000/${userID}`);
-        //const userData = res.json();
-        // Cambiar 'tipo' a un valor distinto a Student para ver el perfil de administrador
-        const userData = {
-            'nombre': 'Juan', 'apellido': 'Perez Perez', 'matricula': 'A01',
-            'correo': 'juan@gmail.com', 'telefono': '0000000000', 'lada':'52', 'tipo': 'Student',
-            'curp': 'OEAF771012HMCRGR09', 'escolaridad': 'Secundaria', 'ultima_escuela':'CBTIS',
-            'estado':'Nuevo Leon', 'ciudad':'Monterrey', 'colonia': 'Centro' 
-        };
-        return userData; 
-    };
-
-    const [isEditing, setIsEditing] = useState(true)
-    const [userInfo, setUserInfo] = useState(fetchUserInfo)
-    const [userTag, setUserTag] = useState(userInfo.matricula)
-    const [userName, setUserName] = useState(userInfo.nombre)
-    const [userLastName, setUserLastName] = useState(userInfo.apellido)
-    const [userMail, setUserMail] = useState(userInfo.correo)
-    const [userLada, setUserLada] = useState(userInfo.lada)
-    const [userPhone, setUserPhone] = useState(userInfo.telefono)
-
-    //
+    }, []);
+    
+    const handleChange = e => setUserInfo(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
 
     return (
         <Box sx={{border: 1, p: 1, borderRadius: 1}}>
@@ -54,21 +48,22 @@ const Profile = ({userID}) =>{
                 noValidate
                 autoComplete="off"
             >
-                <TextField label="Matricula" InputProps={{readOnly: isEditing}} value={userTag}  onChange={(e) => setUserTag(e.target.value)}/>
-                <TextField label="Nombre(s)" InputProps={{readOnly: isEditing}} value={userName} onChange={(e) => setUserName(e.target.value)}/>
-                <TextField label="Apellido(s)" InputProps={{readOnly: isEditing}} value={userInfo.apellido} onChange={(e) => setUserLastName(e.target.value)}/>       
-                <TextField label="Correo" InputProps={{readOnly: isEditing}} value={userMail} onChange={(e) => setUserMail(e.target.value)}/> 
+                <TextField name="matricula" label="Matricula" InputProps={{readOnly: isEditing}} value={userInfo.matricula || ''}  onChange={handleChange}/>
+                <TextField name="nombre" label="Nombre(s)" InputProps={{readOnly: isEditing}} value={userInfo.nombre || ''} onChange={handleChange}/>
+                <TextField name="apellido" label="Apellido(s)" InputProps={{readOnly: isEditing}} value={userInfo.apellido || ''} onChange={handleChange}/>       
+                <TextField name="correo" label="Correo" InputProps={{readOnly: isEditing}} value={userInfo.correo || ''} onChange={handleChange}/> 
                 <TextField
+                    name="lada"
                     label="LADA" sx={{ m: 1, width: '5ch' }} type='number'
                     InputProps={{
                         startAdornment: <InputAdornment position="start">+</InputAdornment>,
                         readOnly: isEditing
                     }}
-                    value={userLada}
-                    onChange={(e) => setUserLada(e.target.value)}
+                    value={userInfo.lada || ''}
+                    onChange={handleChange}
                 />
-                <TextField label="Núm. Telefonico" InputProps={{readOnly: isEditing}} value={userPhone} onChange={(e) => setUserPhone(e.target.value)}/> 
-                {userInfo.tipo === "Student" ? <StudentProfile isEditing={isEditing} userInfo={userInfo}/> : null }
+                <TextField name="telefono" label="Núm. Telefonico" InputProps={{readOnly: isEditing}} value={userInfo.telefono || ''} onChange={handleChange}/> 
+                {userInfo.tipo === "Student" ? <StudentProfile isEditing={isEditing} userInfo={userInfo} handleChange={handleChange}/> : null }
  
 
             </Box>  
