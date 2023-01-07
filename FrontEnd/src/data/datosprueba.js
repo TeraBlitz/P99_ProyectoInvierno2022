@@ -1,3 +1,5 @@
+// Data temporal para probar show
+
 export const data = [
   {
     id: 1,

@@ -40,7 +40,13 @@
 .button--center {
     display: flex;
     margin-top: 10px;
-    justify-content: center
-     
+    justify-content: center  
   }
+
+.form--data{
+    display: flex;
+    margin-top: 10px;
+    justify-content: center  
+}
+
 
