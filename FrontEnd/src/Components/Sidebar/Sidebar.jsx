@@ -7,14 +7,24 @@ import RegistroClasesAlumnos from '../../Pages/RegistroClasesAlumnos/RegistroCla
 
 
 function Sidebar(props) {
-    // Atributos Sidebar Button : 
-    //     Title: El nombre que va a salir en la Sidebar 
-    //     content: El nombre que le pusiste en Pages To Render al componente en App.jsx
-    //     setContent: props.setContent
-    //     setOpen: props.setOpen
+    // agregar un componente a la sidebar : 
+    // key: identificador unico (Math.random())
+    // title: como va a aparecer en el boton de la sidebar
+    // content: nombre del componente renderizado en PagesToRender (app.jsx)
+    const options = [
+        {
+            key: Math.random(),
+            title: 'Registro Clases',
+            content: 'RegistroClasesAlumnos'
+        }
+
+    ]
     const listItems = (
         <List sx={{ bgcolor: 'info.main', width: '240px', height: '100vh', spacingY: '10px' }}>
-            <SidebarButton content='RegistroClasesAlumnos' title='Registro Clases' setOpen={props.setOpen} changeContent={props.changeContent} />
+            {options.map(e => (
+
+                <SidebarButton key={e.key} content={e.content} title={e.title} setOpen={props.setOpen} changeContent={props.changeContent} changeDrawerState={props.changeDrawerState} />
+            ))}
         </List >
     )
 

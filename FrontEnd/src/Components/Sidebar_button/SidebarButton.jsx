@@ -6,6 +6,7 @@ import { Divider } from '@mui/material';
 function SidebarButton(props) {
     const handleClick = () => {
         props.changeContent(props.content)
+        props.changeDrawerState()
 
     }
 
