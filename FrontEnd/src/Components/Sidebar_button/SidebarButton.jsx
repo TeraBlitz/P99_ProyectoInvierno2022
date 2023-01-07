@@ -10,9 +10,10 @@ function SidebarButton(props) {
 
     }
 
+
     return (
         <ListItemButton onClick={() => handleClick()}>
-            <ListItemText>{props.title}</ListItemText>
+            <ListItemText sx={{ color: 'white' }}>{props.title}</ListItemText>
         </ListItemButton>
     )
 }
