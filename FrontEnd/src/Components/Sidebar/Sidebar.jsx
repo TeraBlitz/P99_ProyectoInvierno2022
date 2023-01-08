@@ -2,20 +2,29 @@ import React from 'react'
 import Box from '@mui/material/Box'
 import { Drawer, List } from '@mui/material'
 import SidebarButton from '../Sidebar_button/SidebarButton'
+import Profile from '../../Pages/ProfilePage/Profile'
+
 
 
 function Sidebar(props) {
-    // Atributos Sidebar Button : 
-    //     Title: El nombre que va a salir en la Sidebar 
-    //     Content: El componente que va a salir como contenido 
-    //     setContent: props.setContent
-    //     setOpen: props.setOpen
+    // agregar un componente a la sidebar : 
+    // key: identificador unico (Math.random())
+    // title: como va a aparecer en el boton de la sidebar
+    // content: nombre del componente renderizado en PagesToRender (app.jsx)
+    const options = [
+        {
+            key: Math.random(),
+            title: 'Perfil',
+            content: 'Profile'
+        }
+
+    ]
     const listItems = (
-        <List sx={{ bgcolor: 'primary.light', width: '240px', height: '100vh' }}>
-            <SidebarButton content='Registro Clases' title='Registro Clases' setContent={props.setContent} setOpen={props.setOpen} />
+        <List sx={{ bgcolor: 'info.main', width: '240px', height: '100vh', spacingY: '10px' }}>
+            {options.map(e => (
 
-            <SidebarButton title='Other Component' content='hi everyone' setContent={props.setContent} setOpen={props.setOpen} />
-
+                <SidebarButton key={e.key} content={e.content} title={e.title} setOpen={props.setOpen} changeContent={props.changeContent} changeDrawerState={props.changeDrawerState} />
+            ))}
         </List >
     )
 
@@ -25,7 +34,7 @@ function Sidebar(props) {
             <Drawer variant="permanent" sx={{ width: '240px', height: '100vh', display: { xs: 'none', sm: 'block' } }}>
                 {listItems}
             </Drawer>
-            <Drawer variant="temporary" open={props.open} onClose={() => props.setOpen(false)} sx={{ width: '240px', height: '100vh', display: { xs: 'block', sm: 'none' } }}>
+            <Drawer variant="temporary" open={props.open} onClose={() => props.changeDrawerState()} sx={{ width: '240px', height: '100vh', display: { xs: 'block', sm: 'none' } }}>
                 {listItems}
             </Drawer>
         </Box>

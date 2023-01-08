@@ -12,7 +12,7 @@ const fetchUserInfo = () => {
     // Cambiar 'tipo' a un valor distinto a Student para ver el perfil de administrador
     const userData = {
         'nombre': 'Juan', 'apellido': 'Perez Perez', 'matricula': 'A01',
-        'correo': 'juan@gmail.com', 'telefono': '0000000000', 'lada':'52', 'tipo': 'admin',
+        'correo': 'juan@gmail.com', 'telefono': '0000000000', 'lada':'52', 'tipo': 'Student',
         'curp': 'OEAF771012HMCRGR09', 'escolaridad': 'Secundaria', 'ultima_escuela':'CBTIS',
         'estado':'Nuevo Leon', 'ciudad':'Monterrey', 'colonia': 'Centro' 
     };
@@ -33,6 +33,12 @@ const Profile = ({userID}) =>{
     }, []);
     
     const handleChange = e => setUserInfo(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
+
+    const handleSubmit = () => {
+        // Enviar esta informacion a bd
+        console.log(userInfo);
+        setIsEditing(!isEditing); 
+    };
 
     return (
         <Box sx={{border: 1, p: 1, borderRadius: 1}}>
@@ -69,8 +75,13 @@ const Profile = ({userID}) =>{
             </Box>  
 
             <Box sx={{display:'flex', m: 1, p: 1}}>
-                <Button variant="contained" sx={{ mr: 1}} onClick={() => { setIsEditing(!isEditing); }}>
-                    {isEditing ? "Editar" : "Guardar"}
+                <Button variant="contained" sx={{ mr: 1, display: !isEditing ? 'none' : ''}} onClick={() => { setIsEditing(!isEditing); }}>
+                    Editar
+                </Button>
+                <Button variant="contained" type='submit'
+                 sx={{ display: isEditing ? 'none' : '', mr: 1}}
+                 onClick={handleSubmit}>
+                    Guardar
                 </Button>
                 <Button variant="contained" color='error' 
                     sx={{ display: isEditing ? 'none' : '', mx: 2}}
