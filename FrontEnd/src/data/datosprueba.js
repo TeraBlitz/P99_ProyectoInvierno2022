@@ -2,7 +2,7 @@
 
 export const data = [
   {
-    id: 1,
+    id: 0,
     coursename: "Programacion I",
     level: 1,
     teacher: "Paulina Mijares",
@@ -10,7 +10,7 @@ export const data = [
     maximumcapacity: 15,
   },
   {
-    id: 2,
+    id: 1,
     coursename: "Evaluación de proyectos",
     level: 3,
     teacher: "Leonardo Castro",
@@ -18,7 +18,7 @@ export const data = [
     maximumcapacity: 10,
   },
   {
-    id: 3,
+    id: 2,
     coursename: "Nahualt",
     level: 2,
     teacher: "Moises Rodriguez",
@@ -26,27 +26,27 @@ export const data = [
     maximumcapacity: 15,
   },
   {
-    id: 4,
+    id: 3,
     coursename: "Ingles III",
     level: 2,
     teacher: "Jose Benvenuto",
-    weeklyfrequency: "4 hours",
+    weeklyfrequency: "4 horas",
     maximumcapacity: 15,
   },
   {
-    id: 5,
+    id: 4,
     coursename: "Programacion Orientada a Objetos",
     level: 3,
     teacher: "Angel Estrada",
-    weeklyfrequency: "4 hours",
+    weeklyfrequency: "4 horas",
     maximumcapacity: 10,
   },
   {
-    id: 6,
+    id: 5,
     coursename: "Ingles I",
     level: 1,
     teacher: "Luis Perez",
-    weeklyfrequency: "6 hours",
+    weeklyfrequency: "6 horas",
     maximumcapacity: 10,
   },
 ];

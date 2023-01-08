@@ -49,4 +49,28 @@
     justify-content: center  
 }
 
+.button--delete{
+    --tw-bg-opacity: 1;
+    background-color: rgb(239 68 68 / var(--tw-bg-opacity));
+    padding-left: 0.5rem/* 8px */;
+    padding-right: 0.5rem/* 8px */;
+    padding-top: 0.8rem/* 4px */;
+    padding-bottom: 0.3rem/* 4px */;
+    border-radius: 0.375rem/* 6px */;
+}
 
+.button--edit{
+    --tw-bg-opacity: 1;
+    background-color: rgb(25, 25, 189);
+    padding-left: 0.5rem/* 8px */;
+    padding-right: 0.5rem/* 8px */;
+    padding-top: 0.8rem/* 4px */;
+    padding-bottom: 0.3rem/* 4px */;
+    border-radius: 0.375rem/* 6px */;
+}
+
+.form--title{
+    text-align: center;
+    font: 1.5em sans-serif;
+    font: bold;
+}
