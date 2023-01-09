@@ -1,7 +1,7 @@
 import React from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { Button } from "@mui/material";
-import { data as information } from "../../data/datosprueba";
+import { data as information } from "../../../data/datosprueba";
 import CreateClass from "./CreateClass";
 import { useState, useEffect } from "react";
 import Navbar from "./Navbar";
