@@ -92,7 +92,7 @@ export default function ShowClass() {
     );
 
   return (
-    <div>
+    <div >
       <Navbar />
       {crear && (
         <div>

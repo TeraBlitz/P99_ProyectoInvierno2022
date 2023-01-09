@@ -19,7 +19,7 @@ function Sidebar(props) {
 
     ]
     const listItems = (
-        <List sx={{ bgcolor: 'info.main', width: '240px', height: '300vh', spacingY: '10px' }}>
+        <List sx={{ bgcolor: 'info.main', width: '240px', height: '100vh', spacingY: '10px' }}>
             {options.map(e => (
 
                 <SidebarButton key={e.key} content={e.content} title={e.title} setOpen={props.setOpen} changeContent={props.changeContent} changeDrawerState={props.changeDrawerState} />

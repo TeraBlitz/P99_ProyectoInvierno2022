@@ -28,7 +28,7 @@ const ClassTable = (props) => {
     event.target.style.background = "rgb(25, 25, 189)";
   }
   return (
-    <TableContainer sx={{ maxHeight: "500px" }}>
+    <TableContainer sx={{ maxHeight: "300px" }}>
       <Table stickyHeader>
         <TableHead>
           <TableRow>
