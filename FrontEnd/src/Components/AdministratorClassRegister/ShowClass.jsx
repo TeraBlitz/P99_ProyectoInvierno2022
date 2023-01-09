@@ -1,13 +1,12 @@
 import React from "react";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import { TableContainer, TableRow, Table, Button, TableCell, TableHead,TableBody } from "@mui/material";
+import {  Button } from "@mui/material";
 import { data as information } from "../../data/datosprueba";
 import CreateClass from "./CreateClass";
 import { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import EditClass from "./EditClass";
+import ClassTable from "./ClassTable";
 
 export default function ShowClass() {
   //States
@@ -91,21 +90,7 @@ export default function ShowClass() {
       </div>
     );
 
-  function RedMouseOver(event) {
-    event.target.style.background = "rgb(248 113 113 / var(--tw-bg-opacity)";
-  }
-
-  function RedMouseOut(event) {
-    event.target.style.background = "rgb(239 68 68 / var(--tw-bg-opacity)";
-  }
-
-  function BlueMouseOver(event) {
-    event.target.style.background = " rgb(31, 31, 228)";
-  }
-
-  function BlueMouseOut(event) {
-    event.target.style.background = "rgb(25, 25, 189)";
-  }
+  
 
   return (
     <div>
@@ -123,51 +108,7 @@ export default function ShowClass() {
       </div>
 
       <h3 className="body-admin--title"> Panel de modificacion de clases </h3>
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell> Curso </TableCell>
-              <TableCell> Nivel </TableCell>
-              <TableCell> Profesor </TableCell>
-              <TableCell> Frecuencia semanal </TableCell>
-              <TableCell> Capacidad </TableCell>
-              <TableCell> Editar </TableCell>
-              <TableCell> Eliminar </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.map((datos) => (
-              <TableRow key={datos.id}>
-                <TableCell>{datos.coursename}</TableCell>
-                <TableCell>{datos.level}</TableCell>
-                <TableCell>{datos.teacher}</TableCell>
-                <TableCell>{datos.weeklyfrequency}</TableCell>
-                <TableCell>{datos.maximumcapacity}</TableCell>
-                <TableCell>
-                  <i
-                    className="button--edit"
-                    onMouseOver={BlueMouseOver}
-                    onMouseOut={BlueMouseOut}
-                    onClick={()=> editClasses(datos.id,datos)}>
-                    {<ModeEditIcon />}
-                  </i>
-                </TableCell>
-                <TableCell>
-                  <i
-                    className="button--delete"
-                    onMouseOver={RedMouseOver}
-                    onMouseOut={RedMouseOut}
-                    onClick={() => deleteClass(datos.id)}>
-                    {<DeleteForeverIcon />}
-                  </i>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
+      < ClassTable data = { data } deleteClass = { deleteClass} editClasses = { editClasses }/>
    {/* Solucion temporal en lo que linkamos, no va a hacer asi el resultado final */}
 
    {editar && (

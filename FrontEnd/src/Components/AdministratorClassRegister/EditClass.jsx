@@ -1,5 +1,8 @@
 import React from "react";
 import { useState,useEffect } from "react";
+import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
+import { Button,Box } from "@mui/material";
 
 const EditClass = (props) => {
 
@@ -20,71 +23,68 @@ const EditClass = (props) => {
   };
 
   return (
-    <div className="form--data">
+    <Box className="form--data">
       <form>
-        <div>
-          <label className="body-admin--title, form--title">
+      <InputLabel className=" form--title">
             Actualiza una clase
-          </label>
-        </div>
-        <br />
+          </InputLabel>
         <div>
-          <label>Curso: </label>
-          <input
+        <InputLabel>Curso: </ InputLabel>
+          <Input
             placeholder="Escribe el curso"
             type="text" value={clase.coursename} name="coursename" onChange={handleChange}
             autoFocus
-          ></input>
+          ></Input>
         </div>
         <br />
         <div>
-          <label>Nivel: </label>
-          <input
+        <InputLabel>Nivel: </InputLabel>
+          <Input
             placeholder="Escribe el nivel"
             type="number"
             name="level"
             value={clase.level} onChange={handleChange}
-          ></input>
+          ></Input>
         </div>
         <br />
         <div>
-          <label>Profesor: </label>
-          <input
+        <InputLabel>Profesor: </InputLabel>
+          <Input
             placeholder="Escribe el profesor"
             type="text"
             name="teacher"
             value={clase.teacher}
             onChange={handleChange}
-          ></input>
+          ></Input>
         </div>
         <br />
         <div>
-          <label>Frecuencia semanal: </label>
-          <input
+        <InputLabel>Frecuencia semanal: </InputLabel>
+          <Input
             placeholder="Escribe la frecuencia semanal"
             type="text"
-            name="weeklyfrequencyr"
+            name="weeklyfrequency"
             value={clase.weeklyfrequency}
             onChange={handleChange}
-          ></input>
+          ></Input>
         </div>
         <br />
         <div>
-          <label>Capacidad: </label>
-          <input
+        <InputLabel>Capacidad: </InputLabel>
+          <Input
             placeholder="Escribe la capacidad"
             type="number"
             name="maximumcapacity"
             value={clase.maximumcapacity}
             onChange={handleChange}
-          ></input>
+          ></Input>
         </div>
         <br />
         <div className="button--center">
-          <button type="submit" onClick={handleSubmit}>Actualiza</button>
+          <Button type="submit" onClick={handleSubmit} variant="text" >Actualiza</Button>
         </div>
       </form>
-    </div>
+    </Box>
   );
 };
 

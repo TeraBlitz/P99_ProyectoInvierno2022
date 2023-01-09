@@ -1,5 +1,8 @@
 import React from "react";
 import { useState } from "react";
+import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
+import { Button,Box } from "@mui/material";
 
 export default function CreateClass({ createClasses }) {
   //States
@@ -39,70 +42,72 @@ export default function CreateClass({ createClasses }) {
   return (
     // Form
     
-    <div className="form--data">
-      <form onSubmit={handleSubmit}>
-      <div><label className="body-admin--title, form--title">Crea una clase</label></div>
+    <Box className="form--data">
+      <form >
+      <InputLabel className=" form--title">
+            Crea una clase
+          </InputLabel>
           <br /> 
         <div>       
-          <label>Curso: </label>
-          <input
+          <InputLabel>Curso: </ InputLabel>
+          <Input
             placeholder="Escribe el curso"
             onChange={(e) => setCoursename(e.target.value)}
             value={coursename}
             type="text"
             name="coursename"
             autoFocus
-          ></input>
+          ></Input>
         </div>
         <br />
         <div>
-          <label>Nivel: </label>
-          <input
+          <InputLabel>Nivel: </InputLabel>
+          <Input
             placeholder="Escribe el nivel"
             type="number"
             name="level"
             onChange={(e) => setLevel(e.target.value)}
             value={level}
-          ></input>
+          ></Input>
         </div>
         <br />
         <div>
-          <label>Profesor: </label>
-          <input
+          <InputLabel>Profesor: </InputLabel>
+          <Input
             placeholder="Escribe el profesor"
             type="text"
             name="teacher"
             onChange={(e) => setTeacher(e.target.value)}
             value={teacher}
-          ></input>
+          ></Input>
         </div>
         <br />
         <div>
-          <label>Frecuencia semanal: </label>
-          <input
+          <InputLabel>Frecuencia semanal: </InputLabel>
+          <Input
             placeholder="Escribe la frecuencia semanal"
             type="text"
             name="weeklyfrequencyr"
             onChange={(e) => setWeeklyfrequency(e.target.value)}
             value={weeklyfrequency}
-          ></input>
+          ></Input>
         </div>
         <br />
         <div>
-          <label>Capacidad: </label>
-          <input
+          <InputLabel>Capacidad: </InputLabel>
+          <Input
             placeholder="Escribe la capacidad"
             type="number"
             name="maximumcapacity"
             onChange={(e) => setMaximumcapacity(e.target.value)}
             value={maximumcapacity}
-          ></input>
+          ></Input>
         </div>
         <br />
         <div className="button--center">
-        <button >Crear</button>
+        <Button  type="submit" variant="text" onClick={handleSubmit}>Crear</Button>
         </div>
       </form>
-    </div>
+    </Box>
   );
 }

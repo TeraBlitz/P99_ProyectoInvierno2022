@@ -32,6 +32,7 @@
 .body-admin--title{
     text-align: center;
     font: bold;
+    font-size: larger;
     font-family: Arial, Helvetica, sans-serif;
     margin-top: 10px;
     margin-bottom: 15px;
@@ -40,6 +41,7 @@
 .button--center {
     display: flex;
     margin-top: 10px;
+    margin-bottom: 30px;
     justify-content: center  
   }
 
