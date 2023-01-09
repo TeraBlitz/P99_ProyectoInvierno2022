@@ -1,6 +1,6 @@
 import React from "react";
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import {  Button } from "@mui/material";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { Button } from "@mui/material";
 import { data as information } from "../../data/datosprueba";
 import CreateClass from "./CreateClass";
 import { useState, useEffect } from "react";
@@ -10,7 +10,7 @@ import ClassTable from "./ClassTable";
 
 export default function ShowClass() {
   //States
-  //Agregar 
+  //Agregar
   const [data, setData] = useState([]);
   const [crear, setCrear] = useState(false);
 
@@ -18,24 +18,26 @@ export default function ShowClass() {
   const [editar, setEditar] = useState(false);
   const claseInicial = {
     id: null,
-    coursename: '',
+    coursename: "",
     level: null,
-    teacher: '',
-    weeklyfrequency: '',
-    maximumcapacity: '',
-   }
- const [claseActual, setClaseActual] = useState(claseInicial)
+    teacher: "",
+    weeklyfrequency: "",
+    maximumcapacity: "",
+  };
+  const [claseActual, setClaseActual] = useState(claseInicial);
 
- const editClasses = (id, clase) => {
-  handleClick2()
-  setClaseActual(clase);
- }
- 
- const updateClass = (nuevaClase) => {
-  setData(data.map(datos => (datos.id === claseActual.id ? nuevaClase : datos)))
-  setClaseActual(claseInicial);
-  handleClick2();
- }
+  const editClasses = (id, clase) => {
+    handleClick2();
+    setClaseActual(clase);
+  };
+
+  const updateClass = (nuevaClase) => {
+    setData(
+      data.map((datos) => (datos.id === claseActual.id ? nuevaClase : datos))
+    );
+    setClaseActual(claseInicial);
+    handleClick2();
+  };
 
   //Function  on Click
   function handleClick() {
@@ -45,14 +47,14 @@ export default function ShowClass() {
   function handleClick2() {
     setEditar((prevState) => !prevState);
   }
-  
+
   //Save information
   useEffect(() => {
     setData(information);
   }, []);
 
   function createClasses(datas) {
-    handleClick()
+    handleClick();
     setData([
       ...data,
       {
@@ -79,18 +81,15 @@ export default function ShowClass() {
           <div>
             <CreateClass createClasses={createClasses} />
           </div>
-        
         )}
         <div className="button--center">
-        <Button variant="contained" color="primary" onClick={handleClick}>
-          {<AddCircleOutlineIcon />}
-        </Button>
-      </div>
+          <Button variant="contained" color="primary" onClick={handleClick}>
+            {<AddCircleOutlineIcon />}
+          </Button>
+        </div>
         <h1 className="body-admin--title"> No hay clases aun</h1>
       </div>
     );
-
-  
 
   return (
     <div>
@@ -102,22 +101,28 @@ export default function ShowClass() {
       )}
 
       <div className="button--center">
-        <Button variant="contained" color="primary" onClick={(handleClick)}>
+        <Button variant="contained" color="primary" onClick={handleClick}>
           {<AddCircleOutlineIcon />}
         </Button>
       </div>
 
       <h3 className="body-admin--title"> Panel de modificacion de clases </h3>
-      < ClassTable data = { data } deleteClass = { deleteClass} editClasses = { editClasses }/>
-   {/* Solucion temporal en lo que linkamos, no va a hacer asi el resultado final */}
+      <ClassTable
+        data={data}
+        deleteClass={deleteClass}
+        editClasses={editClasses}
+      />
+      {/* Solucion temporal en lo que linkamos, no va a hacer asi el resultado final */}
 
-   {editar && (
-          <div>
-            <EditClass claseActual = { claseActual } setEditar = { setEditar } updateClass = { updateClass }/>
-          </div>
-        
-        )}
-        
+      {editar && (
+        <div>
+          <EditClass
+            claseActual={claseActual}
+            setEditar={setEditar}
+            updateClass={updateClass}
+          />
+        </div>
+      )}
     </div>
   );
 }

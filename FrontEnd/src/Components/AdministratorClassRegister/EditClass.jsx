@@ -1,11 +1,10 @@
 import React from "react";
-import { useState,useEffect } from "react";
-import Input from '@mui/material/Input';
-import InputLabel from '@mui/material/InputLabel';
-import { Button,Box } from "@mui/material";
+import { useState, useEffect } from "react";
+import Input from "@mui/material/Input";
+import InputLabel from "@mui/material/InputLabel";
+import { Button, Box } from "@mui/material";
 
 const EditClass = (props) => {
-
   useEffect(() => {
     setClase(props.claseActual);
   }, [props]);
@@ -19,36 +18,45 @@ const EditClass = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (clase.coursename && clase.level && clase.teacher && clase.weeklyfrequency && clase.maximumcapacity) props.updateClass(clase);
+    if (
+      clase.coursename &&
+      clase.level &&
+      clase.teacher &&
+      clase.weeklyfrequency &&
+      clase.maximumcapacity
+    )
+      props.updateClass(clase);
   };
 
   return (
     <Box className="form--data">
       <form>
-      <InputLabel className=" form--title">
-            Actualiza una clase
-          </InputLabel>
+        <InputLabel className=" form--title">Actualiza una clase</InputLabel>
         <div>
-        <InputLabel>Curso: </ InputLabel>
+          <InputLabel>Curso: </InputLabel>
           <Input
             placeholder="Escribe el curso"
-            type="text" value={clase.coursename} name="coursename" onChange={handleChange}
+            type="text"
+            value={clase.coursename}
+            name="coursename"
+            onChange={handleChange}
             autoFocus
           ></Input>
         </div>
         <br />
         <div>
-        <InputLabel>Nivel: </InputLabel>
+          <InputLabel>Nivel: </InputLabel>
           <Input
             placeholder="Escribe el nivel"
             type="number"
             name="level"
-            value={clase.level} onChange={handleChange}
+            value={clase.level}
+            onChange={handleChange}
           ></Input>
         </div>
         <br />
         <div>
-        <InputLabel>Profesor: </InputLabel>
+          <InputLabel>Profesor: </InputLabel>
           <Input
             placeholder="Escribe el profesor"
             type="text"
@@ -59,7 +67,7 @@ const EditClass = (props) => {
         </div>
         <br />
         <div>
-        <InputLabel>Frecuencia semanal: </InputLabel>
+          <InputLabel>Frecuencia semanal: </InputLabel>
           <Input
             placeholder="Escribe la frecuencia semanal"
             type="text"
@@ -70,7 +78,7 @@ const EditClass = (props) => {
         </div>
         <br />
         <div>
-        <InputLabel>Capacidad: </InputLabel>
+          <InputLabel>Capacidad: </InputLabel>
           <Input
             placeholder="Escribe la capacidad"
             type="number"
@@ -81,7 +89,9 @@ const EditClass = (props) => {
         </div>
         <br />
         <div className="button--center">
-          <Button type="submit" onClick={handleSubmit} variant="text" >Actualiza</Button>
+          <Button type="submit" onClick={handleSubmit} variant="text">
+            Actualiza
+          </Button>
         </div>
       </form>
     </Box>

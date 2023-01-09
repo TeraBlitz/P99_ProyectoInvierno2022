@@ -64,7 +64,7 @@
 .button--edit{
     --tw-bg-opacity: 1;
     background-color: rgb(25, 25, 189);
-    padding-left: 0.5rem/* 8px */;
+    padding-left: 0.3rem/* 8px */;
     padding-right: 0.5rem/* 8px */;
     padding-top: 0.8rem/* 4px */;
     padding-bottom: 0.3rem/* 4px */;
@@ -75,4 +75,11 @@
     text-align: center;
     font: 1.5em sans-serif;
     font: bold;
+}
+
+.MuiTableHead-root .MuiTableRow-root .MuiTableCell-head {
+    font-weight: bold;
+    resize: horizontal;
+    overflow-x: overlay;
+    overflow-y: hidden;
 }

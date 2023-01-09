@@ -1,8 +1,8 @@
 import React from "react";
 import { useState } from "react";
-import Input from '@mui/material/Input';
-import InputLabel from '@mui/material/InputLabel';
-import { Button,Box } from "@mui/material";
+import Input from "@mui/material/Input";
+import InputLabel from "@mui/material/InputLabel";
+import { Button, Box } from "@mui/material";
 
 export default function CreateClass({ createClasses }) {
   //States
@@ -40,16 +40,12 @@ export default function CreateClass({ createClasses }) {
   };
 
   return (
-    // Form
-    
     <Box className="form--data">
-      <form >
-      <InputLabel className=" form--title">
-            Crea una clase
-          </InputLabel>
-          <br /> 
-        <div>       
-          <InputLabel>Curso: </ InputLabel>
+      <form>
+        <InputLabel className=" form--title">Crea una clase</InputLabel>
+        <br />
+        <div>
+          <InputLabel>Curso: </InputLabel>
           <Input
             placeholder="Escribe el curso"
             onChange={(e) => setCoursename(e.target.value)}
@@ -105,7 +101,9 @@ export default function CreateClass({ createClasses }) {
         </div>
         <br />
         <div className="button--center">
-        <Button  type="submit" variant="text" onClick={handleSubmit}>Crear</Button>
+          <Button type="submit" variant="text" onClick={handleSubmit}>
+            Crear
+          </Button>
         </div>
       </form>
     </Box>

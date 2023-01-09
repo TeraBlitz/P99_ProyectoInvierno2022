@@ -1,11 +1,18 @@
-import React from 'react'
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import { TableContainer, TableRow, Table, TableCell, TableHead,TableBody , Paper} from "@mui/material";
+import React from "react";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import {
+  TableContainer,
+  TableRow,
+  Table,
+  TableCell,
+  TableHead,
+  TableBody,
+  Paper,
+} from "@mui/material";
 
-const ClassTable = (props) => { 
-
-function RedMouseOver(event) {
+const ClassTable = (props) => {
+  function RedMouseOver(event) {
     event.target.style.background = "rgb(248 113 113 / var(--tw-bg-opacity)";
   }
 
@@ -21,51 +28,53 @@ function RedMouseOver(event) {
     event.target.style.background = "rgb(25, 25, 189)";
   }
   return (
-    <TableContainer >
-        <Table >
-          <TableHead>
-            <TableRow>
-              <TableCell> Curso </TableCell>
-              <TableCell> Nivel </TableCell>
-              <TableCell> Profesor </TableCell>
-              <TableCell> Frecuencia semanal </TableCell>
-              <TableCell> Capacidad </TableCell>
-              <TableCell> Editar </TableCell>
-              <TableCell> Eliminar </TableCell>
+    <TableContainer sx={{ maxHeight: "500px" }}>
+      <Table stickyHeader>
+        <TableHead>
+          <TableRow>
+            <TableCell> Curso </TableCell>
+            <TableCell> Nivel </TableCell>
+            <TableCell> Profesor </TableCell>
+            <TableCell> Frecuencia semanal </TableCell>
+            <TableCell> Capacidad </TableCell>
+            <TableCell> Editar </TableCell>
+            <TableCell> Eliminar </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {props.data.map((datos) => (
+            <TableRow key={datos.id}>
+              <TableCell>{datos.coursename}</TableCell>
+              <TableCell>{datos.level}</TableCell>
+              <TableCell>{datos.teacher}</TableCell>
+              <TableCell>{datos.weeklyfrequency}</TableCell>
+              <TableCell>{datos.maximumcapacity}</TableCell>
+              <TableCell>
+                <i
+                  className="button--edit"
+                  onMouseOver={BlueMouseOver}
+                  onMouseOut={BlueMouseOut}
+                  onClick={() => props.editClasses(datos.id, datos)}
+                >
+                  {<ModeEditIcon />}
+                </i>
+              </TableCell>
+              <TableCell>
+                <i
+                  className="button--delete"
+                  onMouseOver={RedMouseOver}
+                  onMouseOut={RedMouseOut}
+                  onClick={() => props.deleteClass(datos.id)}
+                >
+                  {<DeleteForeverIcon />}
+                </i>
+              </TableCell>
             </TableRow>
-          </TableHead>
-          <TableBody>
-            {props.data.map((datos) => (
-              <TableRow key={datos.id}>
-                <TableCell>{datos.coursename}</TableCell>
-                <TableCell>{datos.level}</TableCell>
-                <TableCell>{datos.teacher}</TableCell>
-                <TableCell>{datos.weeklyfrequency}</TableCell>
-                <TableCell>{datos.maximumcapacity}</TableCell>
-                <TableCell>
-                  <i
-                    className="button--edit"
-                    onMouseOver={BlueMouseOver}
-                    onMouseOut={BlueMouseOut}
-                    onClick={()=> props.editClasses(datos.id,datos)}>
-                    {<ModeEditIcon />}
-                  </i>
-                </TableCell>
-                <TableCell>
-                  <i
-                    className="button--delete"
-                    onMouseOver={RedMouseOver}
-                    onMouseOut={RedMouseOut}
-                    onClick={() => props.deleteClass(datos.id)}>
-                    {<DeleteForeverIcon />}
-                  </i>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-  )
-}
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+};
 
-export default ClassTable
+export default ClassTable;
