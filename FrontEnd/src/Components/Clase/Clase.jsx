@@ -3,6 +3,7 @@ import React from 'react'
 import Box from '@mui/material/Box'
 
 function Clase(props) {
+    console.log(props.cupo / props.cupoMax)
     return (
         <Box sx={{ marginTop: '20px' }}>
             <Box sx={{ bgcolor: 'lightgray', paddingX: '10px', borderTopRightRadius: '10px', borderTopLeftRadius: '10px' }}>
@@ -11,7 +12,7 @@ function Clase(props) {
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography>Periodo: {props.periodo}</Typography>
                     <Typography>Edades: {props.edadMin} a {props.edadMax}</Typography>
-                    <Typography>{props.cupo.toString()}/{props.cupoMax.toString()}</Typography>
+                    <Typography sx={{ color: props.cupo / props.cupoMax >= 1 ? "red" : "black" }}>{props.cupo.toString()}/{props.cupoMax.toString()}</Typography>
                 </Box>
             </Box>
             <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{ width: '100%' }}>
