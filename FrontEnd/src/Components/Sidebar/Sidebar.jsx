@@ -15,6 +15,11 @@ function Sidebar(props) {
             key: Math.random(),
             title: 'Registro clases de Administrador',
             content: 'Registro'
+        },
+        {
+            key: Math.random(),
+            title: 'Pagina de Inicio',
+            content: 'PaginaInicio'
         }
 
     ]
