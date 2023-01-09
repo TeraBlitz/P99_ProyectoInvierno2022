@@ -17,7 +17,6 @@ function RegistroClasesAlumnos() {
 
         },
         {
-
             key: '2',
             title: 'Clase 2',
             periodo: 1,
@@ -31,7 +30,7 @@ function RegistroClasesAlumnos() {
         <Box sx={{ textAlign: 'center', width: '100%' }}>
             <TextField label="Buscar" color='primary' sx={{ width: '70%', fontSize: '30px', bgcolor: 'lightgray', borderRadius: 1 }} variant="filled"></TextField>
             {clases.map(e => (
-                <Clase title={e.title} periodo={e.periodo.toString()} cupo={e.cupo} cupoMax={e.cupoMax} edadMin={e.edadMin.toString()} edadMax={e.edadMax.toString()} />
+                <Clase key={e.key} title={e.title} periodo={e.periodo.toString()} cupo={e.cupo} cupoMax={e.cupoMax} edadMin={e.edadMin.toString()} edadMax={e.edadMax.toString()} />
             ))}
 
         </Box>
