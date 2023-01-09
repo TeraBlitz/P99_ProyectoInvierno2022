@@ -2,9 +2,21 @@ import { TextField, Typography } from '@mui/material'
 import Box from '@mui/material/Box'
 import React, { useState } from 'react'
 import Clase from '../../Components/Clase/Clase'
+import { Alert, Button } from '@mui/material'
+import { AlertTitle } from '@mui/material'
+import { display } from '@mui/system'
 
 
 function RegistroClasesAlumnos() {
+    const [claseRegistrada, setClaseRegistrada] = useState([]) // esto se obtendria de la base de datos
+    const changeClaseRegistrada = (classId) => {
+        if (claseRegistrada[0]) {
+            setError('block')
+        } else {
+            setClaseRegistrada([classId])
+        }
+    }
+    const [error, setError] = useState('none')
     const [clases, setClases] = useState([
         {
             key: '1',
@@ -29,11 +41,27 @@ function RegistroClasesAlumnos() {
     return (
         <Box sx={{ textAlign: 'center', width: '100%' }}>
             <TextField label="Buscar" color='primary' sx={{ width: '70%', fontSize: '30px', bgcolor: 'lightgray', borderRadius: 1 }} variant="filled"></TextField>
-            {clases.map(e => (
-                <Clase key={e.key} title={e.title} periodo={e.periodo.toString()} cupo={e.cupo} cupoMax={e.cupoMax} edadMin={e.edadMin.toString()} edadMax={e.edadMax.toString()} />
-            ))}
-
-        </Box>
+            <Box sx={{ display: error, bgcolor: 'rgba(50, 50, 50, 0.60)', zIndex: '1000', width: { xs: '100vw', sm: '86vw' }, height: '100vh', position: 'absolute', top: 0, left: 0 }}>
+                <Alert sx={{
+                    position: 'absolute', top: '50vh', left: '50%', transform: 'translate(-50%,-50%)', zIndex: '1000', width: '50%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between'
+                }} severity="error">
+                    <AlertTitle> Error</AlertTitle>
+                    Solo puedes Tener <strong>una</strong> clase Registrada
+                    <br />
+                    <Button onClick={() => setError("none")} sx={{ color: 'error.dark' }}>
+                        Cancelar
+                    </Button>
+                    <Button onClick={() => { setClaseRegistrada([]); setError('none') }} sx={{ color: 'error.dark' }}>
+                        Anular Registro
+                    </Button>
+                </Alert >
+            </Box>
+            {
+                clases.map(e => (
+                    <Clase changeClaseRegistrada={changeClaseRegistrada} key={e.key} title={e.title} periodo={e.periodo.toString()} cupo={e.cupo} cupoMax={e.cupoMax} edadMin={e.edadMin.toString()} edadMax={e.edadMax.toString()} />
+                ))
+            }
+        </Box >
     )
 }
 

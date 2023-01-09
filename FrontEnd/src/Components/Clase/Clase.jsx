@@ -3,7 +3,6 @@ import React from 'react'
 import Box from '@mui/material/Box'
 
 function Clase(props) {
-    console.log(props.cupo / props.cupoMax)
     return (
         <Box sx={{ marginTop: '20px' }}>
             <Box sx={{ bgcolor: 'lightgray', paddingX: '10px', borderTopRightRadius: '10px', borderTopLeftRadius: '10px' }}>
@@ -17,7 +16,7 @@ function Clase(props) {
             </Box>
             <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{ width: '100%' }}>
                 <Button sx={{ width: '50%', borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>Mas Informacion</Button>
-                <Button sx={{ width: '50%', borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>{props.cupo / props.cupoMax >= 1 ? "Lista de Espera" : "Registrarse"}</Button>
+                <Button onClick={() => props.changeClaseRegistrada(props.title)} sx={{ width: '50%', borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>{props.cupo / props.cupoMax >= 1 ? "Lista de Espera" : "Registrarse"}</Button>
             </ButtonGroup>
         </Box>
     )
