@@ -61,8 +61,12 @@ const Profile = ({userID}) =>{
 
     return (
         <Box sx={{p: 1, ml: 1}}>
-            <Box sx={{ fontFamily: 'default', fontSize: 'h3.fontSize', py: 2}}>
+            <Box sx={{ fontFamily: 'default', fontSize: 'h3.fontSize', py: 2, display:'flex', justifyContent: 'space-between'  }}>
                 Mi perfil
+                <Fab color="primary" aria-label="edit" sx={{ display: isEditing ? 'none' : ''}} 
+                        onClick={() => { setIsEditing(!isEditing); }}>
+                    <EditIcon />
+                </Fab>
             </Box>
             <Box sx={{ typography: 'subtitle2', fontWeight: 'light', fontFamily: 'default' }}>
                 Datos Generales
@@ -94,10 +98,6 @@ const Profile = ({userID}) =>{
                 <Box sx={{width: '100%' }}></Box>
 
                 <Box sx={{display:'flex', m: 1, p: 1, justifyContent: 'flex-end', width: '100%'}}>
-                    <Fab color="primary" aria-label="edit" sx={{ display: isEditing ? 'none' : ''}} 
-                    onClick={() => { setIsEditing(!isEditing); }}>
-                        <EditIcon />
-                    </Fab>
                     <Button variant="contained" color='error' 
                         sx={{ display: !isEditing ? 'none' : '', mx: 2}}
                         onClick={() => { setIsEditing(!isEditing); }}>
