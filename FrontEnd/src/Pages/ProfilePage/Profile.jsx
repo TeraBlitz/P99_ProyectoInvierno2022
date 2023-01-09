@@ -1,8 +1,12 @@
-import React, {useState, useEffect} from 'react'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
+import React, {useState, useEffect} from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
+import Fab from '@mui/material/Fab';
+import EditIcon from '@mui/icons-material/Edit';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 import StudentProfile from './StudentProfile';
 
 // Possible function to get user data, this goes in another file
@@ -19,9 +23,14 @@ const fetchUserInfo = () => {
     return userData; 
 };
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 const Profile = ({userID}) =>{
     
-    const [isEditing, setIsEditing] = useState(true)
+    const [open, setOpen] = useState(false);
+    const [isEditing, setIsEditing] = useState(false)
     const [userInfo, setUserInfo] = useState(fetchUserInfo)
 
     useEffect(() => {
@@ -34,14 +43,24 @@ const Profile = ({userID}) =>{
     
     const handleChange = e => setUserInfo(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
 
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
         // Enviar esta informacion a bd
+        e.preventDefault();
         console.log(userInfo);
-        setIsEditing(!isEditing); 
+        setIsEditing(!isEditing);
+        setOpen(true); 
     };
 
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setOpen(false);
+    };
+
+
     return (
-        <Box sx={{border: 1, p: 1, borderRadius: 1}}>
+        <Box sx={{p: 1, ml: 1}}>
             <Box sx={{ fontFamily: 'default', fontSize: 'h3.fontSize', py: 2}}>
                 Mi perfil
             </Box>
@@ -51,44 +70,50 @@ const Profile = ({userID}) =>{
             <Box
                 component="form"
                 sx={{'& .MuiTextField-root': { m: 1, width: '35ch' }, display: 'flex', alignItems: 'center',  flexWrap: 'wrap' }}
-                noValidate
                 autoComplete="off"
+                onSubmit={handleSubmit}
             >
-                <TextField name="matricula" label="Matricula" InputProps={{readOnly: isEditing}} value={userInfo.matricula || ''}  onChange={handleChange}/>
-                <TextField name="nombre" label="Nombre(s)" InputProps={{readOnly: isEditing}} value={userInfo.nombre || ''} onChange={handleChange}/>
-                <TextField name="apellido" label="Apellido(s)" InputProps={{readOnly: isEditing}} value={userInfo.apellido || ''} onChange={handleChange}/>       
-                <TextField name="correo" label="Correo" InputProps={{readOnly: isEditing}} value={userInfo.correo || ''} onChange={handleChange}/> 
+                <TextField name="matricula" label="Matricula" InputProps={{readOnly: true}} value={userInfo.matricula || ''}  onChange={handleChange}/>
+                <TextField name="nombre" label="Nombre(s)" InputProps={{readOnly: !isEditing}} value={userInfo.nombre || ''} onChange={handleChange} required/>
+                <TextField name="apellido" label="Apellido(s)" InputProps={{readOnly: !isEditing}} value={userInfo.apellido || ''} onChange={handleChange} required/>       
+                <TextField name="correo" type="email" label="Correo" InputProps={{readOnly: !isEditing}} value={userInfo.correo || ''} onChange={handleChange} required/> 
                 <TextField
                     name="lada"
-                    label="LADA" sx={{ m: 1, width: '5ch' }} type='number'
+                    label="LADA" type='number'
                     InputProps={{
                         startAdornment: <InputAdornment position="start">+</InputAdornment>,
-                        readOnly: isEditing
+                        readOnly: !isEditing
                     }}
                     value={userInfo.lada || ''}
                     onChange={handleChange}
+                    required
                 />
-                <TextField name="telefono" label="Núm. Telefonico" InputProps={{readOnly: isEditing}} value={userInfo.telefono || ''} onChange={handleChange}/> 
+                <TextField name="telefono" label="Núm. Telefonico" InputProps={{readOnly: !isEditing}} value={userInfo.telefono || ''} onChange={handleChange} required/> 
                 {userInfo.tipo === "Student" ? <StudentProfile isEditing={isEditing} userInfo={userInfo} handleChange={handleChange}/> : null }
- 
+                
+                <Box sx={{width: '100%' }}></Box>
 
+                <Box sx={{display:'flex', m: 1, p: 1, justifyContent: 'flex-end', width: '100%'}}>
+                    <Fab color="primary" aria-label="edit" sx={{ display: isEditing ? 'none' : ''}} 
+                    onClick={() => { setIsEditing(!isEditing); }}>
+                        <EditIcon />
+                    </Fab>
+                    <Button variant="contained" color='error' 
+                        sx={{ display: !isEditing ? 'none' : '', mx: 2}}
+                        onClick={() => { setIsEditing(!isEditing); }}>
+                        Cancelar
+                    </Button>
+                    <Button variant="contained" type='submit' sx={{ display: !isEditing ? 'none' : ''}} size="medium">
+                        Guardar
+                    </Button>
+                    <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
+                        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                            Información actualizada correctamente
+                        </Alert>
+                    </Snackbar>
+                </Box>
             </Box>  
 
-            <Box sx={{display:'flex', m: 1, p: 1}}>
-                <Button variant="contained" sx={{ mr: 1, display: !isEditing ? 'none' : ''}} onClick={() => { setIsEditing(!isEditing); }}>
-                    Editar
-                </Button>
-                <Button variant="contained" type='submit'
-                 sx={{ display: isEditing ? 'none' : '', mr: 1}}
-                 onClick={handleSubmit}>
-                    Guardar
-                </Button>
-                <Button variant="contained" color='error' 
-                    sx={{ display: isEditing ? 'none' : '', mx: 2}}
-                    onClick={() => { setIsEditing(!isEditing); }}>
-                    Cancelar
-                </Button>
-            </Box>
         </Box>
     )
 }
