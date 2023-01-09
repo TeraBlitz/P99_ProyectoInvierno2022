@@ -63,8 +63,8 @@
 
 .button--edit{
     --tw-bg-opacity: 1;
-    background-color: rgb(25, 25, 189);
-    padding-left: 0.3rem/* 8px */;
+    background-color: rgb(64, 64, 224);
+    padding-left: 0.5rem/* 8px */;
     padding-right: 0.5rem/* 8px */;
     padding-top: 0.8rem/* 4px */;
     padding-bottom: 0.3rem/* 4px */;
