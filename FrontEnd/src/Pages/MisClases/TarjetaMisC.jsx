@@ -56,7 +56,7 @@ export default function TarjetaMisC(props){
 
     return(
       <div>
-        <Card sx={{ minWidth: 275, bgcolor: 'grey.200'}}>
+        <Card sx={{ minWidth: 275, bgcolor: 'grey.200' }}>
             <CardContent>
                 <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                 {props.item.claveCurso}
@@ -103,7 +103,7 @@ export default function TarjetaMisC(props){
                 </Modal>
             </CardActions>
             </Card>
-            <div className="spacer"></div>
+
 
     </div>
 

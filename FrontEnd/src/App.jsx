@@ -26,7 +26,7 @@ function App() {
         <Box sx={{ display: 'flex' }}>
             <Sidebar open={open} changeDrawerState={changeDrawerState} changeContent={changeContent} />
             <Box sx={{
-                width: 'calc(100%-240px)',
+                width: 'calc(100% - 240px)',
                 padding: '15px',
                 height: '120vh',
                 position: 'relative',
