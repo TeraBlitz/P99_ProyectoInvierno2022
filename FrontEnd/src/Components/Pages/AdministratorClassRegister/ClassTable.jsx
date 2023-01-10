@@ -1,3 +1,4 @@
+//Importacion de clases
 import React from "react";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
@@ -12,6 +13,7 @@ import {
 } from "@mui/material";
 
 const ClassTable = (props) => {
+  // Metodo de creacion de botones
   function RedMouseOver(event) {
     event.target.style.background = "rgb(248 113 113 / var(--tw-bg-opacity)";
   }
@@ -28,6 +30,8 @@ const ClassTable = (props) => {
     event.target.style.background = "rgb(25, 25, 189)";
   }
   return (
+    // Creacion de la tabla
+    // Parametros: datos, funciones de eliminar y editar
     <TableContainer >
       <Table >
         <TableHead>
