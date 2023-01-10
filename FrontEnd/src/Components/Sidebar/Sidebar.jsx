@@ -17,6 +17,12 @@ function Sidebar(props) {
             content: 'RegistroClasesAlumnos'
         },
 
+        {
+            key: 2,
+            title: 'Profile',
+            content: 'Profile'
+        }
+
     ]
     const listItems = (
         <List sx={{ bgcolor: 'info.main', width: '240px', height: '100vh', spacingY: '10px' }}>

@@ -1,0 +1,24 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend del sistema",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon v1/index.js"
+  },
+  "author": "Jorge Tato",
+  "license": "ISC",
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "ajv-errors": "^3.0.0",
+    "ajv-formats": "^2.1.1",
+    "ajv-i18n": "^4.2.0",
+    "body-parser": "^1.20.1",
+    "express": "^4.18.2",
+    "mongoose": "^6.8.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
