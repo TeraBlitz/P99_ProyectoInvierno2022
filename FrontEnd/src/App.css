@@ -69,12 +69,4 @@
     overflow-y: hidden;
 }
 
-.modal{
-    text-align: center;
-    background-color: white;
-    justify-content: center;
-    position: 'flex';
-}
-.inputMaterial{
-    width: 100%;
-}
+

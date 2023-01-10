@@ -76,9 +76,9 @@ export default function ShowClass() {
   // Estados para editar
   const [modalEditar, setModalEditar] = useState(false);
   const claseInicial = {
-    id: null,
+    id: -1,
     coursename: "",
-    level: null,
+    level: 4,
     teacher: "",
     weeklyfrequency: "",
     maximumcapacity: "",
@@ -156,35 +156,37 @@ export default function ShowClass() {
 
   //-------------------------------Datos de ventanas modales---------------
   const bodyInsertar = (
-    <div className="modal">
-      <h3>Crear una nueva clase</h3>
-      <TextField
+    <div  style={{position: 'absolute', width: 200,height:420, backgroundColor: '#fefefd',top:'50%', left:'50%',transform: 'translate(-50%, -50%)',border: '2px solid #000',margin:'auto'}}>
+      <h3 style={{paddingBottom:'10px'}}>Crear una nueva clase</h3>
+      <TextField style={{paddingBottom:'10px'}}
         label="Curso"
         onChange={(e) => setCoursename(e.target.value)}
         value={coursename}
         autoFocus
       />
       <br />
-      <TextField
+      <TextField style={{paddingBottom:'10px'}}
         label="Nivel"
         onChange={(e) => setLevel(e.target.value)}
         value={level}
+        type="number"
       />
       <br />
-      <TextField
+      <TextField style={{paddingBottom:'10px'}}
         label="Profesor"
         onChange={(e) => setTeacher(e.target.value)}
         value={teacher}
       />
       <br />
-      <TextField
+      <TextField style={{paddingBottom:'10px'}}
         label="Frecuencia Semanal"
         onChange={(e) => setWeeklyfrequency(e.target.value)}
         value={weeklyfrequency}
       />
       <br />
-      <TextField
+      <TextField style={{paddingBottom:'10px'}}
         label="Capacidad"
+        type="number"
         onChange={(e) => setMaximumcapacity(e.target.value)}
         value={maximumcapacity}
       />
@@ -202,41 +204,43 @@ export default function ShowClass() {
   );
 
   const bodyEditar = (
-    <div className="modal">
-      <h3>Actualizar una clase</h3>
-      <TextField
+    <div style={{position: 'absolute', width: 200,height:460, backgroundColor: '#fefefd',top:'50%', left:'50%',transform: 'translate(-50%, -50%)',border: '2px solid #000',margin:'auto'}}>
+      <h3 style={{paddingBottom:'10px'}}>Actualizar una clase</h3>
+      <TextField style={{paddingBottom:'10px'}}
         label="Curso"
-        value={clase && clase.coursename}
+        value={ clase.coursename}
         name="coursename"
         onChange={handleChange}
         autoFocus
       />
       <br />
-      <TextField
+      <TextField style={{paddingBottom:'10px'}}
         label="Nivel"
         type="number"
         name="level"
-        value={clase && clase.level}
+        value={ clase.level}
+        onChange={handleChange}
       />
       <br />
-      <TextField
+      <TextField style={{paddingBottom:'10px'}}
         label="Profesor"
         name="teacher"
-        value={clase && clase.teacher}
+        value={ clase.teacher}
         onChange={handleChange}
       />
       <br />
-      <TextField
+      <TextField style={{paddingBottom:'10px'}}
         label="Frecuencia Semanal"
         name="weeklyfrequency"
-        value={clase && clase.weeklyfrequency}
+        value={ clase.weeklyfrequency}
         onChange={handleChange}
       />
       <br />
-      <TextField
+      <TextField style={{paddingBottom:'10px'}}
         label="Capacidad"
         name="maximumcapacity"
-        value={clase && clase.maximumcapacity}
+        type="number"
+        value={clase.maximumcapacity}
         onChange={handleChange}
       />
       <br />
