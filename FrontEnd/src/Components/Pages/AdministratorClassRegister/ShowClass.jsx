@@ -1,60 +1,78 @@
 import React from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { Button } from "@mui/material";
+import { Button, Box, Modal, TextField,  Paper, } from "@mui/material";
 import { data as information } from "../../../data/datosprueba";
-import CreateClass from "./CreateClass";
+import ClassTable from './ClassTable'
 import { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import EditClass from "./EditClass";
-import ClassTable from "./ClassTable";
 
 export default function ShowClass() {
-  //States
-  //Agregar
+  //Estados de agregar 
   const [data, setData] = useState([]);
-  const [crear, setCrear] = useState(false);
+  const [modalInsertar, setModalInsertar] = useState(false);
+  const [coursename, setCoursename] = useState("");
+  const [level, setLevel] = useState("");
+  const [teacher, setTeacher] = useState("");
+  const [weeklyfrequency, setWeeklyfrequency] = useState("");
+  const [maximumcapacity, setMaximumcapacity] = useState("");
 
-  //Editar
-  const [editar, setEditar] = useState(false);
-  const claseInicial = {
-    id: null,
-    coursename: "",
-    level: null,
-    teacher: "",
-    weeklyfrequency: "",
-    maximumcapacity: "",
-  };
-  const [claseActual, setClaseActual] = useState(claseInicial);
+  const handleClick= (e) => {
+      e.preventDefault();
+      if (
+        coursename !== "" &&
+        level !== "" &&
+        teacher !== "" &&
+        weeklyfrequency !== "" &&
+        maximumcapacity !== ""
+      ) {
+        createClasses({
+          coursename,
+          level,
+          teacher,
+          weeklyfrequency,
+          maximumcapacity,
+        });
+        setCoursename("");
+        setLevel("");
+        setTeacher("");
+        setWeeklyfrequency("");
+        setMaximumcapacity("");
+        abrirCerrarModalInsertar();
+      } else {
+        alert("No se puede enviar, si hay algo vacio");
+      }
+    };
+    const [modalEditar, setModalEditar] = useState(false);
+ 
 
-  const editClasses = (id, clase) => {
-    handleClick2();
-    setClaseActual(clase);
-  };
 
-  const updateClass = (nuevaClase) => {
-    setData(
-      data.map((datos) => (datos.id === claseActual.id ? nuevaClase : datos))
-    );
-    setClaseActual(claseInicial);
-    handleClick2();
-  };
+
+  // const editClasses = (id, clase) => {
+  //   handleClick2();
+  //   setClaseActual(clase);
+  // };
+
+  // const updateClass = (nuevaClase) => {
+  //   setData(
+  //     data.map((datos) => (datos.id === claseActual.id ? nuevaClase : datos))
+  //   );
+  //   setClaseActual(claseInicial);
+  //   handleClick2();
+  // };
 
   //Function  on Click
-  function handleClick() {
-    setCrear((prevState) => !prevState);
+  const abrirCerrarModalInsertar=()=>{
+    setModalInsertar(!modalInsertar);
   }
 
-  function handleClick2() {
-    setEditar((prevState) => !prevState);
-  }
-
+ 
   //Save information
   useEffect(() => {
     setData(information);
   }, []);
 
   function createClasses(datas) {
-    handleClick();
     setData([
       ...data,
       {
@@ -66,6 +84,7 @@ export default function ShowClass() {
         maximumcapacity: datas.maximumcapacity,
       },
     ]);
+    abrirCerrarModalInsertar();
   }
 
   // Delete class
@@ -77,52 +96,75 @@ export default function ShowClass() {
     return (
       <div>
         <Navbar />
-        {crear && (
-          <div>
-            <CreateClass createClasses={createClasses} />
-          </div>
-        )}
         <div className="button--center">
-          <Button variant="contained" color="primary" onClick={handleClick}>
-            {<AddCircleOutlineIcon />}
-          </Button>
+        <Button variant="contained" color="primary"  onClick={abrirCerrarModalInsertar}>
+          {<AddCircleOutlineIcon />} 
+        </Button>
         </div>
         <h1 className="body-admin--title"> No hay clases aun</h1>
       </div>
     );
 
+  const bodyInsertar = (
+    <div className="modal">
+      <h3>Crear una nueva clase</h3>
+      <TextField   label="Curso" onChange={(e) => setCoursename(e.target.value)}
+            value={coursename}
+            autoFocus/>
+      <br />
+      <TextField  label="Nivel"   
+            onChange={(e) => setLevel(e.target.value)}
+            value={level}/>
+      <br />
+      <TextField  label="Profesor" 
+            onChange={(e) => setTeacher(e.target.value)}
+            value={teacher}/>
+      <br />
+      <TextField   label="Frecuencia Semanal" 
+            onChange={(e) => setWeeklyfrequency(e.target.value)}
+            value={weeklyfrequency}/>
+      <br />
+      <TextField  label="Capacidad"  
+            onChange={(e) => setMaximumcapacity(e.target.value)}
+            value={maximumcapacity}/>
+      <br />
+      <br />
+      <div align="right">
+        <Button color="primary" onClick={handleClick}> Insertar</Button>
+        <Button onClick={abrirCerrarModalInsertar}color="error"> Cancelar</Button>
+      </div>
+    </div>
+  );
   return (
     <div >
-      <Navbar />
-      {crear && (
-        <div>
-          <CreateClass createClasses={createClasses} />
-        </div>
-      )}
-
+          <Navbar />
       <div className="button--center">
-        <Button variant="contained" color="primary" onClick={handleClick}>
-          {<AddCircleOutlineIcon />}
+        <Button variant="contained" color="primary"  onClick={abrirCerrarModalInsertar}>
+          {<AddCircleOutlineIcon />} 
         </Button>
       </div>
 
-      <h3 className="body-admin--title"> Panel de modificacion de clases </h3>
+       <h3 className="body-admin--title"> Panel de modificacion de clases </h3>
       <ClassTable
         data={data}
         deleteClass={deleteClass}
-        editClasses={editClasses}
+        //editClasses={editClasses}
       />
-      {/* Solucion temporal en lo que linkamos, no va a hacer asi el resultado final */}
 
-      {editar && (
-        <div>
-          <EditClass
-            claseActual={claseActual}
-            setEditar={setEditar}
-            updateClass={updateClass}
-          />
-        </div>
-      )}
+      {/* createClasses={createClasses} */}
+      <Modal
+     open={modalInsertar}
+     onClose={abrirCerrarModalInsertar}>
+        {bodyInsertar}
+     </Modal>
+
+     <Modal
+     open={modalEditar}
+     onClose={abrirCerrarModalEditar}>
+        {bodyEditar}
+     </Modal>
+
+
     </div>
   );
 }
