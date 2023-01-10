@@ -6,6 +6,7 @@ import { Box } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
 import RegistroClasesAlumno from './Pages/RegistroClasesAlumno/RegistroClasesAlumno'
 import MisClasesProfesor from './Pages/MisClasesProfesor/MisClasesProfesor'
+import Profile from './Pages/ProfilePage/Profile'
 
 function App() {
     const [open, setOpen] = useState(false)
@@ -19,6 +20,7 @@ function App() {
     const PagesToRender = {
         RegistroClasesAlumnos: <RegistroClasesAlumno />,
         MisClasesProfesor: <MisClasesProfesor />
+        Profile: <Profile />,
     }
     return (
         <Box sx={{ display: 'flex' }}>

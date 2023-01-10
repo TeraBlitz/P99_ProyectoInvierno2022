@@ -3,6 +3,7 @@ import Box from '@mui/material/Box'
 import { Drawer, List } from '@mui/material'
 import SidebarButton from '../Sidebar_button/SidebarButton'
 
+
 function Sidebar(props) {
     // agregar un componente a la sidebar : 
     // key: identificador unico (Math.random())
@@ -15,9 +16,15 @@ function Sidebar(props) {
             content: 'RegistroClasesAlumnos'
         },
         {
-            key: 2,
+            key: 3,
             title: 'Mis Clases (Profesor)',
             content: 'MisClasesProfesor'
+        },
+
+        {
+            key: 2,
+            title: 'Profile',
+            content: 'Profile'
         }
 
     ]
