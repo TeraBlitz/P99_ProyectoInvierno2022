@@ -4,6 +4,24 @@ import Grid from '@mui/material/Grid'
 import PanelCard from '../../Components/ControlPanel/PanelCard';
 import PanelInfo from '../../Components/ControlPanel/PanelInfo';
 
+// Possible function to get users, this goes in another file
+const fetchUsers = () => {
+    //const res = await fetch(`http://localhost:3000/users`);
+    //const userData = res.json();
+    // Se reciben todos los usuarios este array se pasa como prop al componente de Alumnos
+    const users = [];
+    return users; 
+};
+
+const fetchTeachers = () => {
+    //const res = await fetch(`http://localhost:3000/teachers`);
+    //const userData = res.json();
+    // Se reciben todos los usuarios este array se pasa como prop al componente de Alumnos
+    const teachers = [];
+    return teachers; 
+};
+
+
 const cards = [
     {
         'id': '1',
@@ -35,34 +53,17 @@ const panelInfoCards = [
     {
         'id': '1',
         'title': 'Estudiantes inscritos',
-        'data': 0,
+        'data': fetchUsers,
         'color': '#0094DF'
     },
     {
         'id': '2',
         'title': 'Profesores inscritos',
-        'data': 0,
+        'data': fetchTeachers,
         'color': '#00B8D6'
     }
 ]
 
-
-// Possible function to get users, this goes in another file
-const fetchUsers = () => {
-    //const res = await fetch(`http://localhost:3000/users`);
-    //const userData = res.json();
-    // Se reciben todos los usuarios este array se pasa como prop al componente de Alumnos
-    const users = [];
-    return users; 
-};
-
-const fetchTeachers = () => {
-    //const res = await fetch(`http://localhost:3000/teachers`);
-    //const userData = res.json();
-    // Se reciben todos los usuarios este array se pasa como prop al componente de Alumnos
-    const teachers = [];
-    return teachers; 
-};
 
 const ControlPanel = () => {
 
