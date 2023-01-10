@@ -7,12 +7,14 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import Modal from '@mui/material/Modal';
 
 
 
 
 
   const theme = createTheme({
+
     palette: {
       primary: {
         light: '#757ce8',
@@ -30,35 +32,28 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
   });
 
 
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '60%',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+
+  };
+
+
 export default function TarjetaMisC(props){
-    // <h4 className="card-text">{props.item.id}</h4>
-    //<h4 className="card-text">{props.item.nombre}</h4>
-    //<h4 className="card-text">{props.item.nivel}</h4>
-    //<h4 className="card-text">{props.item.maestro}</h4>
-    //<h4 className="card-text">{props.item.horario}</h4>
-    //<h4 className="card-text">{props.item.faltas}</h4>
 
-    /*
-<div className="card">
-                    <h4 className="card-header">Id</h4>
-                    <h4 className="card-header">Nombre de clase</h4>
-                    <h4 className="card-header">Nivel</h4>
-                    <h4 className="card-header">Maestro</h4>
-                    <h4 className="card-header">Frecuencia Semanal</h4>
-                    <h4 className="card-header">Faltas</h4>
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
-                    <h4 className="card-text">{props.item.id}</h4>
-                    <h4 className="card-text">{props.item.nombre}</h4>
-                    <h4 className="card-text">{props.item.nivel}</h4>
-                    <h4 className="card-text">{props.item.maestro}</h4>
-                    <h4 className="card-text">{props.item.horario}</h4>
-                    <h4 className="card-text">{props.item.faltas}</h4>
 
-                </div>
 
-    */
-
-    console.log(props)
     return(
 
                 <div>
@@ -81,7 +76,33 @@ export default function TarjetaMisC(props){
                         <h5 className="leyendaFaltas">Faltas: {props.item.faltas}</h5>
                     </CardContent>
                     <CardActions>
-                        <Button size="small">Mas Infromacion</Button>
+                        <Button size="small" onClick={handleOpen}>Mas Infromacion</Button>
+                        <Modal
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Card sx={style}>
+                                <Typography variant="h5" component="div">
+                                    Informacion Adicional
+                                </Typography>
+                                <div className="spacer"></div>
+
+                                <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                                    Maestro: {props.item.maestro}
+                                 </Typography>
+
+                                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                                    Link: {props.item.link}
+                                 </Typography>
+                                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                                    Notas Del Profesor: {props.item.notas}
+                                 </Typography>
+
+
+                            </Card>
+                        </Modal>
                     </CardActions>
                     </Card>
                     <div className="spacer"></div>

@@ -16,7 +16,7 @@ function Sidebar(props) {
         <List sx={{ bgcolor: 'primary.light', width: '240px', height: '100vh' }}>
             <SidebarButton content='Registro Clases' title='Registro Clases' setContent={props.setContent} setOpen={props.setOpen} />
             <SidebarButton content={MisClases} title='Mis Clases' setContent={props.setContent} setOpen={props.setOpen} />
-            <SidebarButton content={Debug} title='prueba' setContent={props.setContent} setOpen={props.setOpen} />
+
 
             <SidebarButton title='Other Component' content='hi everyone' setContent={props.setContent} setOpen={props.setOpen} />
 
