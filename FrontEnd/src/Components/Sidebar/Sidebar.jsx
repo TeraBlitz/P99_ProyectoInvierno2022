@@ -2,7 +2,8 @@ import React from 'react'
 import Box from '@mui/material/Box'
 import { Drawer, List } from '@mui/material'
 import SidebarButton from '../Sidebar_button/SidebarButton'
-import ShowClass from '../Pages/AdministratorClassRegister/ShowClass'
+
+
 
 
 function Sidebar(props) {

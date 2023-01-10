@@ -1,7 +1,7 @@
 //Importancioon de datos
 import React from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { Button, Modal, TextField } from "@mui/material";
+import { Button, Modal, TextField,Box,Typography } from "@mui/material";
 import { data as information } from "../../../data/datosprueba";
 import ClassTable from "./ClassTable";
 import { useState, useEffect } from "react";
@@ -137,27 +137,26 @@ export default function ShowClass() {
   }
 
   //-----------------------------Caso que no haya------------------
-  if (data.length === 0)
-    return (
-      <div>
-        <Navbar />
-        <div className="button--center">
-          <Button
-          style={{cursor:"pointer"}}
-            variant="contained"
-            color="primary"
-            onClick={() => abrirCerrarModalInsertar()}
-          >
-            {<AddCircleOutlineIcon />}Crear
-          </Button>
-        </div>
-        <h1 className="body-admin--title"> No hay clases aun</h1>
-      </div>
-    );
+  // if (data.length === 0)
+  //   return (
+  //     <div>
+  //       <Navbar />
+  //       <div className="button--center">
+  //         <Button
+  //           cursor="pointer"
+  //           color="primary"
+  //           onClick={() => abrirCerrarModalInsertar()}
+  //         >
+  //           {<AddCircleOutlineIcon />}Crear
+  //         </Button>
+  //       </div>
+  //       <h1 className="body-admin--title"> No hay clases aun</h1>
+  //     </div>
+  //   );
 
   //-------------------------------Datos de ventanas modales---------------
   const bodyInsertar = (
-    <div  style={{position: 'absolute', width: 230,height:420, backgroundColor: '#fefefd',top:'50%', left:'50%',transform: 'translate(-50%, -50%)',border: '4px solid  #7382f1',margin:'auto'}}>
+    <div style={{position: 'absolute', width: 200,height:440, backgroundColor: '#fefefd',top:'50%', left:'50%',transform: 'translate(-50%, -50%)',border: '4px solid  #7382f1',margin:'auto',borderRadius:'10px',padding:"8px"}}>
       <h3 style={{paddingBottom:'10px',marginTop:'5px'}} align="center">Crear una nueva clase</h3>
       <TextField style={{paddingBottom:'10px'}}
         label="Curso"
@@ -170,7 +169,6 @@ export default function ShowClass() {
         label="Nivel"
         onChange={(e) => setLevel(e.target.value)}
         value={level}
-        type="number"
       />
       <br />
       <TextField style={{paddingBottom:'10px'}}
@@ -205,7 +203,7 @@ export default function ShowClass() {
   );
 
   const bodyEditar = (
-    <div style={{position: 'absolute', width: 230,height:440, backgroundColor: '#fefefd',top:'50%', left:'50%',transform: 'translate(-50%, -50%)',border: '4px solid  #7382f1',margin:'auto'}}>
+    <div style={{position: 'absolute', width: 200,height:440, backgroundColor: '#fefefd',top:'50%', left:'50%',transform: 'translate(-50%, -50%)',border: '4px solid  #7382f1',margin:'auto',borderRadius:'10px',padding:"8px"}}>
       <h3 style={{paddingBottom:'10px',marginTop:'5px'}} align="center">Actualizar una clase</h3>
       <TextField style={{paddingBottom:'10px'}}
         label="Curso"
@@ -217,7 +215,6 @@ export default function ShowClass() {
       <br />
       <TextField style={{paddingBottom:'10px'}}
         label="Nivel"
-        type="number"
         name="level"
         value={ clase.level}
         onChange={handleChange}
@@ -248,7 +245,7 @@ export default function ShowClass() {
       <br />
       <div align="center">
         <Button color="primary" onClick={handleClick2}>
-          Actualizar
+          Editar
         </Button>
         <Button  onClick={() => abrirCerrarModalEditar()} color="error">
           Cancelar
@@ -258,12 +255,17 @@ export default function ShowClass() {
   );
 
   return (
-    <div >
-      <Navbar />
+    <Box sx={{width: 800,
+    padding: '15px',
+    height: '66.4vh',
+    position: 'relative'}}>
+      
+      <Typography variant = 'h3' component = 'h3' sx={{textAlign:'center',mt:3,mb:3}} > Clases</Typography>
+      {/* <Navbar />
       <div >
       <div className="button--center">
         <Button
-        style={{cursor:"pointer"}}
+        
           variant="contained"
           color="success"
           onClick={() => abrirCerrarModalInsertar()}>
@@ -271,24 +273,21 @@ export default function ShowClass() {
         </Button>
       </div>
 
-      <h3 className="body-admin--title"> Clases </h3>
-      </div>
-
       {/* Paso de parametros a classTable para las funciones*/}
       <ClassTable
         data={data}
-        deleteClass={deleteClass}
-        editClasses={editClasses}
+        // deleteClass={deleteClass}
+        // editClasses={editClasses}
       />
 
       {/* Creacion de modales */}
-      <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
+      {/* <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
         {bodyInsertar}
       </Modal>
 
       <Modal open={modalEditar} onClose={() => abrirCerrarModalEditar()}>
         {bodyEditar}
-      </Modal>
-    </div>
+      </Modal>*/}
+    </Box> 
   );
 }

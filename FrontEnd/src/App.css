@@ -42,13 +42,13 @@
     display: flex;
     margin-top: 10px;
     margin-bottom: 30px;
-    justify-content: center  
+    justify-content: center;
   }
 
 .form--data{
     display: flex;
     margin-top: 10px;
-    justify-content: center  
+    justify-content: center;
 }
 
 .button--delete{
@@ -79,6 +79,4 @@
 
 .MuiTableHead-root .MuiTableRow-root .MuiTableCell-head {
     font-weight: bold;
-    overflow-x: overlay;
-    overflow-y: hidden;
 }
