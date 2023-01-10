@@ -4,6 +4,7 @@ import './App.css'
 import Sidebar from './Components/Sidebar/Sidebar.jsx'
 import { Box } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
+import RegistroClasesAlumnos from './Pages/RegistroClasesAlumnos/RegistroClasesAlumnos'
 import Profile from './Pages/ProfilePage/Profile'
 
 function App() {
@@ -16,7 +17,8 @@ function App() {
         setContent(newContent)
     }
     const PagesToRender = {
-        Profile: <Profile/>,
+        RegistroClasesAlumnos: <RegistroClasesAlumnos />,
+        Profile: <Profile />,
     }
     return (
         <Box sx={{ display: 'flex' }}>

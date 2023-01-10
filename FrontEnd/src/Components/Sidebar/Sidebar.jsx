@@ -2,7 +2,9 @@ import React from 'react'
 import Box from '@mui/material/Box'
 import { Drawer, List } from '@mui/material'
 import SidebarButton from '../Sidebar_button/SidebarButton'
+import RegistroClasesAlumnos from '../../Pages/RegistroClasesAlumnos/RegistroClasesAlumnos'
 import Profile from '../../Pages/ProfilePage/Profile'
+
 
 
 function Sidebar(props) {
@@ -13,7 +15,12 @@ function Sidebar(props) {
     const options = [
         {
             key: 1,
-            title: 'Perfil',
+            title: 'Registro Clases',
+            content: 'RegistroClasesAlumnos'
+        },
+        {
+            key: 2,
+            title: 'Profile',
             content: 'Profile'
         }
 
