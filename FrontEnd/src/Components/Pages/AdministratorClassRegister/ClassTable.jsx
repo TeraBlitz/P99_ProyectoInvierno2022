@@ -9,7 +9,6 @@ import {
   TableCell,
   TableHead,
   TableBody,
-  Paper,
 } from "@mui/material";
 
 const ClassTable = (props) => {
@@ -32,8 +31,8 @@ const ClassTable = (props) => {
   return (
     // Creacion de la tabla
     // Parametros: datos, funciones de eliminar y editar
-    <TableContainer >
-      <Table >
+    <TableContainer sx={{maxHeight:'350px'}}>
+      <Table stickyHeader>
         <TableHead>
           <TableRow>
             <TableCell> Curso </TableCell>

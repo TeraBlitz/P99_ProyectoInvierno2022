@@ -2,7 +2,7 @@
 .nav--logo {
     display: flex;
     align-items: center;
-    background-color: #b0b7ec;
+    background-color: #7382f1;
     height: 50px;
     padding: 30px 25px;
 }
@@ -55,7 +55,7 @@
 
 .button--edit{
     --tw-bg-opacity: 1;
-    background-color: rgb(64, 64, 224);
+    background-color: rgb(25, 25, 189);
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     padding-top: 0.8rem;

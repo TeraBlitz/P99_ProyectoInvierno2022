@@ -156,8 +156,8 @@ export default function ShowClass() {
 
   //-------------------------------Datos de ventanas modales---------------
   const bodyInsertar = (
-    <div  style={{position: 'absolute', width: 200,height:420, backgroundColor: '#fefefd',top:'50%', left:'50%',transform: 'translate(-50%, -50%)',border: '2px solid #000',margin:'auto'}}>
-      <h3 style={{paddingBottom:'10px'}}>Crear una nueva clase</h3>
+    <div  style={{position: 'absolute', width: 230,height:420, backgroundColor: '#fefefd',top:'50%', left:'50%',transform: 'translate(-50%, -50%)',border: '4px solid  #7382f1',margin:'auto'}}>
+      <h3 style={{paddingBottom:'10px',marginTop:'5px'}} align="center">Crear una nueva clase</h3>
       <TextField style={{paddingBottom:'10px'}}
         label="Curso"
         onChange={(e) => setCoursename(e.target.value)}
@@ -204,8 +204,8 @@ export default function ShowClass() {
   );
 
   const bodyEditar = (
-    <div style={{position: 'absolute', width: 200,height:460, backgroundColor: '#fefefd',top:'50%', left:'50%',transform: 'translate(-50%, -50%)',border: '2px solid #000',margin:'auto'}}>
-      <h3 style={{paddingBottom:'10px'}}>Actualizar una clase</h3>
+    <div style={{position: 'absolute', width: 230,height:440, backgroundColor: '#fefefd',top:'50%', left:'50%',transform: 'translate(-50%, -50%)',border: '4px solid  #7382f1',margin:'auto'}}>
+      <h3 style={{paddingBottom:'10px',marginTop:'5px'}} align="center">Actualizar una clase</h3>
       <TextField style={{paddingBottom:'10px'}}
         label="Curso"
         value={ clase.coursename}
@@ -272,7 +272,7 @@ export default function ShowClass() {
       <h3 className="body-admin--title"> Clases </h3>
       </div>
 
-      {/* Paso de parametros a clases */}
+      {/* Paso de parametros a classTable para las funciones*/}
       <ClassTable
         data={data}
         deleteClass={deleteClass}
