@@ -31,7 +31,7 @@ const ClassTable = (props) => {
   return (
     // Creacion de la tabla
     // Parametros: datos, funciones de eliminar y editar
-    <TableContainer sx={{maxHeight:'350px'}}>
+    <TableContainer sx={{maxHeight:'300px'}}>
       <Table stickyHeader>
         <TableHead>
           <TableRow>

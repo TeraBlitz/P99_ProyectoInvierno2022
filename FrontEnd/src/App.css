@@ -79,7 +79,6 @@
 
 .MuiTableHead-root .MuiTableRow-root .MuiTableCell-head {
     font-weight: bold;
-    resize: horizontal;
     overflow-x: overlay;
     overflow-y: hidden;
 }
