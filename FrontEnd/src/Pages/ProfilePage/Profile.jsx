@@ -16,7 +16,7 @@ const fetchUserInfo = () => {
     // Cambiar 'tipo' a un valor distinto a Student para ver el perfil de administrador
     const userData = {
         'nombre': 'Juan', 'apellido': 'Perez Perez', 'matricula': 'A01',
-        'correo': 'juan@gmail.com', 'telefono': '0000000000', 'lada':'52', 'tipo': 'Student',
+        'correo': 'juan@gmail.com', 'telefono': '0000000000', 'lada':'52', 'tipo': 'Admin',
         'curp': 'OEAF771012HMCRGR09', 'fecha_nacimiento':'2005-07-22','escolaridad': 'Secundaria', 'ultima_escuela':'CBTIS',
         'estado':'Nuevo Leon', 'ciudad':'Monterrey', 'colonia': 'Centro', 'tutor': 'Carlos Perez' 
     };
@@ -29,7 +29,8 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 const Profile = ({userID}) =>{
     
-    const [open, setOpen] = useState(false);
+    const [successOpen, setSuccessOpen] = useState(false);
+    const [errorOpen, setErrorOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false)
     const [userInfo, setUserInfo] = useState(fetchUserInfo)
 
@@ -48,14 +49,18 @@ const Profile = ({userID}) =>{
         e.preventDefault();
         console.log(userInfo);
         setIsEditing(!isEditing);
-        setOpen(true); 
+        // Validación para que ver si se establecio la conexión de manera exitosa
+        // y se actualizaron los datos 
+        const success = false;
+        success ? setSuccessOpen(true) : setErrorOpen(true);
     };
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
           return;
         }
-        setOpen(false);
+        setSuccessOpen(false);
+        setErrorOpen(false);
     };
 
 
@@ -106,9 +111,14 @@ const Profile = ({userID}) =>{
                     <Button variant="contained" type='submit' sx={{ display: !isEditing ? 'none' : ''}} size="medium">
                         Guardar
                     </Button>
-                    <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
+                    <Snackbar open={successOpen} autoHideDuration={4000} onClose={handleClose}>
                         <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                            Información actualizada correctamente
+                            Información actualizada correctamente.
+                        </Alert>
+                    </Snackbar>
+                    <Snackbar open={errorOpen} autoHideDuration={4000} onClose={handleClose}>
+                        <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+                            Se produjo un error al actualizar la información.
                         </Alert>
                     </Snackbar>
                 </Box>

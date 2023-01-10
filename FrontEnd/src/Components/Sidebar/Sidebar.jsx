@@ -5,7 +5,6 @@ import SidebarButton from '../Sidebar_button/SidebarButton'
 import Profile from '../../Pages/ProfilePage/Profile'
 
 
-
 function Sidebar(props) {
     // agregar un componente a la sidebar : 
     // key: identificador unico (Math.random())
@@ -13,7 +12,7 @@ function Sidebar(props) {
     // content: nombre del componente renderizado en PagesToRender (app.jsx)
     const options = [
         {
-            key: Math.random(),
+            key: 1,
             title: 'Perfil',
             content: 'Profile'
         }
