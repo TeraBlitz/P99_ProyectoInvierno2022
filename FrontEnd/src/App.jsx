@@ -4,12 +4,8 @@ import './App.css'
 import Sidebar from './Components/Sidebar/Sidebar.jsx'
 import { Box } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
-<<<<<<< HEAD
-//import RegistroClasesAlumnos from './Pages/RegistroClasesAlumnos/RegistroClasesAlumnos'
-=======
 import RegistroClasesAlumno from './Pages/RegistroClasesAlumno/RegistroClasesAlumno'
 import MisClasesProfesor from './Pages/MisClasesProfesor/MisClasesProfesor'
->>>>>>> eba415b230d8d3525b360512320a02f2d3310720
 import Profile from './Pages/ProfilePage/Profile'
 import ControlPanel from './Pages/ControlPanel/ControlPanel'
 
@@ -23,12 +19,8 @@ function App() {
         setContent(newContent)
     }
     const PagesToRender = {
-<<<<<<< HEAD
-        //RegistroClasesAlumnos: <RegistroClasesAlumnos />,
-=======
         RegistroClasesAlumnos: <RegistroClasesAlumno />,
-        MisClasesProfesor: <MisClasesProfesor />
->>>>>>> eba415b230d8d3525b360512320a02f2d3310720
+        MisClasesProfesor: <MisClasesProfesor />,
         Profile: <Profile />,
         ControlPanel: <ControlPanel/>
     }
