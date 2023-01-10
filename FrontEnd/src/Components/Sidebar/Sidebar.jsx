@@ -2,9 +2,9 @@ import React from 'react'
 import Box from '@mui/material/Box'
 import { Drawer, List } from '@mui/material'
 import SidebarButton from '../Sidebar_button/SidebarButton'
-import RegistroClasesAlumnos from '../../Pages/RegistroClasesAlumnos/RegistroClasesAlumnos'
+//import RegistroClasesAlumnos from '../../Pages/RegistroClasesAlumnos/RegistroClasesAlumnos'
 import Profile from '../../Pages/ProfilePage/Profile'
-
+import ControlPanel from '../../Pages/ControlPanel/ControlPanel'
 
 
 function Sidebar(props) {
@@ -13,15 +13,20 @@ function Sidebar(props) {
     // title: como va a aparecer en el boton de la sidebar
     // content: nombre del componente renderizado en PagesToRender (app.jsx)
     const options = [
-        {
+       /* {
             key: 1,
             title: 'Registro Clases',
             content: 'RegistroClasesAlumnos'
-        },
+        },*/
         {
             key: 2,
             title: 'Profile',
             content: 'Profile'
+        },
+        {
+            key: 3,
+            title: 'Panel de control',
+            content: 'ControlPanel'
         }
 
     ]
