@@ -19,7 +19,7 @@ function App() {
     }
     const PagesToRender = {
         RegistroClasesAlumnos: <RegistroClasesAlumno />,
-        MisClasesProfesor: <MisClasesProfesor />
+        MisClasesProfesor: <MisClasesProfesor />,
         Profile: <Profile />,
     }
     return (
