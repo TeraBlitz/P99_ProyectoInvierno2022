@@ -1,14 +1,11 @@
 const express = require('express')
-const connection = require('./connection')
+// const connection = require('./connection')
 const bodyParser = require('body-parser')
 const app = express()
 const port = 3000
 
 // Rutas de los modelos
-const user = require('./routes/users')
-
-// Middlewares
-const loggedMW = require('./middlewares/logged')
+const user = require('./v1/routes/users')
 
 // Rutas
 app.get('/v1', (req, res)=>{
