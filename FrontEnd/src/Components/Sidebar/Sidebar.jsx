@@ -10,11 +10,11 @@ function Sidebar(props) {
     // title: como va a aparecer en el boton de la sidebar
     // content: nombre del componente renderizado en PagesToRender (app.jsx)
     const options = [
-       /* {
+        {
             key: 1,
             title: 'Registro Clases',
             content: 'RegistroClasesAlumnos'
-        },*/
+        },
         {
             key: 3,
             title: 'Mis Clases (Profesor)',
@@ -27,7 +27,7 @@ function Sidebar(props) {
             content: 'Profile'
         },
         {
-            key: 3,
+            key: 4,
             title: 'Panel de control',
             content: 'ControlPanel'
         }

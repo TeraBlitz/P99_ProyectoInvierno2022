@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid'
-import Card from '@mui/material/Card';
-import Paper from '@mui/material/Paper';
-import CardActionArea from '@mui/material/CardActionArea';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
+import PanelCard from '../../Components/ControlPanel/PanelCard';
+import PanelInfo from '../../Components/ControlPanel/PanelInfo';
 
 const cards = [
     {
@@ -35,6 +31,22 @@ const cards = [
     }
 ]
 
+const panelInfoCards = [
+    {
+        'id': '1',
+        'title': 'Estudiantes inscritos',
+        'data': 0,
+        'color': '#0094DF'
+    },
+    {
+        'id': '2',
+        'title': 'Profesores inscritos',
+        'data': 0,
+        'color': '#00B8D6'
+    }
+]
+
+
 // Possible function to get users, this goes in another file
 const fetchUsers = () => {
     //const res = await fetch(`http://localhost:3000/users`);
@@ -54,10 +66,8 @@ const fetchTeachers = () => {
 
 const ControlPanel = () => {
 
-
     const [users, setUsersInfo] = useState(fetchUsers);
     const [teachers, setTeachersInfo] = useState(fetchTeachers);
-
 
     useEffect(() => {
         const getUsersInfo = () =>{
@@ -80,47 +90,14 @@ const ControlPanel = () => {
                 Panel de control
             </Box>
             <Grid container spacing={2} sx={{my: 2}}>
-                <Grid item sm={12} md={6}>
-                    <Card sx={{ minWidth: 275 }} sm={12} md={6}>
-                        <CardContent sx={{backgroundColor: '#0094DF'}}>
-                            <Typography variant="h6" sx={{ color: 'white', fontWeight: 700, mb: 0 }}>
-                            Estudiantes inscritos
-                            </Typography>
-                            <Typography variant="h4" sx={{ color: 'white'}}>{users?.length ?? 0}</Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-                <Grid item sm={12} md={6}>
-                    <Card sx={{ minWidth: 275 }} >
-                        <CardContent sx={{backgroundColor: '#00B8D6'}}>
-                            <Typography variant="h6" sx={{ color: 'white', fontWeight: 700, mb: 0 }}>
-                            Profesores inscritos
-                            </Typography>
-                            <Typography variant="h4" sx={{ color: 'white'}}>{teachers?.length ?? 0}</Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-            </Grid>
-            <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2}} >
+                {panelInfoCards.map(infoCard =>
+                    <Grid item sm={12} md={6} key={infoCard.id}>
+                        <PanelInfo title={infoCard.title} data={infoCard.data} bgColor={infoCard.color} />
+                    </Grid>
+                )}
                 {cards.map(card =>
-                    <Grid item sm={12} md={6} lg={6} key={card.id}>
-                        <Card>
-                            <CardActionArea>
-                                <CardMedia
-                                    component="img"
-                                    height="100"
-                                    sx={{ backgroundColor: card.color }}
-                                />
-                                <CardContent>
-                                    <Typography gutterBottom variant="h5" component="div">
-                                        {card.title}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {card.body}
-                                    </Typography>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
+                    <Grid item sm={12} md={6} key={card.id}>
+                        <PanelCard title={card.title} body={card.body} bgColor={card.color} />
                     </Grid>
                 )}
             </Grid>
