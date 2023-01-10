@@ -143,6 +143,7 @@ export default function ShowClass() {
         <Navbar />
         <div className="button--center">
           <Button
+          style={{cursor:"pointer"}}
             variant="contained"
             color="primary"
             onClick={() => abrirCerrarModalInsertar()}
@@ -262,6 +263,7 @@ export default function ShowClass() {
       <div >
       <div className="button--center">
         <Button
+        style={{cursor:"pointer"}}
           variant="contained"
           color="success"
           onClick={() => abrirCerrarModalInsertar()}>

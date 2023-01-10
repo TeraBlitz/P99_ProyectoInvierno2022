@@ -54,6 +54,7 @@ const ClassTable = (props) => {
               <TableCell>{datos.maximumcapacity}</TableCell>
               <TableCell>
                 <i
+                style={{cursor:"pointer"}}
                   className="button--edit"
                   onMouseOver={BlueMouseOver}
                   onMouseOut={BlueMouseOut}
@@ -64,6 +65,7 @@ const ClassTable = (props) => {
               </TableCell>
               <TableCell>
                 <i
+                style={{cursor:"pointer"}}
                   className="button--delete"
                   onMouseOver={RedMouseOver}
                   onMouseOut={RedMouseOut}
