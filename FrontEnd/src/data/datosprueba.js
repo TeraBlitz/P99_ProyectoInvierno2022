@@ -49,4 +49,5 @@ export const data = [
     weeklyfrequency: "6 horas",
     maximumcapacity: 10,
   },
+  
 ];

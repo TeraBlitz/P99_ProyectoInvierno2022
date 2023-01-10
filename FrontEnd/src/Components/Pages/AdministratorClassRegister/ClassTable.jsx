@@ -1,5 +1,7 @@
 //Importacion de clases
 import React from "react";
+import { grey } from '@mui/material/colors';
+import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import {
@@ -10,7 +12,6 @@ import {
   TableHead,
   TableBody,
 } from "@mui/material";
-import { DataGrid} from '@mui/x-data-grid';
 import { useMemo } from "react";
 
 
@@ -21,7 +22,8 @@ const ClassTable = (props) => {
     {field:'level',headerName:'Nivel',width:150},
     {field:'teacher',headerName:'Profesor',width:140,sortable:false},
     {field:'weeklyfrequency',headerName:'Frecuencia',width:100},
-    {field:'maximumcapacity',headerName:'Capacidad',width:80}
+    {field:'maximumcapacity',headerName:'Capacidad',width:80},
+    
   ],[]);
   // Metodo de creacion de botones
   // function RedMouseOver(event) {
@@ -40,14 +42,24 @@ const ClassTable = (props) => {
   //   event.target.style.background = "rgb(25, 25, 189)";
   // }
   return (
-
+    
     // Creacion de la tabla
     // Parametros: datos, funciones de eliminar y editar
     <DataGrid
       columns={columns}
       rows={props.data}
-      pageSize={5}
       
+      getRowSpacing={(params) => ({
+        top: params.isFirstVisible ? 0 : 5,
+        bottom: params.isLastVisible ? 0 : 5,
+      })}
+
+      sx={{
+        [`& .${gridClasses.row}`]: {
+          bgcolor: (theme) =>
+            theme.palette.mode === 'light' ? grey[200] : grey[900],
+        },
+      }}
        />
     // <TableContainer >
     //   <Table >

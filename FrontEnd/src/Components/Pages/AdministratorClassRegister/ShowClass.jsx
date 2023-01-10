@@ -3,9 +3,10 @@ import React from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { Button, Modal, TextField,Box,Typography } from "@mui/material";
 import { data as information } from "../../../data/datosprueba";
-import ClassTable from "./ClassTable";
 import { useState, useEffect } from "react";
-import Navbar from "./Navbar";
+import { grey } from '@mui/material/colors';
+import { DataGrid, gridClasses } from '@mui/x-data-grid';
+import { useMemo } from "react";
 
 export default function ShowClass() {
   //--------------------------------------------Agregar----------------
@@ -200,6 +201,8 @@ export default function ShowClass() {
         </Button>
       </div>
     </div>
+
+    // Show
   );
 
   const bodyEditar = (
@@ -252,39 +255,64 @@ export default function ShowClass() {
         </Button>
       </div>
     </div>
+    
   );
+  //---------------------------------------Show--------------
+  const [pageSize,SetPageSize] = useState(5)
 
+  const columns = useMemo(()=>[
+    {field:'id',headerName:'Clave',width:80},
+    {field:'coursename',headerName:'Curso',width:130},
+    {field:'level',headerName:'Nivel',width:150},
+    {field:'teacher',headerName:'Profesor',width:140,sortable:false},
+    {field:'weeklyfrequency',headerName:'Frecuencia',width:100},
+    {field:'maximumcapacity',headerName:'Capacidad',width:80},
+    
+  ],[]);
   return (
     <Box sx={{width: 800,
     padding: '15px',
-    height: '66.4vh',
+    height: 400,
     position: 'relative'}}>
       
-      <Typography variant = 'h3' component = 'h3' sx={{textAlign:'center',mt:3,mb:3}} > Clases</Typography>
-      {/* <Navbar />
-      <div >
-      <div className="button--center">
-        <Button
-        
+      <Typography variant = 'h3' component = 'h3' sx={{textAlign:'left',mt:3,mb:3}} > Clases <Button 
           variant="contained"
           color="success"
           onClick={() => abrirCerrarModalInsertar()}>
           {<AddCircleOutlineIcon />} Crear
-        </Button>
-      </div>
+        </Button></Typography>
+      <DataGrid
+      columns={columns}
+      rows={data}
+      getRowId={(row) => row.id}
+      rowsPerPageOptions={[5,10]}
+      pageSize={pageSize}
+      onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+      
+      getRowSpacing={(params) => ({
+        top: params.isFirstVisible ? 0 : 5,
+        bottom: params.isLastVisible ? 0 : 5,
+      })}
 
-      {/* Paso de parametros a classTable para las funciones*/}
-      <ClassTable
-        data={data}
-        // deleteClass={deleteClass}
-        // editClasses={editClasses}
-      />
+      sx={{
+        [`& .${gridClasses.row}`]: {
+          bgcolor: (theme) =>
+            theme.palette.mode === 'light' ? grey[200] : grey[900],
+        },
+      }}
+       />
+    
+   
+        
+     
+
+      
 
       {/* Creacion de modales */}
-      {/* <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
+       <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
         {bodyInsertar}
       </Modal>
-
+{/*
       <Modal open={modalEditar} onClose={() => abrirCerrarModalEditar()}>
         {bodyEditar}
       </Modal>*/}
