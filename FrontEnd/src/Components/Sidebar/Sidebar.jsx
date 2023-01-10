@@ -12,10 +12,10 @@ function Sidebar(props) {
     // content: nombre del componente renderizado en PagesToRender (app.jsx)
     const options = [
         {
-            key: Math.random(),
+            key: 1,
             title: 'Registro Clases',
             content: 'RegistroClasesAlumnos'
-        }
+        },
 
     ]
     const listItems = (
