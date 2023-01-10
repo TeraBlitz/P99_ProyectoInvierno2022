@@ -92,6 +92,10 @@ export default function TarjetaMisC(props){
                           </Typography>
 
                           <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                            Contacto: {props.item.contacto}
+                          </Typography>
+
+                          <Typography sx={{ mb: 1.5 }} color="text.secondary">
                             Link: {props.item.link}
                           </Typography>
                           <Typography sx={{ mb: 1.5 }} color="text.secondary">
