@@ -4,8 +4,6 @@ import data from './DataClases'
 import TarjetaMisC from './TarjetaMisC'
 
 
-
-
 export default function MisClases(){
 
     const cardData = data.map(item =>{
