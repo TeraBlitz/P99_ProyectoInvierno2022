@@ -10,7 +10,6 @@ import Profile from './Pages/ProfilePage/Profile'
 import ControlPanel from './Pages/ControlPanel/ControlPanel'
 
 
-
 import ShowClass from "./Components/Pages/AdministratorClassRegister/ShowClass";
 
 function App() {
@@ -28,21 +27,20 @@ function App() {
         Profile: <Profile />,
         ControlPanel: <ControlPanel/>,
 
-        
 
         Registro: <ShowClass />,
     }
-
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box id="main" sx={{ display: 'flex'}}>
             <Sidebar open={open} changeDrawerState={changeDrawerState} changeContent={changeContent} />
             <Box sx={{
                 width: '100%',
-                padding: '15px',
                 position: 'relative',
+                height: 'auto',
+                overflow: 'hidden'
             }}>
+                <IconButton sx={{ bgcolor: 'primary.light', height: 'fit-content', borderRadius: 1, display: { xs: 'block', sm: 'none' }, position: 'fixed', zIndex: 1000, top: '3px', left: '3px' }} onClick={() => setOpen(!open)}>
 
-                <IconButton sx={{ bgcolor: 'primary.light', height: 'fit-content', borderRadius: 1, display: { xs: 'block', sm: 'none' }, position: 'Fixed', top: '3px' }} onClick={() => setOpen(!open)}>
                     <MenuIcon />
                 </IconButton>
                 {PagesToRender[content]}
@@ -51,3 +49,4 @@ function App() {
     )
 }
 
+export default App

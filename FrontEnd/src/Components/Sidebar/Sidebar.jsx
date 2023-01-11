@@ -31,13 +31,6 @@ function Sidebar(props) {
             title: 'Panel de control',
             content: 'ControlPanel'
         },
-        
-       
-
-
-
-
-
 
 
 
@@ -51,6 +44,7 @@ function Sidebar(props) {
             title: 'Registro clases de Administrador',
             content: 'Registro'
         },
+
 
     ]
     const listItems = (
