@@ -10,7 +10,7 @@ function MisClasesProfesor() {
         { field: 'id', headerName: 'ID', width: 90 },
         {
             field: 'title',
-            headerName: 'Clase',
+            headerName: 'Curso',
             width: 150,
             editable: false,
         },
