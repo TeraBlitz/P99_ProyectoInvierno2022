@@ -1,13 +1,15 @@
 //Importancioon de datos
 import React from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { Button, Modal, TextField,Box,Typography } from "@mui/material";
+import { Button, Modal, TextField, Box,Typography } from "@mui/material";
 import { data as information } from "../../../data/datosprueba";
 import { useState, useEffect } from "react";
 import { grey } from '@mui/material/colors';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { useMemo } from "react";
+import Actions from "./Actions";
 
+import IdcellRender from "./IdcellRender";
 export default function ShowClass() {
   //--------------------------------------------Agregar----------------
   //Estados de agregar
@@ -140,19 +142,14 @@ export default function ShowClass() {
   //-----------------------------Caso que no haya------------------
   // if (data.length === 0)
   //   return (
-  //     <div>
-  //       <Navbar />
-  //       <div className="button--center">
-  //         <Button
-  //           cursor="pointer"
-  //           color="primary"
-  //           onClick={() => abrirCerrarModalInsertar()}
-  //         >
-  //           {<AddCircleOutlineIcon />}Crear
-  //         </Button>
-  //       </div>
-  //       <h1 className="body-admin--title"> No hay clases aun</h1>
-  //     </div>
+  //     <Box>
+  //        <Typography variant = 'h3' component = 'h3' sx={{textAlign:'left',mt:3,mb:3}} > No hayClases <Button 
+  //         variant="contained"
+  //         color="success"
+  //         onClick={() => abrirCerrarModalInsertar()}>
+  //         {<AddCircleOutlineIcon />} Crear
+  //       </Button></Typography>
+  //     </Box>
   //   );
 
   //-------------------------------Datos de ventanas modales---------------
@@ -258,21 +255,29 @@ export default function ShowClass() {
     
   );
   //---------------------------------------Show--------------
-  const [pageSize,SetPageSize] = useState(5)
+  const [pageSize,SetPageSize] = useState(5);
 
+ 
   const columns = useMemo(()=>[
-    {field:'id',headerName:'Clave',width:80},
+    {field:'id',headerName:'Clave',width:80,cellRender:IdcellRender},
     {field:'coursename',headerName:'Curso',width:130},
     {field:'level',headerName:'Nivel',width:150},
     {field:'teacher',headerName:'Profesor',width:140,sortable:false},
-    {field:'weeklyfrequency',headerName:'Frecuencia',width:100},
-    {field:'maximumcapacity',headerName:'Capacidad',width:80},
+    {field:'weeklyfrequency',headerName:'Frecuencia',width:80},
+    {field:'maximumcapacity',headerName:'Capacidad',width:70},
+    {
+      field: 'actions',
+      headerName: 'Acciones',
+      type: 'actions',
+      width: 150,
+      renderCell: (params) => <Actions {...{ params,deleteClass,editClasses }} />,
+    }
     
-  ],[]);
+  ],[data.id]);
   return (
     <Box sx={{width: 800,
     padding: '15px',
-    height: 400,
+    height: 420,
     position: 'relative'}}>
       
       <Typography variant = 'h3' component = 'h3' sx={{textAlign:'left',mt:3,mb:3}} > Clases <Button 
@@ -284,10 +289,12 @@ export default function ShowClass() {
       <DataGrid
       columns={columns}
       rows={data}
+      checkboxSelection 
+      onSelectionModelChange={id => console.log(id)}
       getRowId={(row) => row.id}
       rowsPerPageOptions={[5,10]}
       pageSize={pageSize}
-      onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+      onPageSizeChange={(newPageSize) => SetPageSize(newPageSize)}
       
       getRowSpacing={(params) => ({
         top: params.isFirstVisible ? 0 : 5,
@@ -301,21 +308,16 @@ export default function ShowClass() {
         },
       }}
        />
-    
-   
-        
-     
-
-      
 
       {/* Creacion de modales */}
        <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
         {bodyInsertar}
       </Modal>
-{/*
+
       <Modal open={modalEditar} onClose={() => abrirCerrarModalEditar()}>
         {bodyEditar}
-      </Modal>*/}
+      </Modal>
+
     </Box> 
   );
 }
