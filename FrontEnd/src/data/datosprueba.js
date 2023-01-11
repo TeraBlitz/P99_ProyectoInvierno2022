@@ -4,7 +4,7 @@ export const data = [
   {
     id: 0,
     coursename: "Japones I",
-    level: "de  8 a 12 años",
+    level: "de 8 a 12 años",
     teacher: "Paulina Mijares",
     weeklyfrequency: "2 horas",
     maximumcapacity: 15,
@@ -20,7 +20,7 @@ export const data = [
   {
     id: 2,
     coursename: "Nahualt",
-    level: "de  13 a 17 años",
+    level: "de 13 a 17 años",
     teacher: "Moises Rodriguez",
     weeklyfrequency: "3 horas",
     maximumcapacity: 15,
