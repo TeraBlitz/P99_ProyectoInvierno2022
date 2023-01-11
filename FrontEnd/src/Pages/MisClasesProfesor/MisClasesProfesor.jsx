@@ -27,7 +27,7 @@ function MisClasesProfesor() {
         }
     ];
     const [data, setData] = useState([
-        {
+            {
             id: 1,
             key: 'TS12i23',
             title: 'clase 1',
@@ -119,22 +119,26 @@ function MisClasesProfesor() {
             dificultad: 'intermedio'
         },
     ])
-    return (
 
-        <Box sx={{ height: "100vh", padding: '0', width: '100%' , }}>
+    return (
+        <Box sx={{ height: "100vh", padding: '0', width: '100%', }}>
 
             <Box id="CardView" sx={{ display: { xs: 'flex', sm: "none" }, width: '100%', height: 'auto', flexDirection: 'column', alignItems: 'center' }}>
                 {data.map(e => (
                     <ClassCard key={e.id} title={e.title} id={e.key} periodo={e.periodo} dificultad={e.dificultad} />
                 ))}
             </Box>
-            <div style={{ width: '100%', display: 'flex', height: '100vh', justifyContent: 'space-around' , alignItems:'center', flexWrap:'wrap'}}>
+            <div style={{ width: '100%', display: 'flex', height: '100vh', justifyContent: 'space-around', alignItems: 'center', flexWrap: 'wrap' }}>
+                <Box sx={{ width: { sm: '50%', lg: '30%' }, height: { sm: '30%', lg: '40%' }, bgcolor: 'primary.main', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between'  , borderRadius:'5px'}}>
+                    <Typography variant="h4">filtros</Typography>
+                    <Box sx={{display:'flex' , justifyContent:'space-between' , flexDirection:'column' , alignItems:'center' , height:'70%' , marginBottom:'10px' }}>
 
-                <Box sx={{ width:{sm:'50%' ,lg:'30%' },  height: {sm:'30%', lg:'40%'}, bgcolor:'primary.main'}}>
-                    <Typography>filtros</Typography>
-                    <TextField variant="filled" label="Buscar por nombre" sx={{bgcolor:'#DDD',borderRadius:'3px'}}/>
+                        <TextField variant="filled" label="Buscar por nombre" sx={{ bgcolor: '#DDD', borderRadius: '3px', height: 'fit-content' }} size="small" />
+                        <TextField variant="filled" label="Buscar por dificultad" sx={{ bgcolor: '#DDD', borderRadius: '3px', height: 'fit-content' }} size="small" />
+                        <TextField variant="filled" label="Buscar por  periodo" sx={{ bgcolor: '#DDD', borderRadius: '3px', height: 'fit-content' }} size="small" />
+                    </Box>
                 </Box>
-                <Box sx={{ display: { xs: 'none', sm: "block" }, width: {lg:'60%', sm:'90%'}, height:{lg: '95%', sm:'60%'}, maxHeight: '100vh', }}>
+                <Box sx={{ display: { xs: 'none', sm: "block" }, width: { lg: '60%', sm: '90%' }, height: { lg: '95%', sm: '60%' }, maxHeight: '100vh', }}>
                     <DataGrid rows={data} columns={columns} disableSelectionOnClick={true} />
 
                 </Box>
