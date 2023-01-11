@@ -1,4 +1,5 @@
 import React from "react";
+import datos from "./DataAlumnos"
 
 
 import Card from '@mui/material/Card';
@@ -40,12 +41,7 @@ import Paper from '@mui/material/Paper';
     return { nombre,contacto };
   }
 
-const rows = [
-  createData('Juan Alberto', 'contacto@gmail.com'),
-  createData('Juan martinez', 'contacto@gmail.com'),
-  createData('Juan treviño', 'contacto@gmail.com'),
-  createData('Juan rodriguez', 'contacto@gmail.com'),
-];
+
 
 // Funcion que llama a la lista de alumnos
 function ChildModal() {
@@ -66,7 +62,7 @@ function ChildModal() {
   return (
 
     <React.Fragment>
-      <Button onClick={handleOpen}>Open Child Modal</Button>
+      <Button onClick={handleOpen}>Lista de estudiantes</Button>
       <Modal
         hideBackdrop
         open={open}
@@ -92,16 +88,16 @@ function ChildModal() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
+                {datos.map((item) => (
                   <TableRow
-                    key={row.name}
+                    key={item.id}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
                     <TableCell component="th" scope="row" align="center">
-                      {row.nombre}
+                      {item.nombre}
                     </TableCell>
 
-                    <TableCell align="center">{row.contacto}</TableCell>
+                    <TableCell align="center">{item.contacto}</TableCell>
 
                   </TableRow>
                 ))}
@@ -110,7 +106,7 @@ function ChildModal() {
           </TableContainer>
 
           {/* Boton para cerrar el child modal */}
-          <Button onClick={handleClose}>Close Child Modal</Button>
+          <Button onClick={handleClose}>Regresar</Button>
 
         </Card>
 

@@ -38,7 +38,7 @@ export default [
         notas: 'Tengan a la mano su libro de texto y un block de notas para los trabajos en clase'
     },
     {
-        id: 3298173,
+        id: 1926912,
         claveCurso: 'PI-Algerba',
         nombre: 'Algerba',
         nivel : 'avanzada',
@@ -51,7 +51,7 @@ export default [
     }
     ,
     {
-        id: 3298173,
+        id: 473979,
         claveCurso: 'PI-Algerba',
         nombre: 'Algerba',
         nivel : 'avanzada',
@@ -64,7 +64,7 @@ export default [
     }
     ,
     {
-        id: 3298173,
+        id: 2939943,
         claveCurso: 'PI-Algerba',
         nombre: 'Algerba',
         nivel : 'avanzada',
@@ -77,7 +77,7 @@ export default [
     }
     ,
     {
-        id: 3298173,
+        id: 4938923,
         claveCurso: 'PI-Algerba',
         nombre: 'Algerba',
         nivel : 'avanzada',
@@ -90,7 +90,7 @@ export default [
     }
     ,
     {
-        id: 3298173,
+        id: 37849374,
         claveCurso: 'PI-Algerba',
         nombre: 'Algerba',
         nivel : 'avanzada',
@@ -103,7 +103,7 @@ export default [
     }
     ,
     {
-        id: 3298173,
+        id: 340897230,
         claveCurso: 'PI-Algerba',
         nombre: 'Algerba',
         nivel : 'avanzada',
@@ -116,7 +116,7 @@ export default [
     }
     ,
     {
-        id: 3298173,
+        id: 1290830,
         claveCurso: 'PI-Algerba',
         nombre: 'Algerba',
         nivel : 'avanzada',
@@ -129,7 +129,7 @@ export default [
     }
     ,
     {
-        id: 3298173,
+        id: 46397692,
         claveCurso: 'PI-Algerba',
         nombre: 'Algerba',
         nivel : 'avanzada',
@@ -142,7 +142,7 @@ export default [
     }
     ,
     {
-        id: 3298173,
+        id: 918389749,
         claveCurso: 'PI-Algerba',
         nombre: 'Algerba',
         nivel : 'avanzada',
