@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
-const SignIn = () => {
+const SignIn = ({isSignedIn, handleSignIn}) => {
 
     const [checked, setChecked] = useState([true, false]);
     const [userCredentials, setUserCredentials] = useState({});
@@ -21,19 +21,13 @@ const SignIn = () => {
         setChecked([e.target.checked, e.target.checked]);
     };
     
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Mandar y validad esta informacion 
-        console.log(userCredentials);
-    }
-    
   return (    
     <Container   
     sx={{ height: '100vh', display: 'flex',
     alignContent: 'center', justifyContent: 'center', flexWrap: 'wrap'}}
     >
         <Card sx={{px: 3, py:2, backgroundColor: '#3A4856', borderRadius: 2}}>
-            <Box component='form' sx={{mx: 3, display: 'flex', flexDirection: 'column'}} onSubmit={handleSubmit}>
+            <Box component='form' sx={{mx: 3, display: 'flex', flexDirection: 'column'}} onSubmit={handleSignIn}>
                 <Typography component='h1' variant="h4" sx={{color: '#E6F4F1', mb: 1, fontWeight: '400', textAlign: 'center'}}>
                     Iniciar Sesión
                 </Typography>
