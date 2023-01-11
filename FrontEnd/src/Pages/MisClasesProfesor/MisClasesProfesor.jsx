@@ -147,7 +147,7 @@ function MisClasesProfesor() {
                             component="div"
                             sx={{ textAlign: "center", fontFamily: 'arial' }}
                         >
-                            Filtros
+                            Busqueda
                         </Typography>
                         <TextField
                             style={{ paddingBottom: "15px", fontFamily: 'arial', width: '25ch' }}
