@@ -1,9 +1,8 @@
-/* const User = require('../models/users') */
 const connection = require('../connection')
 
 const getUsers = (req, res)=>{
-    // Ontener todos los users
-    db.collection('users')
+    // Ontener todos los datos
+    db.collection('asistencias')
     .find()
     .toArray(function (err, items) {
         res.send(items)
@@ -12,7 +11,7 @@ const getUsers = (req, res)=>{
 
 const createUser = (req, res)=>{
     // Solicitud para crear
-    db.collection('users').insertOne({ text: req.body.text }, function (
+    db.collection('asistencias').insertOne({ text: req.body.text }, function (
         err,
         info
     ) {
@@ -22,7 +21,7 @@ const createUser = (req, res)=>{
 
 const updateUser = (req, res)=>{
     // Actualizar por su ID
-    db.collection('users').findOneAndUpdate(
+    db.collection('asistencias').findOneAndUpdate(
         { _id: new mongodb.ObjectId(req.body.id) },
         { $set: { text: req.body.text } },
         function () {
@@ -33,7 +32,7 @@ const updateUser = (req, res)=>{
 
 const deleteUser = (req, res)=>{
     // Eliminar por su ID
-    db.collection('users').deleteOne(
+    db.collection('asistencias').deleteOne(
         { _id: new mongodb.ObjectId(req.body.id) },
         function () {
         res.send('Eliminado con exito!')

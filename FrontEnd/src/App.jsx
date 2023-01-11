@@ -4,9 +4,11 @@ import './App.css'
 import Sidebar from './Components/Sidebar/Sidebar.jsx'
 import { Box } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
-// import RegistroClasesAlumnos from './Pages/RegistroClasesAlumnos/RegistroClasesAlumnos'
+import RegistroClasesAlumno from './Pages/RegistroClasesAlumno/RegistroClasesAlumno'
+import MisClasesProfesor from './Pages/MisClasesProfesor/MisClasesProfesor'
 import Profile from './Pages/ProfilePage/Profile'
-import MisClases from './Pages/MisClases/MisClases'
+import ControlPanel from './Pages/ControlPanel/ControlPanel'
+import MisClases from './Pages/MisClases/MisClasesEstudiante'
 
 function App() {
     const [open, setOpen] = useState(false)
@@ -18,21 +20,22 @@ function App() {
         setContent(newContent)
     }
     const PagesToRender = {
-        // RegistroClasesAlumnos: <RegistroClasesAlumnos />,
+        RegistroClasesAlumnos: <RegistroClasesAlumno />,
+        MisClasesProfesor: <MisClasesProfesor />,
         Profile: <Profile />,
+        ControlPanel: <ControlPanel/>,
         MisClases: <MisClases />,
     }
     return (
         <Box sx={{ display: 'flex' }}>
             <Sidebar open={open} changeDrawerState={changeDrawerState} changeContent={changeContent} />
             <Box sx={{
-                width: 'calc(100% - 240px)',
+                width: '100%',
                 padding: '15px',
-                height: '120vh',
                 position: 'relative',
             }}>
 
-                <IconButton sx={{ bgcolor: 'primary.light', height: 'fit-content', borderRadius: 1, display: { xs: 'block', sm: 'none' }, position: 'sticky', top: '3px' }} onClick={() => setOpen(!open)}>
+                <IconButton sx={{ bgcolor: 'primary.light', height: 'fit-content', borderRadius: 1, display: { xs: 'block', sm: 'none' }, position: 'Fixed', top: '3px' }} onClick={() => setOpen(!open)}>
                     <MenuIcon />
                 </IconButton>
                 {PagesToRender[content]}

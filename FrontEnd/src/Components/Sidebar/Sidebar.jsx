@@ -16,9 +16,20 @@ function Sidebar(props) {
             content: 'RegistroClasesAlumnos'
         },
         {
+            key: 3,
+            title: 'Mis Clases (Profesor)',
+            content: 'MisClasesProfesor'
+        },
+
+        {
             key: 2,
             title: 'Profile',
             content: 'Profile'
+        },
+        {
+            key: 4,
+            title: 'Panel de control',
+            content: 'ControlPanel'
         },
         {
             Key:5,
