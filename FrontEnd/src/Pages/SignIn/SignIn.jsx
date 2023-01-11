@@ -37,8 +37,8 @@ const SignIn = () => {
                 <Typography component='h1' variant="h4" sx={{color: '#E6F4F1', mb: 1, fontWeight: '400', textAlign: 'center'}}>
                     Iniciar Sesión
                 </Typography>
-                    <TextField name='matricula' required 
-                    fullWidth label='Matricula'
+                    <TextField name='usuario' required 
+                    fullWidth label='Usuario'
                     sx={{my: 2, input: {color: 'white'}}}
                     InputLabelProps={{style: {color: '#E6F4F1'}}}
                     onChange={handleChange}
