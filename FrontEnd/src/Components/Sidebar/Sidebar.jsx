@@ -4,39 +4,47 @@ import { Drawer, List } from '@mui/material'
 import SidebarButton from '../Sidebar_button/SidebarButton'
 
 
-
-
 function Sidebar(props) {
     // agregar un componente a la sidebar : 
     // key: identificador unico (Math.random())
     // title: como va a aparecer en el boton de la sidebar
     // content: nombre del componente renderizado en PagesToRender (app.jsx)
     const options = [
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-
-        
         {
-            key: Math.random(),
+            key: 1,
+            title: 'Registro Clases',
+            content: 'RegistroClasesAlumnos'
+        },
+        {
+            key: 3,
+            title: 'Mis Clases (Profesor)',
+            content: 'MisClasesProfesor'
+        },
+
+        {
+            key: 2,
+            title: 'Profile',
+            content: 'Profile'
+        },
+        {
+            key: 4,
+            title: 'Panel de control',
+            content: 'ControlPanel'
+        },
+        
+       
+
+
+
+
+
+
+
+        {
+            key: 7,
             title: 'Registro clases de Administrador',
             content: 'Registro'
-        }
+        },
 
     ]
     const listItems = (
