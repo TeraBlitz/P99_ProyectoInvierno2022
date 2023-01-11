@@ -10,6 +10,7 @@ import Profile from './Pages/ProfilePage/Profile'
 import ControlPanel from './Pages/ControlPanel/ControlPanel'
 
 
+
 import ShowClass from "./Components/Pages/AdministratorClassRegister/ShowClass";
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
         Profile: <Profile />,
         ControlPanel: <ControlPanel/>,
 
+        
 
         Registro: <ShowClass />,
     }

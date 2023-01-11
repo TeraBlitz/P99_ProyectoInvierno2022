@@ -40,8 +40,14 @@ function Sidebar(props) {
 
 
 
+
+
+
+
+
+
         {
-            key: 7,
+            key: 8,
             title: 'Registro clases de Administrador',
             content: 'Registro'
         },
