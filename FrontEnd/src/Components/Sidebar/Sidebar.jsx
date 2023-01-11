@@ -30,6 +30,8 @@ function Sidebar(props) {
 
 
         
+
+        
         {
             key: Math.random(),
             title: 'Registro clases de Administrador',

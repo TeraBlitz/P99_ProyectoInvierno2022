@@ -175,11 +175,14 @@ export default function ShowClass() {
         padding: "20px",
       }}
     >
-      <h3 style={{ paddingBottom: "15px", marginTop: "5px" ,fontFamily: 'arial'}} align="center">
+      <h3
+        style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" }}
+        align="center"
+      >
         Crear una nueva clase
       </h3>
       <TextField
-        style={{ paddingBottom: "15px",fontFamily: 'arial' }}
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
         label="Curso"
         onChange={(e) => setCoursename(e.target.value)}
         value={coursename}
@@ -187,7 +190,7 @@ export default function ShowClass() {
       />
       <br />
       <TextField
-        style={{ paddingBottom: "15px", width: "23ch" ,fontFamily: 'arial'}}
+        style={{ paddingBottom: "15px", width: "23ch", fontFamily: "arial" }}
         label="Nivel"
         onChange={(e) => setLevel(e.target.value)}
         value={level}
@@ -196,28 +199,32 @@ export default function ShowClass() {
       >
         {" "}
         {niveles.map((option) => (
-          <MenuItem key={option.value} value={option.value} sx={{fontFamily: 'arial'}}>
+          <MenuItem
+            key={option.value}
+            value={option.value}
+            sx={{ fontFamily: "arial" }}
+          >
             {option.label}
           </MenuItem>
         ))}
       </TextField>
       <br />
       <TextField
-        style={{ paddingBottom: "15px",fontFamily: 'arial' }}
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
         label="Profesor"
         onChange={(e) => setTeacher(e.target.value)}
         value={teacher}
       />
       <br />
       <TextField
-        style={{ paddingBottom: "15px",fontFamily: 'arial' }}
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
         label="Frecuencia Semanal"
         onChange={(e) => setWeeklyfrequency(e.target.value)}
         value={weeklyfrequency}
       />
       <br />
       <TextField
-        style={{ paddingBottom: "15px",fontFamily: 'arial' }}
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
         label="Capacidad"
         type="number"
         onChange={(e) => setMaximumcapacity(e.target.value)}
@@ -254,11 +261,14 @@ export default function ShowClass() {
         padding: "20px",
       }}
     >
-      <h3 style={{ paddingBottom: "15px", marginTop: "5px" ,fontFamily: 'arial'}} align="center">
+      <h3
+        style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" }}
+        align="center"
+      >
         Actualizar una clase
       </h3>
       <TextField
-        style={{ paddingBottom: "15px" ,fontFamily: 'arial'}}
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
         label="Curso"
         value={clase.coursename}
         name="coursename"
@@ -267,7 +277,7 @@ export default function ShowClass() {
       />
       <br />
       <TextField
-        style={{ paddingBottom: "15px", width: "23ch",fontFamily: 'arial' }}
+        style={{ paddingBottom: "15px", width: "23ch", fontFamily: "arial" }}
         label="Nivel"
         onChange={(e) => setLevel(e.target.value)}
         value={level}
@@ -283,7 +293,7 @@ export default function ShowClass() {
       </TextField>
       <br />
       <TextField
-        style={{ paddingBottom: "15px" ,fontFamily: 'arial'}}
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
         label="Profesor"
         name="teacher"
         value={clase.teacher}
@@ -291,7 +301,7 @@ export default function ShowClass() {
       />
       <br />
       <TextField
-        style={{ paddingBottom: "15px",fontFamily: 'arial' }}
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
         label="Frecuencia Semanal"
         name="weeklyfrequency"
         value={clase.weeklyfrequency}
@@ -299,7 +309,7 @@ export default function ShowClass() {
       />
       <br />
       <TextField
-        style={{ paddingBottom: "15px",fontFamily: 'arial' }}
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
         label="Capacidad"
         name="maximumcapacity"
         type="number"
@@ -342,6 +352,9 @@ export default function ShowClass() {
     ],
     [data]
   );
+
+  //---------------------------------------Filter---------------------------
+  const [items, setItems] = useState([]);
   return (
     <div>
       <Card
@@ -360,42 +373,50 @@ export default function ShowClass() {
             gutterBottom
             variant="h5"
             component="div"
-            sx={{ textAlign: "center",fontFamily: 'arial' }}
+            sx={{ textAlign: "center", fontFamily: "arial" }}
           >
             Filtros
           </Typography>
           <TextField
-            style={{ paddingBottom: "15px",fontFamily: 'arial' }}
+            style={{ paddingBottom: "15px", fontFamily: "arial" }}
             label="Curso"
+            onChange={(e) => {
+              setItems([
+                {
+                  columnField: "coursename",
+                  operatorValue: "contains",
+                  value: e.target.value,
+                },
+              ]);
+            }}
           ></TextField>
           <TextField
-            style={{ paddingBottom: "15px", width: "25ch" ,fontFamily: 'arial'}}
+            style={{ paddingBottom: "15px", fontFamily: "arial" }}
             label="Nivel"
-            select
-            id="filled-select-currency"
-          >
-            {niveles.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
+            onChange={(e) => {
+              setItems([
+                {
+                  columnField: "level",
+                  operatorValue: "contains",
+                  value: e.target.value,
+                },
+              ]);
+            }}
+          ></TextField>
           <TextField
-            style={{ paddingBottom: "15px", width: "25ch",fontFamily: 'arial'}}
-            label="Profesores"
-            select
-            id="filled-select-currency"
-          >
-            {data.map((datos) => (
-              <MenuItem key={datos.teacher} value={datos.teacher} sx={{fontFamily: 'arial'}}>
-                {datos.teacher}
-              </MenuItem>
-            ))}
-          </TextField>
+            style={{ paddingBottom: "15px", fontFamily: "arial" }}
+            label="Profesor"
+            onChange={(e) => {
+              setItems([
+                {
+                  columnField: "teacher",
+                  operatorValue: "contains",
+                  value: e.target.value,
+                },
+              ]);
+            }}
+          ></TextField>
         </CardContent>
-        <CardActions>
-          <Button type="submit">Filtrar</Button>
-        </CardActions>
       </Card>
 
       <Box
@@ -405,13 +426,12 @@ export default function ShowClass() {
           height: 420,
           position: "absolute",
           marginLeft: "265px",
-          
         }}
       >
         <Typography
           variant="h3"
           component="h3"
-          sx={{ textAlign: "left", mt: 3, mb: 3 ,fontFamily: 'arial'}}
+          sx={{ textAlign: "left", mt: 3, mb: 3, fontFamily: "arial" }}
         >
           {" "}
           Clases{" "}
@@ -425,7 +445,7 @@ export default function ShowClass() {
           </Button>
         </Typography>
 
-        <DataGrid 
+        <DataGrid
           columns={columns}
           rows={data}
           getRowId={(row) => row.id}
@@ -440,9 +460,12 @@ export default function ShowClass() {
             [`& .${gridClasses.row}`]: {
               bgcolor: (theme) =>
                 theme.palette.mode === "light" ? grey[200] : grey[900],
-              fontFamily:'arial',
-              
+              fontFamily: "arial",
             },
+          }}
+          disableSelectionOnClick={true}
+          filterModel={{
+            items: items,
           }}
         />
 
