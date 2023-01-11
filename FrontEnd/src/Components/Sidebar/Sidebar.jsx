@@ -12,6 +12,24 @@ function Sidebar(props) {
     // title: como va a aparecer en el boton de la sidebar
     // content: nombre del componente renderizado en PagesToRender (app.jsx)
     const options = [
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
         {
             key: Math.random(),
             title: 'Registro clases de Administrador',

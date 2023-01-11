@@ -4,6 +4,11 @@ import './App.css'
 import Sidebar from './Components/Sidebar/Sidebar.jsx'
 import { Box } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
+
+
+
+
+
 import ShowClass from './Components/Pages/AdministratorClassRegister/ShowClass'
 
 function App() {
@@ -16,6 +21,12 @@ function App() {
         setContent(newContent)
     }
     const PagesToRender = {
+        
+        
+        
+        
+        
+        
         Registro: <ShowClass/>,
     }
     return (
@@ -25,7 +36,7 @@ function App() {
                   width: '100%',
                   position: 'relative',
                   height: 'auto',
-                  overflow: 'initial'
+                  
             }}>
 
     <IconButton sx={{ bgcolor: 'primary.light', height: 'fit-content', borderRadius: 1, display: { xs: 'block', sm: 'none' }, position: 'fixed', zIndex: 1000, top: '3px', left: '3px' }} onClick={() => setOpen(!open)}>

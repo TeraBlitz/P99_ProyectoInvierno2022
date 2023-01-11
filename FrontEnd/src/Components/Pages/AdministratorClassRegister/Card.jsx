@@ -29,30 +29,30 @@ function Card(props) {
       {props.id}-{props.coursename}
     </Typography>
     <br/>
-    <InputLabel>Nivel:</InputLabel>
-    <Typography>
+    <InputLabel  sx={{ fontFamily: 'arial' }}>Nivel:</InputLabel>
+    <Typography sx={{ fontFamily: 'arial' }} >
         {props.level}
     </Typography>
         <br/>
-        <InputLabel>Nivel:</InputLabel>
-    <Typography>
+        <InputLabel sx={{ fontFamily: 'arial' }}>Nivel:</InputLabel>
+    <Typography sx={{ fontFamily: 'arial' }}>
         {props.teacher}
     </Typography>
         <br/>
-        <InputLabel>Frecuencia:</InputLabel>
-    <Typography>
+        <InputLabel sx={{ fontFamily: 'arial' }}>Frecuencia:</InputLabel>
+    <Typography sx={{ fontFamily: 'arial' }}>
         {props.weeklyfrequency}
-    </Typography>
+    </Typography >
         <br/>
-        <InputLabel>Capacidad:</InputLabel>
-    <Typography>
+        <InputLabel sx={{ fontFamily: 'arial' }}>Capacidad:</InputLabel>
+    <Typography sx={{ fontFamily: 'arial' }}>
         {props.maximumcapacity}
     </Typography>
         <br/>
   </CardContent>
   <CardActions>
-    <Button >Eliminar</Button>
-    <Button>Editar</Button>
+    <Button color="primary" >Eliminar</Button>
+    <Button color="error">Editar</Button>
   </CardActions>
   </Card>
   </div>

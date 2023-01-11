@@ -187,7 +187,7 @@ export default function ShowClass() {
       />
       <br />
       <TextField
-        style={{ paddingBottom: "15px", width: "25ch" ,fontFamily: 'arial'}}
+        style={{ paddingBottom: "15px", width: "23ch" ,fontFamily: 'arial'}}
         label="Nivel"
         onChange={(e) => setLevel(e.target.value)}
         value={level}
@@ -267,7 +267,7 @@ export default function ShowClass() {
       />
       <br />
       <TextField
-        style={{ paddingBottom: "15px", width: "25ch",fontFamily: 'arial' }}
+        style={{ paddingBottom: "15px", width: "23ch",fontFamily: 'arial' }}
         label="Nivel"
         onChange={(e) => setLevel(e.target.value)}
         value={level}
