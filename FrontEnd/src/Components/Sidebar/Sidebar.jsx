@@ -25,6 +25,11 @@ function Sidebar(props) {
             key: 2,
             title: 'Profile',
             content: 'Profile'
+        },
+        {
+            key: 4,
+            title: 'Panel de control',
+            content: 'ControlPanel'
         }
 
     ]

@@ -7,6 +7,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import RegistroClasesAlumno from './Pages/RegistroClasesAlumno/RegistroClasesAlumno'
 import MisClasesProfesor from './Pages/MisClasesProfesor/MisClasesProfesor'
 import Profile from './Pages/ProfilePage/Profile'
+import ControlPanel from './Pages/ControlPanel/ControlPanel'
 
 function App() {
     const [open, setOpen] = useState(false)
@@ -21,6 +22,7 @@ function App() {
         RegistroClasesAlumnos: <RegistroClasesAlumno />,
         MisClasesProfesor: <MisClasesProfesor />,
         Profile: <Profile />,
+        ControlPanel: <ControlPanel/>
     }
     return (
         <Box sx={{ display: 'flex' }}>
