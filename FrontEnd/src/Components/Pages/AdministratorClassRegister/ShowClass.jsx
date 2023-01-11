@@ -8,11 +8,14 @@ import { grey } from '@mui/material/colors';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { useMemo } from "react";
 import Actions from "./Actions";
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
 
-import IdcellRender from "./IdcellRender";
 export default function ShowClass() {
   //--------------------------------------------Agregar----------------
   //Estados de agregar
+  let number = 6;
   const [data, setData] = useState([]);
   const [modalInsertar, setModalInsertar] = useState(false);
   const [coursename, setCoursename] = useState("");
@@ -64,7 +67,7 @@ export default function ShowClass() {
     setData([
       ...data,
       {
-        id: data.length,
+        id: number+1,
         coursename: datas.coursename,
         level: datas.level,
         teacher: datas.teacher,
@@ -81,10 +84,10 @@ export default function ShowClass() {
   const claseInicial = {
     id: -1,
     coursename: "",
-    level: 4,
+    level: "",
     teacher: "",
     weeklyfrequency: "",
-    maximumcapacity: "",
+    maximumcapacity: 0,
   };
   const [claseActual, setClaseActual] = useState(claseInicial);
 
@@ -136,52 +139,40 @@ export default function ShowClass() {
   //--------------------------------------------Eliminar--------------
   // Solo se usa un filter para eliminar
   function deleteClass(classId) {
-    setData(data.filter((datos) => datos.id !== classId));
+    console.log(classId);
+    setData(data.filter((datos) => datos.id !== classId ) );
   }
-
-  //-----------------------------Caso que no haya------------------
-  // if (data.length === 0)
-  //   return (
-  //     <Box>
-  //        <Typography variant = 'h3' component = 'h3' sx={{textAlign:'left',mt:3,mb:3}} > No hayClases <Button 
-  //         variant="contained"
-  //         color="success"
-  //         onClick={() => abrirCerrarModalInsertar()}>
-  //         {<AddCircleOutlineIcon />} Crear
-  //       </Button></Typography>
-  //     </Box>
-  //   );
 
   //-------------------------------Datos de ventanas modales---------------
   const bodyInsertar = (
-    <div style={{position: 'absolute', width: 200,height:440, backgroundColor: '#fefefd',top:'50%', left:'50%',transform: 'translate(-50%, -50%)',border: '4px solid  #7382f1',margin:'auto',borderRadius:'10px',padding:"8px"}}>
-      <h3 style={{paddingBottom:'10px',marginTop:'5px'}} align="center">Crear una nueva clase</h3>
-      <TextField style={{paddingBottom:'10px'}}
+    <div style={{position: 'absolute', width: 200,height:440, backgroundColor: '#fefefd',top:'50%', left:'50%',transform: 'translate(-50%, -50%)',border: '4px solid  #7382f1',margin:'auto',borderRadius:'10px',padding:"16px"}}>
+      <h3 style={{paddingBottom:'15px',marginTop:'5px'}} align="center">Crear una nueva clase</h3>
+      <TextField style={{paddingBottom:'15px'}}
         label="Curso"
         onChange={(e) => setCoursename(e.target.value)}
         value={coursename}
         autoFocus
       />
       <br />
-      <TextField style={{paddingBottom:'10px'}}
+      <TextField style={{paddingBottom:'15px'}}
         label="Nivel"
         onChange={(e) => setLevel(e.target.value)}
         value={level}
       />
       <br />
-      <TextField style={{paddingBottom:'10px'}}
+      <TextField style={{paddingBottom:'15px'}}
         label="Profesor"
         onChange={(e) => setTeacher(e.target.value)}
         value={teacher}
       />
       <br />
-      <TextField style={{paddingBottom:'10px'}}
+      <TextField style={{paddingBottom:'15px'}}
         label="Frecuencia Semanal"
         onChange={(e) => setWeeklyfrequency(e.target.value)}
         value={weeklyfrequency}
       />
       <br />
-      <TextField style={{paddingBottom:'10px'}}
+      <TextField style={{paddingBottom:'15px'}}
         label="Capacidad"
         type="number"
         onChange={(e) => setMaximumcapacity(e.target.value)}
@@ -203,9 +194,9 @@ export default function ShowClass() {
   );
 
   const bodyEditar = (
-    <div style={{position: 'absolute', width: 200,height:440, backgroundColor: '#fefefd',top:'50%', left:'50%',transform: 'translate(-50%, -50%)',border: '4px solid  #7382f1',margin:'auto',borderRadius:'10px',padding:"8px"}}>
-      <h3 style={{paddingBottom:'10px',marginTop:'5px'}} align="center">Actualizar una clase</h3>
-      <TextField style={{paddingBottom:'10px'}}
+    <div style={{position: 'absolute', width: 200,height:440, backgroundColor: '#fefefd',top:'50%', left:'50%',transform: 'translate(-50%, -50%)',border: '4px solid  #7382f1',margin:'auto',borderRadius:'10px',padding:"16px"}}>
+      <h3 style={{paddingBottom:'15px',marginTop:'5px'}} align="center">Actualizar una clase</h3>
+      <TextField style={{paddingBottom:'15px'}}
         label="Curso"
         value={ clase.coursename}
         name="coursename"
@@ -213,28 +204,28 @@ export default function ShowClass() {
         autoFocus
       />
       <br />
-      <TextField style={{paddingBottom:'10px'}}
+      <TextField style={{paddingBottom:'15px'}}
         label="Nivel"
         name="level"
         value={ clase.level}
         onChange={handleChange}
       />
       <br />
-      <TextField style={{paddingBottom:'10px'}}
+      <TextField style={{paddingBottom:'15px'}}
         label="Profesor"
         name="teacher"
         value={ clase.teacher}
         onChange={handleChange}
       />
       <br />
-      <TextField style={{paddingBottom:'10px'}}
+      <TextField style={{paddingBottom:'15px'}}
         label="Frecuencia Semanal"
         name="weeklyfrequency"
         value={ clase.weeklyfrequency}
         onChange={handleChange}
       />
       <br />
-      <TextField style={{paddingBottom:'10px'}}
+      <TextField style={{paddingBottom:'15px'}}
         label="Capacidad"
         name="maximumcapacity"
         type="number"
@@ -254,48 +245,77 @@ export default function ShowClass() {
     </div>
     
   );
+    
+  
+
   //---------------------------------------Show--------------
   const [pageSize,SetPageSize] = useState(5);
 
- 
   const columns = useMemo(()=>[
-    {field:'id',headerName:'Clave',width:80,cellRender:IdcellRender},
-    {field:'coursename',headerName:'Curso',width:130},
-    {field:'level',headerName:'Nivel',width:150},
+    {field:'id',headerName:'Clave',width:54},
+    {field:'coursename',headerName:'Curso',width:90},
+    {field:'level',headerName:'Nivel',width:151},
     {field:'teacher',headerName:'Profesor',width:140,sortable:false},
-    {field:'weeklyfrequency',headerName:'Frecuencia',width:80},
-    {field:'maximumcapacity',headerName:'Capacidad',width:70},
+    {field:'weeklyfrequency',headerName:'Frecuencia',width:85},
+    {field:'maximumcapacity',headerName:'Capacidad',width:80},
     {
       field: 'actions',
       headerName: 'Acciones',
       type: 'actions',
-      width: 150,
+      width: 95,
       renderCell: (params) => <Actions {...{ params,deleteClass,editClasses }} />,
-    }
-    
-  ],[data.id]);
+    }],[data]);
   return (
-    <Box sx={{width: 800,
+    <div>
+      <Card sx={{ maxWidth: 255, position: 'absolute',textAlign:'left', marginLeft:"5px",marginTop:"120px"}}>
+         <CardContent>
+         <Typography gutterBottom variant="h5" component="div"sx={{ textAlign:'center' }} >
+          Filtros
+        </Typography>
+        <TextField
+        style={{paddingBottom:'15px'}}
+        label="Curso">  
+        </TextField>
+        <TextField
+        style={{paddingBottom:'15px'}}
+        label="Nivel">  
+        </TextField>
+        <TextField
+        style={{paddingBottom:'15px'}}
+        label="Profesores">  
+        </TextField>
+          </CardContent> 
+          <CardActions>
+            <Button>
+              Filtrar
+            </Button>
+          </CardActions>
+
+      </Card>
+    
+ 
+
+    <Box sx={{width: 700,
     padding: '15px',
     height: 420,
-    position: 'relative'}}>
+    position: 'absolute',
+    marginLeft:"265px"}} >
       
       <Typography variant = 'h3' component = 'h3' sx={{textAlign:'left',mt:3,mb:3}} > Clases <Button 
+          sx={{marginLeft:'350px'}}
           variant="contained"
           color="success"
           onClick={() => abrirCerrarModalInsertar()}>
           {<AddCircleOutlineIcon />} Crear
         </Button></Typography>
+      
       <DataGrid
       columns={columns}
       rows={data}
-      checkboxSelection 
-      onSelectionModelChange={id => console.log(id)}
       getRowId={(row) => row.id}
       rowsPerPageOptions={[5,10]}
       pageSize={pageSize}
       onPageSizeChange={(newPageSize) => SetPageSize(newPageSize)}
-      
       getRowSpacing={(params) => ({
         top: params.isFirstVisible ? 0 : 5,
         bottom: params.isLastVisible ? 0 : 5,
@@ -319,5 +339,6 @@ export default function ShowClass() {
       </Modal>
 
     </Box> 
+    </div>
   );
 }

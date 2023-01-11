@@ -22,13 +22,13 @@ function App() {
         <Box sx={{ display: 'flex' }}>
             <Sidebar open={open} changeDrawerState={changeDrawerState} changeContent={changeContent} />
             <Box sx={{
-                width: 'calc(100%-240px)',
-                padding: '15px',
-                height: '120vh',
-                position: 'relative',
+                  width: '100%',
+                  position: 'relative',
+                  height: 'auto',
+                  overflow: 'initial'
             }}>
 
-                <IconButton sx={{ bgcolor: 'primary.light', height: 'fit-content', borderRadius: 1, display: { xs: 'block', sm: 'none' }, position: 'sticky', top: '3px' }} onClick={() => setOpen(!open)}>
+    <IconButton sx={{ bgcolor: 'primary.light', height: 'fit-content', borderRadius: 1, display: { xs: 'block', sm: 'none' }, position: 'fixed', zIndex: 1000, top: '3px', left: '3px' }} onClick={() => setOpen(!open)}>
                     <MenuIcon />
                 </IconButton>
                 {PagesToRender[content]}
