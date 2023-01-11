@@ -39,12 +39,16 @@ function Sidebar(props) {
 
 
 
+
         {
-            key: 8,
+            key: 7,
             title: 'Registro clases de Administrador',
             content: 'Registro'
-        },
+        }
 
+
+    
+        
 
     ]
     const listItems = (

@@ -12,6 +12,7 @@ import ControlPanel from './Pages/ControlPanel/ControlPanel'
 
 import ShowClass from "./Components/Pages/AdministratorClassRegister/ShowClass";
 
+
 function App() {
     const [open, setOpen] = useState(false)
     const [content, setContent] = useState('content')
@@ -28,7 +29,7 @@ function App() {
         ControlPanel: <ControlPanel/>,
 
 
-        Registro: <ShowClass />,
+        Registro: <ShowClass />
     }
     return (
         <Box id="main" sx={{ display: 'flex'}}>
