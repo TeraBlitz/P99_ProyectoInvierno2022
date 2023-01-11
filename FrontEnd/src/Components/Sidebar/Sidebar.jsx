@@ -5,7 +5,7 @@ import SidebarButton from '../Sidebar_button/SidebarButton'
 
 
 function Sidebar(props) {
-    // agregar un componente a la sidebar : 
+    // agregar un componente a la sidebar :
     // key: identificador unico (Math.random())
     // title: como va a aparecer en el boton de la sidebar
     // content: nombre del componente renderizado en PagesToRender (app.jsx)
@@ -22,7 +22,7 @@ function Sidebar(props) {
         },
         {
             Key:3,
-            title: 'Mis Clases',
+            title: 'Mis Clases (Estudiantes)',
             content: 'MisClases'
         }
 

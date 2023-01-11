@@ -75,6 +75,7 @@ function ChildModal() {
           <Typography variant="h5" component="div">
               Contactos Alumnos
           </Typography>
+          <div className="spacer"></div>
 
           {/* Reneder de tabla de alumnos */}
 
@@ -161,19 +162,24 @@ export default function TarjetaMisC(props){
                         </Typography>
                         <div className="spacer"></div>
 
+                        <h5 className="leyendaFaltas">Maestro: </h5>
                         <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                            Maestro: {props.item.maestro}
+                            {props.item.maestro}
                           </Typography>
 
+                          <h5 className="leyendaFaltas">Contacto: </h5>
                           <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                            Contacto: {props.item.contacto}
+                            {props.item.contacto}
                           </Typography>
 
+                          <h5 className="leyendaFaltas">Link: </h5>
                           <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                            Link: {props.item.link}
+                            {props.item.link}
                           </Typography>
+
+                          <h5 className="leyendaFaltas">Notas del profesor: </h5>
                           <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                            Notas Del Profesor: {props.item.notas}
+                             {props.item.notas}
                           </Typography>
                           {/* Call a el modal child */ }
                           <ChildModal/>
