@@ -13,35 +13,51 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 const SignIn = () => {
 
     const [checked, setChecked] = useState([true, false]);
-
-    const handleChange = (e) => {
-    setChecked([e.target.checked, e.target.checked]);
+    const [userCredentials, setUserCredentials] = useState({});
+    
+    const handleChange = e => setUserCredentials(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
+    
+    const handleChangeCheckBox = (e) => {
+        setChecked([e.target.checked, e.target.checked]);
     };
-
+    
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Mandar y validad esta informacion 
+        console.log(userCredentials);
+    }
+    
   return (    
     <Container   
     sx={{ height: '100vh', display: 'flex',
     alignContent: 'center', justifyContent: 'center', flexWrap: 'wrap'}}
     >
         <Card sx={{px: 3, py:2, backgroundColor: '#3A4856', borderRadius: 2}}>
-            <Box component='form' sx={{mx: 3, display: 'flex', flexDirection: 'column'}}>
+            <Box component='form' sx={{mx: 3, display: 'flex', flexDirection: 'column'}} onSubmit={handleSubmit}>
                 <Typography component='h1' variant="h4" sx={{color: '#E6F4F1', mb: 1, fontWeight: '400', textAlign: 'center'}}>
                     Iniciar Sesión
                 </Typography>
-                    <TextField required fullWidth label='Matricula' sx={{my: 2, input: {color: 'white'}}} InputLabelProps={{style: {color: '#E6F4F1'}}}/>
-                    <TextField required fullWidth label='Contraseña' type='password' sx={{my: 1, input: {color: 'white'}}} InputLabelProps={{style: {color: '#E6F4F1'}}}/>
+                    <TextField name='matricula' required 
+                    fullWidth label='Matricula'
+                    sx={{my: 2, input: {color: 'white'}}}
+                    InputLabelProps={{style: {color: '#E6F4F1'}}}
+                    onChange={handleChange}
+                     />
+                    <TextField name='contraseña' required
+                    fullWidth label='Contraseña' type='password'
+                    sx={{my: 1, input: {color: 'white'}}}
+                    InputLabelProps={{style: {color: '#E6F4F1'}}}
+                    onChange={handleChange}
+                    />
                 <Box sx={{display:'flex', justifyContent: 'space-between'}}>
                     <FormControlLabel
                         label={<Typography variant="body1" sx={{color: '#E6F4F1'}}>Recuerdame</Typography>}
                         color='white'
-                        control={<Checkbox checked={checked[1]} onChange={handleChange}/>}
+                        control={<Checkbox checked={checked[1]} onChange={handleChangeCheckBox}/>}
                     />
                     <Link
                         variant="body1"
                         underline="hover"
-                        onClick={(e) => {
-                            console.info("I'm a button.");
-                        }}
                         sx={{alignSelf: 'center'}}
                         >
                         ¿Olvidaste tu contraseña?
