@@ -21,7 +21,7 @@ function Sidebar(props) {
             content: 'Profile'
         },
         {
-            Key:3,
+            Key:5,
             title: 'Mis Clases (Estudiantes)',
             content: 'MisClases'
         }
