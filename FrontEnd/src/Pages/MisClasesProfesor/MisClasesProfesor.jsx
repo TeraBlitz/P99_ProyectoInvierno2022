@@ -5,7 +5,7 @@ import { Card, CardContent, CardActions, Button, Box, TextField, Typography } fr
 import { minWidth } from '@mui/system';
 
 function MisClasesProfesor() {
-  const [items, setItems] = useState([]);
+    const [items, setItems] = useState([]);
     const columns = [
         { field: 'id', headerName: 'ID', width: 90 },
         {
@@ -140,7 +140,7 @@ function MisClasesProfesor() {
                         minWidth: '340px'
                     }}
                 >
-                    <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <CardContent sx={{ display: 'flex', flexDirection: 'column'  , alignItems:'center'}}>
                         <Typography
                             gutterBottom
                             variant="h5"
@@ -152,30 +152,30 @@ function MisClasesProfesor() {
                         <TextField
                             style={{ paddingBottom: "15px", fontFamily: 'arial', width: '25ch' }}
                             label="Curso"
-                            onChange={e=>{setItems([{columnField: 'title', operatorValue: 'contains', value:e.target.value}])}}></TextField>
+                            onChange={e => { setItems([{ columnField: 'title', operatorValue: 'contains', value: e.target.value }]) }}></TextField>
                         <TextField
                             style={{ paddingBottom: "15px", width: "25ch", fontFamily: 'arial' }}
                             label="Nivel"
                             id="filled-select-currency"
-                            onChange={e=>{setItems([{columnField: 'nivel', operatorValue: 'contains', value:e.target.value}])}}
+                            onChange={e => { setItems([{ columnField: 'nivel', operatorValue: 'contains', value: e.target.value }]) }}
                         >
                         </TextField>
                         <TextField
                             style={{ paddingBottom: "15px", width: "25ch", fontFamily: 'arial' }}
                             label="Periodo"
                             id="filled-select-currency"
-                            onChange={e=>{setItems([{columnField: 'periodo', operatorValue: 'contains', value:e.target.value}])}}
+                            onChange={e => { setItems([{ columnField: 'periodo', operatorValue: 'contains', value: e.target.value }]) }}
                         >
                         </TextField>
                     </CardContent>
                 </Card>
                 <Box sx={{ display: { xs: 'none', sm: "block" }, width: { lg: '60%', sm: '90%' }, height: { lg: '95%', sm: '50%' }, maxHeight: '100vh', minWidth: '548px' }}>
                     <DataGrid rows={data} columns={columns} disableSelectionOnClick={true}
-                    filterModel={{
-                        items:items
-                    }
-                    }
-                    
+                        filterModel={{
+                            items: items
+                        }
+                        }
+
                     />
 
                 </Box>
