@@ -10,6 +10,7 @@ import Profile from './Pages/ProfilePage/Profile'
 import ControlPanel from './Pages/ControlPanel/ControlPanel'
 import ShowClass from "./Components/Pages/AdministratorClassRegister/ShowClass";
 import SignIn from './Pages/SignIn/SignIn'
+import MisClases from './Pages/MisClases/MisClasesEstudiante'
 
 
 function App() {
@@ -28,21 +29,21 @@ function App() {
         MisClasesProfesor: <MisClasesProfesor />,
         Profile: <Profile />,
         ControlPanel: <ControlPanel/>,
-
+        MisClases: <MisClases />,
 
         Registro: <ShowClass />
     }
 
     const handleSignIn = (e) => {
         e.preventDefault();
-        // Mandar y validad esta informacion 
+        // Mandar y validad esta informacion
         console.log('test');
         setIsSignedIn(!isSignedIn);
     }
 
-    return !isSignedIn ? 
+    return !isSignedIn ?
         <SignIn handleSignIn={handleSignIn}/>
-    : 
+    :
         <Box  id="main" sx={{ display: 'flex'}}>
             <Sidebar open={open} changeDrawerState={changeDrawerState} changeContent={changeContent} handleSignOut={handleSignIn}/>
             <Box sx={{
