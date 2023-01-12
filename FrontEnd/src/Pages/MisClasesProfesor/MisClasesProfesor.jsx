@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import ClassCard from '../../Components/ClassCard/Classcard'
 import { DataGrid } from '@mui/x-data-grid';
-import { Card, CardContent, CardActions, Button, Box, TextField, Typography } from '@mui/material'
+import { Card, CardContent, CardActions, Button, Box, TextField, Typography, MenuItem } from '@mui/material'
 import { minWidth } from '@mui/system';
 
 function MisClasesProfesor() {
@@ -40,7 +40,7 @@ function MisClasesProfesor() {
             key: 'TS29238',
             title: 'clase 2',
             periodo: 'Ene-May 2023',
-            nivel: 'avanzado'
+            nivel: 'Avanzado'
         },
         {
             id: 3,
@@ -54,7 +54,7 @@ function MisClasesProfesor() {
             key: 'TS29238',
             title: 'clase 4',
             periodo: 'Ene-May 2023',
-            nivel: 'avanzado'
+            nivel: 'Avanzado'
         },
         {
             id: 5,
@@ -68,7 +68,7 @@ function MisClasesProfesor() {
             key: 'TS29238',
             title: 'clase 6',
             periodo: 'Ene-May 2023',
-            nivel: 'avanzado'
+            nivel: 'Avanzado'
         },
         {
             id: 7,
@@ -82,7 +82,7 @@ function MisClasesProfesor() {
             key: 'TS29238',
             title: 'clase 8',
             periodo: 'Ene-May 2023',
-            nivel: 'avanzado'
+            nivel: 'Avanzado'
         },
         {
             id: 9,
@@ -96,7 +96,7 @@ function MisClasesProfesor() {
             key: 'TS29238',
             title: 'clase 10',
             periodo: 'Ene-May 2023',
-            nivel: 'avanzado'
+            nivel: 'Avanzado'
         },
         {
             id: 11,
@@ -110,7 +110,7 @@ function MisClasesProfesor() {
             key: 'TS29238',
             title: 'clase 12',
             periodo: 'Ene-May 2023',
-            nivel: 'avanzado'
+            nivel: 'Avanzado'
         },
         {
             id: 13,
@@ -159,7 +159,14 @@ function MisClasesProfesor() {
                             label="Nivel"
                             id="filled-select-currency"
                             onChange={e => { setItems([{ columnField: 'nivel', operatorValue: 'contains', value: e.target.value }]) }}
+                            select
                         >
+                            {["Principiante", "intermedio", "Avanzado"].map(e => (
+                                <MenuItem value={e}>
+
+                                    {e}
+                                </MenuItem>
+                            ))}
                         </TextField>
                         <TextField
                             style={{ paddingBottom: "15px", width: "25ch", fontFamily: 'arial' }}
