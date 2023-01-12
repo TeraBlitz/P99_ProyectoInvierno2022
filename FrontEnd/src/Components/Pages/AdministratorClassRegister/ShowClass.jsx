@@ -1,10 +1,17 @@
 //Importancioon de datos
 import React from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { Button, Modal, TextField, Box, Typography, Autocomplete} from "@mui/material";
+import {
+  Button,
+  Modal,
+  TextField,
+  Box,
+  Typography,
+  Autocomplete,
+} from "@mui/material";
 import { data as information } from "../../../data/datosprueba";
 import { niveles } from "../../../data/numerosprueba";
-import { profes} from  "../../../data/profesprueba";
+import { profes } from "../../../data/profesprueba";
 import { useState, useEffect } from "react";
 import { grey } from "@mui/material/colors";
 import { DataGrid, gridClasses } from "@mui/x-data-grid";
@@ -13,16 +20,15 @@ import Actions from "./Actions";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import MenuItem from "@mui/material/MenuItem";
-
-
+import { minWidth,minHeight } from "@mui/system";
 export default function ShowClass() {
   //--------------------------------------------Agregar----------------
-  //Estados de agregar
+  //Agregar numeros
   const [number, setNumber] = useState(5);
   function add() {
-    setNumber(prevNumber => prevNumber + 1)
+    setNumber((prevNumber) => prevNumber + 1);
   }
-  
+//Estados de agregar
   const [data, setData] = useState([]);
   const [modalInsertar, setModalInsertar] = useState(false);
   const [keys, setKey] = useState("");
@@ -124,7 +130,7 @@ export default function ShowClass() {
 
   //Funcion que modifica los daors
   const handleChange = (e) => {
-    console.log(e.target)
+    console.log(e.target);
     const { name, value } = e.target;
     setClase({ ...clase, [name]: value });
   };
@@ -216,13 +222,13 @@ export default function ShowClass() {
       </TextField>
       <br />
       <Autocomplete
-         value={teacher}
-         onChange={(event, newValue) => {
-           setTeacher(newValue);
-         }}
-         id="profesores-insertar"
-         options={ profes }
-         renderInput={(params) => <TextField {...params} label="Profesor" />}
+        value={teacher}
+        onChange={(event, newValue) => {
+          setTeacher(newValue);
+        }}
+        id="profesores-insertar"
+        options={profes}
+        renderInput={(params) => <TextField {...params} label="Profesor" />}
       />
       <br />
       <TextField
@@ -251,9 +257,9 @@ export default function ShowClass() {
       </div>
     </div>
 
-    // Show
+    
   );
-
+// -----------------------------Modal para editar---------------------------
   const bodyEditar = (
     <div
       style={{
@@ -351,7 +357,7 @@ export default function ShowClass() {
 
   const columns = useMemo(
     () => [
-      { field: "id", headerName: "Id", width: 54 , hide:true},
+      { field: "id", headerName: "Id", width: 54, hide: true },
       { field: "keys", headerName: "Clave", width: 54 },
       { field: "coursename", headerName: "Curso", width: 90 },
       { field: "level", headerName: "Nivel", width: 151 },
@@ -451,8 +457,7 @@ export default function ShowClass() {
           component="h3"
           sx={{ textAlign: "left", mt: 3, mb: 3, fontFamily: "arial" }}
         >
-          {" "}
-          Clases{" "}
+          Clases
           <Button
             sx={{ marginLeft: "350px" }}
             variant="contained"
