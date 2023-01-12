@@ -16,7 +16,7 @@ import MenuItem from "@mui/material/MenuItem";
 export default function ShowClass() {
   //--------------------------------------------Agregar----------------
   //Estados de agregar
-  const [number, setNumber] = useState(6);
+  const [number, setNumber] = useState(5);
   function add() {
     setNumber(prevNumber => prevNumber + 1)
   }
