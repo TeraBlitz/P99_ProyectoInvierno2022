@@ -16,7 +16,7 @@ const fetchUserInfo = () => {
     // Cambiar 'tipo' a un valor distinto a Student para ver el perfil de administrador
     const userData = {
         'nombre': 'Juan', 'apellido': 'Perez Perez', 'matricula': 'A01',
-        'correo': 'juan@gmail.com', 'telefono': '0000000000', 'lada':'52', 'tipo': 'Admin',
+        'correo': 'juan@gmail.com', 'telefono': '0000000000', 'lada':'52', 'tipo': 'Student',
         'curp': 'OEAF771012HMCRGR09', 'fecha_nacimiento':'2005-07-22','escolaridad': 'Secundaria', 'ultima_escuela':'CBTIS',
         'estado':'Nuevo Leon', 'ciudad':'Monterrey', 'colonia': 'Centro', 'tutor': 'Carlos Perez' 
     };

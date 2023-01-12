@@ -15,7 +15,9 @@ const SignIn = ({isSignedIn, handleSignIn}) => {
     const [checked, setChecked] = useState([true, false]);
     const [userCredentials, setUserCredentials] = useState({});
     
-    const handleChange = e => setUserCredentials(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
+    const handleChange = (e) => {
+        setUserCredentials(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
+    } 
     
     const handleChangeCheckBox = (e) => {
         setChecked([e.target.checked, e.target.checked]);
@@ -28,7 +30,7 @@ const SignIn = ({isSignedIn, handleSignIn}) => {
     >
         <Card sx={{px: 3, py:2, backgroundColor: '#3A4856', borderRadius: 2}}>
             <Box component='form' sx={{mx: 3, display: 'flex', flexDirection: 'column'}} onSubmit={handleSignIn}>
-                <Typography component='h1' variant="h4" sx={{color: '#E6F4F1', mb: 1, fontWeight: '400', textAlign: 'center'}}>
+                <Typography component='h1' variant="h4" sx={{color: '#E6F4F1', mb: 1, fontWeight: '400', textAlign: 'center', width: '100%'}}>
                     Iniciar Sesión
                 </Typography>
                     <TextField name='usuario' required 
@@ -36,12 +38,16 @@ const SignIn = ({isSignedIn, handleSignIn}) => {
                     sx={{my: 2, input: {color: 'white'}}}
                     InputLabelProps={{style: {color: '#E6F4F1'}}}
                     onChange={handleChange}
+                    onInvalid={e => e.target.setCustomValidity('Ingresa tu usuario')} 
+                    onInput={e => e.target.setCustomValidity('')}
                      />
                     <TextField name='contraseña' required
                     fullWidth label='Contraseña' type='password'
                     sx={{my: 1, input: {color: 'white'}}}
                     InputLabelProps={{style: {color: '#E6F4F1'}}}
                     onChange={handleChange}
+                    onInvalid={e => e.target.setCustomValidity('Ingresa tu contraseña')} 
+                    onInput={e => e.target.setCustomValidity('')}
                     />
                 <Box sx={{display:'flex', justifyContent: 'space-between'}}>
                     <FormControlLabel
