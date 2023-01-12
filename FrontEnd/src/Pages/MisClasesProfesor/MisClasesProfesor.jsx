@@ -128,7 +128,7 @@ function MisClasesProfesor() {
                     <ClassCard key={e.id} title={e.title} id={e.key} periodo={e.periodo} dificultad={e.dificultad} />
                 ))}
             </Box>
-            <div style={{ width: '100%', display: 'flex', height: '100vh', justifyContent: 'space-around', alignItems: 'center', flexWrap: 'wrap' }}>
+            <Box sx={{ width: '100%', visibility: { xs: 'hidden', sm: 'visible' }, display: 'flex', height: '100%', justifyContent: 'space-around', alignItems: 'center', flexWrap: 'wrap' }}>
                 <Card
                     sx={{
                         textAlign: "left",
@@ -137,11 +137,11 @@ function MisClasesProfesor() {
                         borderRadius: "8px",
                         width: { lg: '30%', sm: '40%' },
                         height: '40%',
-                            minHeight:'293px',
+                        minHeight: '293px',
                         minWidth: '340px'
                     }}
                 >
-                    <CardContent sx={{ display: 'flex', flexDirection: 'column'  , alignItems:'center'}}>
+                    <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <Typography
                             gutterBottom
                             variant="h5"
@@ -170,17 +170,18 @@ function MisClasesProfesor() {
                         </TextField>
                     </CardContent>
                 </Card>
-                <Box sx={{ display: { xs: 'none', sm: "block" }, width: { lg: '60%', sm: '90%' }, height: { lg: '95%', sm: '50%' }, maxHeight: '100vh', minWidth: '548px' }}>
+                <Box sx={{ width: { lg: '60%', sm: '90%' }, height: { lg: '95%', sm: '50%' }, maxHeight: '100vh', minWidth: '548px' }}>
                     <DataGrid rows={data} columns={columns} disableSelectionOnClick={true}
                         filterModel={{
                             items: items
                         }
                         }
+                        sx={{ visibility: { xs: 'hidden', sm: 'visible' } }}
 
                     />
 
                 </Box>
-            </div>
+            </Box>
         </Box>
 
     )
