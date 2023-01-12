@@ -16,7 +16,10 @@ import MenuItem from "@mui/material/MenuItem";
 export default function ShowClass() {
   //--------------------------------------------Agregar----------------
   //Estados de agregar
-  let number = 5;
+  const [number, setNumber] = useState(6);
+  function add() {
+    setNumber(prevNumber => prevNumber + 1)
+  }
   const niveles = [
     {
       value: "de 8 a 12 años",
@@ -79,6 +82,7 @@ export default function ShowClass() {
 
   //Actualiza las clases
   function createClasses(datas) {
+    add();
     setData([
       ...data,
       {
@@ -163,8 +167,8 @@ export default function ShowClass() {
     <div
       style={{
         position: "absolute",
-        width: 200,
-        height: 440,
+        width: 260,
+        height: 480,
         backgroundColor: "#fefefd",
         top: "50%",
         left: "50%",
@@ -190,7 +194,7 @@ export default function ShowClass() {
       />
       <br />
       <TextField
-        style={{ paddingBottom: "15px", width: "23ch", fontFamily: "arial" }}
+        style={{ paddingBottom: "15px", width: "24ch", fontFamily: "arial" }}
         label="Nivel"
         onChange={(e) => setLevel(e.target.value)}
         value={level}
@@ -249,8 +253,8 @@ export default function ShowClass() {
     <div
       style={{
         position: "absolute",
-        width: 200,
-        height: 440,
+        width: 260,
+        height: 480,
         backgroundColor: "#fefefd",
         top: "50%",
         left: "50%",
@@ -277,7 +281,7 @@ export default function ShowClass() {
       />
       <br />
       <TextField
-        style={{ paddingBottom: "15px", width: "23ch", fontFamily: "arial" }}
+        style={{ paddingBottom: "15px", width: "24ch", fontFamily: "arial" }}
         label="Nivel"
         onChange={(e) => setLevel(e.target.value)}
         value={level}
@@ -421,9 +425,9 @@ export default function ShowClass() {
 
       <Box
         sx={{
-          width: 700,
+          width: 740,
           padding: "15px",
-          height: 420,
+          height: 450,
           position: "absolute",
           marginLeft: "265px",
         }}
