@@ -36,7 +36,7 @@ function Sidebar(props) {
             content: 'Registro'
         },
         {
-            Key:6,
+            key:6,
             title: 'Mis Clases (Estudiantes)',
             content: 'MisClases'
         },
