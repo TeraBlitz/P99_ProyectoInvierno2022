@@ -2,7 +2,7 @@ import React from 'react'
 import Box from '@mui/material/Box'
 import { Drawer, List } from '@mui/material'
 import SidebarButton from '../Sidebar_button/SidebarButton'
-
+import SignOutButton from '../SignOut/SignOutButton'
 
 function Sidebar(props) {
     // agregar un componente a la sidebar :
@@ -16,15 +16,14 @@ function Sidebar(props) {
             content: 'RegistroClasesAlumnos'
         },
         {
-            key: 3,
-            title: 'Mis Clases (Profesor)',
-            content: 'MisClasesProfesor'
-        },
-
-        {
             key: 2,
             title: 'Profile',
             content: 'Profile'
+        },
+        {
+            key: 3,
+            title: 'Mis Clases (Profesor)',
+            content: 'MisClasesProfesor'
         },
         {
             key: 4,
@@ -32,12 +31,22 @@ function Sidebar(props) {
             content: 'ControlPanel'
         },
         {
-            Key:5,
+            key: 5,
+            title: 'Registro clases de Administrador',
+            content: 'Registro'
+        },
+        {
+            Key:6,
             title: 'Mis Clases (Estudiantes)',
             content: 'MisClases'
-        }
-
+        },
+        {
+            key: 7,
+            title: <SignOutButton handleSignOut={props.handleSignOut}/>,
+            content: ''
+        },
     ]
+
     const listItems = (
         <List sx={{ bgcolor: 'info.main', width: '240px', height: '100vh', spacingY: '10px' }}>
             {options.map(e => (
