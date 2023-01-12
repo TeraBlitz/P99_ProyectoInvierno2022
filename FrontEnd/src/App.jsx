@@ -50,13 +50,15 @@ function App() {
                 width: '100%',
                 position: 'relative',
                 height: 'auto',
-                overflow: 'hidden'
+                overflow:'scroll'
             }}>
                 <IconButton sx={{ bgcolor: 'primary.light', height: 'fit-content', borderRadius: 1, display: { xs: 'block', sm: 'none' }, position: 'fixed', zIndex: 1000, top: '3px', left: '3px' }} onClick={() => setOpen(!open)}>
 
                     <MenuIcon />
                 </IconButton>
-                {PagesToRender[content]}
+                <div style={{width:'calc(100vw-240px)'}}>
+        {PagesToRender[content]}
+        </div>
             </Box>
         </Box>
 
