@@ -30,7 +30,25 @@ function Sidebar(props) {
             key: 4,
             title: 'Panel de control',
             content: 'ControlPanel'
+        },
+
+
+
+
+
+
+
+
+
+        {
+            key: 7,
+            title: 'Registro clases de Administrador',
+            content: 'Registro'
         }
+
+
+    
+        
 
     ]
     const listItems = (
