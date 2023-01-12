@@ -137,6 +137,7 @@ function MisClasesProfesor() {
                         borderRadius: "8px",
                         width: { lg: '30%', sm: '40%' },
                         height: '40%',
+                            minHeight:'293px',
                         minWidth: '340px'
                     }}
                 >
