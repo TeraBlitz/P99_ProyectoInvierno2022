@@ -2,10 +2,11 @@ import React , {useState} from 'react'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Unstable_Grid2';
 import Container from '@mui/material/Container';
-import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
+import Autocomplete from '@mui/material/Autocomplete';
 import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
 import FormHelperText from '@mui/material/FormHelperText';
 import SignUpInput from '../../Components/SignUp/SignUpInput';
 
@@ -16,9 +17,19 @@ const userData = {
     'estado':'', 'ciudad':'', 'colonia': '', 'tutor': '', 'contraseña': ''
 };
 
+const estados = [
+                'Aguascalientes', 'Baja California', 'Baja California Sur', 'Campeche',
+                'Coahuila', 'Colima', 'Chiapas', 'Chihuahua', 'Durango', 'Distrito Federal',
+                'Guanajuato', 'Guerrero', 'Hidalgo', 'Jalisco', 'México', 'Michoacán', 'Morelos',
+                'Nayarit', 'Nuevo León', 'Oaxaca', 'Puebla', 'Querétaro', 'Quintana Roo',
+                'San Luis Potosí', 'Sinaloa', 'Sonora', 'Tabasco', 'Tamaulipas', 'Tlaxcala',
+                'Veracruz', 'Yucatán', 'Zacatecas'
+                ]
 
 const SignUp = () => {
     const [userInfo, setUserInfo] = useState(userData);
+    const [userStateInput, setUserStateInput] = useState('');
+    const [userState, setUserState] = useState(estados[0]);
     
     const handleChange = (e) => setUserInfo(prevState => ({ ...prevState, [e.target.name]: e.target.value })); 
 
@@ -40,16 +51,15 @@ const SignUp = () => {
     return (
         <Container   
             sx={{ display: 'flex', alignContent: 'center',
-            justifyContent: 'center', flexWrap: 'wrap',
-            backgroundColor: 'lightblue'}}
+            justifyContent: 'center', flexWrap: 'wrap'}}
         >
             <Grid component='form' sx={{px: 3, py:2}} container spacing={1} onSubmit={handleSubmit}>
-                    <Typography component='h1' variant="h4" sx={{color: '#3a4856',fontWeight: '400', textAlign: 'center', width: '100%'}}>
+                    <Typography component='h1' variant="h4" sx={{color: '#4472C4',fontWeight: '400', textAlign: 'center', width: '100%'}}>
                         Crea una cuenta
                     </Typography>
 
                     <Grid xs={12}>
-                    <Typography variant='body1' color={'3a4856'}>Credenciales</Typography>
+                    <Typography variant='body1' color={'#3a4856'}>Credenciales</Typography>
                     </Grid>
                     <Grid xs={6}>
                         <SignUpInput name={'usuario'} label={'Usuario'} value={userInfo.usuario} handleChange={handleChange}/>
@@ -59,7 +69,7 @@ const SignUp = () => {
                     </Grid>
 
                     <Grid xs={12}>
-                        <Typography variant='body1' color={'3a4856'}>Datos Personales</Typography>
+                        <Typography variant='body1' color={'#3a4856'}>Datos Personales</Typography>
                     </Grid>
                     <Grid xs={12} sm={6}>
                         <SignUpInput name={'nombre'} label={'Nombre(s)'} value={userInfo.nombre} handleChange={handleChange}/>
@@ -90,20 +100,30 @@ const SignUp = () => {
                     </Grid>
 
                     <Grid xs={12}>
-                        <Typography variant='body1' color={'3a4856'}>Dirección</Typography>
+                        <Typography variant='body1' color={'#3a4856'}>Dirección</Typography>
                     </Grid>
-                    <Grid xs={6} sm={4}>
-                        <SignUpInput name={'estado'} label={'Estado'} value={userInfo.estado} handleChange={handleChange}/>
+                    <Grid xs={12} sm={6} md={4}>
+                        <Autocomplete
+                            value={userState || ''}
+                            onChange={(e, newValue) => {setUserState(newValue)}}
+                            inputValue={userStateInput}
+                            onInputChange={(event, newInputValue) => {
+                                setUserStateInput(newInputValue);
+                                userInfo['estado'] = newInputValue;
+                            }}
+                            options={estados}
+                            renderInput={(params) => <TextField {...params} InputLabelProps={{style: {color: '#3a4856'}}} name='estado' label="Estado"/>}
+                        />
                     </Grid>
-                    <Grid xs={6} sm={4}>
+                    <Grid xs={12} sm={6} md={4}>
                         <SignUpInput name={'ciudad'} label={'Ciudad'} value={userInfo.ciudad} handleChange={handleChange}/>
                     </Grid>
-                    <Grid xs={12}sm={4} >
+                    <Grid xs={12}sm={12} md={4}>
                         <SignUpInput name={'colonia'} label={'Colonia'} value={userInfo.colonia} handleChange={handleChange}/>
                     </Grid>
                     
                     <Grid xs={12}>
-                        <Typography variant='body1' color={'3a4856'}>Contacto</Typography>
+                        <Typography variant='body1' color={'#3a4856'}>Contacto</Typography>
                     </Grid>
                     <Grid xs={4} md={2}>
                         <SignUpInput name={'lada'} label={'LADA'} value={userInfo.lada} handleChange={handleChange}/>
