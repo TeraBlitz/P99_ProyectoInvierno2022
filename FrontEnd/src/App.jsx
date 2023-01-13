@@ -11,6 +11,7 @@ import ControlPanel from './Pages/ControlPanel/ControlPanel'
 import ShowClass from "./Components/Pages/AdministratorClassRegister/ShowClass";
 import SignIn from './Pages/SignIn/SignIn'
 import MisClases from './Pages/MisClases/MisClasesEstudiante'
+import ForgotPassword from './Pages/ForgotPassword/ForgotPassword'
 
 
 function App() {
@@ -42,7 +43,7 @@ function App() {
     }
 
     return !isSignedIn ?
-        <SignIn handleSignIn={handleSignIn}/>
+        <ForgotPassword/>
     :
         <Box  id="main" sx={{ display: 'flex'}}>
             <Sidebar open={open} changeDrawerState={changeDrawerState} changeContent={changeContent} handleSignOut={handleSignIn}/>
