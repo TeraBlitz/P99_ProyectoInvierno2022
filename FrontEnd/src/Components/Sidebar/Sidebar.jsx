@@ -12,33 +12,34 @@ function Sidebar(props) {
     const options = [
         {
             key: 1,
-            title: 'Registro Clases',
-            content: 'RegistroClasesAlumnos'
-        },
-        {
-            key: 2,
             title: 'Profile',
             content: 'Profile'
         },
         {
+            key: 2,
+            title: 'Registro Clases',
+            content: 'RegistroClasesAlumnos'
+        },
+        {
             key: 3,
-            title: 'Mis Clases (Profesor)',
-            content: 'MisClasesProfesor'
-        },
-        {
-            key: 4,
-            title: 'Panel de control',
-            content: 'ControlPanel'
-        },
-        {
-            key: 5,
             title: 'Registro clases de Administrador',
             content: 'Registro'
         },
         {
-            key:6,
+            key: 4,
+            title: 'Mis Clases (Profesor)',
+            content: 'MisClasesProfesor'
+        },
+        {
+            key: 5,
             title: 'Mis Clases (Estudiantes)',
-            content: 'MisClases'
+            content: 'MisClases',
+        },
+        {
+            key: 6,
+            title: 'Panel de control',
+            content: 'ControlPanel'
+
         },
         {
             key: 7,
