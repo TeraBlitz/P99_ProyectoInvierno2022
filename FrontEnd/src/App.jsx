@@ -44,7 +44,7 @@ function App() {
     }
 
     return !isSignedIn ?
-        <SignIn handleSignIn={handleSignIn}/>
+        <SignUp/>
     :
         <Box  id="main" sx={{ display: 'flex'}}>
             <Sidebar open={open} changeDrawerState={changeDrawerState} changeContent={changeContent} handleSignOut={handleSignIn}/>
