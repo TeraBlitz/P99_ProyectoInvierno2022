@@ -50,6 +50,7 @@ const SignUp = () => {
 
     return (
         <Container   
+            maxWidth="md"
             sx={{ display: 'flex', alignContent: 'center',
             justifyContent: 'center', flexWrap: 'wrap'}}
         >
@@ -102,7 +103,7 @@ const SignUp = () => {
                     <Grid xs={12}>
                         <Typography variant='body1' color={'#3a4856'}>Dirección</Typography>
                     </Grid>
-                    <Grid xs={12} sm={6} md={4}>
+                    <Grid xs={12}>
                         <Autocomplete
                             value={userState || ''}
                             onChange={(e, newValue) => {setUserState(newValue)}}
@@ -115,10 +116,10 @@ const SignUp = () => {
                             renderInput={(params) => <TextField {...params} InputLabelProps={{style: {color: '#3a4856'}}} name='estado' label="Estado"/>}
                         />
                     </Grid>
-                    <Grid xs={12} sm={6} md={4}>
+                    <Grid xs={12} sm={6}>
                         <SignUpInput name={'ciudad'} label={'Ciudad'} value={userInfo.ciudad} handleChange={handleChange}/>
                     </Grid>
-                    <Grid xs={12}sm={12} md={4}>
+                    <Grid xs={12} sm={6}>
                         <SignUpInput name={'colonia'} label={'Colonia'} value={userInfo.colonia} handleChange={handleChange}/>
                     </Grid>
                     
