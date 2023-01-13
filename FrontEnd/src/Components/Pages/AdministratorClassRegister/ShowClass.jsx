@@ -1,41 +1,37 @@
 //Importancioon de datos
 import React from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { Button, Modal, TextField, Box, Typography } from "@mui/material";
+import {
+  Button,
+  Modal,
+  TextField,
+  Box,
+  Typography,
+  Autocomplete,
+} from "@mui/material";
 import { data as information } from "../../../data/datosprueba";
+import { niveles } from "../../../data/numerosprueba";
+import { profes } from "../../../data/profesprueba";
 import { useState, useEffect } from "react";
 import { grey } from "@mui/material/colors";
 import { DataGrid, gridClasses } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import Actions from "./Actions";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import MenuItem from "@mui/material/MenuItem";
-
+import { minWidth,minHeight } from "@mui/system";
 export default function ShowClass() {
   //--------------------------------------------Agregar----------------
-  //Estados de agregar
+  //Agregar numeros
   const [number, setNumber] = useState(5);
   function add() {
-    setNumber(prevNumber => prevNumber + 1)
+    setNumber((prevNumber) => prevNumber + 1);
   }
-  const niveles = [
-    {
-      value: "de 8 a 12 años",
-      label: "de 8 a 12 años",
-    },
-    {
-      value: "de 13 a 17 años",
-      label: "de 13 a 17 años",
-    },
-    {
-      value: "Mayores de 18 años",
-      label: "Mayores de 18 años",
-    },
-  ];
+//Estados de agregar
   const [data, setData] = useState([]);
   const [modalInsertar, setModalInsertar] = useState(false);
+  const [keys, setKey] = useState("");
   const [coursename, setCoursename] = useState("");
   const [level, setLevel] = useState("");
   const [teacher, setTeacher] = useState("");
@@ -51,6 +47,7 @@ export default function ShowClass() {
   const handleClick = (e) => {
     e.preventDefault();
     if (
+      keys !== "" &&
       coursename !== "" &&
       level !== "" &&
       teacher !== "" &&
@@ -58,12 +55,14 @@ export default function ShowClass() {
       maximumcapacity !== ""
     ) {
       createClasses({
+        keys,
         coursename,
         level,
         teacher,
         weeklyfrequency,
         maximumcapacity,
       });
+      setKey("");
       setCoursename("");
       setLevel("");
       setTeacher("");
@@ -87,6 +86,7 @@ export default function ShowClass() {
       ...data,
       {
         id: number + 1,
+        keys: datas.keys,
         coursename: datas.coursename,
         level: datas.level,
         teacher: datas.teacher,
@@ -102,6 +102,7 @@ export default function ShowClass() {
   const [modalEditar, setModalEditar] = useState(false);
   const claseInicial = {
     id: -1,
+    keys: "",
     coursename: "",
     level: "",
     teacher: "",
@@ -109,7 +110,6 @@ export default function ShowClass() {
     maximumcapacity: 0,
   };
   const [claseActual, setClaseActual] = useState(claseInicial);
-
   //Function que abre o cierra el modal
   const abrirCerrarModalEditar = () => {
     setModalEditar(!modalEditar);
@@ -130,6 +130,7 @@ export default function ShowClass() {
 
   //Funcion que modifica los daors
   const handleChange = (e) => {
+    console.log(e.target);
     const { name, value } = e.target;
     setClase({ ...clase, [name]: value });
   };
@@ -138,6 +139,7 @@ export default function ShowClass() {
   const handleClick2 = (e) => {
     e.preventDefault();
     if (
+      clase.keys &&
       clase.coursename &&
       clase.level &&
       clase.teacher &&
@@ -168,11 +170,11 @@ export default function ShowClass() {
       style={{
         position: "absolute",
         width: 260,
-        height: 480,
+        height: 560,
         backgroundColor: "#fefefd",
-        top: "50%",
+        top: "48%",
         left: "50%",
-        transform: "translate(-50%, -50%)",
+        transform: "translate(-48%, -50%)",
         border: "4px solid  rgb(165, 165, 180)",
         margin: "auto",
         borderRadius: "10px",
@@ -192,6 +194,13 @@ export default function ShowClass() {
         value={coursename}
         autoFocus
       />
+      <TextField
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
+        label="Clave"
+        onChange={(e) => setKey(e.target.value)}
+        value={keys}
+        autoFocus
+      />
       <br />
       <TextField
         style={{ paddingBottom: "15px", width: "24ch", fontFamily: "arial" }}
@@ -201,7 +210,6 @@ export default function ShowClass() {
         select
         id="filled-select-currency"
       >
-        {" "}
         {niveles.map((option) => (
           <MenuItem
             key={option.value}
@@ -213,11 +221,14 @@ export default function ShowClass() {
         ))}
       </TextField>
       <br />
-      <TextField
-        style={{ paddingBottom: "15px", fontFamily: "arial" }}
-        label="Profesor"
-        onChange={(e) => setTeacher(e.target.value)}
+      <Autocomplete
         value={teacher}
+        onChange={(event, newValue) => {
+          setTeacher(newValue);
+        }}
+        id="profesores-insertar"
+        options={profes}
+        renderInput={(params) => <TextField {...params} label="Profesor" />}
       />
       <br />
       <TextField
@@ -246,9 +257,9 @@ export default function ShowClass() {
       </div>
     </div>
 
-    // Show
+    
   );
-
+// -----------------------------Modal para editar---------------------------
   const bodyEditar = (
     <div
       style={{
@@ -283,12 +294,12 @@ export default function ShowClass() {
       <TextField
         style={{ paddingBottom: "15px", width: "24ch", fontFamily: "arial" }}
         label="Nivel"
-        onChange={(e) => setLevel(e.target.value)}
-        value={level}
+        onChange={handleChange}
+        name="level"
+        value={clase.level}
         select
         id="filled-select-currency"
       >
-        {" "}
         {niveles.map((option) => (
           <MenuItem key={option.value} value={option.value}>
             {option.label}
@@ -297,12 +308,20 @@ export default function ShowClass() {
       </TextField>
       <br />
       <TextField
-        style={{ paddingBottom: "15px", fontFamily: "arial" }}
-        label="Profesor"
+        style={{ paddingBottom: "15px", width: "24ch", fontFamily: "arial" }}
+        label="Nivel"
+        onChange={handleChange}
         name="teacher"
         value={clase.teacher}
-        onChange={handleChange}
-      />
+        select
+        id="filled-select-currency"
+      >
+        {profes.map((option) => (
+          <MenuItem key={option} value={option}>
+            {option}
+          </MenuItem>
+        ))}
+      </TextField>
       <br />
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
@@ -338,7 +357,8 @@ export default function ShowClass() {
 
   const columns = useMemo(
     () => [
-      { field: "id", headerName: "Clave", width: 54 },
+      { field: "id", headerName: "Id", width: 54, hide: true },
+      { field: "keys", headerName: "Clave", width: 54 },
       { field: "coursename", headerName: "Curso", width: 90 },
       { field: "level", headerName: "Nivel", width: 151 },
       { field: "teacher", headerName: "Profesor", width: 140, sortable: false },
@@ -423,11 +443,12 @@ export default function ShowClass() {
         </CardContent>
       </Card>
 
-      <Box
+      <Box 
+      
         sx={{
-          width: 740,
+          width: '740px',
           padding: "15px",
-          height: 450,
+          height: '450px',
           position: "absolute",
           marginLeft: "265px",
         }}
@@ -437,8 +458,7 @@ export default function ShowClass() {
           component="h3"
           sx={{ textAlign: "left", mt: 3, mb: 3, fontFamily: "arial" }}
         >
-          {" "}
-          Clases{" "}
+          Clases
           <Button
             sx={{ marginLeft: "350px" }}
             variant="contained"

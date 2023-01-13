@@ -39,6 +39,7 @@ function Sidebar(props) {
             key: 6,
             title: 'Panel de control',
             content: 'ControlPanel'
+
         },
         {
             key: 7,
