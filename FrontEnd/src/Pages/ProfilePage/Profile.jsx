@@ -32,7 +32,8 @@ const Profile = ({userID}) =>{
     const [successOpen, setSuccessOpen] = useState(false);
     const [errorOpen, setErrorOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false)
-    const [userInfo, setUserInfo] = useState(fetchUserInfo)
+    const [userInfo, setUserInfo] = useState(fetchUserInfo);
+    const [newUserInfo, setNewUserInfo] = useState({});
 
     useEffect(() => {
         const getUserInfo = () =>{
@@ -47,11 +48,12 @@ const Profile = ({userID}) =>{
     const handleSubmit = (e) => {
         // Enviar esta informacion a bd
         e.preventDefault();
+        setNewUserInfo(userInfo);
         console.log(userInfo);
         setIsEditing(!isEditing);
         // Validación para que ver si se establecio la conexión de manera exitosa
         // y se actualizaron los datos 
-        const success = false;
+        const success = true;
         success ? setSuccessOpen(true) : setErrorOpen(true);
     };
 
@@ -63,6 +65,10 @@ const Profile = ({userID}) =>{
         setErrorOpen(false);
     };
 
+    const handleCancel = () => {
+        setUserInfo(newUserInfo);
+        setIsEditing(!isEditing);
+    }
 
     return (
         <Box sx={{p: 1, ml: 1}}>
@@ -105,7 +111,7 @@ const Profile = ({userID}) =>{
                 <Box sx={{display:'flex', m: 1, p: 1, justifyContent: 'flex-end', width: '100%'}}>
                     <Button variant="contained" color='error' 
                         sx={{ display: !isEditing ? 'none' : '', mx: 2}}
-                        onClick={() => { setIsEditing(!isEditing); }}>
+                        onClick={handleCancel}>
                         Cancelar
                     </Button>
                     <Button variant="contained" type='submit' sx={{ display: !isEditing ? 'none' : ''}} size="medium">
