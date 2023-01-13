@@ -33,7 +33,7 @@ const Profile = ({userID}) =>{
     const [errorOpen, setErrorOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false)
     const [userInfo, setUserInfo] = useState(fetchUserInfo);
-    const [newUserInfo, setNewUserInfo] = useState({});
+    const [newUserInfo, setNewUserInfo] = useState(fetchUserInfo);
 
     useEffect(() => {
         const getUserInfo = () =>{
