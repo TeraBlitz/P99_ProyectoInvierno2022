@@ -14,7 +14,6 @@ connection().catch(console.error);
 app.get('/v1', (req, res)=>{
     res.send('Bienvenido | v1')
 })
-
 app.use('/v1/users', user)
 
 app.listen(port, ()=>{

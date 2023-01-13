@@ -4,7 +4,7 @@ const { mongodbInf } = require('../config.js')
 const mongodb = require("mongodb");
 
 /* // Creamos el cliente
-const client = connection() */
+const con = connection() */
 
 // Connection URI.
 // mongodb://localhost:27017
@@ -14,36 +14,59 @@ const client = new mongodb.MongoClient(uri);
 
 async function getAllUser(req, res){
     try{
+        await client.connect();
         const database = client.db(mongodbInf.database)
         const collection = database.collection("users")
 
-        const result = await collection.find()
-        console.log(JSON.stringify(result))
+        const result = await collection.find().toArray()
+        // console.log(JSON.stringify(result))
+        res.send(JSON.stringify(result))
     }catch(err){
         console.log(`ERROR: ${err}`)
     }finally{
         await client.close();
     }
 }
+// Test getAllUser
+// getAllUser().catch(console.dir);
 
 
 // Create
 async function createUser(req, res){
     try{
+        await client.connect();
         const database = client.db(mongodbInf.database)
         const collection = database.collection("users")
 
-        // Crear un Doc de Ejemplo
+        /* // Crear un Doc de Ejemplo
         const doc = {
             nombre: "Mario 5",
             apellidos: "Guerra 5",
+        } */
+
+        // Crear un Doc
+        const doc = {
+            curp: req.body.curp,
+            tipo_usuario: req.body.tipo_usuario,
+            nombre: req.body.nombre,
+            apellido_paterno: req.body.apellido_paterno,
+            apellido_materno: req.body.apellido_materno,
+            edad: req.body.edad,
+            tutor: req.body.tutor,
+            lada: req.body.lada,
+            num_telefono: req.body.num_telefono,
+            estado: req.body.estado,
+            ciudad: req.body.ciudad,
+            colonia: req.body.colonia,
+            escolaridad: req.body.escolaridad,
+            ultima_escuela: req.body.ultima_escuela,
+            correo: req.body.correo
         }
 
         const result = await collection.insertOne(doc)
-        console.log(`Un documeno fue insertado con el ID: ${result.insertedId}`)
-
+        res.send(`Un documeno fue insertado con el ID: ${result.insertedId}`)
     }catch(err){
-        console.log(`ERROR: ${err}`)
+        res.send(`ERROR: ${err}`)
     }finally{
         await client.close();
     }
@@ -55,21 +78,11 @@ async function createUser(req, res){
 // Update
 async function updateUser(req, res){
     try {
+        await client.connect();
         const database = client.db(mongodbInf.database)
         const collection = database.collection("users")
 
-        // Crear el documento actualizado
-        const idDoc = {
-            _id: new mongodb.ObjectId(req.body.id)
-        }
-        const doc = {
-            $set: { 
-                nombre: req.body.nombre,
-                apellidos: req.body.apellidos
-            }
-        }
-
-        // Crear documento actualizado test
+        /* // Crear documento actualizado test
         const idDocTest = {
             _id: new mongodb.ObjectId("63bf608c8391d717b9d65739"),
         }
@@ -78,12 +91,36 @@ async function updateUser(req, res){
                 nombre: "Jorge",
                 apellidos: "Tato"
             }
+        } */
+
+        // Crear el documento actualizado
+        const idDoc = {
+            _id: new mongodb.ObjectId(req.body._id)
+        }
+        const doc = {
+            $set: {
+                curp: req.body.curp,
+                tipo_usuario: req.body.tipo_usuario,
+                nombre: req.body.nombre,
+                apellido_paterno: req.body.apellido_paterno,
+                apellido_materno: req.body.apellido_materno,
+                edad: req.body.edad,
+                tutor: req.body.tutor,
+                lada: req.body.lada,
+                num_telefono: req.body.num_telefono,
+                estado: req.body.estado,
+                ciudad: req.body.ciudad,
+                colonia: req.body.colonia,
+                escolaridad: req.body.escolaridad,
+                ultima_escuela: req.body.ultima_escuela,
+                correo: req.body.correo
+            }
         }
 
-        const result = await collection.findOneAndUpdate(idDocTest,docTest)
-        console.log(`Usuario con _id: ${result.value._id} actualizado con exito. Status: ${result.ok}.`)
+        const result = await collection.findOneAndUpdate(idDoc, doc)
+        res.send(`Usuario con _id: ${result.value._id} actualizado con exito. Status: ${result.ok}.`)
     }catch(err){
-        console.log(`ERROR: ${err}`)
+        console.log(`updateUser ERROR: ${err}`)
     }finally{
         await client.close();
     }
@@ -95,26 +132,27 @@ async function updateUser(req, res){
 // Delete
 async function deleteUser(req, res){
     try {
+        await client.connect();
         const database = client.db(mongodbInf.database)
         const collection = database.collection("users")
 
-        /* // ID documento a eliminar
+        // ID documento a eliminar
         const idDoc = {
-            _id: new mongodb.ObjectId(req.body.id)
-        } */
-
-        // CID documento a eliminar test
-        const idDocTest = {
-            _id: new mongodb.ObjectId("63bf6107b5823dbe5830157d"),
+            _id: new mongodb.ObjectId(req.body._id)
         }
 
-        const result = await collection.deleteOne(idDocTest)
+        /* // CID documento a eliminar test
+        const idDocTest = {
+            _id: new mongodb.ObjectId("63bf6107b5823dbe5830157d"),
+        } */
+
+        const result = await collection.deleteOne(idDoc)
         // console.log(JSON.stringify(result))
 
         if (result.deletedCount === 1) {
-            console.log(`Documento con _id: ${idDocTest._id} eliminado con exito.`)
+            res.send(`Documento con _id: ${idDoc._id} eliminado con exito.`)
         } else {
-            console.log("Ningun documento encontrado. 0 Documentos eliminados.")
+            res.send("Ningun documento encontrado. 0 Documentos eliminados.")
         }
     }catch(err){
         console.log(`ERROR: ${err}`)

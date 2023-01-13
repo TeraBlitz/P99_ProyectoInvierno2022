@@ -4,27 +4,9 @@ const ajv = new Ajv({allErrors: true}) // Ajv option allErrors is required
 const localize_es = require('ajv-i18n/localize/es')
 addFormats(ajv)
 require("ajv-errors")(ajv)
+const {clasesSchema} = require('../schemas/clasesSchema')
 
-const schema = {
-type: "object",
-properties: {
-	id: {type: "integer"},
-    nombre_curso: {type: "string"},
-    nivel: {type: "integer"},
-    idMaestro: {type: "integer"},
-    frecuencia_semanal: {type: "string"},
-    cupo_maximo: {type: "integer"}
-},
-required: [
-	"id","nombre_curso","nivel","idMaestro","frecuencia_semanal","cupo_maximo"
-],
-additionalProperties: false,
-errorMessage: {
-    type: "Debe ser un Objeto", // will not replace internal "type" error for the property "foo"
-  },
-}
-
-const validate = ajv.compile(schema)
+const validate = ajv.compile(clasesSchema)
 
 const data = {
 	id: 1,

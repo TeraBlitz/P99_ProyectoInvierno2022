@@ -17,13 +17,13 @@ async function connection() {
         // Establecer y verificar conexion.
         await client.db("test_db").command({ ping: 1 });
         console.log("Conectado con exito al servidor.");
-        return client
     }catch(err){
         console.log(`ERROR: ${err}`)
-    }finally {
+    }/* finally {
         // Asegurar que el cliente se cerrará cuando termine/error.
         await client.close();
-    }
+    } */
+    return client
 }
 
 // Testeo de la conexion.

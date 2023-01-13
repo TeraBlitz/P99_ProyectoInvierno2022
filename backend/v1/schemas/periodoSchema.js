@@ -21,4 +21,4 @@ type: "object",
     },
 }
 
-module.exports = periodoSchema
+module.exports = {periodoSchema}

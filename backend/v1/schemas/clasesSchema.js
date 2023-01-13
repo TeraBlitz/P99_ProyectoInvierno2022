@@ -17,4 +17,4 @@ const clasesSchema = {
     },
 }
 
-module.exports = clasesSchema
+module.exports = {clasesSchema}

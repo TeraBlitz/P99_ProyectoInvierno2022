@@ -1,4 +1,4 @@
-const schema = {
+const asistenciaSchema = {
     type: "object",
     properties: {
         id: {type: "integer"},
@@ -16,4 +16,4 @@ const schema = {
     },
 }
 
-module.exports = clasesSchema
+module.exports = {asistenciaSchema}
