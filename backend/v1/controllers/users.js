@@ -22,7 +22,7 @@ async function getAllUser(req, res){
         // console.log(JSON.stringify(result))
         res.send(JSON.stringify(result))
     }catch(err){
-        console.log(`ERROR: ${err}`)
+        res.send(`ERROR: ${err}`)
     }finally{
         await client.close();
     }
@@ -120,7 +120,7 @@ async function updateUser(req, res){
         const result = await collection.findOneAndUpdate(idDoc, doc)
         res.send(`Usuario con _id: ${result.value._id} actualizado con exito. Status: ${result.ok}.`)
     }catch(err){
-        console.log(`updateUser ERROR: ${err}`)
+        res.send(`updateUser ERROR: ${err}`)
     }finally{
         await client.close();
     }

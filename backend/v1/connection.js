@@ -41,14 +41,3 @@ async function checkTest_db(client){
 }
 
 module.exports = {connection}
-
-/* OLD VERSION MONGOOSE
-
-const connection = mongoose.connect(`mongodb://${mongodb.host}:${mongodb.port}/${mongodb.database}`)
-.then((db)=>{
-    console.log('Conexion exitosa')
-}).catch((err)=>{
-    console.log(`ERROR: ${err}`)
-})
-
-*/
