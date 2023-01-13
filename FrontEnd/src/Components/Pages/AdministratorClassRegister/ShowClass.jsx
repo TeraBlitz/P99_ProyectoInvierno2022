@@ -443,11 +443,12 @@ export default function ShowClass() {
         </CardContent>
       </Card>
 
-      <Box
+      <Box 
+      
         sx={{
-          width: 740,
+          width: '740px',
           padding: "15px",
-          height: 450,
+          height: '450px',
           position: "absolute",
           marginLeft: "265px",
         }}
