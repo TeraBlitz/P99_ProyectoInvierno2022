@@ -10,15 +10,6 @@ import Typography from '@mui/material/Typography';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Modal from '@mui/material/Modal';
 
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-
-
 
 
 
@@ -37,84 +28,8 @@ import Paper from '@mui/material/Paper';
 
   };
 
-  function createData(nombre, contacto) {
-    return { nombre,contacto };
-  }
 
 
-
-// Funcion que llama a la lista de alumnos
-function ChildModal() {
-
-  // Funcion para llamar la lista
-
-
-  //setup de modal child
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  //setup del modal child en si
-  return (
-
-    <React.Fragment>
-      <Button onClick={handleOpen}>Lista de estudiantes</Button>
-      <Modal
-
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="child-modal-title"
-        aria-describedby="child-modal-description"
-      >
-        {/* Override manual de width para hacer el child mas ancho*/}
-        <Card sx = {{...style, width:'85%'}}>
-          <Typography variant="h5" component="div">
-              Contactos Alumnos
-          </Typography>
-          <div className="spacer"></div>
-
-          {/* Reneder de tabla de alumnos */}
-
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 330 }} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center">Nombre</TableCell>
-                  <TableCell align="center">Contacto</TableCell>
-
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {datos.map((item) => (
-                  <TableRow
-                    key={item.id}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                  >
-                    <TableCell component="th" scope="row" align="center">
-                      {item.nombre}
-                    </TableCell>
-
-                    <TableCell align="center">{item.contacto}</TableCell>
-
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-
-          {/* Boton para cerrar el child modal */}
-          <Button onClick={handleClose}>Regresar</Button>
-
-        </Card>
-
-      </Modal>
-    </React.Fragment>
-  );
-}
 
 // Renderizado de tarjeta individual
 export default function TarjetaMisC(props){
@@ -181,8 +96,8 @@ export default function TarjetaMisC(props){
                           <Typography sx={{ mb: 1.5 }} color="text.secondary">
                              {props.item.notas}
                           </Typography>
-                          {/* Call a el modal child */ }
-                          <ChildModal/>
+
+
                     </Card>
                 </Modal>
 
