@@ -1,3 +1,4 @@
+import cors from "cors"
 const express = require('express')
 const { connection } = require('./v1/connection.js')
 const bodyParser = require('body-parser')
@@ -13,6 +14,7 @@ const asistencia = require('./v1/routes/asistencias')
 connection().catch(console.error);
 
 // Rutas
+app.use(cors());
 app.get('/v1', (req, res)=>{
     res.send('Bienvenido | v1')
 })
