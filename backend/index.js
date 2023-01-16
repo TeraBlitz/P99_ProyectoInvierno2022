@@ -10,16 +10,17 @@ const user = require('./v1/routes/users')
 const clase = require('./v1/routes/clases')
 const periodo = require('./v1/routes/periodos')
 const asistencia = require('./v1/routes/asistencias')
-<<<<<<< HEAD
 const alumno = require('./v1/routes/alumnos')
-=======
 
->>>>>>> 03dff2ec4a7f956121c9a6c2baa301addc9f15dd
 // Testeo de la Conexion
 connection().catch(console.error);
 
+// create application/x-www-form-urlencoded parser
+let urlencodedParser = bodyParser.urlencoded({ extended: false })
+
 // Rutas
 app.use(cors());
+app.use(urlencodedParser);
 app.get('/v1', (req, res)=>{
     res.send('Bienvenido | v1')
 })
