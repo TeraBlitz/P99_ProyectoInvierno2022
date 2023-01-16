@@ -39,21 +39,10 @@ async function createUser(req, res){
 
         // Crear un Doc
         const doc = {
-            curp: req.body.curp,
+            user_name: req.body.user_name,
             tipo_usuario: req.body.tipo_usuario,
-            nombre: req.body.nombre,
-            apellido_paterno: req.body.apellido_paterno,
-            apellido_materno: req.body.apellido_materno,
-            edad: req.body.edad,
-            tutor: req.body.tutor,
-            lada: req.body.lada,
-            num_telefono: req.body.num_telefono,
-            estado: req.body.estado,
-            ciudad: req.body.ciudad,
-            colonia: req.body.colonia,
-            escolaridad: req.body.escolaridad,
-            ultima_escuela: req.body.ultima_escuela,
-            correo: req.body.correo
+            correo: req.body.correo,
+            password: req.body.password
         }
 
         const result = await collection.insertOne(doc)
@@ -81,21 +70,10 @@ async function updateUser(req, res){
         }
         const doc = {
             $set: {
-                curp: req.body.curp,
+                user_name: req.body.user_name,
                 tipo_usuario: req.body.tipo_usuario,
-                nombre: req.body.nombre,
-                apellido_paterno: req.body.apellido_paterno,
-                apellido_materno: req.body.apellido_materno,
-                edad: req.body.edad,
-                tutor: req.body.tutor,
-                lada: req.body.lada,
-                num_telefono: req.body.num_telefono,
-                estado: req.body.estado,
-                ciudad: req.body.ciudad,
-                colonia: req.body.colonia,
-                escolaridad: req.body.escolaridad,
-                ultima_escuela: req.body.ultima_escuela,
-                correo: req.body.correo
+                correo: req.body.correo,
+                password: req.body.password
             }
         }
 

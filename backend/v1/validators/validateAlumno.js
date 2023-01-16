@@ -15,7 +15,7 @@ async function validateAlumno(req, res, next){
 	if(!isValid){
 		localize_es(validate.errors)
 		res.status(400).send(`ERROR: ${ajv.errorsText(validate.errors, {separator: '\n'})}`)
-		console.log(ajv.errorsText(validate.errors, {separator: '\n'}))
+		// console.log(ajv.errorsText(validate.errors, {separator: '\n'}))
 	}else{
 		console.log("La data es valida")
 		next()
