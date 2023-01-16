@@ -36,7 +36,7 @@ const SignUp = ({createUser}) => {
         // Enviar esta informacion a bd
         e.preventDefault();
         // Pasar esta función para añadir al usuario
-        // createUser({userInfo}); 
+        createUser({userInfo}); 
         console.log(userInfo);
     };
     
