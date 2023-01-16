@@ -1,4 +1,4 @@
-import cors from "cors"
+const cors = require('cors')
 const express = require('express')
 const { connection } = require('./v1/connection.js')
 const bodyParser = require('body-parser')
@@ -10,6 +10,7 @@ const user = require('./v1/routes/users')
 const clase = require('./v1/routes/clases')
 const periodo = require('./v1/routes/periodos')
 const asistencia = require('./v1/routes/asistencias')
+
 // Testeo de la Conexion
 connection().catch(console.error);
 
