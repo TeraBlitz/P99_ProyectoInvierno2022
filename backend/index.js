@@ -6,6 +6,7 @@ const port = 3000
 
 // Rutas de los modelos
 const user = require('./v1/routes/users')
+const clase = require('./v1/routes/clases')
 
 // Testeo de la Conexion
 connection().catch(console.error);
@@ -15,6 +16,7 @@ app.get('/v1', (req, res)=>{
     res.send('Bienvenido | v1')
 })
 app.use('/v1/users', user)
+app.use('/v1/clases', clase)
 
 app.listen(port, ()=>{
     console.log(`Aplicacion corriendo en el puerto: ${port}.`)
