@@ -8,6 +8,7 @@ const port = 3000
 const user = require('./v1/routes/users')
 const clase = require('./v1/routes/clases')
 const periodo = require('./v1/routes/periodos')
+const asistencia = require('./v1/routes/asistencias')
 // Testeo de la Conexion
 connection().catch(console.error);
 
@@ -18,6 +19,7 @@ app.get('/v1', (req, res)=>{
 app.use('/v1/users', user)
 app.use('/v1/clases', clase)
 app.use('/v1/periodos', periodo)
+app.use('/v1/asistencias', asistencia)
 
 app.listen(port, ()=>{
     console.log(`Aplicacion corriendo en el puerto: ${port}.`)

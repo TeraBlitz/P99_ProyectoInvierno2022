@@ -1,16 +1,16 @@
 const asistenciaSchema = {
     type: "object",
     properties: {
-        id: {type: "integer"},
-        idUsuario: {type: "integer"},
-        idClse: {type: "integer"},
+        id: {type: "string"},
+        idUsuario: {type: "string"},
+        idClase: {type: "string"},
         fecha: {type: "string", format: "date"},
-        asistio: {type: "integer"}
+        asistio: {type: "string"}
     },
     required: [
-        "id","idUsuario","idClse","fecha","asistio"
+        "idUsuario","idClase","fecha","asistio"
     ],
-    additionalProperties: false,
+    additionalProperties: true,
     errorMessage: {
         type: "Debe ser un Objeto", // will not replace internal "type" error for the property "foo"
     },
