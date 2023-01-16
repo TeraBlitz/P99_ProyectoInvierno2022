@@ -28,7 +28,7 @@ function App() {
         RegistroClasesAlumnos: <RegistroClasesAlumno />,
         MisClasesProfesor: <MisClasesProfesor />,
         Profile: <Profile />,
-        ControlPanel: <ControlPanel/>,
+        ControlPanel: <ControlPanel />,
         MisClases: <MisClases />,
 
         Registro: <ShowClass />
@@ -42,25 +42,25 @@ function App() {
     }
 
     return !isSignedIn ?
-        <SignIn handleSignIn={handleSignIn}/>
-    :
-        <Box  id="main" sx={{ display: 'flex'}}>
-            <Sidebar open={open} changeDrawerState={changeDrawerState} changeContent={changeContent} handleSignOut={handleSignIn}/>
+        <SignIn handleSignIn={handleSignIn} />
+        :
+        <Box id="main" sx={{ display: 'flex' }}>
+            <Sidebar open={open} changeDrawerState={changeDrawerState} changeContent={changeContent} handleSignOut={handleSignIn} />
             <Box sx={{
                 width: '100%',
                 position: 'relative',
                 height: 'auto',
-                overflow:'scroll'
+                overflow: 'scroll'
             }}>
                 <IconButton sx={{ bgcolor: 'primary.light', height: 'fit-content', borderRadius: 1, display: { xs: 'block', sm: 'none' }, position: 'fixed', zIndex: 1000, top: '3px', left: '3px' }} onClick={() => setOpen(!open)}>
 
                     <MenuIcon />
                 </IconButton>
-                <div style={{width:'calc(100vw-240px)'}}>
-        {PagesToRender[content]}
-        </div>
+                <div style={{ width: 'calc(100vw-240px)', height: '100vh' }} >
+                    { PagesToRender[content]}
+                </div>
             </Box>
-        </Box>
+        </Box >
 
 }
 export default App

@@ -357,18 +357,18 @@ export default function ShowClass() {
 
   const columns = useMemo(
     () => [
-      { field: "id", headerName: "Id", width: 54, hide: true },
-      { field: "keys", headerName: "Clave", width: 54 },
-      { field: "coursename", headerName: "Curso", width: 90 },
-      { field: "level", headerName: "Nivel", width: 151 },
-      { field: "teacher", headerName: "Profesor", width: 140, sortable: false },
-      { field: "weeklyfrequency", headerName: "Frecuencia", width: 85 },
-      { field: "maximumcapacity", headerName: "Capacidad", width: 80 },
+      { field: "id", headerName: "Id", width: 134, hide: true },
+      { field: "keys", headerName: "Clave", width: 134 },
+      { field: "coursename", headerName: "Curso", width: 170 },
+      { field: "level", headerName: "Nivel", width: 231 },
+      { field: "teacher", headerName: "Profesor", width: 220, sortable: false },
+      { field: "weeklyfrequency", headerName: "Frecuencia", width: 165 },
+      { field: "maximumcapacity", headerName: "Capacidad", width: 160 },
       {
         field: "actions",
         headerName: "Acciones",
         type: "actions",
-        width: 95,
+        width: 175,
         renderCell: (params) => (
           <Actions {...{ params, deleteClass, editClasses }} />
         ),
@@ -469,6 +469,8 @@ export default function ShowClass() {
           </Button>
         </Typography>
 
+      <Box sx={{height:'80vh' , width:'70vw'}}>
+
         <DataGrid
           columns={columns}
           rows={data}
@@ -492,6 +494,7 @@ export default function ShowClass() {
             items: items,
           }}
         />
+      </Box>
 
         {/* Creacion de modales */}
         <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
