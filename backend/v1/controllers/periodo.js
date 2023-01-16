@@ -41,21 +41,14 @@ async function createPeriodo(req, res){
 
         // Crear un Doc
         const doc = {
-            curp: req.body.curp,
-            tipo_usuario: req.body.tipo_usuario,
-            nombre: req.body.nombre,
-            apellido_paterno: req.body.apellido_paterno,
-            apellido_materno: req.body.apellido_materno,
-            edad: req.body.edad,
-            tutor: req.body.tutor,
-            lada: req.body.lada,
-            num_telefono: req.body.num_telefono,
-            estado: req.body.estado,
-            ciudad: req.body.ciudad,
-            colonia: req.body.colonia,
-            escolaridad: req.body.escolaridad,
-            ultima_escuela: req.body.ultima_escuela,
-            correo: req.body.correo
+            clave: req.body.clave,
+            status: req.body.status,
+            fecha_inicio: req.body.fecha_inicio,
+            fecha_fin: req.body.fecha_fin,
+            fecha_inicio_insc: req.body.fecha_inicio_insc,
+            fecha_fin_insc: req.body.fecha_fin_insc,
+            cursos_max_por_alumno: req.body.cursos_max_por_alumno,
+            idiomas_max_por_alumno: req.body.idiomas_max_por_alumno
         }
 
         const result = await collection.insertOne(doc)
@@ -94,21 +87,14 @@ async function updatePeriodo(req, res){
         }
         const doc = {
             $set: {
-                curp: req.body.curp,
-                tipo_usuario: req.body.tipo_usuario,
-                nombre: req.body.nombre,
-                apellido_paterno: req.body.apellido_paterno,
-                apellido_materno: req.body.apellido_materno,
-                edad: req.body.edad,
-                tutor: req.body.tutor,
-                lada: req.body.lada,
-                num_telefono: req.body.num_telefono,
-                estado: req.body.estado,
-                ciudad: req.body.ciudad,
-                colonia: req.body.colonia,
-                escolaridad: req.body.escolaridad,
-                ultima_escuela: req.body.ultima_escuela,
-                correo: req.body.correo
+                clave: req.body.clave,
+                status: req.body.status,
+                fecha_inicio: req.body.fecha_inicio,
+                fecha_fin: req.body.fecha_fin,
+                fecha_inicio_insc: req.body.fecha_inicio_insc,
+                fecha_fin_insc: req.body.fecha_fin_insc,
+                cursos_max_por_alumno: req.body.cursos_max_por_alumno,
+                idiomas_max_por_alumno: req.body.idiomas_max_por_alumno
             }
         }
 
