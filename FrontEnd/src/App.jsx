@@ -56,7 +56,7 @@ function App() {
 
                     <MenuIcon />
                 </IconButton>
-                <div style={{width:'calc(100vw-240px)'}}>
+                <div style={{width:'calc(100vw-240px)', height:'100vh'}}>
         {PagesToRender[content]}
         </div>
             </Box>
