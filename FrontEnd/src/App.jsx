@@ -11,6 +11,7 @@ import ControlPanel from './Pages/ControlPanel/ControlPanel'
 import ShowClass from "./Components/Pages/AdministratorClassRegister/ShowClass";
 import SignIn from './Pages/SignIn/SignIn'
 import MisClases from './Pages/MisClases/MisClasesEstudiante'
+import ForgotPassword from './Pages/ForgotPassword/ForgotPassword'
 
 
 function App() {
