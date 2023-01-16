@@ -1,36 +1,43 @@
 const { MongoClient } = require("mongodb");
-const { mongodb } = require('./config')
+const { mongodbInf } = require('./config.js')
 
+// Funcion principal de la conexion.
+async function connection() {
+    // Connection URI.
+    // mongodb://localhost:27017
+    const uri = `mongodb://${mongodbInf.host}:${mongodbInf.port}/${mongodbInf.database}`
+    // Crear un nuevo MongoClient
+    const client = new MongoClient(uri);
 
-// Connection URI
-const uri = `mongodb://${mongodb.host}:${mongodb.port}/${mongodb.database}`
-
-// Crear un nuevo MongoClient
-const client = new MongoClient(uri);
-
-const connection = async () => {
     try {
-        // Conectar el cliente con el server (optional starting in v4.7)
+        // Conectar el cliente con el server (optional starting in v4.7).
         await client.connect();
-        // Establecer y verificar conexion
-        await client.db("admin").command({ ping: 1 });
-        console.log("Conectado con exito al servidor");
-    } finally {
-        // Asegurar que el cliente se cerrará cuando termine/error
+        // Testeo
+        await checkTest_db(client)
+        // Establecer y verificar conexion.
+        await client.db("test_db").command({ ping: 1 });
+        console.log("Conectado con exito al servidor.");
+    }catch(err){
+        console.log(`ERROR: ${err}`)
+    }/* finally {
+        // Asegurar que el cliente se cerrará cuando termine/error.
         await client.close();
-    }
-}   
-run().catch(console.dir);
+    } */
+    return client
+}
 
-module.exports = connection
+// Testeo de la conexion.
+// connection().catch(console.error);
 
-/* OLD VERSION MONGOOSE
+// Funcion de test que lista las bases de datos.
+async function checkTest_db(client){
+    const databasesList = await client.db().admin().listDatabases()
 
-const connection = mongoose.connect(`mongodb://${mongodb.host}:${mongodb.port}/${mongodb.database}`)
-.then((db)=>{
-    console.log('Conexion exitosa')
-}).catch((err)=>{
-    console.log(`ERROR: ${err}`)
-})
+    databasesList.databases.forEach(db => {
+        if(db.name == 'test_db'){
+            console.log(`- DB: '${db.name}' detectada. `)
+        }
+    })
+}
 
-*/
+module.exports = {connection}

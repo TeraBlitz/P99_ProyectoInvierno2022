@@ -1,4 +1,5 @@
 module.exports = {
+
     /* 
     mysql_database: {
         host: 'localhost',
@@ -7,11 +8,13 @@ module.exports = {
         database: 'mydb'
     },
      */
-    mongodb: {
-        host: 'localhost',
+    
+    mongodbInf: {
+        // Equivalente a 'localhost', pero a veces no funciona con 'localhost'
+        host: '127.0.0.1', 
         user: '',
         password: '',
-        database: 'mydb',
+        database: 'test_db',
         port: 27017
     }
 }
