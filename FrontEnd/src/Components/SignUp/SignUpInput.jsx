@@ -5,8 +5,8 @@ import TextField from '@mui/material/TextField';
 const SignUpInput = ({name, label, type, value, handleChange}) => (
     <TextField name={name} required 
         fullWidth label={label}
-        sx={{input: {color: 'black'}, mt: 1}}
-        InputLabelProps={{style: {color: '#3a4856'}, shrink: true}}
+        sx={{input: {color: 'white'}, my: 1}}
+        InputLabelProps={{style: {color: '#E6F4F1'}}}
         onChange={handleChange}
         onInvalid={e => e.target.setCustomValidity(`Ingresa tu ${label}`)} 
         onInput={e => e.target.setCustomValidity('')}
