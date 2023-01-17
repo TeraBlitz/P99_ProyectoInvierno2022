@@ -1,7 +1,6 @@
 const periodoSchema = {
 type: "object",
     properties: {
-        id: {type: "string"},
         clave: {type: "string"},
         status: {type: "string"},
         fecha_inicio: {type: "string", format: "date"},

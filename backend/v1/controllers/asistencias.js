@@ -121,7 +121,7 @@ async function deleteAsistencia(req, res) {
             _id: new mongodb.ObjectId("63bf6107b5823dbe5830157d"),
         } */
 
-    const result = await collection.deleteOne(idDoc);
+    const result = await collection.deleteMany(idDoc);
     // console.log(JSON.stringify(result))
 
     if (result.deletedCount === 1) {

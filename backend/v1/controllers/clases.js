@@ -98,7 +98,7 @@ async function deleteClase(req, res) {
       _id: new mongodb.ObjectId(req.body._id),
     };
 
-    const result = await collection.deleteOne(idDoc);
+    const result = await collection.deleteMany(idDoc);
     // console.log(JSON.stringify(result))
 
     if (result.deletedCount === 1) {
