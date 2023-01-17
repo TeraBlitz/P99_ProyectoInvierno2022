@@ -11,6 +11,7 @@ const clase = require('./v1/routes/clases')
 const periodo = require('./v1/routes/periodos')
 const asistencia = require('./v1/routes/asistencias')
 const alumno = require('./v1/routes/alumnos')
+//const listaespera = require('./v1/routes/listaesperas')
 
 // Testeo de la Conexion
 connection().catch(console.error);
@@ -29,6 +30,7 @@ app.use('/v1/clases', clase)
 app.use('/v1/periodos', periodo)
 app.use('/v1/asistencias', asistencia)
 app.use('/v1/alumnos', alumno)
+//app.use('/v1/listaesperas', listaespera)
 
 app.listen(port, ()=>{
     console.log(`Aplicacion corriendo en el puerto: ${port}.`)

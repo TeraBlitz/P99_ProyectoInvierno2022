@@ -36,6 +36,7 @@ async function createClase(req, res) {
       idMaestro: req.body.idMaestro,
       frecuencia_semanal: req.body.frecuencia_semanal,
       cupo_maximo: req.body.cupo_maximo,
+      cupo_actual: req.body.cupo_actual
     }];
 
     const result = await collection.insertMany(doc);
@@ -70,6 +71,7 @@ async function updateClase(req, res) {
         idMaestro: req.body.idMaestro,
         frecuencia_semanal: req.body.frecuencia_semanal,
         cupo_maximo: req.body.cupo_maximo,
+        cupo_actual: req.body.cupo_actual
       },
     };
 
