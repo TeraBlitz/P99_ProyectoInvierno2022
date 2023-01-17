@@ -1,15 +1,9 @@
-const { connection } = require("../connection.js");
-const { mongodbInf } = require("../config.js");
+const {clientCon} = require('../connection.js')
+const { mongodbInf } = require('../config.js')
 const mongodb = require("mongodb");
 
-/* // Creamos el cliente
-const con = connection() */
-
-// Connection URI.
-// mongodb://localhost:27017
-const uri = `mongodb://${mongodbInf.host}:${mongodbInf.port}/${mongodbInf.database}`;
 // Crear un nuevo MongoClient
-const client = new mongodb.MongoClient(uri);
+const client = clientCon;
 
 async function getAllClase(req, res) {
   try {
