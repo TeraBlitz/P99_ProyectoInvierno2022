@@ -21,6 +21,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import MenuItem from "@mui/material/MenuItem";
 import { minWidth,minHeight } from "@mui/system";
+import DeleteDialog from './DeleteDialog'
 export default function ShowClass() {
   //--------------------------------------------Agregar----------------
   //Agregar numeros
@@ -37,7 +38,18 @@ export default function ShowClass() {
   const [teacher, setTeacher] = useState("");
   const [weeklyfrequency, setWeeklyfrequency] = useState("");
   const [maximumcapacity, setMaximumcapacity] = useState("");
+  const [currentRowId, setCurrentRowId] = useState(null); 
 
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpenDeleteDialog(true);
+  };
+
+  const handleClose = () => {
+    setOpenDeleteDialog(false);
+  };
+  
   //Funcion click para abrir el modal
   const abrirCerrarModalInsertar = () => {
     setModalInsertar(!modalInsertar);
@@ -130,7 +142,7 @@ export default function ShowClass() {
 
   //Funcion que modifica los daors
   const handleChange = (e) => {
-    console.log(e.target);
+    //console.log(e.target);
     const { name, value } = e.target;
     setClase({ ...clase, [name]: value });
   };
@@ -157,11 +169,16 @@ export default function ShowClass() {
     abrirCerrarModalEditar();
   };
 
-  //--------------------------------------------Eliminar--------------
-  // Solo se usa un filter para eliminar
-  function deleteClass(classId) {
-    console.log(classId);
-    setData(data.filter((datos) => datos.id !== classId));
+  //------------------------------------Eliminar-------------------------------------
+  // Se agrego un componente de dialogo para confirmar la eliminacion de una clase
+  
+  const classToDelete = (id, clase) => {
+    setClaseActual(clase);
+  };
+
+  function deleteClass() {
+    setData(data.filter((datos) => datos.id !== claseActual.id));
+    handleClose();
   }
 
   //-------------------------------Datos de ventanas modales---------------
@@ -370,7 +387,7 @@ export default function ShowClass() {
         type: "actions",
         width: 95,
         renderCell: (params) => (
-          <Actions {...{ params, deleteClass, editClasses }} />
+          <Actions {...{ params, handleClickOpen, editClasses, classToDelete}} />
         ),
       },
     ],
@@ -492,7 +509,7 @@ export default function ShowClass() {
             items: items,
           }}
         />
-
+        <DeleteDialog deleteClass={deleteClass} handleClose={handleClose} open={openDeleteDialog}/>
         {/* Creacion de modales */}
         <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
           {bodyInsertar}
