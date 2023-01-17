@@ -39,15 +39,20 @@ async function createAsistencia(req, res) {
         } */
 
     // Crear un Doc
-    const doc = {
-      idUsuario: req.body.idUsuario,
-      idClase: req.body.idClase,
-      fecha: req.body.fecha,
-      asistio: req.body.asistio,
-    };
+    const doc = [
+      {
+        idUsuario: req.body.idUsuario,
+        idClase: req.body.idClase,
+        fecha: req.body.fecha,
+        asistio: req.body.asistio,
+      },
+    ];
 
-    const result = await collection.insertOne(doc);
-    res.send(`Un documeno fue insertado con el ID: ${result.insertedId}`);
+    const result = await collection.insertMany(doc);
+    for (i = 0; i < result.insertedCount; i++)
+      res.send(
+        `Un documento fue insertado con el ID: ${result.insertedIds[i]}`
+      );
   } catch (err) {
     res.send(`ERROR: ${err}`);
   } finally {
