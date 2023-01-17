@@ -58,10 +58,6 @@ export default function ShowClass() {
     setOpenDeleteDialog(false);
   };
   
-  //Funcion click para abrir el modal
-  const abrirCerrarModalInsertar = () => {
-    setModalInsertar(!modalInsertar);
-  };
 
 
     //Evento que dado un nuevos datos los agrega
