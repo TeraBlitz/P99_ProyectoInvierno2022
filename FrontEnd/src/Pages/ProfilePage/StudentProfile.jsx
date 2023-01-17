@@ -1,25 +1,41 @@
 import React, {useState} from 'react'
 import Box from '@mui/material/Box'
+import Link from '@mui/material/Link'
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
+import FormHelperText  from '@mui/material/FormHelperText';
 import Snackbar from '@mui/material/Snackbar';
+import ParentInfo from './ParentInfo'
+
+const studentInfo = {
+    'nombre': '', 'apellido_paterno': '', 'apellido_materno': '',
+    'correo': '', 'telefono': '', 'lada':'','curp': '', 'fecha_nacimiento':'',
+    'escolaridad': '', 'ultima_escuela':'','estado':'', 'ciudad':'', 'colonia': '',
+    'tutor_nombre': '', 'tutor_apellido_paterno':'','tutor_apellido_materno':'',
+    'tutor_correo':'', 'tutor_num_telefonico':''
+};
+
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const StudentProfile = ({setUserInfo, isEditing, userInfo, handleChange, setIsEditing}) =>{
+const StudentProfile = ({isEditing, setIsEditing}) =>{
     const [successOpen, setSuccessOpen] = useState(false);
     const [errorOpen, setErrorOpen] = useState(false);
-    const [newUserInfo, setNewUserInfo] = useState(userInfo);
+    const [studentData, setStudentInfo] = useState(studentInfo)
+    const [newStudentInfo, setNewStudentInfo] = useState(studentInfo);
 
+    const handleChange = e => setStudentInfo(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
 
     const handleSubmit = (e) => {
         // Enviar esta informacion a bd
         e.preventDefault();
-        setNewUserInfo(userInfo);
-        console.log(userInfo);
+        setNewStudentInfo(studentData);
+        console.log(studentData);
         setIsEditing(!isEditing);
         // Validación para que ver si se establecio la conexión de manera exitosa
         // y se actualizaron los datos 
@@ -36,9 +52,19 @@ const StudentProfile = ({setUserInfo, isEditing, userInfo, handleChange, setIsEd
     };
 
     const handleCancel = () => {
-        setUserInfo(newUserInfo);
+        setStudentInfo(newStudentInfo);
         setIsEditing(!isEditing);
     }
+
+    // Funcion para calcular edad si es menor de 18 se pide
+    //  un nombre de Tutor al estudiante
+    const calculate_age = (dateString) => {
+        var birthday = +new Date(dateString);
+        // The magic number: 31557600000 is 24 * 3600 * 365.25 * 1000, which is the length of a year
+        const magic_number = 31557600000;
+        return ~~((Date.now() - birthday) / (magic_number));
+      }
+
 
     return (
         <>
@@ -48,13 +74,21 @@ const StudentProfile = ({setUserInfo, isEditing, userInfo, handleChange, setIsEd
                 autoComplete="off"
                 onSubmit={handleSubmit}
             >
-                <Box sx={{ typography: 'subtitle2', fontWeight: 'light', fontFamily: 'default', width: '100%', mt: 2}}>
+                <Box 
+                    sx={{ typography: 'subtitle2',
+                        fontWeight: 'light', fontFamily: 'default',
+                        width: '100%', mt: 2, display: 'flex',
+                        justifyContent: 'space-between'}}
+                >
                     Datos Estudiante
+                    <IconButton aria-label="edit" color="primary" onClick={() => { setIsEditing(!isEditing); }}>
+                        <EditIcon />
+                    </IconButton>
                 </Box>
-                <TextField name="matricula" label="Matricula" InputProps={{readOnly: true}} value={userInfo.matricula || ''}  onChange={handleChange}/>
-                <TextField name="nombre" label="Nombre(s)" InputProps={{readOnly: !isEditing}} value={userInfo.nombre || ''} onChange={handleChange} required/>
-                <TextField name="apellido_paterno" label="Primer Apellido" InputProps={{readOnly: !isEditing}} value={userInfo.apellido_paterno || ''} onChange={handleChange} required/>       
-                <TextField name="apellido_materno" label="Segundo Apellido" InputProps={{readOnly: !isEditing}} value={userInfo.apellido_materno || ''} onChange={handleChange} required/>       
+                <TextField name="matricula" label="Matricula" InputProps={{readOnly: true}} value={studentData.matricula || ''}  onChange={handleChange}/>
+                <TextField name="nombre" label="Nombre(s)" InputProps={{readOnly: !isEditing}} value={studentData.nombre || ''} onChange={handleChange} required/>
+                <TextField name="apellido_paterno" label="Primer Apellido" InputProps={{readOnly: !isEditing}} value={studentData.apellido_paterno || ''} onChange={handleChange} required/>       
+                <TextField name="apellido_materno" label="Segundo Apellido" InputProps={{readOnly: !isEditing}} value={studentData.apellido_materno || ''} onChange={handleChange} required/>       
                 <TextField
                     name="lada"
                     label="LADA" type='number'
@@ -62,19 +96,25 @@ const StudentProfile = ({setUserInfo, isEditing, userInfo, handleChange, setIsEd
                         startAdornment: <InputAdornment position="start">+</InputAdornment>,
                         readOnly: !isEditing
                     }}
-                    value={userInfo.lada || ''}
+                    value={studentData.lada || ''}
                     onChange={handleChange}
                     required
                 />
-                <TextField name="num_telefono" label="Núm. Telefonico" InputProps={{readOnly: !isEditing}} value={userInfo.num_telefono || ''} onChange={handleChange} required/>    
-                <TextField name="curp" label="CURP" InputProps={{readOnly: !isEditing}} value={userInfo.curp || ''} onChange={handleChange} required/>
-                <TextField name='fecha_nacimiento' label="Fecha de nacimiento" type='date' InputProps={{readOnly: !isEditing}} value={userInfo.fecha_nacimiento || ''} required/>        
-                <TextField name="escolaridad" label="Escolaridad" InputProps={{readOnly: !isEditing}} value={userInfo.escolaridad || ''} onChange={handleChange} required/>        
-                <TextField name="ultima_escuela" label="Ultima Escuela" InputProps={{readOnly: !isEditing}} value={userInfo.ultima_escuela || ''} onChange={handleChange} required/>        
-                <TextField name="estado" label="Estado" InputProps={{readOnly: !isEditing}} value={userInfo.estado || ''} onChange={handleChange} required/>   
-                <TextField name="ciudad" label="Ciudad" InputProps={{readOnly: !isEditing}} value={userInfo.ciudad || ''} onChange={handleChange} required/>        
-                <TextField name="colonia" label="Colonia" InputProps={{readOnly: !isEditing}} value={userInfo.colonia || ''} onChange={handleChange} required/>
-                    
+                <TextField name="num_telefono" label="Núm. Telefonico" InputProps={{readOnly: !isEditing}} value={studentData.num_telefono || ''} onChange={handleChange} required/>    
+                <TextField name="curp" label="CURP" InputProps={{readOnly: !isEditing}} value={studentData.curp || ''} onChange={handleChange} required>
+                    <FormHelperText id="component-helper-text">
+                        <Link href="https://www.gob.mx/curp/" underline="hover" target="_blank">
+                            &#9432; Obten tu CURP
+                        </Link>
+                    </FormHelperText>
+                </TextField>
+                <TextField name='fecha_nacimiento' label="Fecha de nacimiento" type='date' InputProps={{readOnly: !isEditing}} InputLabelProps={{ shrink: true }} value={studentData.fecha_nacimiento || ''} required/>        
+                <TextField name="escolaridad" label="Escolaridad" InputProps={{readOnly: !isEditing}} value={studentData.escolaridad || ''} onChange={handleChange} required/>        
+                <TextField name="ultima_escuela" label="Ultima Escuela" InputProps={{readOnly: !isEditing}} value={studentData.ultima_escuela || ''} onChange={handleChange} required/>        
+                <TextField name="estado" label="Estado" InputProps={{readOnly: !isEditing}} value={studentData.estado || ''} onChange={handleChange} required/>   
+                <TextField name="ciudad" label="Ciudad" InputProps={{readOnly: !isEditing}} value={studentData.ciudad || ''} onChange={handleChange} required/>        
+                <TextField name="colonia" label="Colonia" InputProps={{readOnly: !isEditing}} value={studentData.colonia || ''} onChange={handleChange} required/>
+                {calculate_age(studentData.fecha_nacimiento) < 18 ? <ParentInfo isEditing={isEditing} studentData={studentData} handleChange={handleChange}/> : null}
                 <Box sx={{width: '100%' }}></Box>
 
                 <Box sx={{display:'flex', m: 1, p: 1, justifyContent: 'flex-end', width: '100%'}}>
@@ -98,6 +138,7 @@ const StudentProfile = ({setUserInfo, isEditing, userInfo, handleChange, setIsEd
                     </Snackbar>
                 </Box>
             </Box>
+
         </>
     )
 }

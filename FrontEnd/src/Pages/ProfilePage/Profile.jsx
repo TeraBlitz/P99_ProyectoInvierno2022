@@ -5,7 +5,6 @@ import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import StudentProfile from './StudentProfile';
@@ -20,13 +19,6 @@ const fetchUserInfo = () => {
         'usuario': 'Username', 
         'correo': 'user@gmail.com'
     }
-
-    const studentData = {
-        'nombre': 'Juan', 'apellido': 'Perez Perez', 'matricula': 'A01',
-        'correo': 'juan@gmail.com', 'telefono': '0000000000', 'lada':'52', 'tipo': 'Student',
-        'curp': 'OEAF771012HMCRGR09', 'fecha_nacimiento':'2005-07-22','escolaridad': 'Secundaria', 'ultima_escuela':'CBTIS',
-        'estado':'Nuevo Leon', 'ciudad':'Monterrey', 'colonia': 'Centro', 'tutor': 'Carlos Perez' 
-    };
     return userData; 
 };
 
@@ -34,7 +26,6 @@ const Profile = ({userID}) =>{
     
     const [isEditing, setIsEditing] = useState(false)
     const [userInfo, setUserInfo] = useState(fetchUserInfo);
-    const [newUserInfo, setNewUserInfo] = useState(fetchUserInfo);
 
     useEffect(() => {
         const getUserInfo = () =>{
@@ -58,10 +49,6 @@ const Profile = ({userID}) =>{
                             onClick={() => { setIsEditing(!isEditing); }}>
                         <AddIcon />
                     </Fab>
-                    <Fab color="secondary" aria-label="edit" sx={{ display: isEditing ? 'none' : '', mt: 2}} 
-                            onClick={() => { setIsEditing(!isEditing); }}>
-                        <EditIcon />
-                    </Fab>
                 </Box>
             </Box>
             <Box sx={{ typography: 'subtitle2', fontWeight: 'light', fontFamily: 'default' }}>
@@ -72,11 +59,8 @@ const Profile = ({userID}) =>{
                 <TextField name="correo" label="Correo" InputProps={{readOnly: true}} value={userInfo.correo || ''}/>
             </Box>
             <StudentProfile 
-                setUserInfo={setUserInfo}
                 setIsEditing={setIsEditing}
                 isEditing={isEditing}
-                userInfo={userInfo}
-                handleChange={handleChange}  
             />
         </Box>
     )
