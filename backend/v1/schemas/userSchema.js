@@ -4,10 +4,13 @@ const userSchema = {
         user_name: {type: "string"},
         tipo_usuario: {type: "string"},
         correo: {type: "string", format: "email"},
-        password: {type: "string"}
+        password: {type: "string", format: "password"}
     },
     required: [
-        "user_name","tipo_usuario","correo","password"
+        "user_name",
+        "tipo_usuario",
+        "correo",
+        "password"
     ],
     additionalProperties: true,
     errorMessage: {

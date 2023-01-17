@@ -1,29 +1,28 @@
 const { MongoClient } = require("mongodb");
 const { mongodbInf } = require('./config.js')
 
+// Connection URI.
+// mongodb://localhost:27017
+const uri = `mongodb://${mongodbInf.host}:${mongodbInf.port}/${mongodbInf.database}`
+// Crear un nuevo MongoClient
+const clientCon = new MongoClient(uri);
+
 // Funcion principal de la conexion.
 async function connection() {
-    // Connection URI.
-    // mongodb://localhost:27017
-    const uri = `mongodb://${mongodbInf.host}:${mongodbInf.port}/${mongodbInf.database}`
-    // Crear un nuevo MongoClient
-    const client = new MongoClient(uri);
-
     try {
         // Conectar el cliente con el server (optional starting in v4.7).
-        await client.connect();
+        await clientCon.connect();
         // Testeo
-        await checkTest_db(client)
+        await checkTest_db(clientCon)
         // Establecer y verificar conexion.
-        await client.db("test_db").command({ ping: 1 });
+        await clientCon.db("test_db").command({ ping: 1 });
         console.log("Conectado con exito al servidor.");
     }catch(err){
         console.log(`ERROR: ${err}`)
-    }/* finally {
+    }finally {
         // Asegurar que el cliente se cerrará cuando termine/error.
-        await client.close();
-    } */
-    return client
+        await clientCon.close();
+    }
 }
 
 // Testeo de la conexion.
@@ -40,4 +39,4 @@ async function checkTest_db(client){
     })
 }
 
-module.exports = {connection}
+module.exports = {connection, clientCon}
