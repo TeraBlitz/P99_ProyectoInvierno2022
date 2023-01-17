@@ -4,13 +4,16 @@ import Grid from '@mui/material/Grid'
 import PanelCard from '../../Components/ControlPanel/PanelCard';
 import PanelInfo from '../../Components/ControlPanel/PanelInfo';
 
+import Periodos from './PagesCP/Periodos.jsx';
+
+
 // Possible function to get users, this goes in another file
 const fetchUsers = () => {
     //const res = await fetch(`http://localhost:3000/users`);
     //const userData = res.json();
     // Se reciben todos los usuarios este array se pasa como prop al componente de Alumnos
     const users = [];
-    return users; 
+    return users;
 };
 
 const fetchTeachers = () => {
@@ -18,7 +21,7 @@ const fetchTeachers = () => {
     //const userData = res.json();
     // Se reciben todos los usuarios este array se pasa como prop al componente de Alumnos
     const teachers = [];
-    return teachers; 
+    return teachers;
 };
 
 
@@ -85,7 +88,10 @@ const ControlPanel = () => {
         getTeachersInfo();
     }, []);
 
+    const [display, setDisplay ]= useState(false);
+
     return (
+        <div>
         <Box sx={{ ml: 1, p: 1 }} >
             <Box sx={{ fontFamily: 'default', fontSize: 'h3.fontSize', py: 2, display: 'flex', justifyContent: 'space-between' }}>
                 Panel de control
@@ -103,6 +109,10 @@ const ControlPanel = () => {
                 )}
             </Grid>
         </Box>
+        <button onClick={() => setDisplay(!display)}>Periodos</button>
+        {display && <Periodos/>}
+
+        </div>
     )
 }
 

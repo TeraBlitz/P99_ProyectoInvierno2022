@@ -13,6 +13,7 @@ import SignIn from './Pages/SignIn/SignIn'
 import MisClases from './Pages/MisClases/MisClasesEstudiante'
 
 
+
 function App() {
     const [open, setOpen] = useState(false)
     const [content, setContent] = useState('content')
@@ -31,7 +32,9 @@ function App() {
         ControlPanel: <ControlPanel/>,
         MisClases: <MisClases />,
 
-        Registro: <ShowClass />
+        Registro: <ShowClass />,
+
+
     }
 
     const handleSignIn = (e) => {
