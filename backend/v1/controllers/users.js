@@ -33,7 +33,7 @@ async function createUser(req, res) {
     const doc = [
       {
         user_name: req.body.user_name,
-        tipo_usuario: req.body.tipo_usuario,
+        rol: req.body.rol,
         correo: req.body.correo,
         password: req.body.password,
       },
@@ -67,7 +67,7 @@ async function updateUser(req, res) {
     const doc = {
       $set: {
         user_name: req.body.user_name,
-        tipo_usuario: req.body.tipo_usuario,
+        rol: req.body.rol,
         correo: req.body.correo,
         password: req.body.password,
       },

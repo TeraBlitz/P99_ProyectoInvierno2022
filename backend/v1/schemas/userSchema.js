@@ -3,17 +3,17 @@ const userSchema = {
     properties: {
         id: {type: "string"},
         user_name: {type: "string"},
-        tipo_usuario: {type: "string"},
+        rol: {type: "string"},
         correo: {type: "string", format: "email"},
         password: {type: "string", format: "password"}
     },
     required: [
         "user_name",
-        "tipo_usuario",
+        "rol",
         "correo",
         "password"
     ],
-    additionalProperties: true,
+    additionalProperties: false,
     errorMessage: {
         type: "Debe ser un Objeto", // will not replace internal "type" error for the property "foo"
     },
