@@ -2,6 +2,7 @@
 const alumnoSchema = {
   type: "object",
   properties: {
+    idUsuario : {type: "string"},
     curp: { type: "string",minLength:18, maxLength:18,  pattern:"[a-z|A-Z]{4}[0-9]{6}[H|M|m|h][A-Z|a-z]{5}[a-z|A-Z|0-9][0-9]"},
     nombre: { type: "string" },
     apellido_paterno: { type: "string" },
@@ -26,11 +27,6 @@ const alumnoSchema = {
     "apellido_paterno",
     "apellido_materno",
     "fecha_de_nacimiento",
-    "tutor_nombre",
-    "tutor_apellido_paterno",
-    "tutor_apellido_materno",
-    "tutor_correo",
-    "tutor_num_telefono",
     "num_telefono",
     "estado",
     "ciudad",
