@@ -32,6 +32,7 @@ async function createAlumno(req, res) {
     // Crear un Doc
     const doc = [
       {
+        idUsuario : req.body.idUsuario ,
         curp: req.body.curp,
         nombre: req.body.nombre,
         apellido_paterno: req.body.apellido_paterno,
@@ -79,6 +80,7 @@ async function updateAlumno(req, res) {
     };
     const doc = {
       $set: {
+        idUsuario : req.body.idUsuario ,
         curp: req.body.curp,
         nombre: req.body.nombre,
         apellido_paterno: req.body.apellido_paterno,
@@ -124,7 +126,7 @@ async function deleteAlumno(req, res) {
       _id: new mongodb.ObjectId(req.body._id),
     };
 
-    const result = await collection.deleteOne(idDoc);
+    const result = await collection.deleteMany(idDoc);
     // console.log(JSON.stringify(result))
 
     if (result.deletedCount === 1) {

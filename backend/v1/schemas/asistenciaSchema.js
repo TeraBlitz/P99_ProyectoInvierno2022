@@ -1,7 +1,6 @@
 const asistenciaSchema = {
     type: "object",
     properties: {
-        id: {type: "string"},
         idUsuario: {type: "string"},
         idClase: {type: "string"},
         fecha: {type: "string", format: "date"},

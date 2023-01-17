@@ -73,7 +73,7 @@ async function updateUser(req, res) {
       },
     };
 
-    const result = await collection.findOneAndUpdate(idDoc, doc);
+    const result = await collection.findAndUpdate(idDoc, doc);
     res.send(
       `Documento con _id: ${result.value._id} actualizado con exito. Status: ${result.ok}.`
     );
@@ -98,7 +98,7 @@ async function deleteUser(req, res) {
       _id: new mongodb.ObjectId(req.body._id),
     };
 
-    const result = await collection.deleteOne(idDoc);
+    const result = await collection.deleteMany(idDoc);
     // console.log(JSON.stringify(result))
 
     if (result.deletedCount === 1) {

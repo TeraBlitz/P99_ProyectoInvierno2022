@@ -1,7 +1,6 @@
 const userSchema = {
     type: "object",
     properties: {
-        id: {type: "string"},
         user_name: {type: "string"},
         rol: {type: "string"},
         correo: {type: "string", format: "email"},

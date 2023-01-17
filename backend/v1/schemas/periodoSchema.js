@@ -1,15 +1,14 @@
 const periodoSchema = {
 type: "object",
     properties: {
-        id: {type: "string"},
         clave: {type: "string"},
         status: {type: "string"},
         fecha_inicio: {type: "string", format: "date"},
         fecha_fin: {type: "string", format: "date"},
         fecha_inicio_insc: {type: "string", format: "date"},
         fecha_fin_insc: {type: "string", format: "date"},
-        cursos_max_por_alumno: {type: "string"},
-        idiomas_max_por_alumno: {type: "string"}
+        cursos_max_por_alumno: {type: "string", pattern: "^([0-9])*$"},
+        idiomas_max_por_alumno: {type: "string", pattern: "^([0-9])*$"}
     },
     required: [
         "clave","status","fecha_inicio","fecha_fin","fecha_inicio_insc","fecha_fin_insc",
