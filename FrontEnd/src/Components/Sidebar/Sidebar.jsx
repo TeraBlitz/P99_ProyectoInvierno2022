@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Box from '@mui/material/Box'
 import { Drawer, List } from '@mui/material'
 import SidebarButton from '../Sidebar_button/SidebarButton'
@@ -9,51 +9,62 @@ function Sidebar(props) {
     // key: identificador unico (Math.random())
     // title: como va a aparecer en el boton de la sidebar
     // content: nombre del componente renderizado en PagesToRender (app.jsx)
+    const userValues = useContext(userContext)
     const options = [
         {
             key: 1,
             title: 'Profile',
-            content: 'Profile'
+            content: 'Profile',
+            userType: 'any'
         },
         {
             key: 2,
             title: 'Registro Clases',
-            content: 'RegistroClasesAlumnos'
+            content: 'RegistroClasesAlumnos',
+            userType: 'student'
         },
         {
             key: 3,
             title: 'Registro clases de Administrador',
-            content: 'Registro'
+            content: 'Registro',
+            userType: 'administrador'
         },
         {
             key: 4,
             title: 'Mis Clases (Profesor)',
-            content: 'MisClasesProfesor'
+            content: 'MisClasesProfesor',
+            userType: 'profesor'
         },
         {
             key: 5,
             title: 'Mis Clases (Estudiantes)',
             content: 'MisClases',
+            userType: 'student'
         },
         {
             key: 6,
             title: 'Panel de control',
-            content: 'ControlPanel'
+            content: 'ControlPanel',
+            userType: 'administrador'
 
         },
         {
             key: 7,
-            title: <SignOutButton handleSignOut={props.handleSignOut}/>,
-            content: ''
+            title: <SignOutButton handleSignOut={props.handleSignOut} />,
+            content: '',
+            userType: 'any'
         },
     ]
 
     const listItems = (
         <List sx={{ bgcolor: 'info.main', width: '240px', height: '100vh', spacingY: '10px' }}>
-            {options.map(e => (
-
-                <SidebarButton key={e.key} content={e.content} title={e.title} setOpen={props.setOpen} changeContent={props.changeContent} changeDrawerState={props.changeDrawerState} />
-            ))}
+            {options.map(e => {
+                if (userValues.userType == e.userType || e.userType=='any') {
+                    return (
+                        <SidebarButton key={e.key} content={e.content} title={e.title} setOpen={props.setOpen} changeContent={props.changeContent} changeDrawerState={props.changeDrawerState} />
+                    )
+                }
+            })}
         </List >
     )
 
