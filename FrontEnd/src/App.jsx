@@ -14,12 +14,12 @@ import MisClases from './Pages/MisClases/MisClasesEstudiante'
 import ForgotPassword from './Pages/ForgotPassword/ForgotPassword'
 
 
+export const userContext = createContext()
 function App() {
     const [open, setOpen] = useState(false)
     const [content, setContent] = useState('content')
     const [isSignedIn, setIsSignedIn] = useState(false)
     const [user, setUser] = useState({ userType: 'student' })
-    const userContext = createContext()
 
     const handleUser = (params) => {
         setUser(params)
