@@ -12,6 +12,8 @@ import ShowClass from "./Components/Pages/AdministratorClassRegister/ShowClass";
 import SignIn from './Pages/SignIn/SignIn'
 import MisClases from './Pages/MisClases/MisClasesEstudiante'
 import ForgotPassword from './Pages/ForgotPassword/ForgotPassword'
+import SignUp from './Pages/SignUp/SignUp'
+import {createUser} from './api/users'
 
 
 function App() {
