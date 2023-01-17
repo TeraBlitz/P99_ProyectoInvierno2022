@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {createContext, useState} from 'react'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
@@ -9,13 +9,11 @@ import Typography from '@mui/material/Typography';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
-const SignIn = ({isSignedIn, handleSignIn}) => {
-
+const SignIn = ({isSignedIn, handleSignIn  , handleUser}) => {
     const [checked, setChecked] = useState([true, false]);
-    const [userCredentials, setUserCredentials] = useState({});
     
     const handleChange = (e) => {
-        setUserCredentials(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
+        handleUser(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
     } 
     
     const handleChangeCheckBox = (e) => {
