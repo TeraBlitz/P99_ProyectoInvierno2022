@@ -30,7 +30,8 @@ async function createAlumno(req, res) {
     const collection = database.collection("alumnos");
 
     // Crear un Doc
-    const doc = {
+    const doc = [
+      {
         curp: req.body.curp,
         nombre: req.body.nombre,
         apellido_paterno: req.body.apellido_paterno,
@@ -47,11 +48,15 @@ async function createAlumno(req, res) {
         colonia: req.body.colonia,
         codigo_postal: req.body.codigo_postal,
         escolaridad: req.body.escolaridad,
-        ultima_escuela: req.body.ultima_escuela
-    };
+        ultima_escuela: req.body.ultima_escuela,
+      },
+    ];
 
-    const result = await collection.insertOne(doc);
-    res.send(`Un documeno fue insertado con el ID: ${result.insertedId}`);
+    const result = await collection.insertMany(doc);
+    for (i = 0; i < result.insertedCount; i++)
+      res.send(
+        `Un documento fue insertado con el ID: ${result.insertedIds[i]}`
+      );
   } catch (err) {
     res.send(`ERROR: ${err}`);
   } finally {
@@ -75,22 +80,22 @@ async function updateAlumno(req, res) {
     const doc = {
       $set: {
         curp: req.body.curp,
-      nombre: req.body.nombre,
-      apellido_paterno: req.body.apellido_paterno,
-      apellido_materno: req.body.apellido_materno,
-      fecha_de_nacimiento: req.body.fecha_de_nacimiento,
-      tutor_nombre: req.body.tutor_nombre,
-      tutor_apellido_paterno: req.body.tutor_apellido_paterno,
-      tutor_apellido_materno: req.body.tutor_apellido_materno,
-      tutor_correo: req.body.tutor_correo,
-      tutor_num_telefono: req.body.tutor_num_telefono,
-      num_telefono: req.body.num_telefono,
-      estado: req.body.estado,
-      ciudad: req.body.ciudad,
-      colonia: req.body.colonia,
-      codigo_postal: req.body.codigo_postal,
-      escolaridad: req.body.escolaridad,
-      ultima_escuela: req.body.ultima_escuela
+        nombre: req.body.nombre,
+        apellido_paterno: req.body.apellido_paterno,
+        apellido_materno: req.body.apellido_materno,
+        fecha_de_nacimiento: req.body.fecha_de_nacimiento,
+        tutor_nombre: req.body.tutor_nombre,
+        tutor_apellido_paterno: req.body.tutor_apellido_paterno,
+        tutor_apellido_materno: req.body.tutor_apellido_materno,
+        tutor_correo: req.body.tutor_correo,
+        tutor_num_telefono: req.body.tutor_num_telefono,
+        num_telefono: req.body.num_telefono,
+        estado: req.body.estado,
+        ciudad: req.body.ciudad,
+        colonia: req.body.colonia,
+        codigo_postal: req.body.codigo_postal,
+        escolaridad: req.body.escolaridad,
+        ultima_escuela: req.body.ultima_escuela,
       },
     };
 
