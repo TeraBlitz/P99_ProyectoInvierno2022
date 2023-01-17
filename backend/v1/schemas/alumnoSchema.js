@@ -1,6 +1,7 @@
 const alumnoSchema = {
   type: "object",
   properties: {
+    idUsuario : {type: "string"},
     curp: { type: "string", minLength:18, maxLength:18 },
     nombre: { type: "string" },
     apellido_paterno: { type: "string" },
@@ -20,6 +21,7 @@ const alumnoSchema = {
     ultima_escuela: { type: "string" },
   },
   required: [
+    "idUsuario",
     "curp",
     "nombre",
     "apellido_paterno",

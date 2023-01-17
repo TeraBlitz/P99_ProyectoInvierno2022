@@ -38,6 +38,7 @@ async function createAlumno(req, res) {
 
     // Crear un Doc
     const doc = {
+      idUsuario : req.body.idUsuario ,
         curp: req.body.curp,
         nombre: req.body.nombre,
         apellido_paterno: req.body.apellido_paterno,
@@ -81,7 +82,8 @@ async function updateAlumno(req, res) {
     };
     const doc = {
       $set: {
-        curp: req.body.curp,
+      idUsuario : req.body.idUsuario ,
+      curp: req.body.curp,
       nombre: req.body.nombre,
       apellido_paterno: req.body.apellido_paterno,
       apellido_materno: req.body.apellido_materno,
