@@ -22,6 +22,9 @@ import CardContent from "@mui/material/CardContent";
 import MenuItem from "@mui/material/MenuItem";
 import { minWidth, minHeight } from "@mui/system";
 import {periodosPrueba} from './../../../data/periodosprueba.js'
+import DeleteDialog from './DeleteDialog'
+
+
 export default function ShowClass() {
     //--------------------------------------------Agregar----------------
     //Agregar numeros
@@ -39,11 +42,27 @@ export default function ShowClass() {
     const [weeklyfrequency, setWeeklyfrequency] = useState("");
     const [maximumcapacity, setMaximumcapacity] = useState("");
     const [periodo, setPeriodo] = useState("");
+    const [currentRowId, setCurrentRowId] = useState(null); 
 
     //Funcion click para abrir el modal
     const abrirCerrarModalInsertar = () => {
         setModalInsertar(!modalInsertar);
     };
+     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpenDeleteDialog(true);
+  };
+
+  const handleClose = () => {
+    setOpenDeleteDialog(false);
+  };
+  
+  //Funcion click para abrir el modal
+  const abrirCerrarModalInsertar = () => {
+    setModalInsertar(!modalInsertar);
+  };
+
 
     //Evento que dado un nuevos datos los agrega
     const handleClick = (e) => {
@@ -134,12 +153,14 @@ export default function ShowClass() {
     //Estado que guarda el array modificado
     const [clase, setClase] = useState(claseActual);
 
+
     //Funcion que modifica los daors
     const handleChange = (e) => {
         console.log(e.target);
         const { name, value } = e.target;
         setClase({ ...clase, [name]: value });
     };
+
 
     //Funciones que actualiza los datos con las modificacioness
     const handleClick2 = (e) => {
@@ -156,8 +177,7 @@ export default function ShowClass() {
         )
             updateClass(clase);
     };
-
-    const updateClass = (nuevaClase) => {
+ const updateClass = (nuevaClase) => {
         setData(
             data.map((datos) => (datos.id === claseActual.id ? nuevaClase : datos))
         );
@@ -165,12 +185,19 @@ export default function ShowClass() {
         abrirCerrarModalEditar();
     };
 
-    //--------------------------------------------Eliminar--------------
-    // Solo se usa un filter para eliminar
-    function deleteClass(classId) {
-        console.log(classId);
-        setData(data.filter((datos) => datos.id !== classId));
-    }
+  //------------------------------------Eliminar-------------------------------------
+  // Se agrego un componente de dialogo para confirmar la eliminacion de una clase
+  
+  const classToDelete = (id, clase) => {
+    setClaseActual(clase);
+  };
+
+  function deleteClass() {
+    setData(data.filter((datos) => datos.id !== claseActual.id));
+    handleClose();
+  }
+
+
 
     //-------------------------------Datos de ventanas modales---------------
     const bodyInsertar = (
@@ -245,6 +272,7 @@ export default function ShowClass() {
                 })}
 
 
+
             </TextField>
             <br />
             <Autocomplete
@@ -282,6 +310,7 @@ export default function ShowClass() {
                 </Button>
             </div>
         </div>
+
 
 
     );
@@ -419,6 +448,7 @@ export default function ShowClass() {
                     <Actions {...{ params, deleteClass, editClasses }} />
                 ),
             },
+
         ],
         [data]
     );
@@ -489,6 +519,7 @@ export default function ShowClass() {
                 </CardContent>
             </Card>
 
+
             <Box
 
                 sx={{
@@ -540,6 +571,11 @@ export default function ShowClass() {
                 />
 
                 {/* Creacion de modales */}
+                   <DeleteDialog deleteClass={deleteClass} handleClose={handleClose} open={openDeleteDialog}/>
+        {/* Creacion de modales */}
+        <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
+          {bodyInsertar}
+        </Modal>
                 <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
                     {bodyInsertar}
                 </Modal>

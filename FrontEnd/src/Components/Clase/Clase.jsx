@@ -11,7 +11,7 @@ function Clase(props) {
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography>Periodo: {props.periodo}</Typography>
                     <Typography>Edades: {props.edadMin} a {props.edadMax}</Typography>
-                    <Typography sx={{ color: props.cupo / props.cupoMax >= 1 ? "red" : "black" }}>{props.cupo.toString()}/{props.cupoMax.toString()}</Typography>
+                        <Typography sx={{ color: props.cupo / props.cupoMax >= 1 ? "red" : "black" }}>{props.cupo/props.cupoMax >=1?"Lleno" :  (props.cupoMax - props.cupo).toString() +" puestos"}</Typography>
                 </Box>
             </Box>
             <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{ width: '100%' }}>
