@@ -107,7 +107,7 @@ export default function TarjetasPeriodos(props){
                                         <TextField
                                             style={{ paddingBottom: "15px", fontFamily: "arial" }}
                                             label="Clave"
-                                            value={props.item.clave}
+                                            defaultValue={props.item.clave}
                                             name="clave"
 
                                             autoFocus
@@ -115,7 +115,7 @@ export default function TarjetasPeriodos(props){
                                         <TextField
                                             style={{ paddingBottom: "15px", fontFamily: "arial" }}
                                             label="Status"
-                                            value={props.item.status}
+                                            defaultValue={props.item.status}
                                             name="status"
 
                                             autoFocus
@@ -123,7 +123,7 @@ export default function TarjetasPeriodos(props){
                                         <TextField
                                             style={{ paddingBottom: "15px", fontFamily: "arial" }}
                                             label="Fecha de inicio"
-                                            value={props.item.fechaInicio}
+                                            defaultValue={props.item.fechaInicio}
                                             name="fechaInicio"
 
                                             autoFocus
@@ -131,7 +131,7 @@ export default function TarjetasPeriodos(props){
                                         <TextField
                                             style={{ paddingBottom: "15px", fontFamily: "arial" }}
                                             label="fecha de Fin"
-                                            value={props.item.fechaFin}
+                                            defaultValue={props.item.fechaFin}
                                             name="fechaFin"
 
                                             autoFocus
@@ -139,7 +139,7 @@ export default function TarjetasPeriodos(props){
                                         <TextField
                                             style={{ paddingBottom: "15px", fontFamily: "arial" }}
                                             label="Fecha de inicio de incripciones"
-                                            value={props.item.fechaInicioInscripcion}
+                                            defaultValue={props.item.fechaInicioInscripcion}
                                             name="fechaInicioInscripciones"
 
                                             autoFocus
@@ -147,7 +147,7 @@ export default function TarjetasPeriodos(props){
                                         <TextField
                                             style={{ paddingBottom: "15px", fontFamily: "arial" }}
                                             label="Fecha de fin de inscripciones"
-                                            value={props.item.fechaFinInscripcion}
+                                            defaultValue={props.item.fechaFinInscripcion}
                                             name="fechaFinInscripciones"
 
                                             autoFocus
@@ -155,7 +155,7 @@ export default function TarjetasPeriodos(props){
                                         <TextField
                                             style={{ paddingBottom: "15px", fontFamily: "arial" }}
                                             label="Cursos Maximos por Alumno"
-                                            value={props.item.cursosMax}
+                                            defaultValue={props.item.cursosMax}
                                             name="cursosMax"
 
 
@@ -164,7 +164,7 @@ export default function TarjetasPeriodos(props){
                                         <TextField
                                             style={{ paddingBottom: "15px", fontFamily: "arial" }}
                                             label="Idiomas Max"
-                                            value={props.item.idiomasMax}
+                                            defaultValue={props.item.idiomasMax}
                                             name="idiomasMax"
 
                                             autoFocus

@@ -88,7 +88,7 @@ const ControlPanel = () => {
         getTeachersInfo();
     }, []);
 
-    const [display, setDisplay ]= useState(false);
+    const [display, setDisplay ]= useState(true);
 
     return (
         <div>
