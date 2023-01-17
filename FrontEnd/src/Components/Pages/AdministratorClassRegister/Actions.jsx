@@ -1,8 +1,12 @@
 import React from 'react'
 import { Tooltip,Box, Button } from "@mui/material";
 import {Edit,Delete}from '@mui/icons-material'
-function Actions({params,deleteClass,editClasses}) {
+function Actions({params,handleClickOpen,editClasses, classToDelete}) {
 
+  const handleClick = () => {
+    handleClickOpen();
+    classToDelete(params.row.id, params.row);
+  }
   return (
     <Box>
         <Tooltip title='Editar'>
@@ -11,7 +15,7 @@ function Actions({params,deleteClass,editClasses}) {
             </Button>
         </Tooltip>
         <Tooltip title='Eliminar'>
-            <Button  color="error" onClick={()=>deleteClass(params.row.id)}>
+            <Button  color="error" onClick={handleClick} >
                 <Delete />
             </Button>
         </Tooltip>
