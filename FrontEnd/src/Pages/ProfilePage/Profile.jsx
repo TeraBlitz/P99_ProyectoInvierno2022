@@ -9,7 +9,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import StudentProfile from './StudentProfile';
-import Add from '@mui/icons-material/Add';
 
 // Possible function to get user data, this goes in another file
 const fetchUserInfo = () => {
@@ -31,14 +30,8 @@ const fetchUserInfo = () => {
     return userData; 
 };
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
-
 const Profile = ({userID}) =>{
     
-    const [successOpen, setSuccessOpen] = useState(false);
-    const [errorOpen, setErrorOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false)
     const [userInfo, setUserInfo] = useState(fetchUserInfo);
     const [newUserInfo, setNewUserInfo] = useState(fetchUserInfo);
@@ -53,30 +46,6 @@ const Profile = ({userID}) =>{
     
     const handleChange = e => setUserInfo(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
 
-    const handleSubmit = (e) => {
-        // Enviar esta informacion a bd
-        e.preventDefault();
-        setNewUserInfo(userInfo);
-        console.log(userInfo);
-        setIsEditing(!isEditing);
-        // Validación para que ver si se establecio la conexión de manera exitosa
-        // y se actualizaron los datos 
-        const success = true;
-        success ? setSuccessOpen(true) : setErrorOpen(true);
-    };
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-          return;
-        }
-        setSuccessOpen(false);
-        setErrorOpen(false);
-    };
-
-    const handleCancel = () => {
-        setUserInfo(newUserInfo);
-        setIsEditing(!isEditing);
-    }
 
     return (
         <Box sx={{p: 1, ml: 1}}>
@@ -96,56 +65,19 @@ const Profile = ({userID}) =>{
                 </Box>
             </Box>
             <Box sx={{ typography: 'subtitle2', fontWeight: 'light', fontFamily: 'default' }}>
-                Datos Generales
+                Datos Usuario
+            </Box> 
+            <Box sx={{'& .MuiTextField-root': { m: 1, width: '35ch' }, display: 'flex', alignItems: 'center',  flexWrap: 'wrap' }}>
+                <TextField name="usuario" label="Usuario" InputProps={{readOnly: true}} value={userInfo.usuario || ''} />
+                <TextField name="correo" label="Correo" InputProps={{readOnly: true}} value={userInfo.correo || ''}/>
             </Box>
-            <Box
-                component="form"
-                sx={{'& .MuiTextField-root': { m: 1, width: '35ch' }, display: 'flex', alignItems: 'center',  flexWrap: 'wrap' }}
-                autoComplete="off"
-                onSubmit={handleSubmit}
-            >
-                <TextField name="matricula" label="Matricula" InputProps={{readOnly: true}} value={userInfo.matricula || ''}  onChange={handleChange}/>
-                <TextField name="nombre" label="Nombre(s)" InputProps={{readOnly: !isEditing}} value={userInfo.nombre || ''} onChange={handleChange} required/>
-                <TextField name="apellido" label="Apellido(s)" InputProps={{readOnly: !isEditing}} value={userInfo.apellido || ''} onChange={handleChange} required/>       
-                <TextField name="correo" type="email" label="Correo" InputProps={{readOnly: !isEditing}} value={userInfo.correo || ''} onChange={handleChange} required/> 
-                <TextField
-                    name="lada"
-                    label="LADA" type='number'
-                    InputProps={{
-                        startAdornment: <InputAdornment position="start">+</InputAdornment>,
-                        readOnly: !isEditing
-                    }}
-                    value={userInfo.lada || ''}
-                    onChange={handleChange}
-                    required
-                />
-                <TextField name="telefono" label="Núm. Telefonico" InputProps={{readOnly: !isEditing}} value={userInfo.telefono || ''} onChange={handleChange} required/> 
-                {userInfo.tipo === "Student" ? <StudentProfile isEditing={isEditing} userInfo={userInfo} handleChange={handleChange}/> : null }
-                
-                <Box sx={{width: '100%' }}></Box>
-
-                <Box sx={{display:'flex', m: 1, p: 1, justifyContent: 'flex-end', width: '100%'}}>
-                    <Button variant="contained" color='error' 
-                        sx={{ display: !isEditing ? 'none' : '', mx: 2}}
-                        onClick={handleCancel}>
-                        Cancelar
-                    </Button>
-                    <Button variant="contained" type='submit' sx={{ display: !isEditing ? 'none' : ''}} size="medium">
-                        Guardar
-                    </Button>
-                    <Snackbar open={successOpen} autoHideDuration={4000} onClose={handleClose}>
-                        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                            Información actualizada correctamente.
-                        </Alert>
-                    </Snackbar>
-                    <Snackbar open={errorOpen} autoHideDuration={4000} onClose={handleClose}>
-                        <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-                            Se produjo un error al actualizar la información.
-                        </Alert>
-                    </Snackbar>
-                </Box>
-            </Box>  
-
+            <StudentProfile 
+                setUserInfo={setUserInfo}
+                setIsEditing={setIsEditing}
+                isEditing={isEditing}
+                userInfo={userInfo}
+                handleChange={handleChange}  
+            />
         </Box>
     )
 }
