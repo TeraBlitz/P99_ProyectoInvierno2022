@@ -138,9 +138,26 @@ async function deleteAsistencia(req, res) {
 // Test deleteAsistencia
 // deleteAsistencia().catch(console.dir);
 
+// Metodo find 
+async function findAsistencia(req,res){
+  try{
+    await client.connect();
+    const database = client.db(mongodbInf.database);
+    const collection = database.collection("asistencias");
+    console.log(req.body.value);
+
+    
+  }catch (err) {
+    console.log(`ERROR: ${err}`);
+  } finally {
+    await client.close();
+  }
+}
+
 module.exports = {
   getAllAsistencia,
   createAsistencia,
   updateAsistencia,
   deleteAsistencia,
+  findAsistencia,
 };
