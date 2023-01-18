@@ -1,11 +1,12 @@
 const clasesSchema = {
     type: "object",
     properties: {
+        id: {type: "string"},
         nombre_curso: {type: "string"},
         nivel: {type: "string"},
         idMaestro: {type: "string"},
         frecuencia_semanal: {type: "string"},
-        cupo_maximo: {type: "string",pattern: "^([0-9])*$"}
+        cupo_maximo: {type: "string"}
     },
     required: [
         "nombre_curso","nivel","idMaestro","frecuencia_semanal","cupo_maximo"

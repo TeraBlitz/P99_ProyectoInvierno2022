@@ -1,5 +1,5 @@
-const {clientCon} = require('../connection.js')
-const { mongodbInf } = require('../config.js')
+const { clientCon } = require("../connection.js");
+const { mongodbInf } = require("../config.js");
 const mongodb = require("mongodb");
 
 // Crear un nuevo MongoClient
@@ -146,4 +146,67 @@ async function deletePeriodo(req, res) {
 // Test deletePeriodo
 // deletePeriodo().catch(console.dir);
 
-module.exports = { getAllPeriodo, createPeriodo, updatePeriodo, deletePeriodo };
+//find
+async function findPeriodo(req, res) {
+  try {
+    await client.connect();
+    const database = client.db(mongodbInf.database);
+    const collection = database.collection("periodos");
+    let query = "";
+    let key = "";
+    let value = "";
+    if (req.body.clave) {
+      key = "clave";
+      value = req.body.clave;
+      query = { clave: value };
+    } else if (req.body.status) {
+      key = "status";
+      value = req.body.status;
+      query = { status: value };
+    } else if (req.body.fecha_inicio) {
+      key = "fecha_inicio";
+      value = req.body.fecha_inicio;
+      query = { fecha_inicio: value };
+    } else if (req.body.fecha_fin) {
+      key = "fecha_fin";
+      value = req.body.fecha_fin;
+      query = { fecha_fin: value };
+    } else if (req.body.fecha_inicio_insc) {
+      key = "fecha_inicio_insc";
+      value = req.body.fecha_inicio_insc;
+      query = { fecha_inicio_insc: value };
+    } else if (req.body.fecha_fin_insc) {
+      key = "fecha_fin_insc";
+      value = req.body.fecha_fin_insc;
+      query = { fecha_fin_insc: value };
+    } else if (req.body.cursos_max_por_alumno) {
+      key = "cursos_max_por_alumno";
+      value = req.body.cursos_max_por_alumno;
+      query = { cursos_max_por_alumno: value };
+    } else if (req.body.idiomas_max_por_alumno) {
+      key = "idiomas_max_por_alumno";
+      value = req.body.idiomas_max_por_alumno;
+      query = { idiomas_max_por_alumno: value };
+    } else {
+      throw "parametros invalidos";
+    }
+    const result = await collection.find(query).toArray();
+    if (result == "") {
+      res.send(`Ninguna clase encontrada con ${key} : ${value}`);
+    } else {
+      res.send(result);
+    }
+  } catch (err) {
+    console.log(`ERROR: ${err}`);
+  } finally {
+    await client.close();
+  }
+}
+
+module.exports = {
+  getAllPeriodo,
+  createPeriodo,
+  updatePeriodo,
+  deletePeriodo,
+  findPeriodo,
+};
