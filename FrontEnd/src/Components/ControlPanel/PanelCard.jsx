@@ -5,11 +5,11 @@ import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 
-const PanelCard = ({title, body, bgColor}) => {
+const PanelCard = ({title, body, bgColor, changeContent}) => {
 
   return (
     <Card>
-        <CardActionArea>
+        <CardActionArea onClick={()=>changeContent('Alumnos')}>
             <CardMedia
                 component="img"
                 height="100"

@@ -46,6 +46,18 @@ function Sidebar(props) {
             title: <SignOutButton handleSignOut={props.handleSignOut}/>,
             content: ''
         },
+        {
+            key: 8,
+            title: 'wbdkwjbd',
+            content: 'Periodos'
+        },
+        {
+            key: 9,
+            title: 'Alumnos',
+            content: 'Alumnos'
+        },
+
+
     ]
 
     const listItems = (

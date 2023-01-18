@@ -68,7 +68,8 @@ const panelInfoCards = [
 ]
 
 
-const ControlPanel = () => {
+const ControlPanel = ({changeContent}) => {
+
 
     const [users, setUsersInfo] = useState(fetchUsers);
     const [teachers, setTeachersInfo] = useState(fetchTeachers);
@@ -99,16 +100,19 @@ const ControlPanel = () => {
             <Grid container spacing={2} sx={{my: 2}}>
                 {panelInfoCards.map(infoCard =>
                     <Grid item sm={12} md={6} key={infoCard.id}>
-                        <PanelInfo title={infoCard.title} data={infoCard.data} bgColor={infoCard.color} />
+                        <PanelInfo title={infoCard.title} data={infoCard.data} bgColor={infoCard.color}/>
                     </Grid>
                 )}
                 {cards.map(card =>
                     <Grid item sm={12} md={6} key={card.id}>
-                        <PanelCard title={card.title} body={card.body} bgColor={card.color} />
+                        <PanelCard title={card.title} body={card.body} bgColor={card.color} changeContent={changeContent}/>
                     </Grid>
                 )}
             </Grid>
         </Box>
+
+        <button onClick={()=>changeContent("Periodos")}>jsbckehwbckk</button>
+
         <button onClick={() => setDisplay(!display)}>Periodos</button>
         {display && <Periodos/>}
 

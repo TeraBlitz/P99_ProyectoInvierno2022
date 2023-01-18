@@ -11,6 +11,8 @@ import ControlPanel from './Pages/ControlPanel/ControlPanel'
 import ShowClass from "./Components/Pages/AdministratorClassRegister/ShowClass";
 import SignIn from './Pages/SignIn/SignIn'
 import MisClases from './Pages/MisClases/MisClasesEstudiante'
+import Periodos from './Pages/ControlPanel/PagesCP/Periodos'
+import Alumnos from './Pages/ControlPanel/PagesCP/Alumnos/Alumnos'
 
 
 
@@ -29,13 +31,21 @@ function App() {
         RegistroClasesAlumnos: <RegistroClasesAlumno />,
         MisClasesProfesor: <MisClasesProfesor />,
         Profile: <Profile />,
-        ControlPanel: <ControlPanel/>,
+        ControlPanel: <ControlPanel changeContent={changeContent}/>,
         MisClases: <MisClases />,
 
         Registro: <ShowClass />,
 
+        Periodos: <Periodos/>,
+
+        Alumnos: <Alumnos/>,
+
+
+
 
     }
+
+    console.log(PagesToRender)
 
     const handleSignIn = (e) => {
         e.preventDefault();
