@@ -45,7 +45,7 @@ function App() {
 
     }
 
-    console.log(PagesToRender)
+
 
     const handleSignIn = (e) => {
         e.preventDefault();
