@@ -183,7 +183,7 @@ function MisClasesProfesor() {
                             items: items
                         }
                         }
-                        sx={{ visibility: { xs: 'hidden', sm: 'visible' } }}
+none                        sx={{ visibility: { xs: 'hidden', sm: 'visible' } }}
 
                     />
 
