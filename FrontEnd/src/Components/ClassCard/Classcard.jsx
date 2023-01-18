@@ -8,9 +8,9 @@ import { Box } from '@mui/material'
 
 function ClassCard(props) {
     return (
-        <Card sx={{ width: '200px', height: '200px', marginX: '20px' }}>
+        <Card sx={{ width: '200px', height: '200px', marginX: '20px' , marginY:'20px' }}>
             <Box sx={{ width: '100%', height: '50%', bgcolor: 'primary.main', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Typography > Imagen</Typography>
+                <Typography >Imagen</Typography>
             </Box>
             <CardContent sx={{paddingY:0 , }}>
                 <Typography variant="h6" sx={{ fontFamily: 'arial' }}>
