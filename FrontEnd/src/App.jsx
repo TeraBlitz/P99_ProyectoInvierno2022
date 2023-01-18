@@ -13,7 +13,7 @@ import SignIn from './Pages/SignIn/SignIn'
 import MisClases from './Pages/MisClases/MisClasesEstudiante'
 import ForgotPassword from './Pages/ForgotPassword/ForgotPassword'
 import SignUp from './Pages/SignUp/SignUp'
-import {createUser} from './api/users'
+import { createUser } from './api/users'
 
 
 export const userContext = createContext()
@@ -43,11 +43,18 @@ function App() {
         Registro: <ShowClass />
     }
 
-    const handleSignIn = (e) => {
+    const handleSignIn =  (e) => {
         e.preventDefault();
         // Mandar y validad esta informacion
-        console.log('test');
-        setIsSignedIn(!isSignedIn);
+
+        fetch(`http://127.0.0.1:3000/v1/users/find/${user.usuario}`,
+            {
+                method: 'GET',
+                redirect: 'follow'
+            })
+            .then(response => response.json())
+            .then(result => console.log(result))
+            .catch(error => console.log('error', error));
     }
 
     return !isSignedIn ?

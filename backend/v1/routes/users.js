@@ -13,5 +13,6 @@ router.get('/', userController.getAllUser)
 router.post('/create', urlencodedParser, validateUser.validateUser, userController.createUser)
 router.put('/update', urlencodedParser, validateUser.validateUser, userController.updateUser)
 router.delete('/delete', urlencodedParser, userController.deleteUser)
+router.get('/find/:correo/:contrasena' , urlencodedParser , userController.findUser)
 
 module.exports = router

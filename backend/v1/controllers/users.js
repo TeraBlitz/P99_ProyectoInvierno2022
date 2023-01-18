@@ -1,5 +1,5 @@
 /* const User = require('../models/users') */
-const {connection} = require('../connection.js')
+const { connection } = require('../connection.js')
 const { mongodbInf } = require('../config.js')
 const mongodb = require("mongodb");
 
@@ -12,27 +12,38 @@ const uri = `mongodb://${mongodbInf.host}:${mongodbInf.port}/${mongodbInf.databa
 // Crear un nuevo MongoClient
 const client = new mongodb.MongoClient(uri);
 
-async function getAllUser(req, res){
-    try{
+async function getAllUser(req, res) {
+    try {
         await client.connect();
         const database = client.db(mongodbInf.database)
         const collection = database.collection("users")
 
         const result = await collection.find().toArray()
         res.send(result)
-    }catch(err){
+    } catch (err) {
         res.send(`ERROR: ${err}`)
-    }finally{
+    } finally {
         await client.close();
     }
 }
 // Test getAllUser
 // getAllUser().catch(console.dir);
 
+async function findUser(req, res) {
+    await client.connect();
+    const database = client.db(mongodbInf.database)
+    const collection = database.collection("users")
+
+    const [result] = await collection.find({ correo: req.params.correo , 'contraseña':req.params.contrasena}).toArray()
+     
+    console.log(result)
+    res.send(result)
+
+}
 
 // Create
-async function createUser(req, res){
-    try{
+async function createUser(req, res) {
+    try {
         await client.connect();
         const database = client.db(mongodbInf.database)
         const collection = database.collection("users")
@@ -58,9 +69,9 @@ async function createUser(req, res){
 
         const result = await collection.insertOne(doc)
         res.send(`Un documeno fue insertado con el ID: ${result.insertedId}`)
-    }catch(err){
+    } catch (err) {
         res.send(`ERROR: ${err}`)
-    }finally{
+    } finally {
         await client.close();
     }
 }
@@ -69,7 +80,7 @@ async function createUser(req, res){
 
 
 // Update
-async function updateUser(req, res){
+async function updateUser(req, res) {
     try {
         await client.connect();
         const database = client.db(mongodbInf.database)
@@ -101,9 +112,9 @@ async function updateUser(req, res){
 
         const result = await collection.findOneAndUpdate(idDoc, doc)
         res.send(`Documento con _id: ${result.value._id} actualizado con exito. Status: ${result.ok}.`)
-    }catch(err){
+    } catch (err) {
         res.send(`updateUser ERROR: ${err}`)
-    }finally{
+    } finally {
         await client.close();
     }
 }
@@ -112,7 +123,7 @@ async function updateUser(req, res){
 
 
 // Delete
-async function deleteUser(req, res){
+async function deleteUser(req, res) {
     try {
         await client.connect();
         const database = client.db(mongodbInf.database)
@@ -131,13 +142,13 @@ async function deleteUser(req, res){
         } else {
             res.send("Ningun documento encontrado. 0 Documentos eliminados.")
         }
-    }catch(err){
+    } catch (err) {
         console.log(`ERROR: ${err}`)
-    }finally{
+    } finally {
         await client.close()
     }
 }
 // Test deleteUser
 // deleteUser().catch(console.dir);
 
-module.exports = {getAllUser, createUser, updateUser, deleteUser}
+module.exports = { getAllUser, createUser, updateUser, deleteUser, findUser }

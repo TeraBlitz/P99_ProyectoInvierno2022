@@ -1,4 +1,4 @@
-import cors from "cors"
+const cors = require('cors')
 const express = require('express')
 const { connection } = require('./v1/connection.js')
 const bodyParser = require('body-parser')
