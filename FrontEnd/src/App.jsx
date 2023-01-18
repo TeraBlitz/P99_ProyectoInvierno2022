@@ -51,6 +51,7 @@ function App() {
     }
 
     return !isSignedIn ?
+
         <SignIn handleSignIn={handleSignIn} handleUser={handleUser} />
         :
         <userContext.Provider value={user}>
@@ -72,6 +73,7 @@ function App() {
                 </Box>
             </Box>
         </userContext.Provider>
+
 
 }
 export default App
