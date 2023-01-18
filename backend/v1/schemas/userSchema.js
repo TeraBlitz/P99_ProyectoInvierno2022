@@ -2,15 +2,17 @@ const userSchema = {
     type: "object",
     properties: {
         user_name: {type: "string"},
-        rol: {type: "string"},
         correo: {type: "string", format: "email"},
-        password: {type: "string", format: "password"}
+        password: {type: "string", format: "password"},
+        status: {type: "string"},
+        rol: {type: "string"}
     },
     required: [
         "user_name",
-        "rol",
         "correo",
-        "password"
+        "password",
+        "status",
+        "rol"
     ],
     additionalProperties: false,
     errorMessage: {

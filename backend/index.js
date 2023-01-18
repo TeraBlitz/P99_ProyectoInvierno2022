@@ -33,7 +33,7 @@ app.use('/v1/alumnos', alumno)
 app.use('/v1/listas', lista)
 
 app.listen(port, ()=>{
-    console.log(`Aplicacion corriendo en el puerto: ${port}.`)
+    console.log(`Aplicacion corriendo | Puerto:${port}`)
 })
 
 // console.log('Probando, 1, 2, 3, Hola Mundo')

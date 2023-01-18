@@ -16,7 +16,7 @@ async function connection() {
         await checkTest_db(clientCon)
         // Establecer y verificar conexion.
         await clientCon.db("test_db").command({ ping: 1 });
-        console.log("Conectado con exito al servidor.");
+        // console.log("Conectado con exito al servidor.");
     }catch(err){
         console.log(`ERROR: ${err}`)
     }finally {
@@ -34,7 +34,7 @@ async function checkTest_db(client){
 
     databasesList.databases.forEach(db => {
         if(db.name == 'test_db'){
-            console.log(`- DB: '${db.name}' detectada. `)
+            console.log(`Conectado con exito a MongoDB | Host:${mongodbInf.host} | Puerto:${mongodbInf.port} | DB:'${db.name}'`)
         }
     })
 }
