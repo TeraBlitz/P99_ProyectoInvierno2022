@@ -1,4 +1,4 @@
-const {clientCon} = require('../connection.js')
+const { clientCon } = require("../connection.js");
 const { mongodbInf } = require("../config.js");
 const mongodb = require("mongodb");
 
@@ -138,16 +138,43 @@ async function deleteAsistencia(req, res) {
 // Test deleteAsistencia
 // deleteAsistencia().catch(console.dir);
 
-// Metodo find 
-async function findAsistencia(req,res){
-  try{
+// Metodo find
+async function findAsistencia(req, res) {
+  try {
     await client.connect();
     const database = client.db(mongodbInf.database);
     const collection = database.collection("asistencias");
-    console.log(req.body.value);
+    let query = "";
+    let key = "";
+    let value = "";
 
-    
-  }catch (err) {
+    if (req.body.idUsuario) {
+      key = "idUsuario";
+      value = req.body.idUsuario;
+      query = { idUsuario: value };
+    } else if (req.body.idClase) {
+      key = "idClase";
+      value = req.body.idClase;
+      query = { idClase: value };
+    } else if (req.body.fecha) {
+      key = "fecha";
+      value = req.body.fecha;
+      query = { fecha: value };
+    } else if (req.body.asistio) {
+      key = "asistio";
+      value = req.body.asistio;
+
+      query = { asistio: value };
+    } else {
+      throw "parametros invalidos";
+    }
+    const result = await collection.find(query).toArray();
+    if (result == "") {
+      res.send(`Ninguna clase encontrada con ${key} : ${value}`);
+    } else {
+      res.send(result);
+    }
+  } catch (err) {
     console.log(`ERROR: ${err}`);
   } finally {
     await client.close();

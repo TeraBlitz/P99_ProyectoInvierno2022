@@ -1,4 +1,4 @@
-const {clientCon} = require('../connection.js')
+const { clientCon } = require("../connection.js");
 const { mongodbInf } = require("../config.js");
 const mongodb = require("mongodb");
 
@@ -32,8 +32,8 @@ async function createLista(req, res) {
     // Crear un Doc
     const doc = [
       {
-        idAlumno : req.body.idAlumno ,
-        idClase : req.body.idClase ,
+        idAlumno: req.body.idAlumno,
+        idClase: req.body.idClase,
         lugar_de_espera: req.body.lugar_de_espera,
         status: req.body.status,
       },
@@ -66,8 +66,8 @@ async function updateLista(req, res) {
     };
     const doc = {
       $set: {
-        idAlumno : req.body.idAlumno ,
-        idClase : req.body.idClase ,
+        idAlumno: req.body.idAlumno,
+        idClase: req.body.idClase,
         lugar_de_espera: req.body.lugar_de_espera,
         status: req.body.status,
       },
@@ -115,4 +115,52 @@ async function deleteLista(req, res) {
 // Test deleteLista
 // deleteLista().catch(console.dir);
 
-module.exports = { getAllLista, createLista, updateLista, deleteLista };
+//find
+async function findLista(req, res) {
+  try {
+    await client.connect();
+    const database = client.db(mongodbInf.database);
+    const collection = database.collection("listas");
+    let query = "";
+    let key = "";
+    let value = "";
+    if (req.body.idAlumno) {
+      key = "idAlumno";
+      value = req.body.idAlumno;
+      query = { idAlumno: value };
+    } else if (req.body.idClase) {
+      key = "idClase";
+      value = req.body.idClase;
+      query = { idClase: value };
+    } else if (req.body.lugar_de_espera) {
+      key = "lugar_de_espera";
+      value = req.body.lugar_de_espera;
+      query = { lugar_de_espera: value };
+    } else if (req.body.status) {
+      key = "status";
+      value = req.body.status;
+
+      query = { status: value };
+    } else {
+      throw "parametros invalidos";
+    }
+    const result = await collection.find(query).toArray();
+    if (result == "") {
+      res.send(`Ninguna clase encontrada con ${key} : ${value}`);
+    } else {
+      res.send(result);
+    }
+  } catch (err) {
+    console.log(`ERROR: ${err}`);
+  } finally {
+    await client.close();
+  }
+}
+
+module.exports = {
+  getAllLista,
+  createLista,
+  updateLista,
+  deleteLista,
+  findLista,
+};
