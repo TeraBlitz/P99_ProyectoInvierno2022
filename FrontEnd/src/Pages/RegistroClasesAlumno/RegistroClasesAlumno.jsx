@@ -10,34 +10,40 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 function RegistroClasesAlumnos() {
     const [items, setItems] = useState([]);
     const columns = [
-        { field: 'id', headerName: 'ID', width: 130 },
+        { field: 'id', headerName: 'ID', width: 110 },
         {
             field: 'title',
             headerName: 'Curso',
-            width: 210,
+            width: 190,
             editable: false,
         },
         {
             field: 'periodo',
             headerName: 'Periodo',
-            width: 200,
+            width: 180,
             editable: false,
-            
+
         },
         {
-            field:'cupoMax',
-            headerName:'Cupo Maximo',
-            width:200,
-            editable:'false'
+            field: 'cupoMax',
+            headerName: 'Cupo Maximo',
+            width: 180,
+            editable: 'false'
         },
         {
-                field: "actions",
-                headerName: "Acciones",
-                type: "actions",
-                width: 135,
-                renderCell: (params) => (
-                   <AddCircleIcon sx={{color:params.id==claseRegistrada[0]?"green": "black"}}onClick={ ()=>changeClaseRegistrada(params.id) }></AddCircleIcon> 
-                ),
+            field: 'nivel',
+            headerName: 'Nivel',
+            width: 180,
+            editable: false
+        },
+        {
+            field: "actions",
+            headerName: "Acciones",
+            type: "actions",
+            width: 115,
+            renderCell: (params) => (
+                <AddCircleIcon sx={{ color: params.id == claseRegistrada[0] ? "green" : "black" }} onClick={() => changeClaseRegistrada(params.id)}></AddCircleIcon>
+            ),
 
         }
 
@@ -61,7 +67,7 @@ function RegistroClasesAlumnos() {
             cupoMax: 30,
             edadMin: 10,
             edadMax: 15,
-
+            nivel: 'avanzado'
         },
         {
             key: 2,
@@ -69,9 +75,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 2',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 3,
@@ -79,9 +86,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 3',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 4,
@@ -89,9 +97,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 4',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 5,
@@ -99,9 +108,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 5',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 6,
@@ -109,9 +119,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 6',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 7,
@@ -119,9 +130,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 7',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 8,
@@ -129,9 +141,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 8',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 9,
@@ -139,9 +152,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 9',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 10,
@@ -149,9 +163,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 10',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 11,
@@ -159,9 +174,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 11',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 12,
@@ -169,9 +185,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 12',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 13,
@@ -179,9 +196,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 13',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 14,
@@ -189,9 +207,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 14',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 15,
@@ -199,9 +218,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 15',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 16,
@@ -209,9 +229,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 16',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 17,
@@ -219,9 +240,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 17',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 18,
@@ -229,9 +251,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 18',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 19,
@@ -239,9 +262,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 19',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 20,
@@ -249,9 +273,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 20',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 21,
@@ -259,9 +284,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 21',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 22,
@@ -269,9 +295,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 22',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 23,
@@ -279,9 +306,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 23',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 24,
@@ -289,9 +317,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 24',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 25,
@@ -299,9 +328,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 25',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 26,
@@ -309,9 +339,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 26',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 27,
@@ -319,9 +350,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 27',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 28,
@@ -329,9 +361,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 28',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 29,
@@ -339,9 +372,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 29',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 30,
@@ -349,9 +383,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 30',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 31,
@@ -359,9 +394,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 31',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 32,
@@ -369,9 +405,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 32',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 33,
@@ -379,9 +416,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 33',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 34,
@@ -389,9 +427,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 34',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 35,
@@ -399,9 +438,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 35',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 36,
@@ -409,9 +449,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 36',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 37,
@@ -419,9 +460,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 37',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 38,
@@ -429,9 +471,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 38',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 39,
@@ -439,9 +482,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 39',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 40,
@@ -449,9 +493,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 40',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 41,
@@ -459,9 +504,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 41',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 42,
@@ -469,9 +515,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 42',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 43,
@@ -479,9 +526,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 43',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 44,
@@ -489,9 +537,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 44',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 45,
@@ -499,9 +548,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 45',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 46,
@@ -509,9 +559,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 46',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 47,
@@ -519,9 +570,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 47',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 48,
@@ -529,9 +581,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 48',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         },
         {
             key: 49,
@@ -539,9 +592,10 @@ function RegistroClasesAlumnos() {
             title: 'Clase 49',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 40,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'avanzado'
         },
         {
             key: 50,
@@ -549,30 +603,31 @@ function RegistroClasesAlumnos() {
             title: 'Clase 50',
             periodo: 1,
             cupo: 11,
-            cupoMax: 30,
+            cupoMax: 20,
             edadMin: 10,
             edadMax: 15,
+            nivel: 'intermedio'
         }
     ])
     return (
         <>
-                <Box sx={{ display: error, bgcolor: 'rgba(50, 50, 50, 0.60)', zIndex: '1000', width: { xs: '100vw', sm: '86vw' }, position: 'absolute', top: 0, left: 0 , bottom:0 , right:0 }}>
-                    <Alert sx={{
-                        position: 'absolute', top: '50vh', left: '50%', transform: 'translate(-50%,-50%)', zIndex: '1000', width: '50%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between'
-                    }} severity="error">
-                        <AlertTitle> Error</AlertTitle>
-                        Solo puedes Tener <strong>una</strong> clase Registrada
-                        <br />
-                        <Button onClick={() => setError("none")} sx={{ color: 'error.dark' }}>
-                            Cancelar
-                        </Button>
-                        <Button onClick={() => { setClaseRegistrada([]); setError('none') }} sx={{ color: 'error.dark' }}>
-                            Anular Registro
-                        </Button>
-                    </Alert >
-                </Box>
+            <Box sx={{ display: error, bgcolor: 'rgba(50, 50, 50, 0.60)', zIndex: '1000', width: { xs: '100vw', sm: '86vw' }, position: 'absolute', top: 0, left: 0, bottom: 0, right: 0 }}>
+                <Alert sx={{
+                    position: 'absolute', top: '50vh', left: '50%', transform: 'translate(-50%,-50%)', zIndex: '1000', width: '50%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between'
+                }} severity="error">
+                    <AlertTitle> Error</AlertTitle>
+                    Solo puedes Tener <strong>una</strong> clase Registrada
+                    <br />
+                    <Button onClick={() => setError("none")} sx={{ color: 'error.dark' }}>
+                        Cancelar
+                    </Button>
+                    <Button onClick={() => { setClaseRegistrada([]); setError('none') }} sx={{ color: 'error.dark' }}>
+                        Anular Registro
+                    </Button>
+                </Alert >
+            </Box>
             <Box sx={{ textAlign: 'center', width: '100%', paddingX: '20px', height: '100%', paddingBottom: '10px', overflowY: 'scroll', display: { xs: 'block', sm: 'none' } }}>
-        
+
                 {
                     data.map(e => (
                         <Clase changeClaseRegistrada={changeClaseRegistrada} key={e.id} title={e.title} periodo={e.periodo.toString()} cupo={e.cupo} cupoMax={e.cupoMax} edadMin={e.edadMin.toString()} edadMax={e.edadMax.toString()} />
@@ -624,6 +679,13 @@ function RegistroClasesAlumnos() {
                             label="Periodo"
                             id="filled-select-currency"
                             onChange={e => { setItems([{ columnField: 'periodo', operatorValue: 'contains', value: e.target.value }]) }}
+                        >
+                        </TextField>
+                        <TextField
+                            style={{ paddingBottom: "15px", width: "25ch", fontFamily: 'arial' }}
+                            label="Cupo Maximo"
+                            id="filled-select-currency"
+                            onChange={e => { setItems([{ columnField: 'cupoMax', operatorValue: 'contains', value: e.target.value }]) }}
                         >
                         </TextField>
                     </CardContent>
