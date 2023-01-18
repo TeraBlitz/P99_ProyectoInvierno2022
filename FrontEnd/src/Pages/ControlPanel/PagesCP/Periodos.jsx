@@ -94,6 +94,7 @@ export default function Periodos(){
     }
 
 
+
    // Abrir cerrar modals
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => {
@@ -106,7 +107,7 @@ export default function Periodos(){
     //borrar periodo
     const handleDeletePer = (id) => {
         console.log('id de periodo borrado: ', id)
-
+        setTarjetas(tarjetas.filter(nuevaTarjeta => nuevaTarjeta.id!== id))
     }
 
     const debug = 'debug'
@@ -215,7 +216,7 @@ export default function Periodos(){
                    <TarjetasPeriodos
                    key={item.id}
                    item={item}
-                   onDelete= {handleDeletePer}
+                   handleDeletePer= {handleDeletePer}
                      />
                 ))}
             </div>

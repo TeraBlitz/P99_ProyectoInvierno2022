@@ -39,6 +39,14 @@ export default function TarjetasPeriodos(props){
     setOpen(false);
     };
 
+    const [abierto2, setAbierto2] = React.useState(false);
+    const handleAbierto2 =()=>{
+        setAbierto2(true)
+    };
+    const handleCerrar2 = () =>{
+        setAbierto2(false)
+    };
+
     return(
         <div>
             <Card sx={{ minWidth: 275, bgcolor: 'grey.200' }}>
@@ -82,12 +90,38 @@ export default function TarjetasPeriodos(props){
 
             </CardContent>
           <CardActions>
-            <Button size="small" onClick={handleOpen}>Editar</Button>
 
-            <Button variant="contained" onClick={()=> onDelete(props.item.id)}>Borrar Periodo</Button>
+                <Button variant="contained" onClick={handleOpen}>Editar</Button>
+
+                <div className="spacer-botones"></div>
+
+                <Button variant="contained" onClick={handleAbierto2} color= "error">Borrar Periodo</Button>
 
 
-              {/* Empieza el modal parent*/ }
+
+                {/* Empieza el modal 2 */}
+                <Modal
+                 open={abierto2}
+                 onClose={handleCerrar2}
+                 aria-labelledby="modal-modal-title"
+                 aria-describedby="modal-modal-description">
+
+                    <Card sx={style}>
+                        <Typography variant="h5" component="div">
+                           Estas seguro de borrar este periodo?
+                        </Typography>
+                        <div className="spacer"></div>
+                        <Button variant="contained" onClick={handleCerrar2}>Cancelar</Button>
+                        <div className="spacer-botones"></div>
+                        <Button variant="contained" color= "error" onClick={()=> props.handleDeletePer(props.item.id)}>Borrar Periodo</Button>
+
+                    </Card>
+
+
+                </Modal>
+
+
+              {/* Empieza el modal 1*/ }
                 <Modal
                     open={open}
                     onClose={handleClose}
