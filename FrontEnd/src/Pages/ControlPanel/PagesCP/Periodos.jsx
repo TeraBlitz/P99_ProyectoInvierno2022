@@ -156,7 +156,7 @@ export default function Periodos(){
                                         <TextField
                                             style={{ paddingBottom: "15px", fontFamily: "arial" }}
                                             label="Clave"
-                                            defaultValue={debug}
+
                                             name="clave"
                                             onChange={(e) => setClave(e.target.value)}
                                             autoFocus
@@ -164,7 +164,7 @@ export default function Periodos(){
                                         <TextField
                                             style={{ paddingBottom: "15px", fontFamily: "arial" }}
                                             label="Status"
-                                            defaultValue={debug}
+
                                             name="status"
                                             onChange={(e) => setStatus(e.target.value)}
                                             autoFocus
@@ -172,7 +172,7 @@ export default function Periodos(){
                                         <TextField
                                             style={{ paddingBottom: "15px", fontFamily: "arial" }}
                                             label="Fecha de inicio"
-                                            defaultValue={debug}
+
                                             name="fechaInicio"
                                             onChange={(e) => setFechaInicio(e.target.value)}
                                             autoFocus
@@ -180,7 +180,7 @@ export default function Periodos(){
                                         <TextField
                                             style={{ paddingBottom: "15px", fontFamily: "arial" }}
                                             label="fecha de Fin"
-                                            defaultValue={debug}
+
                                             name="fechaFin"
                                             onChange={(e) => setFechaFin(e.target.value)}
                                             autoFocus
@@ -188,7 +188,7 @@ export default function Periodos(){
                                         <TextField
                                             style={{ paddingBottom: "15px", fontFamily: "arial" }}
                                             label="Fecha de inicio de incripciones"
-                                            defaultValue={debug}
+
                                             name="fechaInicioInscripciones"
                                             onChange={(e) => setFechaII(e.target.value)}
                                             autoFocus
@@ -196,7 +196,7 @@ export default function Periodos(){
                                         <TextField
                                             style={{ paddingBottom: "15px", fontFamily: "arial" }}
                                             label="Fecha de fin de inscripciones"
-                                            defaultValue={debug}
+
                                             name="fechaFinInscripciones"
                                             onChange={(e) => setFechaFI(e.target.value)}
                                             autoFocus
@@ -204,7 +204,7 @@ export default function Periodos(){
                                         <TextField
                                             style={{ paddingBottom: "15px", fontFamily: "arial" }}
                                             label="Cursos Maximos por Alumno"
-                                            defaultValue={debug}
+
                                             name="cursosMax"
 
                                             onChange={(e) => setCursosMax(e.target.value)}
@@ -213,12 +213,12 @@ export default function Periodos(){
                                         <TextField
                                             style={{ paddingBottom: "15px", fontFamily: "arial" }}
                                             label="Idiomas Max"
-                                            defaultValue={debug}
+
                                             name="idiomasMax"
                                             onChange={(e) => setIdiomasMax(e.target.value)}
                                             autoFocus
                                         />
-                                        <Button variant="contained" onClick={mandarDatos}>Nuevo Periodo</Button>
+                                        <Button variant="contained" onClick={mandarDatos}>Agregar Periodo</Button>
 
 
 

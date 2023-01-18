@@ -170,7 +170,7 @@ export default function TarjetasPeriodos(props){
                                             autoFocus
                                         />
 
-
+                                        <Button variant="contained" onClick={handleClose}>Editar Datos</Button>
 
 
 
