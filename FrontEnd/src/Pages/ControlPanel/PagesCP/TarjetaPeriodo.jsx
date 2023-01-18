@@ -27,12 +27,7 @@ const style = {
 
   };
 
-  //Funcion que modifica los daors
-  const handleChange = (e) => {
-    console.log(e.target);
-    const { name, value } = e.target;
-    setClase({ ...clase, [name]: value });
-  };
+
 
 export default function TarjetasPeriodos(props){
 
@@ -88,6 +83,10 @@ export default function TarjetasPeriodos(props){
             </CardContent>
           <CardActions>
             <Button size="small" onClick={handleOpen}>Editar</Button>
+
+            <Button variant="contained" onClick={()=> onDelete(props.item.id)}>Borrar Periodo</Button>
+
+
               {/* Empieza el modal parent*/ }
                 <Modal
                     open={open}
@@ -171,6 +170,7 @@ export default function TarjetasPeriodos(props){
                                         />
 
                                         <Button variant="contained" onClick={handleClose}>Editar Datos</Button>
+
 
 
 
