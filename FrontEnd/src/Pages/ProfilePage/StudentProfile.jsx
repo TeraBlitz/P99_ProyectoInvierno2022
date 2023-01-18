@@ -6,16 +6,18 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
-import FormHelperText  from '@mui/material/FormHelperText';
+import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import { createStudent } from '../../api/students';
 import ParentInfo from './ParentInfo'
+
 
 const studentInfo = {
     'nombre': '', 'apellido_paterno': '', 'apellido_materno': '',
-    'correo': '', 'num_telefono': '', 'lada':'','curp': '', 'fecha_nacimiento':'',
+    'num_telefono': '', 'lada':'','curp': '', 'fecha_de_nacimiento':'',
     'escolaridad': '', 'ultima_escuela':'','estado':'', 'ciudad':'', 'colonia': '',
     'tutor_nombre': '', 'tutor_apellido_paterno':'','tutor_apellido_materno':'',
-    'tutor_correo':'', 'tutor_num_telefonico':''
+    'tutor_correo':'', 'tutor_num_telefono':'', 'codigo_postal':''
 };
 
 
@@ -37,6 +39,7 @@ const StudentProfile = ({isEditing, setIsEditing, setAddStudent, addStudent}) =>
         e.preventDefault();
         setNewStudentInfo(studentData);
         console.log(studentData);
+        createStudent(studentData);
         setIsEditing(!isEditing);
         // Validación para que ver si se establecio la conexión de manera exitosa
         // y se actualizaron los datos 
@@ -54,7 +57,6 @@ const StudentProfile = ({isEditing, setIsEditing, setAddStudent, addStudent}) =>
 
     const handleCancel = () => {
         setStudentInfo(newStudentInfo);
-        setIsEditing(!isEditing);
         setAddStudent(!addStudent);
     }
 
@@ -74,7 +76,7 @@ const StudentProfile = ({isEditing, setIsEditing, setAddStudent, addStudent}) =>
                 component="form"
                 sx={{'& .MuiTextField-root': { m: 1, width: '35ch' },
                 display: 'flex', alignItems: 'center',  flexWrap: 'wrap',
-                backgroundColor: 'white', borderRadius: 3}}
+                backgroundColor: 'white', borderRadius: 3, m: 2, p: 2}}
                 autoComplete="off"
                 onSubmit={handleSubmit}
             >
@@ -85,11 +87,14 @@ const StudentProfile = ({isEditing, setIsEditing, setAddStudent, addStudent}) =>
                         justifyContent: 'space-between'}}
                 >
                     Datos Estudiante
-                    <IconButton aria-label="edit" color="primary" onClick={() => { setIsEditing(!isEditing); }}>
-                        <EditIcon />
-                    </IconButton>
+                    {
+                        !addStudent ?
+                            <IconButton aria-label="edit" color="primary" onClick={() => { setIsEditing(!isEditing); }}>
+                                <EditIcon />
+                            </IconButton>
+                        : null
+                    }
                 </Box>
-                <TextField name="matricula" label="Matricula" InputProps={{readOnly: true}} value={studentData.matricula || ''}  onChange={handleChange}  helperText=" "/>
                 <TextField name="nombre" label="Nombre(s)" InputProps={{readOnly: !isEditing}} value={studentData.nombre || ''} onChange={handleChange}  helperText=" " required/>
                 <TextField name="apellido_paterno" label="Primer Apellido" InputProps={{readOnly: !isEditing}} value={studentData.apellido_paterno || ''} onChange={handleChange} helperText=" " required/>       
                 <TextField name="apellido_materno" label="Segundo Apellido" InputProps={{readOnly: !isEditing}} value={studentData.apellido_materno || ''} onChange={handleChange}  helperText=" " required/>       
@@ -113,13 +118,14 @@ const StudentProfile = ({isEditing, setIsEditing, setAddStudent, addStudent}) =>
                         </Link>
                     }
                 />
-                <TextField name='fecha_nacimiento' label="Fecha de nacimiento" type='date' InputProps={{readOnly: !isEditing}} InputLabelProps={{ shrink: true }} value={studentData.fecha_nacimiento || ''} onChange={handleChange}  helperText=" " required/>        
+                <TextField name='fecha_de_nacimiento' label="Fecha de nacimiento" type='date' InputProps={{readOnly: !isEditing}} InputLabelProps={{ shrink: true }} value={studentData.fecha_de_nacimiento || ''} onChange={handleChange}  helperText=" " required/>        
                 <TextField name="escolaridad" label="Escolaridad" InputProps={{readOnly: !isEditing}} value={studentData.escolaridad || ''} onChange={handleChange} helperText=" " required/>        
                 <TextField name="ultima_escuela" label="Ultima Escuela" InputProps={{readOnly: !isEditing}} value={studentData.ultima_escuela || ''} onChange={handleChange} helperText=" " required/>        
                 <TextField name="estado" label="Estado" InputProps={{readOnly: !isEditing}} value={studentData.estado || ''} onChange={handleChange} helperText=" " required/>   
                 <TextField name="ciudad" label="Ciudad" InputProps={{readOnly: !isEditing}} value={studentData.ciudad || ''} onChange={handleChange}  helperText=" "required/>        
+                <TextField name="codigo_postal" label="Codigo Postal" type="number" InputProps={{readOnly: !isEditing}} value={studentData.codigo_postal || ''}  onChange={handleChange}  helperText=" "/>
                 <TextField name="colonia" label="Colonia" InputProps={{readOnly: !isEditing}} value={studentData.colonia || ''} onChange={handleChange}  helperText=" " required/>
-                {calculate_age(studentData.fecha_nacimiento) < 18 ? <ParentInfo isEditing={isEditing} studentData={studentData} handleChange={handleChange}/> : null}
+                {calculate_age(studentData.fecha_de_nacimiento) < 18 ? <ParentInfo isEditing={isEditing} studentData={studentData} handleChange={handleChange}/> : null}
                 <Box sx={{width: '100%' }}></Box>
 
                 <Box sx={{display:'flex', m: 1, p: 1, justifyContent: 'flex-end', width: '100%'}}>
