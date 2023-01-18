@@ -89,7 +89,7 @@ const ControlPanel = ({changeContent}) => {
         getTeachersInfo();
     }, []);
 
-    const [display, setDisplay ]= useState(true);
+
 
     return (
         <div>
@@ -110,12 +110,6 @@ const ControlPanel = ({changeContent}) => {
                 )}
             </Grid>
         </Box>
-
-        <button onClick={()=>changeContent("Periodos")}>jsbckehwbckk</button>
-
-        <button onClick={() => setDisplay(!display)}>Periodos</button>
-        {display && <Periodos/>}
-
         </div>
     )
 }

@@ -1,5 +1,5 @@
 
- export default  [
+ export const tarjetas = [
     {
         id: 18279,
         clave: 'febrero-junio',

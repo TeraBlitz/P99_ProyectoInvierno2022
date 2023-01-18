@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 
 import './periodos.css'
 import TarjetasPeriodos from "./tarjetaPeriodo";
@@ -10,6 +10,8 @@ import TextField from '@mui/material/TextField';
 import Card from '@mui/material/Card';
 
 import Typography from '@mui/material/Typography';
+
+import { tarjetas as information } from "./tarjetas";
 
 
 export default function Periodos(){
@@ -29,41 +31,11 @@ export default function Periodos(){
       };
 
     //arreglo de objetos previo
-    const [tarjetas, setTarjetas] = useState([
-        {
-            id: 18279,
-            clave: 'febrero-junio',
-            status: 'Activo',
-            fechaInicio: 'febrero 15',
-            fechaFin: 'junio 22',
-            fechaInicioInscripcion: 'enero 20',
-            fechaFinInscripcion: 'febrero 7',
-            cursosMax: 2,
-            idiomasMax: 1,
-            },
-            {
-            id: 27836,
-            clave: 'febrero-junio',
-            status: 'Activo',
-            fechaInicio: 'febrero 15',
-            fechaFin: 'junio 22',
-            fechaInicioInscripcion: 'enero 20',
-            fechaFinInscripcion: 'febrero 7',
-            cursosMax: 2,
-            idiomasMax: 1,
-            },
-            {
-                id: 37283,
-                clave: 'febrero-junio',
-                status: 'Activo',
-                fechaInicio: 'febrero 15',
-                fechaFin: 'junio 22',
-                fechaInicioInscripcion: 'enero 20',
-                fechaFinInscripcion: 'febrero 7',
-                cursosMax: 2,
-                idiomasMax: 1,
-                }
-    ])
+    const [tarjetas, setTarjetas] = useState([])
+
+    useEffect(() => {
+        setTarjetas(information);
+      }, []);
 
     // genera objetos nuevos con valores predeterminados a la listay los renderiza
     const agregaTarjeta= () =>{

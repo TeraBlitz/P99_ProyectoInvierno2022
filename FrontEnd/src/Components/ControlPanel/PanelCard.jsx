@@ -9,7 +9,7 @@ const PanelCard = ({title, body, bgColor, changeContent}) => {
 
   return (
     <Card>
-        <CardActionArea onClick={()=>changeContent('Alumnos')}>
+        <CardActionArea onClick={()=>changeContent(title)}>
             <CardMedia
                 component="img"
                 height="100"
