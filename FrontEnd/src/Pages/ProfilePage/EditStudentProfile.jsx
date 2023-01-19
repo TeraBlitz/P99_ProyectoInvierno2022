@@ -5,22 +5,15 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import TextField from '@mui/material/TextField';
-import MuiAlert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
 import { updateStudent, getStudents } from '../../api/students';
 import ParentInfo from './ParentInfo'
 
 
 
+const EditStudentProfile = ({
+    openEditModal, setOpenEditModal, studentInfo, isEditing, setIsEditing,
+    setStudents, setSuccessOpen, setErrorOpen, setAlertMessage}) =>{
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
-
-const EditStudentProfile = ({openEditModal, setOpenEditModal, studentInfo, isEditing, setIsEditing, setStudents}) =>{
-
-    const [successOpen, setSuccessOpen] = useState(false);
-    const [errorOpen, setErrorOpen] = useState(false);
     const [studentData, setStudentInfo] = useState(studentInfo)
     const [newStudentInfo, setNewStudentInfo] = useState(studentInfo);
 
@@ -44,27 +37,26 @@ const EditStudentProfile = ({openEditModal, setOpenEditModal, studentInfo, isEdi
         setNewStudentInfo(studentData);
         console.log(studentData);
         setOpenEditModal(!openEditModal)
+        setIsEditing(!isEditing);
         updateStudent(urlEncondeRespose(studentData)).then((data) => {
             console.log(data);
-            setSuccessOpen(true);
         })
         .catch((error) => {
-            console.log(error)
-            setErrorOpen(true);
+            
+            if (error.message.includes('Documento')){
+                setAlertMessage('Información del estudiante actualizada correctamente.');
+                setSuccessOpen(true);
+            }
+            else{
+                setAlertMessage('Se produjo un error al actualizar al estudiante.');
+                setErrorOpen(true);
+            }
             getStudents().then(
                 (data) => {
                     const students = data.filter(student => student.idUsuario === studentInfo.idUsuario);
                     setStudents(students);
             });
         });
-    };
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-          return;
-        }
-        setSuccessOpen(false);
-        setErrorOpen(false);
     };
 
     const handleCancel = () => {
@@ -133,16 +125,6 @@ const EditStudentProfile = ({openEditModal, setOpenEditModal, studentInfo, isEdi
                     <Button variant="contained" type='submit' sx={{ display: !isEditing ? 'none' : ''}} size="medium">
                         Guardar
                     </Button>
-                    <Snackbar open={successOpen} autoHideDuration={4000} onClose={handleClose}>
-                        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                            Información de estudiante actualizada correctamente.
-                        </Alert>
-                    </Snackbar>
-                    <Snackbar open={errorOpen} autoHideDuration={4000} onClose={handleClose}>
-                        <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-                            Se produjo un error al actualizar la información del estudiante.
-                        </Alert>
-                    </Snackbar>
                 </Box>
             </Box>
         </>

@@ -5,6 +5,8 @@ import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import AddIcon from '@mui/icons-material/Add';
 import CircularProgress from '@mui/material/CircularProgress';
+import MuiAlert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 import StudentItem from '../../Components/Profile/StudentItem';
 import StudentProfile from './StudentProfile';
 import { getUser } from '../../api/users';
@@ -19,8 +21,15 @@ const studentInfo = {
     'codigo_postal':''
 };
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 const Profile = ({userID}) =>{
-    
+
+    const [successOpen, setSuccessOpen] = useState(false);
+    const [errorOpen, setErrorOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
     const [isEditing, setIsEditing] = useState(false)
     const [userInfo, setUserInfo] = useState(null);
     const [addStudent, setAddStudent] = useState(false);
@@ -57,8 +66,16 @@ const Profile = ({userID}) =>{
         setOpenEditModal(!openEditModal);
     };
 
-    
     const handleChange = e => setUserInfo(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setSuccessOpen(false);
+        setErrorOpen(false);
+    };
+
     if (!userInfo || !students) {
         return(
             <Box sx={{ display: 'flex', alignItems: 'center', height: '100vh', justifyContent: 'center'}}>
@@ -66,6 +83,8 @@ const Profile = ({userID}) =>{
             </Box>
         )
     }
+
+    
     return (
         <Box sx={{p: 1, ml: 1}}>
             <Box sx={{ fontFamily: 'default', fontSize: 'h3.fontSize', py: 2, display:'flex' }}>
@@ -127,6 +146,9 @@ const Profile = ({userID}) =>{
                         setAddStudent={setAddStudent}
                         addStudent={addStudent}
                         setStudents={setStudents}
+                        setSuccessOpen={setSuccessOpen}
+                        setErrorOpen={setErrorOpen}
+                        setAlertMessage={setAlertMessage}
                     />
                 </>
             </Modal>
@@ -143,9 +165,22 @@ const Profile = ({userID}) =>{
                         setIsEditing={setIsEditing}
                         isEditing={isEditing}
                         setStudents={setStudents}
+                        setSuccessOpen={setSuccessOpen}
+                        setErrorOpen={setErrorOpen}
+                        setAlertMessage={setAlertMessage}
                     />
                 </>
             </Modal>
+            <Snackbar open={successOpen} autoHideDuration={4000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                    {alertMessage}
+                </Alert>
+            </Snackbar>
+            <Snackbar open={errorOpen} autoHideDuration={4000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+                    {alertMessage}
+                </Alert>
+            </Snackbar>
         </Box>
     )
 }

@@ -18,11 +18,9 @@ const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStudents}) =>{
+const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStudents, setSuccessOpen, setErrorOpen, setAlertMessage}) =>{
 
     studentInfo['idUsuario'] = userID;
-    const [successOpen, setSuccessOpen] = useState(false);
-    const [errorOpen, setErrorOpen] = useState(false);
     const [studentData, setStudentInfo] = useState(studentInfo)
     const [newStudentInfo, setNewStudentInfo] = useState(studentInfo);
 
@@ -47,11 +45,17 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
         setAddStudent(!addStudent);
         createStudent(urlEncondeRespose(studentData)).then((data) => {
             console.log(data);
-            setSuccessOpen(true);
         })
         .catch((error) => {
-            console.log(error)
-            setErrorOpen(true);
+            console.log(error.message);
+            if (error.message.includes('Un documen')){
+                setAlertMessage('Estudiante agregado correctamente.')
+                setSuccessOpen(true);
+            }
+            else{
+                setAlertMessage('Se produjo un error al agregar al estudiante.')
+                setErrorOpen(true);
+            }
             getStudents().then(
                 (data) => {
                     const students = data.filter(student => student.idUsuario === studentInfo.idUsuario);
@@ -131,16 +135,6 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
                     <Button variant="contained" type='submit'  size="medium">
                         Guardar
                     </Button>
-                    <Snackbar open={successOpen} autoHideDuration={4000} onClose={handleClose}>
-                        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                            Estudiante agregado correctamente.
-                        </Alert>
-                    </Snackbar>
-                    <Snackbar open={errorOpen} autoHideDuration={4000} onClose={handleClose}>
-                        <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-                            Se produjo un error al agregar al estudiante.
-                        </Alert>
-                    </Snackbar>
                 </Box>
             </Box>
         </>
