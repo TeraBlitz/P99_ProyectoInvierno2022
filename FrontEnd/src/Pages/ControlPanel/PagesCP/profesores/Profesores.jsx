@@ -293,10 +293,10 @@ export default function Profesores() {
     <div>
       <Card
         sx={{
-          maxWidth: 255,
+          width: 350,
           position: "absolute",
           textAlign: "left",
-          marginLeft: "5px",
+          marginLeft: "20px",
           marginTop: "120px",
           border: "2px solid  rgb(165, 165, 180)",
           borderRadius: "8px",
@@ -312,7 +312,7 @@ export default function Profesores() {
             Filtro
           </Typography>
           <TextField
-            style={{ paddingBottom: "15px", fontFamily: "arial" }}
+            style={{ paddingBottom: "15px", fontFamily: "arial" , width:300, marginLeft:7}}
             label="Ingrese un nombre para buscar"
             onChange={(e) => {
               setItems([
@@ -335,7 +335,7 @@ export default function Profesores() {
           padding: "15px",
           height: '450px',
           position: "absolute",
-          marginLeft: "265px",
+          marginLeft: "400px",
         }}
       >
         <Typography
