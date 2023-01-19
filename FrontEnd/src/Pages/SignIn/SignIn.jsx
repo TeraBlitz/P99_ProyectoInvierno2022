@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
-const SignIn = ({isSignedIn, handleSignIn  , handleUser}) => {
+const SignIn = ({isSignedIn, handleSignIn  , handleUser , loginError}) => {
     const [checked, setChecked] = useState([true, false]);
     
     const handleChange = (e) => {
@@ -30,7 +30,8 @@ const SignIn = ({isSignedIn, handleSignIn  , handleUser}) => {
                 <Typography component='h1' variant="h4" sx={{color: '#E6F4F1', mb: 1, fontWeight: '400', textAlign: 'center', width: '100%'}}>
                     Iniciar Sesión
                 </Typography>
-                    <TextField name='usuario' required 
+                <Typography variant="h7" sx={{color:'red' , display: loginError , textAlign:'center'}}> usuario o contraseña incorrecta</Typography>
+                    <TextField name="correo" required 
                     fullWidth label='Usuario'
                     sx={{my: 2, input: {color: 'white'}}}
                     InputLabelProps={{style: {color: '#E6F4F1'}}}

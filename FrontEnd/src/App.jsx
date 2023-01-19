@@ -14,6 +14,7 @@ import MisClases from './Pages/MisClases/MisClasesEstudiante'
 import ForgotPassword from './Pages/ForgotPassword/ForgotPassword'
 import SignUp from './Pages/SignUp/SignUp'
 import { createUser } from './api/users'
+import { Password } from '@mui/icons-material'
 
 
 export const userContext = createContext()
@@ -21,11 +22,11 @@ function App() {
     const [open, setOpen] = useState(false)
     const [content, setContent] = useState('content')
     const [isSignedIn, setIsSignedIn] = useState(false)
-    const [user, setUser] = useState({ userType: 'student' })
+    const [user, setUser] = useState({})
+    const [loginError, setLoginError]= useState('none');
 
     const handleUser = (params) => {
         setUser(params)
-
     }
 
     const changeDrawerState = () => {
@@ -43,22 +44,38 @@ function App() {
         Registro: <ShowClass />
     }
 
-    const handleSignIn =  (e) => {
+    const handleSignIn = (e) => {
         e.preventDefault();
         // Mandar y validad esta informacion
 
-        fetch(`http://127.0.0.1:3000/v1/users/find/${user.usuario}`,
+
+        fetch(`http://127.0.0.1:3000/v1/auth/login`,
             {
-                method: 'GET',
-                redirect: 'follow'
+                method: 'POST',
+                redirect: 'follow',
+                body: new URLSearchParams(
+                    {
+                        correo:user.correo,
+                        password:user.contraseña
+                    }
+                )
             })
             .then(response => response.json())
-            .then(result => console.log(result))
+            .then(result => {
+                if(result.msg=="Login OK"){
+                    handleUser(result.data_user)
+                    setIsSignedIn(true)
+                }
+                else{
+                    setLoginError('block')
+                }
+            })
+
             .catch(error => console.log('error', error));
     }
 
     return !isSignedIn ?
-        <SignIn handleSignIn={handleSignIn} handleUser={handleUser} />
+        <SignIn handleSignIn={handleSignIn} handleUser={handleUser}  loginError={loginError} />
         :
         <userContext.Provider value={user}>
             <Box id="main" sx={{ display: 'flex' }}>
