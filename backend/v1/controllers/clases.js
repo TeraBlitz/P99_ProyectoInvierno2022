@@ -32,12 +32,16 @@ async function createClase(req, res) {
     // Crear un Doc
     const doc = [
       {
+        clave: req.body.clave,
         nombre_curso: req.body.nombre_curso,
         nivel: req.body.nivel,
-        idMaestro: req.body.idMaestro,
         frecuencia_semanal: req.body.frecuencia_semanal,
+        horario: req.body.horario,
+        rango_edades: req.body.rango_edades,
         cupo_maximo: req.body.cupo_maximo,
         cupo_actual: req.body.cupo_actual,
+        matriculaMaestro: req.body.matriculaMaestro,
+        clavePeriodo: req.body.clavePeriodo,
       },
     ];
 
@@ -68,12 +72,16 @@ async function updateClase(req, res) {
     };
     const doc = {
       $set: {
+        clave: req.body.clave,
         nombre_curso: req.body.nombre_curso,
         nivel: req.body.nivel,
-        idMaestro: req.body.idMaestro,
         frecuencia_semanal: req.body.frecuencia_semanal,
+        horario: req.body.horario,
+        rango_edades: req.body.rango_edades,
         cupo_maximo: req.body.cupo_maximo,
         cupo_actual: req.body.cupo_actual,
+        matriculaMaestro: req.body.matriculaMaestro,
+        clavePeriodo: req.body.clavePeriodo,
       },
     };
 
