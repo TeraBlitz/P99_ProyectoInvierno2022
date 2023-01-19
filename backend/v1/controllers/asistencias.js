@@ -1,11 +1,9 @@
+const { clientCon } = require("../connection.js");
 const { mongodbInf } = require("../config.js");
 const mongodb = require("mongodb");
 
-// Connection URI.
-// mongodb://localhost:27017
-const uri = `mongodb://${mongodbInf.host}:${mongodbInf.port}/${mongodbInf.database}`;
 // Crear un nuevo MongoClient
-const client = new mongodb.MongoClient(uri);
+const client = clientCon;
 
 async function getAllAsistencia(req, res) {
   try {
@@ -39,15 +37,20 @@ async function createAsistencia(req, res) {
         } */
 
     // Crear un Doc
-    const doc = {
-      idUsuario: req.body.idUsuario,
-      idClase: req.body.idClase,
-      fecha: req.body.fecha,
-      asistio: req.body.asistio,
-    };
+    const doc = [
+      {
+        idUsuario: req.body.idUsuario,
+        idClase: req.body.idClase,
+        fecha: req.body.fecha,
+        asistio: req.body.asistio,
+      },
+    ];
 
-    const result = await collection.insertOne(doc);
-    res.send(`Un documeno fue insertado con el ID: ${result.insertedId}`);
+    const result = await collection.insertMany(doc);
+    for (i = 0; i < result.insertedCount; i++)
+      res.send(
+        `Un documento fue insertado con el ID: ${result.insertedIds[i]}`
+      );
   } catch (err) {
     res.send(`ERROR: ${err}`);
   } finally {
@@ -118,7 +121,7 @@ async function deleteAsistencia(req, res) {
             _id: new mongodb.ObjectId("63bf6107b5823dbe5830157d"),
         } */
 
-    const result = await collection.deleteOne(idDoc);
+    const result = await collection.deleteMany(idDoc);
     // console.log(JSON.stringify(result))
 
     if (result.deletedCount === 1) {
@@ -135,9 +138,53 @@ async function deleteAsistencia(req, res) {
 // Test deleteAsistencia
 // deleteAsistencia().catch(console.dir);
 
+// Metodo find
+async function findAsistencia(req, res) {
+  try {
+    await client.connect();
+    const database = client.db(mongodbInf.database);
+    const collection = database.collection("asistencias");
+    let query = "";
+    let key = "";
+    let value = "";
+
+    if (req.body.idUsuario) {
+      key = "idUsuario";
+      value = req.body.idUsuario;
+      query = { idUsuario: value };
+    } else if (req.body.idClase) {
+      key = "idClase";
+      value = req.body.idClase;
+      query = { idClase: value };
+    } else if (req.body.fecha) {
+      key = "fecha";
+      value = req.body.fecha;
+      query = { fecha: value };
+    } else if (req.body.asistio) {
+      key = "asistio";
+      value = req.body.asistio;
+
+      query = { asistio: value };
+    } else {
+      throw "parametros invalidos";
+    }
+    const result = await collection.find(query).toArray();
+    if (result == "") {
+      res.send(`Ninguna clase encontrada con ${key} : ${value}`);
+    } else {
+      res.send(result);
+    }
+  } catch (err) {
+    console.log(`ERROR: ${err}`);
+  } finally {
+    await client.close();
+  }
+}
+
 module.exports = {
   getAllAsistencia,
   createAsistencia,
   updateAsistencia,
   deleteAsistencia,
+  findAsistencia,
 };

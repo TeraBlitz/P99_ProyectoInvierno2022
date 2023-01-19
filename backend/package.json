@@ -14,9 +14,11 @@
     "ajv-errors": "^3.0.0",
     "ajv-formats": "^2.1.1",
     "ajv-i18n": "^4.2.0",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.1",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "express-validator": "^6.14.2",
     "mongodb": "^4.13.0"
   },
   "devDependencies": {
