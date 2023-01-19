@@ -9,9 +9,11 @@ import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import StudentItem from '../../Components/Profile/StudentItem';
 import StudentProfile from './StudentProfile';
-import { getUser } from '../../api/users';
-import { getStudents } from '../../api/students';
 import EditStudentProfile from './EditStudentProfile';
+import DeleteDialog from '../../Components/Profile/DeleteDialog';
+import { getUser } from '../../api/users';
+import { getStudents, deleteStudent, findStudents } from '../../api/students';
+import { postData } from '../../utils/requestUtils';
 import { userContext } from './../../App.jsx'
 
 
@@ -43,6 +45,15 @@ const Profile = () =>{
     const [students, setStudents] = useState(null);
     const [openEditModal, setOpenEditModal] = useState(false);
     const [currentStudent, setCurrentStudent] = useState(studentInfo)
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
+    const handleOpenDialog = () => {
+      setOpenDeleteDialog(true);
+    };
+  
+    const handleCloseDialog = () => {
+      setOpenDeleteDialog(false);
+    };
 
     //const userValues = useContext(userContext)
 
@@ -62,12 +73,21 @@ const Profile = () =>{
 
     useEffect(() => {
         const getUserStudents = () =>{
-            getStudents().then(
-                (data) => {
-                    const students = data.filter(student => student.idUsuario === userValues._id);
-                    setStudents(students);
-                    //console.log(students)
-                });
+            fetch(`http://127.0.0.1:3000/v1/alumnos/find`,
+            {
+                method: 'POST',
+                redirect: 'follow',
+                body: new URLSearchParams(
+                    {
+                        idUsuario : userValues._id
+                    }
+                )
+            })
+            .then(response => response.json())
+            .then(result => {
+                setStudents(result)
+            })
+
         }
         getUserStudents();
     }, []);
@@ -76,6 +96,31 @@ const Profile = () =>{
         setCurrentStudent(student);
         setOpenEditModal(!openEditModal);
     };
+
+    const deleteCurrentStudent = () => {
+        console.log(currentStudent);
+        handleCloseDialog();
+        deleteStudent(new URLSearchParams({'_id': currentStudent._id})).then((data) => {
+            console.log(data)
+        })
+        .catch((error) => {
+            console.log(error.message);
+            if (error.message.includes('Documen')){
+                setAlertMessage('Estudiante eliminado correctamente.')
+                setSuccessOpen(true);
+            }
+            else{
+                setAlertMessage('Se produjo un error al eliminar al estudiante.')
+                setErrorOpen(true);
+            }
+        })
+        .finally(() => {
+            findStudents(new URLSearchParams({'idUsuario': userValues._id})).then(
+                (data) => {
+                    setStudents(data);
+            });
+        });
+    }
 
     const handleChange = e => setUserInfo(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
 
@@ -141,6 +186,9 @@ const Profile = () =>{
                             first_lastname={student.apellido_paterno}
                             second_lastname={student.apellido_materno}
                             editStudent={editStudent}
+                            setCurrentStudent={setCurrentStudent}
+                            handleOpenDialog={handleOpenDialog}
+                            setIsEditing={setIsEditing}
                         />    
                     )
                 } 
@@ -182,6 +230,7 @@ const Profile = () =>{
                     />
                 </>
             </Modal>
+            <DeleteDialog deleteStudent={deleteCurrentStudent} handleClose={handleCloseDialog} open={openDeleteDialog} student={currentStudent}/>
             <Snackbar open={successOpen} autoHideDuration={4000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
                     {alertMessage}

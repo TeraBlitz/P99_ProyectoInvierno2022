@@ -31,3 +31,14 @@ export const getData = async (url = '') => {
     });
     return response.json();
 }
+
+export const deleteData = async (url = '', data = {}) => {
+    const response = await fetch(url, {
+        method: 'DELETE', 
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        },
+        body: data
+    });
+    return response.json();
+}
