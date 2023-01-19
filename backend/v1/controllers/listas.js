@@ -5,11 +5,11 @@ const mongodb = require("mongodb");
 // Crear un nuevo MongoClient
 const client = clientCon;
 
-async function getAllClase(req, res) {
+async function getAllLista(req, res) {
   try {
     await client.connect();
     const database = client.db(mongodbInf.database);
-    const collection = database.collection("clases");
+    const collection = database.collection("listas");
 
     const result = await collection.find().toArray();
     res.send(result);
@@ -19,26 +19,23 @@ async function getAllClase(req, res) {
     await client.close();
   }
 }
-// Test getAllClase
-// getAllClase().catch(console.dir);
+// Test getAllLista
+// getAllLista().catch(console.dir);
 
 // Create
-async function createClase(req, res) {
+async function createLista(req, res) {
   try {
     await client.connect();
     const database = client.db(mongodbInf.database);
-    const collection = database.collection("clases");
+    const collection = database.collection("listas");
 
     // Crear un Doc
     const doc = [
       {
-        nombre_curso: req.body.nombre_curso,
-        nivel: req.body.nivel,
-        idMaestro: req.body.idMaestro,
-        frecuencia_semanal: req.body.frecuencia_semanal,
-        cupo_maximo: req.body.cupo_maximo,
-        cupo_actual: req.body.cupo_actual,
-        clavePeriodo:  req.body.clavePeriodo
+        idAlumno: req.body.idAlumno,
+        idClase: req.body.idClase,
+        lugar_de_espera: req.body.lugar_de_espera,
+        status: req.body.status,
       },
     ];
 
@@ -53,15 +50,15 @@ async function createClase(req, res) {
     await client.close();
   }
 }
-// Test createClase
-// createClase().catch(console.dir);
+// Test createLista
+// createLista().catch(console.dir);
 
 // Update
-async function updateClase(req, res) {
+async function updateLista(req, res) {
   try {
     await client.connect();
     const database = client.db(mongodbInf.database);
-    const collection = database.collection("clases");
+    const collection = database.collection("listas");
 
     // Crear el documento actualizado
     const idDoc = {
@@ -69,13 +66,10 @@ async function updateClase(req, res) {
     };
     const doc = {
       $set: {
-        nombre_curso: req.body.nombre_curso,
-        nivel: req.body.nivel,
-        idMaestro: req.body.idMaestro,
-        frecuencia_semanal: req.body.frecuencia_semanal,
-        cupo_maximo: req.body.cupo_maximo,
-        cupo_actual: req.body.cupo_actual,
-        clavePeriodo:  req.body.clavePeriodo
+        idAlumno: req.body.idAlumno,
+        idClase: req.body.idClase,
+        lugar_de_espera: req.body.lugar_de_espera,
+        status: req.body.status,
       },
     };
 
@@ -84,20 +78,20 @@ async function updateClase(req, res) {
       `Documento con _id: ${result.value._id} actualizado con exito. Status: ${result.ok}.`
     );
   } catch (err) {
-    res.send(`updateClase ERROR: ${err}`);
+    res.send(`updateLista ERROR: ${err}`);
   } finally {
     await client.close();
   }
 }
-// Test updateClase
-// updateClase().catch(console.dir);
+// Test updateLista
+// updateLista().catch(console.dir);
 
 // Delete
-async function deleteClase(req, res) {
+async function deleteLista(req, res) {
   try {
     await client.connect();
     const database = client.db(mongodbInf.database);
-    const collection = database.collection("clases");
+    const collection = database.collection("listas");
 
     // ID documento a eliminar
     const idDoc = {
@@ -118,46 +112,35 @@ async function deleteClase(req, res) {
     await client.close();
   }
 }
-// Test deleteClase
-// deleteClase().catch(console.dir);
-// Metodo find
-async function findClase(req, res) {
+// Test deleteLista
+// deleteLista().catch(console.dir);
+
+//find
+async function findLista(req, res) {
   try {
     await client.connect();
     const database = client.db(mongodbInf.database);
-    const collection = database.collection("clases");
+    const collection = database.collection("listas");
     let query = "";
     let key = "";
     let value = "";
-    if (req.body.nombre_curso) {
-      key = " nombre_curso";
-      value = req.body.nombre_curso;
-      query = { nombre_curso: value };
-    } else if (req.body.nivel) {
-      key = "nivel";
-      value = req.body.nivel;
-      id = req.body._id;
-      query = { nivel: value };
-    } else if (req.body.idMaestro) {
-      key = "idMaestro";
-      value = req.body.idMaestro;
-      id = req.body.idMaestro;
-      query = { idMaestro: value };
-    } else if (req.body.frecuencia_semanal) {
-      key = "frecuencia_semanal";
-      value = req.body.frecuencia_semanal;
-      id = req.body._id;
-      query = { frecuencia_semanal: value };
-    } else if (req.body.cupo_maximo) {
-      key = "cupo_maximo";
-      value = req.body.cupo_maximo;
-      id = req.body._id;
-      query = { cupo_maximo: value };
-    } else if (req.body.cupo_actual) {
-      key = "cupo_actual";
-      value = req.body.cupo_actual;
-      id = req.body._id;
-      query = { cupo_actual: value };
+    if (req.body.idAlumno) {
+      key = "idAlumno";
+      value = req.body.idAlumno;
+      query = { idAlumno: value };
+    } else if (req.body.idClase) {
+      key = "idClase";
+      value = req.body.idClase;
+      query = { idClase: value };
+    } else if (req.body.lugar_de_espera) {
+      key = "lugar_de_espera";
+      value = req.body.lugar_de_espera;
+      query = { lugar_de_espera: value };
+    } else if (req.body.status) {
+      key = "status";
+      value = req.body.status;
+
+      query = { status: value };
     } else {
       throw "parametros invalidos";
     }
@@ -175,9 +158,9 @@ async function findClase(req, res) {
 }
 
 module.exports = {
-  getAllClase,
-  createClase,
-  updateClase,
-  deleteClase,
-  findClase,
+  getAllLista,
+  createLista,
+  updateLista,
+  deleteLista,
+  findLista,
 };

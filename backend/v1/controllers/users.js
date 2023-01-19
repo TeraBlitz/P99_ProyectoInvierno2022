@@ -1,44 +1,179 @@
-/* const User = require('../models/users') */
-const connection = require('../connection')
+const {clientCon} = require('../connection.js')
+const { mongodbInf } = require('../config.js')
+const mongodb = require("mongodb")
+const bcryptjs = require('bcryptjs')
 
-const getUsers = (req, res)=>{
-    // Ontener todos los users
-    db.collection('users')
-    .find()
-    .toArray(function (err, items) {
-        res.send(items)
-    })
+const COLLECTION_NAME = "users"
+
+// Crear un nuevo MongoClient
+const client = clientCon;
+
+async function getAllUser(req, res) {
+    try {
+        await client.connect();
+        const database = client.db(mongodbInf.database);
+        const collection = database.collection(COLLECTION_NAME);
+
+        const result = await collection.find().toArray();
+        res.send(result);
+    } catch (err) {
+        res.send(`ERROR: ${err}`);
+    } finally {
+        await client.close();
+    }
 }
+// Test getAllUser
+// getAllUser().catch(console.dir);
 
-const createUser = (req, res)=>{
-    // Solicitud para crear
-    db.collection('users').insertOne({ text: req.body.text }, function (
-        err,
-        info
-    ) {
-        res.json(info.ops[0])
-    })
-}
+async function findUser(req, res) {
+    try {
+        await client.connect();
+        const database = client.db(mongodbInf.database);
+        const collection = database.collection(COLLECTION_NAME);
 
-const updateUser = (req, res)=>{
-    // Actualizar por su ID
-    db.collection('users').findOneAndUpdate(
-        { _id: new mongodb.ObjectId(req.body.id) },
-        { $set: { text: req.body.text } },
-        function () {
-            res.send('Actualizado con exito!')
+        // Detectar la key y crear la query
+        let query = ""
+        let key = ""
+        let value = ""
+        if(req.body.user_name){
+            key = "Nombre de Usuario"
+            value = req.body.user_name
+            query = {user_name: value};
+        }else if(req.body.correo){
+            key = "Correo"
+            value = req.body.correo
+            query = {correo: value};
+        }else{
+            throw("Parametros invalidos.")
         }
-    )
-}
 
-const deleteUser = (req, res)=>{
-    // Eliminar por su ID
-    db.collection('users').deleteOne(
-        { _id: new mongodb.ObjectId(req.body.id) },
-        function () {
-        res.send('Eliminado con exito!')
+        // Ejecucion de la query
+        const result = await collection.find(query).toArray();
+
+        result.forEach(function(valor, index, arr){
+            console.log(valor)
+            console.log(index)
+        })
+
+        if(result == ''){
+            res.send(`Ningun user con ${key}:"${value}" encontrado.`);
+        }else{
+            delete result[0].password
+            res.send(result[0]);
         }
-    )
+        
+    } catch (err) {
+        res.send(`ERROR: ${err}`);
+    } finally {
+        await client.close();
+    }
 }
+// Test getAllUser
+// getAllUser().catch(console.dir);
 
-module.exports = {getUsers, createUser, updateUser, deleteUser}
+// Create
+async function createUser(req, res) {
+    try {
+        await client.connect();
+        const database = client.db(mongodbInf.database);
+        const collection = database.collection(COLLECTION_NAME);
+
+        // Encriptar password
+        // Nivel de encriptado, por defecto es 10.
+        req.body.password = bcryptjs.hashSync(req.body.password, 12)
+
+        // Crear un Doc
+        const doc = [
+            {
+                user_name: req.body.user_name,
+                correo: req.body.correo,
+                password: req.body.password,
+                status: req.body.status,
+                rol: req.body.rol
+            },
+        ];
+
+        const result = await collection.insertMany(doc);
+        for (i = 0; i < result.insertedCount; i++)
+        res.send(
+            `Un documento fue insertado con el ID: ${result.insertedIds[i]}`
+        );
+    } catch (err) {
+        res.send(`ERROR: ${err}`);
+    } finally {
+        await client.close();
+    }
+}
+// Test createUser
+// createUser().catch(console.dir);
+
+// Update
+async function updateUser(req, res) {
+    try {
+        await client.connect();
+        const database = client.db(mongodbInf.database);
+        const collection = database.collection(COLLECTION_NAME);
+
+        // Crear el documento actualizado
+        const idDoc = {
+            _id: new mongodb.ObjectId(req.body._id),
+        };
+        const doc = {
+            $set: {
+                user_name: req.body.user_name,
+                correo: req.body.correo,
+                password: req.body.password,
+                status: req.body.status,
+                rol: req.body.rol
+            },
+        };
+
+        const result = await collection.findAndUpdate(idDoc, doc);
+        res.send(
+            `Documento con _id: ${result.value._id} actualizado con exito. Status: ${result.ok}.`
+        );
+    } catch (err) {
+        res.send(`updateUser ERROR: ${err}`);
+    } finally {
+        await client.close();
+    }
+}
+// Test updateUser
+// updateUser().catch(console.dir);
+
+// Delete
+async function deleteUser(req, res) {
+    try {
+        await client.connect();
+        const database = client.db(mongodbInf.database);
+        const collection = database.collection(COLLECTION_NAME);
+
+        // ID documento a eliminar
+        const idDoc = {
+            _id: new mongodb.ObjectId(req.body._id),
+        };
+
+        const result = await collection.deleteMany(idDoc);
+        // console.log(JSON.stringify(result))
+
+        if (result.deletedCount === 1) {
+            res.send(`Documento con _id: ${idDoc._id} eliminado con exito.`);
+        } else {
+            res.send("Ningun documento encontrado. 0 Documentos eliminados.");
+        }
+    } catch (err) {
+        console.log(`ERROR: ${err}`);
+    } finally {
+        await client.close();
+    }
+}
+// Test deleteUser
+// deleteUser().catch(console.dir);
+
+module.exports = {
+    findUser,
+    getAllUser, 
+    createUser, 
+    updateUser, 
+    deleteUser 
+};

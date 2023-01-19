@@ -5,22 +5,22 @@ const localize_es = require('ajv-i18n/localize/es')
 addFormats(ajv)
 require("ajv-errors")(ajv)
 // Schema
-const {userSchema} = require('../schemas/userSchema')
+const {listaSchema} = require('../schemas/listaSchema')
 
-const validate = ajv.compile(userSchema)
+const validate = ajv.compile(listaSchema)
 
-async function validateUser(req, res, next){
+async function validateLista(req, res, next){
 	const isValid = validate(req.body)
 
 	if(!isValid){
 		localize_es(validate.errors)
 		res.status(400).send(`ERROR: ${ajv.errorsText(validate.errors, {separator: '\n'})}`)
-		// console.log(ajv.errorsText(validate.errors, {separator: '\n'}))
+		console.log(ajv.errorsText(validate.errors, {separator: '\n'}))
 	}else{
-		// console.log("La data es valida")
+		console.log("La data es valida")
 		next()
 	}
 
 }
 
-module.exports = {validateUser}
+module.exports = {validateLista}

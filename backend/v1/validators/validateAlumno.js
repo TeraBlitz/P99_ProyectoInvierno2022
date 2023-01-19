@@ -5,11 +5,11 @@ const localize_es = require('ajv-i18n/localize/es')
 addFormats(ajv)
 require("ajv-errors")(ajv)
 // Schema
-const {userSchema} = require('../schemas/userSchema')
+const {alumnoSchema} = require('../schemas/alumnoSchema')
 
-const validate = ajv.compile(userSchema)
+const validate = ajv.compile(alumnoSchema)
 
-async function validateUser(req, res, next){
+async function validateAlumno(req, res, next){
 	const isValid = validate(req.body)
 
 	if(!isValid){
@@ -17,10 +17,10 @@ async function validateUser(req, res, next){
 		res.status(400).send(`ERROR: ${ajv.errorsText(validate.errors, {separator: '\n'})}`)
 		// console.log(ajv.errorsText(validate.errors, {separator: '\n'}))
 	}else{
-		// console.log("La data es valida")
+		console.log("La data es valida")
 		next()
 	}
 
 }
 
-module.exports = {validateUser}
+module.exports = {validateAlumno}
