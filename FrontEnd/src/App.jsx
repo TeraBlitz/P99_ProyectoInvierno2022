@@ -13,7 +13,7 @@ import SignIn from './Pages/SignIn/SignIn'
 import MisClases from './Pages/MisClases/MisClasesEstudiante'
 import ForgotPassword from './Pages/ForgotPassword/ForgotPassword'
 import SignUp from './Pages/SignUp/SignUp'
-import {createUser} from './api/users'
+import { createUser } from './api/users'
 
 
 export const userContext = createContext()
@@ -43,15 +43,12 @@ function App() {
         Registro: <ShowClass />
     }
 
-    const handleSignIn = (e) => {
-        e.preventDefault();
-        // Mandar y validad esta informacion
-        console.log('test');
-        setIsSignedIn(!isSignedIn);
+    const handleSignIn =  (e) => {
+        e.preventDefault()
+        setIsSignedIn(!isSignedIn)
     }
 
     return !isSignedIn ?
-
         <SignIn handleSignIn={handleSignIn} handleUser={handleUser} />
         :
         <userContext.Provider value={user}>
@@ -73,7 +70,6 @@ function App() {
                 </Box>
             </Box>
         </userContext.Provider>
-
 
 }
 export default App
