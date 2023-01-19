@@ -13,6 +13,7 @@ import SignIn from './Pages/SignIn/SignIn'
 import MisClases from './Pages/MisClases/MisClasesEstudiante'
 import Periodos from './Pages/ControlPanel/PagesCP/Periodos'
 import Alumnos from './Pages/ControlPanel/PagesCP/Alumnos/Alumnos'
+import Profesores from './Pages/ControlPanel/PagesCP/profesores/Profesores'
 
 
 
@@ -39,6 +40,8 @@ function App() {
         Periodos: <Periodos/>,
 
         Alumnos: <Alumnos/>,
+
+        Profesores: <Profesores/>
 
 
 
