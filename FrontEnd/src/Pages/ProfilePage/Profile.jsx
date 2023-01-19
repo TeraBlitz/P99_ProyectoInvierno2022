@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import Fab from '@mui/material/Fab';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -12,6 +12,7 @@ import StudentProfile from './StudentProfile';
 import { getUser } from '../../api/users';
 import { getStudents } from '../../api/students';
 import EditStudentProfile from './EditStudentProfile';
+import { userContext } from './../../App.jsx'
 
 
 const studentInfo = {
@@ -25,7 +26,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const Profile = ({userID}) =>{
+const Profile = () =>{
 
     const [successOpen, setSuccessOpen] = useState(false);
     const [errorOpen, setErrorOpen] = useState(false);
@@ -37,11 +38,13 @@ const Profile = ({userID}) =>{
     const [openEditModal, setOpenEditModal] = useState(false);
     const [currentStudent, setCurrentStudent] = useState(studentInfo)
 
+    const userValues = useContext(userContext)
+
     useEffect(() => {
         const getUserInfo = () =>{
             getUser().then(
                 (data) => {
-                    const currentUser = data.find(user => user._id === "63c85788d7f5ef2ec08b41ae");
+                    const currentUser = data.find(user => user._id === userValues._id);
                     setUserInfo(currentUser);
                     console.log(currentUser)
                 });
@@ -53,7 +56,7 @@ const Profile = ({userID}) =>{
         const getUserStudents = () =>{
             getStudents().then(
                 (data) => {
-                    const students = data.filter(student => student.idUsuario === "63c85788d7f5ef2ec08b41ae");
+                    const students = data.filter(student => student.idUsuario === userValues._id);
                     setStudents(students);
                     console.log(students)
                 });
