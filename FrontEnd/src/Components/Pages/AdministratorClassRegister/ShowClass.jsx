@@ -428,19 +428,19 @@ export default function ShowClass() {
 
     const columns = useMemo(
         () => [
-            { field: "id", headerName: "Id", width: 44, hide: true },
-            { field: "keys", headerName: "Clave", width: 44 },
-            { field: "coursename", headerName: "Curso", width: 80 },
-            { field: "level", headerName: "Nivel", width: 141 },
-            { field: "teacher", headerName: "Profesor", width: 130, sortable: false },
-            { field: "weeklyfrequency", headerName: "Frecuencia", width: 75 },
-            { field: "maximumcapacity", headerName: "Capacidad", width: 70 },
-            { field: "periodo", headerName: "Periodo", width: 70 },
+            { field: "id", headerName: "Id", width: 124, hide: true },
+            { field: "keys", headerName: "Clave", width: 124 },
+            { field: "coursename", headerName: "Curso", width: 160 },
+            { field: "level", headerName: "Nivel", width: 221 },
+            { field: "teacher", headerName: "Profesor", width: 210, sortable: false },
+            { field: "weeklyfrequency", headerName: "Frecuencia", width: 155 },
+            { field: "maximumcapacity", headerName: "Capacidad", width: 150 },
+            { field: "periodo", headerName: "Periodo", width: 150 },
             {
                 field: "actions",
                 headerName: "Acciones",
                 type: "actions",
-                width: 85,
+                width: 165,
                 renderCell: (params) => (
                     <Actions {...{ params, deleteClass, editClasses }} />
                 ),
