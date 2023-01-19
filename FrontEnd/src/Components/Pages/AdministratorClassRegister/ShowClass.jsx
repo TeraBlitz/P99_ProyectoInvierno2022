@@ -2,14 +2,13 @@
 import React from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import {
-    Button,
-    Modal,
-    TextField,
-    Box,
-    Typography,
-    Autocomplete,
+  Button,
+  Modal,
+  TextField,
+  Box,
+  Typography,
+  Autocomplete,
 } from "@mui/material";
-import { data as information } from "../../../data/datosprueba";
 import { niveles } from "../../../data/numerosprueba";
 import { profes } from "../../../data/profesprueba";
 import { useState, useEffect } from "react";
@@ -20,570 +19,514 @@ import Actions from "./Actions";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import MenuItem from "@mui/material/MenuItem";
-import { minWidth, minHeight } from "@mui/system";
-import {periodosPrueba} from './../../../data/periodosprueba.js'
-import DeleteDialog from './DeleteDialog'
-
+import axios from "axios";
 
 export default function ShowClass() {
-    //--------------------------------------------Agregar----------------
-    //Agregar numeros
-    const [number, setNumber] = useState(5);
-    function add() {
-        setNumber((prevNumber) => prevNumber + 1);
+  //Encargado de guardar la data
+  const [data, setData] = useState([]);
+  //-----------------------------------Obtener la data------------
+  const getClases = () => {
+    axios
+      .get("http://127.0.0.1:3000/v1/clases")
+      .then((res) => setData(res.data))
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    getClases();
+  }, []);
+
+  //Estados de creacion, actualizacion y eliminacion
+  const [modalInsertar, setModalInsertar] = useState(false);
+  const [clavePeriodo, setClavePeriodo] = useState("");
+  const [nombre_curso, setNombreCurso] = useState("");
+  const [nivel, setNivel] = useState("");
+  const [idMaestro, setIdMaestro] = useState("");
+  const [frecuencia_semanal, setFrecuencia_semanal] = useState("");
+  const [cupo_maximo, setCupo_maximo] = useState("");
+  const [cupo_actual, setCupo_actual] = useState("");
+  const [modalEditar, setModalEditar] = useState(false);
+  const [modalEliminar, setModalEliminar] = useState(false);
+  const [consolaSeleccionada, setConsolaSeleccionada] = useState({
+    _id: "",
+    nombre_curso: "",
+    nivel: "",
+    frecuencia_semanal: "",
+    cupo_maximo: "",
+    cupo_actual: "",
+    idMaestro: "",
+    clavePeriodo: "",
+  });
+
+  // Nos dice que texto fue seleccionado
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setConsolaSeleccionada((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+    console.log(consolaSeleccionada);
+  };
+
+  // Funcion para abrir y cerra ventanas modales
+  const abrirCerrarModalInsertar = () => {
+    setModalInsertar(!modalInsertar);
+  };
+
+  const abrirCerrarModalEditar = () => {
+    setModalEditar(!modalEditar);
+  };
+
+  const abrirCerrarModalEliminar = () => {
+    setModalEliminar(!modalEliminar);
+  };
+
+  // Funcion para eliminar o editar
+  const seleccionarConsola = (consola, caso) => {
+    setConsolaSeleccionada(consola);
+    if (caso === "Editar") {
+      abrirCerrarModalEditar();
+    } else {
+      abrirCerrarModalEliminar();
     }
-    //Estados de agregar
-    const [data, setData] = useState([]);
-    const [modalInsertar, setModalInsertar] = useState(false);
-    const [keys, setKey] = useState("");
-    const [coursename, setCoursename] = useState("");
-    const [level, setLevel] = useState("");
-    const [teacher, setTeacher] = useState("");
-    const [weeklyfrequency, setWeeklyfrequency] = useState("");
-    const [maximumcapacity, setMaximumcapacity] = useState("");
-    const [periodo, setPeriodo] = useState("");
-    const [currentRowId, setCurrentRowId] = useState(null); 
-
-    //Funcion click para abrir el modal
-    const abrirCerrarModalInsertar = () => {
-        setModalInsertar(!modalInsertar);
-    };
-     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpenDeleteDialog(true);
   };
 
-  const handleClose = () => {
-    setOpenDeleteDialog(false);
-  };
-  
-
-
-    //Evento que dado un nuevos datos los agrega
-    const handleClick = (e) => {
-        e.preventDefault();
-        if (
-            keys !== "" &&
-            coursename !== "" &&
-            level !== "" &&
-            teacher !== "" &&
-            weeklyfrequency !== "" &&
-            maximumcapacity !== "" &&
-            periodo !== ""
-        ) {
-            createClasses({
-                keys,
-                coursename,
-                level,
-                teacher,
-                weeklyfrequency,
-                maximumcapacity,
-                periodo,
-            });
-            setKey("");
-            setCoursename("");
-            setLevel("");
-            setTeacher("");
-            setWeeklyfrequency("");
-            setMaximumcapacity("");
-            abrirCerrarModalInsertar();
-        } else {
-            alert("No se puede enviar, si hay algo vacio");
-        }
-    };
-
-    //Se encarga de guardar la nueva informacion
-    useEffect(() => {
-        setData(information);
-    }, []);
-
-    //Actualiza las clases
-    function createClasses(datas) {
-        add();
-        setData([
-            ...data,
-            {
-                id: number + 1,
-                keys: datas.keys,
-                coursename: datas.coursename,
-                level: datas.level,
-                teacher: datas.teacher,
-                weeklyfrequency: datas.weeklyfrequency,
-                maximumcapacity: datas.maximumcapacity,
-                periodo:datas.periodo
-            },
-        ]);
-        abrirCerrarModalInsertar();
+  //procedimiento para crear datos
+  const postCrea = async (e) => {
+    e.preventDefault();
+    try {
+      await fetch("http://127.0.0.1:3000/v1/clases/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          nombre_curso: nombre_curso,
+          nivel: nivel,
+          frecuencia_semanal: frecuencia_semanal,
+          cupo_maximo: cupo_maximo,
+          cupo_actual: cupo_actual,
+          idMaestro: idMaestro,
+          clavePeriodo: clavePeriodo,
+        }),
+      });
+      abrirCerrarModalInsertar();
+      getClases();
+      setClavePeriodo("");
+      setNombreCurso("");
+      setNivel("");
+      setIdMaestro("");
+      setFrecuencia_semanal("");
+      setCupo_maximo("");
+      setCupo_actual("");
+    } catch (error) {
+      console.log(error);
     }
-
-    //-------------------------------Editar----------------------------------
-    // Estados para editar
-    const [modalEditar, setModalEditar] = useState(false);
-    const claseInicial = {
-        id: -1,
-        keys: "",
-        coursename: "",
-        level: "",
-        teacher: "",
-        weeklyfrequency: "",
-        maximumcapacity: 0,
-        periodo:"",
-    };
-    const [claseActual, setClaseActual] = useState(claseInicial);
-    //Function que abre o cierra el modal
-    const abrirCerrarModalEditar = () => {
-        setModalEditar(!modalEditar);
-    };
-
-    const editClasses = (id, clase) => {
-        setClaseActual(clase);
-        abrirCerrarModalEditar();
-    };
-
-    //Funcion que guarda informacion del modal
-    useEffect(() => {
-        setClase(claseActual);
-    }, [claseActual]);
-
-    //Estado que guarda el array modificado
-    const [clase, setClase] = useState(claseActual);
-
-
-    //Funcion que modifica los daors
-    const handleChange = (e) => {
-        console.log(e.target);
-        const { name, value } = e.target;
-        setClase({ ...clase, [name]: value });
-    };
-
-
-    //Funciones que actualiza los datos con las modificacioness
-    const handleClick2 = (e) => {
-        e.preventDefault();
-        if (
-            clase.keys &&
-            clase.coursename &&
-            clase.level &&
-            clase.teacher &&
-            clase.weeklyfrequency &&
-            clase.maximumcapacity &&
-            clase.periodo
-
-        )
-            updateClass(clase);
-    };
- const updateClass = (nuevaClase) => {
-        setData(
-            data.map((datos) => (datos.id === claseActual.id ? nuevaClase : datos))
-        );
-        setClaseActual(claseInicial);
-        abrirCerrarModalEditar();
-    };
-
-  //------------------------------------Eliminar-------------------------------------
-  // Se agrego un componente de dialogo para confirmar la eliminacion de una clase
-  
-  const classToDelete = (id, clase) => {
-    setClaseActual(clase);
   };
 
-  function deleteClass() {
-    setData(data.filter((datos) => datos.id !== claseActual.id));
-    handleClose();
-  }
+  // Procedimiento para editar
+  const postEditar = async (e) => {
+    e.preventDefault();
+    try {
+      await fetch("http://127.0.0.1:3000/v1/clases/update", {
+        method: "Put",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          _id: consolaSeleccionada._id,
+          nombre_curso: consolaSeleccionada.nombre_curso,
+          nivel: consolaSeleccionada.nivel,
+          frecuencia_semanal: consolaSeleccionada.frecuencia_semanal,
+          cupo_maximo: consolaSeleccionada.cupo_maximo,
+          cupo_actual: consolaSeleccionada.cupo_actual,
+          idMaestro: consolaSeleccionada.idMaestro,
+          clavePeriodo: consolaSeleccionada.clavePeriodo,
+        }),
+      });
+      abrirCerrarModalEditar();
+      getClases();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  // Procedimiento para eliminar
+  const postDelete = async (e) => {
+    try {
+      await fetch("http://127.0.0.1:3000/v1/clases/delete", {
+        method: "Delete",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          _id: consolaSeleccionada._id,
+        }),
+      });
+      abrirCerrarModalEliminar();
+      getClases();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    //-------------------------------Datos de ventanas modales---------------
-    const bodyInsertar = (
-        <div
-            style={{
-                position: "absolute",
-                width: 260,
-                height: 560,
-                backgroundColor: "#fefefd",
-                top: "48%",
-                left: "50%",
-                transform: "translate(-48%, -50%)",
-                border: "4px solid  rgb(165, 165, 180)",
-                margin: "auto",
-                borderRadius: "10px",
-                padding: "20px",
+  //-------------------------------Datos de ventanas modales---------------
+  const bodyInsertar = (
+    <div
+      style={{
+        position: "absolute",
+        width: 260,
+        height: 630,
+        backgroundColor: "#fefefd",
+        top: "48%",
+        left: "50%",
+        transform: "translate(-48%, -50%)",
+        border: "4px solid  rgb(165, 165, 180)",
+        margin: "auto",
+        borderRadius: "10px",
+        padding: "20px",
+      }}>
+      <h3
+        style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" }}
+        align="center">
+        Crear una nueva clase
+      </h3>
+      <TextField
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
+        label="Clave"
+        onChange={(e) => setClavePeriodo(e.target.value)}
+        value={clavePeriodo}
+        autoFocus/>
+      <TextField
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
+        label="Curso"
+        onChange={(e) => setNombreCurso(e.target.value)}
+        value={nombre_curso}
+        autoFocus/>
+      <br />
+      <TextField
+        style={{ paddingBottom: "15px", width: "24ch", fontFamily: "arial" }}
+        label="Nivel"
+        onChange={(e) => setNivel(e.target.value)}
+        value={nivel}
+        select
+        id="filled-select-currency">
+        {niveles.map((option) => (
+          <MenuItem
+            key={option.value}
+            value={option.value}
+            sx={{ fontFamily: "arial" }}>
+            {option.label}
+          </MenuItem>
+        ))}
+      </TextField>
+      <Autocomplete
+        value={idMaestro}
+        onChange={(event, newValue) => {
+          setIdMaestro(newValue);
+        }}
+        id="profesores-insertar"
+        options={profes}
+        renderInput={(params) => <TextField {...params} label="Profesor" />}/>
+      <br />
+      <TextField
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
+        label="Frecuencia Semanal"
+        onChange={(e) => setFrecuencia_semanal(e.target.value)}
+        value={frecuencia_semanal}/>
+      <br />
+      <TextField
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
+        label="Capacidad"
+        onChange={(e) => setCupo_maximo(e.target.value)}
+        value={cupo_maximo}/>
+      <br />
+      <TextField
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
+        label="Cupo Actual"
+        onChange={(e) => setCupo_actual(e.target.value)}
+        value={cupo_actual}/>
+      <br />
+      <br />
+      <div align="center">
+        <Button color="primary" onClick={postCrea}>
+          Insertar
+        </Button>
+        <Button onClick={() => abrirCerrarModalInsertar()} color="error">
+          Cancelar
+        </Button>
+      </div>
+    </div>
+  );
+  // -----------------------------Modal para editar---------------------------
+  const bodyEditar = (
+    <div
+      style={{
+        position: "absolute",
+        width: 260,
+        height: 580,
+        backgroundColor: "#fefefd",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        border: "4px solid  rgb(165, 165, 180)",
+        margin: "auto",
+        borderRadius: "10px",
+        padding: "20px",
+      }}>
+      <h3
+        style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" }}
+        align="center">
+        Actualizar una clase
+      </h3>
+      <TextField
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
+        label="Curso"
+        value={consolaSeleccionada && consolaSeleccionada.nombre_curso}
+        name="nombre_curso"
+        onChange={handleChange}
+        autoFocus/>
+      <br />
+      <TextField
+        style={{ paddingBottom: "15px", width: "24ch", fontFamily: "arial" }}
+        label="Nivel"
+        onChange={handleChange}
+        name="nivel"
+        value={consolaSeleccionada && consolaSeleccionada.nivel}
+        select
+        id="filled-select-currency">
+        {niveles.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
+          </MenuItem>
+        ))}
+      </TextField>
+      <br />
+      <TextField
+        style={{ paddingBottom: "15px", width: "24ch", fontFamily: "arial" }}
+        label="Profesor"
+        onChange={handleChange}
+        name="idMaestro"
+        value={consolaSeleccionada && consolaSeleccionada.idMaestro}
+        select
+        id="filled-select-currency">
+        {profes.map((option) => (
+          <MenuItem key={option} value={option}>
+            {option}
+          </MenuItem>
+        ))}
+      </TextField>
+      <br />
+      <TextField
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
+        label="Frecuencia Semanal"
+        name="frecuencia_semanal"
+        value={consolaSeleccionada && consolaSeleccionada.frecuencia_semanal}
+        onChange={handleChange}
+      />
+      <br />
+      <TextField
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
+        label="Capacidad"
+        name="cupo_maximo"
+        value={consolaSeleccionada && consolaSeleccionada.cupo_maximo}
+        onChange={handleChange}/>
+      <TextField
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
+        label="Capacidad"
+        name="cupo_actual"
+        value={consolaSeleccionada && consolaSeleccionada.cupo_actual}
+        onChange={handleChange}/>
+      <br />
+      <br />
+      <div align="center">
+        <Button color="primary" onClick={postEditar}>
+          Editar
+        </Button>
+        <Button onClick={() => abrirCerrarModalEditar()} color="error">
+          Cancelar
+        </Button>
+      </div>
+    </div>
+  );
+  //----------Modal Eliminar----------------
+  const bodyEliminar = (
+    <div
+      style={{
+        position: "absolute",
+        width: 260,
+        height: 280,
+        backgroundColor: "#fefefd",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        border: "4px solid  rgb(165, 165, 180)",
+        margin: "auto",
+        borderRadius: "10px",
+        padding: "20px",
+      }}>
+      <h3
+        style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" }}
+        align="center">
+        Eliminar una clase
+      </h3>
+      <Typography style={{ align: "justify", fontFamily: "arial" }}>
+        El curso de {consolaSeleccionada && consolaSeleccionada.nombre_curso} y
+        todo lo relacionado a el se va a eliminar por completo. No vas a poder
+        acceder a estos datos de nuevo.
+      </Typography>
+      <br />
+      <br />
+      <div align="center">
+        <Button color="error" onClick={postDelete}>
+          Confirmar
+        </Button>
+        <Button onClick={() => abrirCerrarModalEliminar()} color="primary">
+          Cancelar
+        </Button>
+      </div>
+    </div>
+  );
 
+  //---------------------------------------Show--------------
+  const [pageSize, SetPageSize] = useState(10);
+
+  const columns = useMemo(() => [
+      { field: "_id", headerName: "Id", width: 4, hide: true },
+      { field: "clavePeriodo", headerName: "Clave", width: 84 },
+      { field: "nombre_curso", headerName: "Curso", width: 80 },
+      { field: "nivel", headerName: "Nivel", width: 141 },
+      {
+        field: "idMaestro",
+        headerName: "Profesor",
+        width: 140,
+        sortable: false,
+      },
+      { field: "frecuencia_semanal", headerName: "Frecuencia", width: 100 },
+      { field: "cupo_maximo", headerName: "Capacidad", width: 100 },
+      { field: "cupo_actual", headerName: "Cupo actual", width: 100 },
+      {
+        field: "actions",
+        headerName: "Acciones",
+        type: "actions",
+        width: 85,
+        renderCell: (params) => <Actions {...{ params, seleccionarConsola }} />,
+      },
+    ],[data]);
+
+  return (
+    <div>
+      <Card
+        sx={{
+          maxWidth: 255,
+          position: "absolute",
+          textAlign: "left",
+          marginLeft: "5px",
+          marginTop: "120px",
+          border: "2px solid  rgb(165, 165, 180)",
+          borderRadius: "8px",
+        }}>
+        <CardContent>
+          <Typography
+            gutterBottom
+            variant="h5"
+            component="div"
+            sx={{ textAlign: "center", fontFamily: "arial" }}>
+            Filtros
+          </Typography>
+          <TextField
+            style={{ paddingBottom: "15px", fontFamily: "arial" }}
+            label="Curso"
+            onChange={(e) => {
+              setItems([
+                {
+                  columnField: "nombre_curso",
+                  operatorValue: "contains",
+                  value: e.target.value,
+                },
+              ]);
+            }}></TextField>
+          <TextField
+            style={{ paddingBottom: "15px", fontFamily: "arial" }}
+            label="Nivel"
+            onChange={(e) => {
+              setItems([
+                {
+                  columnField: "nivel",
+                  operatorValue: "contains",
+                  value: e.target.value,
+                },
+              ]);
+            }}></TextField>
+          <TextField
+            style={{ paddingBottom: "15px", fontFamily: "arial" }}
+            label="Profesor"
+            onChange={(e) => {
+              setItems([
+                {
+                  columnField: "idMaestro",
+                  operatorValue: "contains",
+                  value: e.target.value,
+                },
+              ]);
+            }}></TextField>
+        </CardContent>
+      </Card>
+
+      <Box
+        sx={{
+          width: "740px",
+          padding: "15px",
+          height: "450px",
+          position: "absolute",
+          marginLeft: "265px",
+        }}>
+        <Typography
+          variant="h3"
+          component="h3"
+          sx={{ textAlign: "left", mt: 3, mb: 3, fontFamily: "arial" }}>
+          Clases
+          <Button
+            sx={{ marginLeft: "350px" }}
+            variant="contained"
+            color="success"
+            onClick={() => abrirCerrarModalInsertar()}>
+            {<AddCircleOutlineIcon />} Crear
+          </Button>
+        </Typography>
+        <Box sx={{ height: "80vh", width: "70vw" }}>
+          <DataGrid
+            columns={columns}
+            rows={data}
+            getRowId={(row) => row._id}
+            rowsPerPageOptions={[10, 20, 30, 40, 50]}
+            pageSize={pageSize}
+            onPageSizeChange={(newPageSize) => SetPageSize(newPageSize)}
+            getRowSpacing={(params) => ({
+              top: params.isFirstVisible ? 0 : 10,
+              bottom: params.isLastVisible ? 0 : 10,
+            })}
+            sx={{
+              [`& .${gridClasses.row}`]: {
+                bgcolor: (theme) =>
+                  theme.palette.mode === "light" ? grey[200] : grey[900],
+                fontFamily: "arial",
+              },
             }}
-        >
-            <h3
-                style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" }}
-                align="center"
-            >
-                Crear una nueva clase
-            </h3>
-            <TextField
-                style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                label="Curso"
-                onChange={(e) => setCoursename(e.target.value)}
-                value={coursename}
-                autoFocus
-            />
-            <TextField
-                style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                label="Clave"
-                onChange={(e) => setKey(e.target.value)}
-                value={keys}
-                autoFocus
-            />
-            <br />
-            <TextField
-                style={{ paddingBottom: "15px", width: "24ch", fontFamily: "arial" }}
-                label="Nivel"
-                onChange={(e) => setLevel(e.target.value)}
-                value={level}
-                select
-                id="filled-select-currency"
-            >
-                {niveles.map((option) => (
-                    <MenuItem
-                        key={option.value}
-                        value={option.value}
-                        sx={{ fontFamily: "arial" }}
-                    >
-                        {option.label}
-                    </MenuItem>
-                ))}
-            </TextField>
-            <TextField
-                style={{ paddingBottom: "15px", width: "24ch", fontFamily: "arial" }}
-                label="Periodo"
-                onChange={(e) => setPeriodo(e.target.value)}
-                value={periodo}
-                select
-                id="filled-select-currency"
-            >
-                {periodosPrueba.map(e =>{
-                    if (e.active == true){
-                        return <MenuItem key={e.key} value={e.value}>
-                                {e.value}
-                            </MenuItem>
-                    }
-                })}
-
-
-
-            </TextField>
-            <br />
-            <Autocomplete
-                value={teacher}
-                onChange={(event, newValue) => {
-                    setTeacher(newValue);
-                }}
-                id="profesores-insertar"
-                options={profes}
-                renderInput={(params) => <TextField {...params} label="Profesor" />}
-            />
-            <br />
-            <TextField
-                style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                label="Frecuencia Semanal"
-                onChange={(e) => setWeeklyfrequency(e.target.value)}
-                value={weeklyfrequency}
-            />
-            <br />
-            <TextField
-                style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                label="Capacidad"
-                type="number"
-                onChange={(e) => setMaximumcapacity(e.target.value)}
-                value={maximumcapacity}
-            />
-            <br />
-            <br />
-            <div align="center">
-                <Button color="primary" onClick={handleClick}>
-                    Insertar
-                </Button>
-                <Button onClick={() => abrirCerrarModalInsertar()} color="error">
-                    Cancelar
-                </Button>
-            </div>
-        </div>
-
-
-
-    );
-    // -----------------------------Modal para editar---------------------------
-    const bodyEditar = (
-        <div
-            style={{
-                position: "absolute",
-                width: 260,
-                height: 480,
-                backgroundColor: "#fefefd",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                border: "4px solid  rgb(165, 165, 180)",
-                margin: "auto",
-                borderRadius: "10px",
-                padding: "20px",
-            }}
-        >
-
-            <h3
-                style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" }}
-                align="center"
-            >
-                Actualizar una clase
-            </h3>
-            <TextField
-                style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                label="Curso"
-                value={clase.coursename}
-                name="coursename"
-                onChange={handleChange}
-                autoFocus
-            />
-            <br />
-            <TextField
-                style={{ paddingBottom: "15px", width: "24ch", fontFamily: "arial" }}
-                label="Nivel"
-                onChange={handleChange}
-                name="level"
-                value={clase.level}
-                select
-                id="filled-select-currency"
-            >
-                {niveles.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                    </MenuItem>
-                ))}
-            </TextField>
-            <br />
-            <TextField
-                style={{ paddingBottom: "15px", width: "24ch", fontFamily: "arial" }}
-                label="Nivel"
-                onChange={handleChange}
-                name="teacher"
-                value={clase.teacher}
-                select
-                id="filled-select-currency"
-            >
-                {profes.map((option) => (
-                    <MenuItem key={option} value={option}>
-                        {option}
-                    </MenuItem>
-                ))}
-            </TextField>
-            <br />
-            <TextField
-                style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                label="Frecuencia Semanal"
-                name="weeklyfrequency"
-                value={clase.weeklyfrequency}
-                onChange={handleChange}
-            />
-            <br />
-            <TextField
-                style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                label="Capacidad"
-                name="maximumcapacity"
-                type="number"
-                value={clase.maximumcapacity}
-                onChange={handleChange}
-            />
-            <TextField
-                style={{ paddingBottom: "15px", width: "24ch", fontFamily: "arial" }}
-                label="Periodo"
-                onChange={handleChange}
-                name="periodo"
-                value={clase.periodo}
-                select
-                id="filled-select-currency"
-            >
-                {periodosPrueba.map(e =>{
-                    if (e.active == true){
-                        return <MenuItem key={e.key} value={e.value}>
-                                {e.value}
-                            </MenuItem>
-                    }
-                })}
-
-
-            </TextField>
-            <br />
-            <br />
-            <div align="center">
-                <Button color="primary" onClick={handleClick2}>
-                    Editar
-                </Button>
-                <Button onClick={() => abrirCerrarModalEditar()} color="error">
-                    Cancelar
-                </Button>
-            </div>
-        </div>
-    );
-
-    //---------------------------------------Show--------------
-    const [pageSize, SetPageSize] = useState(5);
-
-    const columns = useMemo(
-        () => [
-            { field: "id", headerName: "Id", width: 44, hide: true },
-            { field: "keys", headerName: "Clave", width: 44 },
-            { field: "coursename", headerName: "Curso", width: 80 },
-            { field: "level", headerName: "Nivel", width: 141 },
-            { field: "teacher", headerName: "Profesor", width: 130, sortable: false },
-            { field: "weeklyfrequency", headerName: "Frecuencia", width: 75 },
-            { field: "maximumcapacity", headerName: "Capacidad", width: 70 },
-            { field: "periodo", headerName: "Periodo", width: 70 },
-            {
-                field: "actions",
-                headerName: "Acciones",
-                type: "actions",
-                width: 85,
-                renderCell: (params) => (
-                    <Actions {...{ params, deleteClass, editClasses }} />
-                ),
-            },
-
-
-        ],
-        [data]
-    );
-
-    //---------------------------------------Filter---------------------------
-    const [items, setItems] = useState([]);
-    return (
-        <div>
-            <Card
-                sx={{
-                    maxWidth: 255,
-                    position: "absolute",
-                    textAlign: "left",
-                    marginLeft: "5px",
-                    marginTop: "120px",
-                    border: "2px solid  rgb(165, 165, 180)",
-                    borderRadius: "8px",
-                }}
-            >
-                <CardContent>
-                    <Typography
-                        gutterBottom
-                        variant="h5"
-                        component="div"
-                        sx={{ textAlign: "center", fontFamily: "arial" }}
-                    >
-                        Filtros
-                    </Typography>
-                    <TextField
-                        style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                        label="Curso"
-                        onChange={(e) => {
-                            setItems([
-                                {
-                                    columnField: "coursename",
-                                    operatorValue: "contains",
-                                    value: e.target.value,
-                                },
-                            ]);
-                        }}
-                    ></TextField>
-                    <TextField
-                        style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                        label="Nivel"
-                        onChange={(e) => {
-                            setItems([
-                                {
-                                    columnField: "level",
-                                    operatorValue: "contains",
-                                    value: e.target.value,
-                                },
-                            ]);
-                        }}
-                    ></TextField>
-                    <TextField
-                        style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                        label="Profesor"
-                        onChange={(e) => {
-                            setItems([
-                                {
-                                    columnField: "teacher",
-                                    operatorValue: "contains",
-                                    value: e.target.value,
-                                },
-                            ]);
-                        }}
-                    ></TextField>
-                </CardContent>
-            </Card>
-
-
-            <Box
-
-                sx={{
-                    width: '740px',
-                    padding: "15px",
-                    height: '450px',
-                    position: "absolute",
-                    marginLeft: "265px",
-                }}
-            >
-                <Typography
-                    variant="h3"
-                    component="h3"
-                    sx={{ textAlign: "left", mt: 3, mb: 3, fontFamily: "arial" }}
-                >
-                    Clases
-                    <Button
-                        sx={{ marginLeft: "350px" }}
-                        variant="contained"
-                        color="success"
-                        onClick={() => abrirCerrarModalInsertar()}
-                    >
-                        {<AddCircleOutlineIcon />} Crear
-                    </Button>
-                </Typography>
-                <Box sx={{height:'80vh' , width:'70vw'}}>
-
-                <DataGrid
-                    columns={columns}
-                    rows={data}
-                    getRowId={(row) => row.id}
-                    rowsPerPageOptions={[5, 10]}
-                    pageSize={pageSize}
-                    onPageSizeChange={(newPageSize) => SetPageSize(newPageSize)}
-                    getRowSpacing={(params) => ({
-                        top: params.isFirstVisible ? 0 : 5,
-                        bottom: params.isLastVisible ? 0 : 5,
-                    })}
-                    sx={{
-                        [`& .${gridClasses.row}`]: {
-                            bgcolor: (theme) =>
-                                theme.palette.mode === "light" ? grey[200] : grey[900],
-                            fontFamily: "arial",
-                        },
-                    }}
-                    disableSelectionOnClick={true}
-                    filterModel={{
-                        items: items,
-                    }}
-                />
-                </Box>
-
-                {/* Creacion de modales */}
-                   <DeleteDialog deleteClass={deleteClass} handleClose={handleClose} open={openDeleteDialog}/>
-        {/* Creacion de modales */}
+          />
+        </Box>
         <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
           {bodyInsertar}
         </Modal>
-                <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
-                    {bodyInsertar}
-                </Modal>
 
-                <Modal open={modalEditar} onClose={() => abrirCerrarModalEditar()}>
-                    {bodyEditar}
-                </Modal>
-            </Box>
-        </div>
-    );
+        <Modal open={modalEditar} onClose={() => abrirCerrarModalEditar()}>
+          {bodyEditar}
+        </Modal>
+
+        <Modal open={modalEliminar} onClose={abrirCerrarModalEliminar}>
+          {bodyEliminar}
+        </Modal>
+      </Box>
+    </div>
+  );
 }

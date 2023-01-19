@@ -16,7 +16,6 @@ const clasesSchema = {
         "cupo_maximo",
         "cupo_actual",
         "idMaestro",
-        "clavePeriodo"
     ],
     additionalProperties: true,
     errorMessage: {

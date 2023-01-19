@@ -1,21 +1,18 @@
 import React from 'react'
 import { Tooltip,Box, Button } from "@mui/material";
 import {Edit,Delete}from '@mui/icons-material'
-function Actions({params,handleClickOpen,editClasses, classToDelete}) {
+function Actions({params,seleccionarConsola}) {
 
-  const handleClick = () => {
-    handleClickOpen();
-    classToDelete(params.row.id, params.row);
-  }
+
   return (
     <Box>
         <Tooltip title='Editar'>
             <Button >
-                <Edit color="primary"onClick={()=>editClasses(params.row.id,params.row)}/>
-            </Button>
+                <Edit color="primary" onClick={()=>seleccionarConsola(params.row, 'Editar')} />
+            </ Button>
         </Tooltip>
         <Tooltip title='Eliminar'>
-            <Button  color="error" onClick={handleClick} >
+            <Button  color="error" onClick={()=>seleccionarConsola(params.row, 'Eliminar')} >
                 <Delete />
             </Button>
         </Tooltip>

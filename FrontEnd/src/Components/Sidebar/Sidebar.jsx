@@ -60,11 +60,11 @@ function Sidebar(props) {
     const listItems = (
         <List sx={{ bgcolor: 'info.main', width: '240px', height: '100vh', spacingY: '10px' }}>
             {options.map(e => {
-                if (userValues.userType == e.userType || e.userType=='any') {
+                //if (userValues.userType == e.userType || e.userType=='any') {
                     return (
                         <SidebarButton key={e.key} content={e.content} title={e.title} setOpen={props.setOpen} changeContent={props.changeContent} changeDrawerState={props.changeDrawerState} />
                     )
-                }
+                //}
             })}
         </List >
     )
