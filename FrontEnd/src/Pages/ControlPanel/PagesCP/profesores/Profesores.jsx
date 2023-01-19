@@ -102,9 +102,7 @@ export default function Profesores() {
   };
 
   //Funcion que guarda informacion del modal
-  useEffect(() => {
-    setClase(claseActual);
-  }, [claseActual]);
+  const dataMemo = useMemo(() => information, []);
 
   //Estado que guarda el array modificado
   const [clase, setClase] = useState(claseActual);
@@ -163,7 +161,7 @@ export default function Profesores() {
         style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" }}
         align="center"
       >
-        Crear una nueva clase
+        Agregar Profesor
       </h3>
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
@@ -225,7 +223,7 @@ export default function Profesores() {
         style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" }}
         align="center"
       >
-        Actualizar una clase
+        Cambiar Datos Profesor
       </h3>
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
@@ -272,9 +270,9 @@ export default function Profesores() {
   const columns = useMemo(
     () => [
       { field: "id", headerName: "Id", width: 54, hide: true },
-      { field: "nombre", headerName: "Nombre", width: 300 },
+      { field: "nombre", headerName: "Nombre", width: 400 },
       { field: "cursosImp", headerName: "Cursos Impartidos", width: 200 },
-      { field: "numero", headerName: "Numero", width: 200 },
+      { field: "numero", headerName: "Numero", width: 250 },
 
       {
         field: "actions",
@@ -347,12 +345,12 @@ export default function Profesores() {
         >
           Profesores
           <Button
-            sx={{ marginLeft: "350px" }}
+            sx={{ marginLeft: "535px" }}
             variant="contained"
             color="success"
             onClick={() => abrirCerrarModalInsertar()}
           >
-            {<AddCircleOutlineIcon />} Crear
+            {<AddCircleOutlineIcon />} Agregar Profesor
           </Button>
         </Typography>
 
