@@ -1,4 +1,4 @@
-const {clientCon} = require('../connection.js')
+const { clientCon } = require("../connection.js");
 const { mongodbInf } = require("../config.js");
 const mongodb = require("mongodb");
 
@@ -32,17 +32,17 @@ async function createAlumno(req, res) {
     // Crear un Doc
     const doc = [
       {
-        idUsuario : req.body.idUsuario ,
+        idUsuario: req.body.idUsuario,
         curp: req.body.curp,
         nombre: req.body.nombre,
         apellido_paterno: req.body.apellido_paterno,
         apellido_materno: req.body.apellido_materno,
         fecha_de_nacimiento: req.body.fecha_de_nacimiento,
-        tutor_nombre: req.body.tutor_nombre,
-        tutor_apellido_paterno: req.body.tutor_apellido_paterno,
-        tutor_apellido_materno: req.body.tutor_apellido_materno,
-        tutor_correo: req.body.tutor_correo,
-        tutor_num_telefono: req.body.tutor_num_telefono,
+        ...(req.body.tutor_nombre && { tutor_nombre: req.body.tutor_nombre }),
+        ...(req.body.tutor_apellido_paterno && { tutor_apellido_paterno: req.body.tutor_apellido_paterno }),
+        ...(req.body.tutor_apellido_materno && { tutor_apellido_materno: req.body.tutor_apellido_materno }),
+        ...(req.body.tutor_correo && { tutor_correo: req.body.tutor_correo }),
+        ...(req.body.tutor_num_telefono && { tutor_num_telefono: req.body.tutor_num_telefono }),
         num_telefono: req.body.num_telefono,
         estado: req.body.estado,
         ciudad: req.body.ciudad,
@@ -80,17 +80,17 @@ async function updateAlumno(req, res) {
     };
     const doc = {
       $set: {
-        idUsuario : req.body.idUsuario ,
+        idUsuario: req.body.idUsuario,
         curp: req.body.curp,
         nombre: req.body.nombre,
         apellido_paterno: req.body.apellido_paterno,
         apellido_materno: req.body.apellido_materno,
         fecha_de_nacimiento: req.body.fecha_de_nacimiento,
-        tutor_nombre: req.body.tutor_nombre,
-        tutor_apellido_paterno: req.body.tutor_apellido_paterno,
-        tutor_apellido_materno: req.body.tutor_apellido_materno,
-        tutor_correo: req.body.tutor_correo,
-        tutor_num_telefono: req.body.tutor_num_telefono,
+        ...(req.body.tutor_nombre && { tutor_nombre: req.body.tutor_nombre }),
+        ...(req.body.tutor_apellido_paterno && { tutor_apellido_paterno: req.body.tutor_apellido_paterno }),
+        ...(req.body.tutor_apellido_materno && { tutor_apellido_materno: req.body.tutor_apellido_materno }),
+        ...(req.body.tutor_correo && { tutor_correo: req.body.tutor_correo }),
+        ...(req.body.tutor_num_telefono && { tutor_num_telefono: req.body.tutor_num_telefono }),
         num_telefono: req.body.num_telefono,
         estado: req.body.estado,
         ciudad: req.body.ciudad,
@@ -143,4 +143,108 @@ async function deleteAlumno(req, res) {
 // Test deleteAlumno
 // deleteAlumno().catch(console.dir);
 
-module.exports = { getAllAlumno, createAlumno, updateAlumno, deleteAlumno };
+// Metodo find
+async function findAlumno(req, res) {
+  try {
+    await client.connect();
+    const database = client.db(mongodbInf.database);
+    const collection = database.collection("alumnos");
+    let query = "";
+    let key = "";
+    let value = "";
+
+    if (req.body.idUsuario) {
+      key = "idUsuario";
+      value = req.body.idUsuario;
+      query = { idUsuario: value };
+    } else if (req.body.curp) {
+      key = "curp";
+      value = req.body.curp;
+      query = { curp: value };
+    } else if (req.body.nombre) {
+      key = "nombre";
+      value = req.body.nombre;
+      query = { nombre: value };
+    } else if (req.body.apellido_paterno) {
+      key = "apellido_paterno";
+      value = req.body.apellido_paterno;
+      query = { apellido_paterno: value };
+    } else if (req.body.apellido_materno) {
+      key = "apellido_materno";
+      value = req.body.apellido_materno;
+      query = { apellido_materno: value };
+    } else if (req.body.fecha_de_nacimiento) {
+      key = "fecha_de_nacimiento";
+      value = req.body.fecha_de_nacimiento;
+      query = { fecha_de_nacimiento: value };
+    } else if (req.body.tutor_nombre) {
+      key = "tutor_nombre";
+      value = req.body.tutor_nombre;
+      query = { tutor_nombre: value };
+    } else if (req.body.tutor_apellido_paterno) {
+      key = "tutor_apellido_paterno";
+      value = req.body.tutor_apellido_paterno;
+      query = { tutor_apellido_paterno: value };
+    } else if (req.body.tutor_apellido_materno) {
+      key = "tutor_apellido_materno";
+      value = req.body.tutor_apellido_materno;
+      query = { tutor_apellido_materno: value };
+    } else if (req.body.tutor_correo) {
+      key = "tutor_correo";
+      value = req.body.tutor_correo;
+      query = { tutor_correo: value };
+    } else if (req.body.tutor_num_telefono) {
+      key = "tutor_num_telefono";
+      value = req.body.tutor_num_telefono;
+      query = { tutor_num_telefono: value };
+    } else if (req.body.num_telefono) {
+      key = "num_telefono";
+      value = req.body.num_telefono;
+      query = { num_telefono: value };
+    } else if (req.body.estado) {
+      key = "estado";
+      value = req.body.estado;
+      query = { estado: value };
+    } else if (req.body.ciudad) {
+      key = "ciudad";
+      value = req.body.ciudad;
+      query = { ciudad: value };
+    } else if (req.body.colonia) {
+      key = "colonia";
+      value = req.body.colonia;
+      query = { colonia: value };
+    } else if (req.body.codigo_postal) {
+      key = "codigo_postal";
+      value = req.body.codigo_postal;
+      query = { codigo_postal: value };
+    } else if (req.body.escolaridad) {
+      key = "escolaridad";
+      value = req.body.escolaridad;
+      query = { escolaridad: value };
+    } else if (req.body.ultima_escuela) {
+      key = "ultima_escuela";
+      value = req.body.ultima_escuela;
+      query = { ultima_escuela: value };
+    } else {
+      throw "parametros invalidos";
+    }
+    const result = await collection.find(query).toArray();
+    if (result == "") {
+      res.send(`Ninguna clase encontrada con ${key} : ${value}`);
+    } else {
+      res.send(result);
+    }
+  } catch (err) {
+    console.log(`ERROR: ${err}`);
+  } finally {
+    await client.close();
+  }
+}
+
+module.exports = {
+  getAllAlumno,
+  createAlumno,
+  updateAlumno,
+  deleteAlumno,
+  findAlumno,
+};

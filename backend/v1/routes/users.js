@@ -6,6 +6,7 @@ const userController = require('../controllers/users')
 const validateUser = require('../validators/validateUser')
 
 router.get('/', userController.getAllUser)
+router.post('/find', userController.findUser)
 router.post('/create', validateUser.validateUser, userController.createUser)
 router.put('/update', validateUser.validateUser, userController.updateUser)
 router.delete('/delete', userController.deleteUser)

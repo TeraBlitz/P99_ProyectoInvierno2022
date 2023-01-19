@@ -1,5 +1,5 @@
-const {clientCon} = require('../connection.js')
-const { mongodbInf } = require('../config.js')
+const { clientCon } = require("../connection.js");
+const { mongodbInf } = require("../config.js");
 const mongodb = require("mongodb");
 
 // Crear un nuevo MongoClient
@@ -30,14 +30,16 @@ async function createClase(req, res) {
     const collection = database.collection("clases");
 
     // Crear un Doc
-    const doc = [{
-      nombre_curso: req.body.nombre_curso,
-      nivel: req.body.nivel,
-      idMaestro: req.body.idMaestro,
-      frecuencia_semanal: req.body.frecuencia_semanal,
-      cupo_maximo: req.body.cupo_maximo,
-      cupo_actual: req.body.cupo_actual,
-    }];
+    const doc = [
+      {
+        nombre_curso: req.body.nombre_curso,
+        nivel: req.body.nivel,
+        idMaestro: req.body.idMaestro,
+        frecuencia_semanal: req.body.frecuencia_semanal,
+        cupo_maximo: req.body.cupo_maximo,
+        cupo_actual: req.body.cupo_actual,
+      },
+    ];
 
     const result = await collection.insertMany(doc);
     for (i = 0; i < result.insertedCount; i++)
@@ -116,5 +118,64 @@ async function deleteClase(req, res) {
 }
 // Test deleteClase
 // deleteClase().catch(console.dir);
+// Metodo find
+async function findClase(req, res) {
+  try {
+    await client.connect();
+    const database = client.db(mongodbInf.database);
+    const collection = database.collection("clases");
+    let query = "";
+    let key = "";
+    let value = "";
+    if (req.body.nombre_curso) {
+      key = " nombre_curso";
+      value = req.body.nombre_curso;
+      query = { nombre_curso: value };
+    } else if (req.body.nivel) {
+      key = "nivel";
+      value = req.body.nivel;
+      id = req.body._id;
+      query = { nivel: value };
+    } else if (req.body.idMaestro) {
+      key = "idMaestro";
+      value = req.body.idMaestro;
+      id = req.body.idMaestro;
+      query = { idMaestro: value };
+    } else if (req.body.frecuencia_semanal) {
+      key = "frecuencia_semanal";
+      value = req.body.frecuencia_semanal;
+      id = req.body._id;
+      query = { frecuencia_semanal: value };
+    } else if (req.body.cupo_maximo) {
+      key = "cupo_maximo";
+      value = req.body.cupo_maximo;
+      id = req.body._id;
+      query = { cupo_maximo: value };
+    } else if (req.body.cupo_actual) {
+      key = "cupo_actual";
+      value = req.body.cupo_actual;
+      id = req.body._id;
+      query = { cupo_actual: value };
+    } else {
+      throw "parametros invalidos";
+    }
+    const result = await collection.find(query).toArray();
+    if (result == "") {
+      res.send(`Ninguna clase encontrada con ${key} : ${value}`);
+    } else {
+      res.send(result);
+    }
+  } catch (err) {
+    console.log(`ERROR: ${err}`);
+  } finally {
+    await client.close();
+  }
+}
 
-module.exports = { getAllClase, createClase, updateClase, deleteClase };
+module.exports = {
+  getAllClase,
+  createClase,
+  updateClase,
+  deleteClase,
+  findClase,
+};
