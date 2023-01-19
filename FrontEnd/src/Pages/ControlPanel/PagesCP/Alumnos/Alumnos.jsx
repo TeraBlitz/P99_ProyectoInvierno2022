@@ -33,9 +33,15 @@ export default function Profesores() {
   const [data, setData] = useState([]);
   const [modalInsertar, setModalInsertar] = useState(false);
 
+  const [matricula, setMatricula] = useState("");
+  const [edad, setEdad] = useState("");
+  const [contacto , setContacto] = useState("");
+  const [curp,setCurp] = useState("")
   const [nombre, setNombre] = useState("");
+
   const [cursosImp, serCursosImp] = useState("");
   const [numero, setNumero] = useState("");
+
 
 
   //Funcion click para abrir el modal
@@ -161,7 +167,7 @@ export default function Profesores() {
         style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" }}
         align="center"
       >
-        Agregar Profesor
+        Agregar Alumno
       </h3>
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
@@ -170,6 +176,7 @@ export default function Profesores() {
         value={nombre}
         autoFocus
       />
+
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
         label="Cursos Impartidos"
@@ -270,9 +277,11 @@ export default function Profesores() {
   const columns = useMemo(
     () => [
       { field: "id", headerName: "Id", width: 54, hide: true },
-      { field: "nombre", headerName: "Nombre", width: 400 },
-      { field: "cursosImp", headerName: "Cursos Impartidos", width: 200 },
-      { field: "numero", headerName: "Numero", width: 250 },
+      { field: "nombre", headerName: "Nombre", width: 300 },
+      { field: "matricula", headerName: "Matricula", width: 200 },
+      { field: "edad", headerName: "Edad", width: 100 },
+      { field: "contacto", headerName: "Contacto", width: 200 },
+      { field: "curp", headerName: "CURP", width: 200 },
 
       {
         field: "actions",
@@ -331,7 +340,7 @@ export default function Profesores() {
       <Box
 
         sx={{
-          width: '1000px',
+          width: '1200',
           padding: "15px",
           height: '450px',
           position: "absolute",
