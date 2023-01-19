@@ -76,6 +76,7 @@ function App() {
 
     return !isSignedIn ?
         <SignIn handleSignIn={handleSignIn} handleUser={handleUser}  loginError={loginError} />
+
         :
         <userContext.Provider value={user}>
             <Box id="main" sx={{ display: 'flex' }}>
@@ -96,6 +97,7 @@ function App() {
                 </Box>
             </Box>
         </userContext.Provider>
+
 
 }
 export default App

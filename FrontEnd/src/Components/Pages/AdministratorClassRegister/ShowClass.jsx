@@ -194,7 +194,6 @@ export default function ShowClass() {
   }
 
 
-
     //-------------------------------Datos de ventanas modales---------------
     const bodyInsertar = (
         <div
@@ -210,6 +209,7 @@ export default function ShowClass() {
                 margin: "auto",
                 borderRadius: "10px",
                 padding: "20px",
+
             }}
         >
             <h3
@@ -327,6 +327,7 @@ export default function ShowClass() {
                 padding: "20px",
             }}
         >
+
             <h3
                 style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" }}
                 align="center"
@@ -445,6 +446,7 @@ export default function ShowClass() {
                 ),
             },
 
+
         ],
         [data]
     );
@@ -541,6 +543,7 @@ export default function ShowClass() {
                         {<AddCircleOutlineIcon />} Crear
                     </Button>
                 </Typography>
+                <Box sx={{height:'80vh' , width:'70vw'}}>
 
                 <DataGrid
                     columns={columns}
@@ -565,6 +568,7 @@ export default function ShowClass() {
                         items: items,
                     }}
                 />
+                </Box>
 
                 {/* Creacion de modales */}
                    <DeleteDialog deleteClass={deleteClass} handleClose={handleClose} open={openDeleteDialog}/>
