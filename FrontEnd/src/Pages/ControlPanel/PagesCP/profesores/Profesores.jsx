@@ -73,13 +73,13 @@ export default function Profesores() {
 
   //Actualiza las clases
   function createClasses(datas) {
-    add();
-    setData((prevData) => [      ...prevData,      {        id: number + 1,        nombre: datas.nombre,        cursosImp: datas.cursosImp,        numero: datas.numero,      },    ]);
+    setData((prevData) => [        ...prevData,        {            id: prevData.length + 1,            nombre: datas.nombre,            cursosImp: datas.cursosImp,            numero: datas.numero        }    ]);
     setNombre("");
     serCursosImp("");
     setNumero("");
-    abrirCerrarModalInsertar();
-  }
+
+}
+
 
   //-------------------------------Editar----------------------------------
   // Estados para editar
