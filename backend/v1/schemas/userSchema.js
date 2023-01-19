@@ -1,25 +1,16 @@
 const userSchema = {
     type: "object",
     properties: {
-        curp: {type: "string"},
+        user_name: {type: "string"},
         tipo_usuario: {type: "string"},
-        nombre: {type: "string"},
-        apellido_paterno: {type: "string"},
-        apellido_materno: {type: "string"},
-        edad: {type: "string"},
-        tutor: {type: "string"},
-        lada: {type: "string"},
-        num_telefono: {type: "string"},
-        estado: {type: "string"},
-        ciudad: {type: "string"},
-        colonia: {type: "string"},
-        escolaridad: {type: "string"},
-        ultima_escuela: {type: "string"},
-        correo: {type: "string", format: "email"}
+        correo: {type: "string", format: "email"},
+        password: {type: "string", format: "password"}
     },
     required: [
-        "curp","tipo_usuario","nombre","apellido_paterno","apellido_materno","edad","tutor","lada",
-        "num_telefono","estado","ciudad","colonia","escolaridad","ultima_escuela","correo"
+        "user_name",
+        "tipo_usuario",
+        "correo",
+        "password"
     ],
     additionalProperties: true,
     errorMessage: {

@@ -1,13 +1,13 @@
-const asistenciaSchema = {
+const listaSchema = {
     type: "object",
     properties: {
-        idUsuario: {type: "string"},
+        idAlumno: {type: "string"},
         idClase: {type: "string"},
-        fecha: {type: "string", format: "date"},
-        asistio: {type: "string"}
+        lugar_de_espera: {type: "string", pattern: "^([0-9])*$"},
+        status: {type: "string"}
     },
     required: [
-        "idUsuario","idClase","fecha","asistio"
+        "idAlumno","idClase","lugar_de_espera","status"
     ],
     additionalProperties: true,
     errorMessage: {
@@ -15,4 +15,4 @@ const asistenciaSchema = {
     },
 }
 
-module.exports = {asistenciaSchema}
+module.exports = {listaSchema}

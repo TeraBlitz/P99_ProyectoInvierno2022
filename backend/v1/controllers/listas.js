@@ -5,44 +5,37 @@ const mongodb = require("mongodb");
 // Crear un nuevo MongoClient
 const client = clientCon;
 
-async function getAllAsistencia(req, res) {
+async function getAllLista(req, res) {
   try {
     await client.connect();
     const database = client.db(mongodbInf.database);
-    const collection = database.collection("asistencias");
+    const collection = database.collection("listas");
 
     const result = await collection.find().toArray();
-    // console.log(JSON.stringify(result))
-    res.send(JSON.stringify(result));
+    res.send(result);
   } catch (err) {
     res.send(`ERROR: ${err}`);
   } finally {
     await client.close();
   }
 }
-// Test getAllAsistencia
-// getAllAsistencia().catch(console.dir);
+// Test getAllLista
+// getAllLista().catch(console.dir);
 
 // Create
-async function createAsistencia(req, res) {
+async function createLista(req, res) {
   try {
     await client.connect();
     const database = client.db(mongodbInf.database);
-    const collection = database.collection("asistencias");
-
-    /* // Crear un Doc de Ejemplo
-        const doc = {
-            nombre: "Mario 5",
-            apellidos: "Guerra 5",
-        } */
+    const collection = database.collection("listas");
 
     // Crear un Doc
     const doc = [
       {
-        idUsuario: req.body.idUsuario,
-        idClase: req.body.idClase,
-        fecha: req.body.fecha,
-        asistio: req.body.asistio,
+        idAlumno : req.body.idAlumno ,
+        idClase : req.body.idClase ,
+        lugar_de_espera: req.body.lugar_de_espera,
+        status: req.body.status,
       },
     ];
 
@@ -57,26 +50,15 @@ async function createAsistencia(req, res) {
     await client.close();
   }
 }
-// Test createAsistencia
-// createAsistencia().catch(console.dir);
+// Test createLista
+// createLista().catch(console.dir);
 
 // Update
-async function updateAsistencia(req, res) {
+async function updateLista(req, res) {
   try {
     await client.connect();
     const database = client.db(mongodbInf.database);
-    const collection = database.collection("asistencias");
-
-    /* // Crear documento actualizado test
-        const idDocTest = {
-            _id: new mongodb.ObjectId("63bf608c8391d717b9d65739"),
-        }
-        const docTest = {
-            $set: { 
-                nombre: "Jorge",
-                apellidos: "Tato"
-            }
-        } */
+    const collection = database.collection("listas");
 
     // Crear el documento actualizado
     const idDoc = {
@@ -84,42 +66,37 @@ async function updateAsistencia(req, res) {
     };
     const doc = {
       $set: {
-        idUsuario: req.body.idUsuario,
-        idClase: req.body.idClase,
-        fecha: req.body.fecha,
-        asistio: req.body.asistio,
+        idAlumno : req.body.idAlumno ,
+        idClase : req.body.idClase ,
+        lugar_de_espera: req.body.lugar_de_espera,
+        status: req.body.status,
       },
     };
 
     const result = await collection.findOneAndUpdate(idDoc, doc);
     res.send(
-      `Usuario con _id: ${result.value._id} actualizado con exito. Status: ${result.ok}.`
+      `Documento con _id: ${result.value._id} actualizado con exito. Status: ${result.ok}.`
     );
   } catch (err) {
-    res.send(`updateAsistencia ERROR: ${err}`);
+    res.send(`updateLista ERROR: ${err}`);
   } finally {
     await client.close();
   }
 }
-// Test updateAsistencia
-// updateAsistencia().catch(console.dir);
+// Test updateLista
+// updateLista().catch(console.dir);
 
 // Delete
-async function deleteAsistencia(req, res) {
+async function deleteLista(req, res) {
   try {
     await client.connect();
     const database = client.db(mongodbInf.database);
-    const collection = database.collection("asistencias");
+    const collection = database.collection("listas");
 
     // ID documento a eliminar
     const idDoc = {
       _id: new mongodb.ObjectId(req.body._id),
     };
-
-    /* // CID documento a eliminar test
-        const idDocTest = {
-            _id: new mongodb.ObjectId("63bf6107b5823dbe5830157d"),
-        } */
 
     const result = await collection.deleteMany(idDoc);
     // console.log(JSON.stringify(result))
@@ -135,12 +112,7 @@ async function deleteAsistencia(req, res) {
     await client.close();
   }
 }
-// Test deleteAsistencia
-// deleteAsistencia().catch(console.dir);
+// Test deleteLista
+// deleteLista().catch(console.dir);
 
-module.exports = {
-  getAllAsistencia,
-  createAsistencia,
-  updateAsistencia,
-  deleteAsistencia,
-};
+module.exports = { getAllLista, createLista, updateLista, deleteLista };
