@@ -14,7 +14,9 @@ import MisClases from './Pages/MisClases/MisClasesEstudiante'
 import ForgotPassword from './Pages/ForgotPassword/ForgotPassword'
 import SignUp from './Pages/SignUp/SignUp'
 import { createUser } from './api/users'
+
 import { Password } from '@mui/icons-material'
+
 
 
 export const userContext = createContext()
@@ -43,6 +45,7 @@ function App() {
         MisClases: <MisClases />,
         Registro: <ShowClass />
     }
+
 
     const handleSignIn = (e) => {
         e.preventDefault();
@@ -76,7 +79,6 @@ function App() {
 
     return !isSignedIn ?
         <SignIn handleSignIn={handleSignIn} handleUser={handleUser}  loginError={loginError} />
-
         :
         <userContext.Provider value={user}>
             <Box id="main" sx={{ display: 'flex' }}>
@@ -97,7 +99,6 @@ function App() {
                 </Box>
             </Box>
         </userContext.Provider>
-
 
 }
 export default App

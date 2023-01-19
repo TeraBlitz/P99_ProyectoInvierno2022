@@ -38,11 +38,13 @@ async function createAlumno(req, res) {
         apellido_paterno: req.body.apellido_paterno,
         apellido_materno: req.body.apellido_materno,
         fecha_de_nacimiento: req.body.fecha_de_nacimiento,
+
         tutor_nombre: req.body.tutor_nombre,
         tutor_apellido_paterno: req.body.tutor_apellido_paterno,
         tutor_apellido_materno: req.body.tutor_apellido_materno,
         tutor_correo: req.body.tutor_correo,
         tutor_num_telefono: req.body.tutor_num_telefono,
+
         num_telefono: req.body.num_telefono,
         estado: req.body.estado,
         ciudad: req.body.ciudad,

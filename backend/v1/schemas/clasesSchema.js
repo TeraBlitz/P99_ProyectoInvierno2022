@@ -17,6 +17,7 @@ const clasesSchema = {
         "cupo_actual",
         "idMaestro",
         "clavePeriodo"
+
     ],
     additionalProperties: true,
     errorMessage: {

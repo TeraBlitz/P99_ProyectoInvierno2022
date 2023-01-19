@@ -28,7 +28,7 @@ function Sidebar(props) {
             key: 3,
             title: 'Registro clases de Administrador',
             content: 'Registro',
-            rol: 'administrador'
+            rol: 'admin'
         },
         {
             key: 4,
@@ -46,7 +46,7 @@ function Sidebar(props) {
             key: 6,
             title: 'Panel de control',
             content: 'ControlPanel',
-            rol: 'administrador'
+            rol: 'admin'
 
         },
         {
@@ -60,11 +60,13 @@ function Sidebar(props) {
     const listItems = (
         <List sx={{ bgcolor: 'info.main', width: '240px', height: '100vh', spacingY: '10px' }}>
             {options.map(e => {
+
                 if (userValues.rol == e.rol || e.rol=='any') {
+
                     return (
                         <SidebarButton key={e.key} content={e.content} title={e.title} setOpen={props.setOpen} changeContent={props.changeContent} changeDrawerState={props.changeDrawerState} />
                     )
-                }
+                //}
             })}
         </List >
     )
