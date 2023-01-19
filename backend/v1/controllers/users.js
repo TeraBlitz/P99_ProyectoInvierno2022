@@ -49,7 +49,6 @@ async function findUser(req, res) {
 
         // Ejecucion de la query
         const result = await collection.find(query).toArray();
-
         if(result == ''){
             res.send(`Ningun user con ${key}:"${value}" encontrado.`);
         }else{

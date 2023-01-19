@@ -21,6 +21,10 @@ connection().catch(console.error);
 // create application/x-www-form-urlencoded parser
 let urlencodedParser = bodyParser.urlencoded({ extended: false })
 
+// Rutas
+app.use(cors());
+app.use(urlencodedParser);
+
 app.get('/v1', (req, res)=>{
     res.send('Bienvenido | v1')
 })

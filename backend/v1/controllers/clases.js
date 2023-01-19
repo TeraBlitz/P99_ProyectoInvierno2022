@@ -38,6 +38,8 @@ async function createClase(req, res) {
         frecuencia_semanal: req.body.frecuencia_semanal,
         cupo_maximo: req.body.cupo_maximo,
         cupo_actual: req.body.cupo_actual,
+        clavePeriodo:  req.body.clavePeriodo
+
       },
     ];
 
@@ -74,6 +76,8 @@ async function updateClase(req, res) {
         frecuencia_semanal: req.body.frecuencia_semanal,
         cupo_maximo: req.body.cupo_maximo,
         cupo_actual: req.body.cupo_actual,
+        clavePeriodo:  req.body.clavePeriodo
+
       },
     };
 
