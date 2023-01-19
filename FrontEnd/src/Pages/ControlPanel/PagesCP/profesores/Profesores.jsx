@@ -12,8 +12,7 @@ import {
 //import { data as information } from "../../../../data/datosprueba";
 
 import { data as information } from "./datos/profesores";
-import { niveles } from "../../../../data/numerosprueba";
-import { profes } from "../../../../data/profesprueba";
+
 import { useState, useEffect } from "react";
 import { grey } from "@mui/material/colors";
 import { DataGrid, gridClasses } from "@mui/x-data-grid";
@@ -33,12 +32,11 @@ export default function Profesores() {
 //Estados de agregar
   const [data, setData] = useState([]);
   const [modalInsertar, setModalInsertar] = useState(false);
-  const [keys, setKey] = useState("");
-  const [coursename, setCoursename] = useState("");
-  const [level, setLevel] = useState("");
-  const [teacher, setTeacher] = useState("");
-  const [weeklyfrequency, setWeeklyfrequency] = useState("");
-  const [maximumcapacity, setMaximumcapacity] = useState("");
+
+  const [nombre, setNombre] = useState("");
+  const [cursosImp, serCursosImp] = useState("");
+  const [numero, setNumero] = useState("");
+
 
   //Funcion click para abrir el modal
   const abrirCerrarModalInsertar = () => {
@@ -49,27 +47,19 @@ export default function Profesores() {
   const handleClick = (e) => {
     e.preventDefault();
     if (
-      keys !== "" &&
-      coursename !== "" &&
-      level !== "" &&
-      teacher !== "" &&
-      weeklyfrequency !== "" &&
-      maximumcapacity !== ""
+      nombre !== "" &&
+      cursosImp !== "" &&
+      numero !== ""
+
     ) {
       createClasses({
-        keys,
-        coursename,
-        level,
-        teacher,
-        weeklyfrequency,
-        maximumcapacity,
+        nombre,
+        cursosImp,
+        numero,
+
       });
-      setKey("");
-      setCoursename("");
-      setLevel("");
-      setTeacher("");
-      setWeeklyfrequency("");
-      setMaximumcapacity("");
+
+
       abrirCerrarModalInsertar();
     } else {
       alert("No se puede enviar, si hay algo vacio");
@@ -84,18 +74,10 @@ export default function Profesores() {
   //Actualiza las clases
   function createClasses(datas) {
     add();
-    setData([
-      ...data,
-      {
-        id: number + 1,
-        keys: datas.keys,
-        coursename: datas.coursename,
-        level: datas.level,
-        teacher: datas.teacher,
-        weeklyfrequency: datas.weeklyfrequency,
-        maximumcapacity: datas.maximumcapacity,
-      },
-    ]);
+    setData((prevData) => [      ...prevData,      {        id: number + 1,        nombre: datas.nombre,        cursosImp: datas.cursosImp,        numero: datas.numero,      },    ]);
+    setNombre("");
+    serCursosImp("");
+    setNumero("");
     abrirCerrarModalInsertar();
   }
 
@@ -104,12 +86,9 @@ export default function Profesores() {
   const [modalEditar, setModalEditar] = useState(false);
   const claseInicial = {
     id: -1,
-    keys: "",
-    coursename: "",
-    level: "",
-    teacher: "",
-    weeklyfrequency: "",
-    maximumcapacity: 0,
+    nombre: "",
+    cursosImp: "",
+    numero: "",
   };
   const [claseActual, setClaseActual] = useState(claseInicial);
   //Function que abre o cierra el modal
@@ -141,12 +120,9 @@ export default function Profesores() {
   const handleClick2 = (e) => {
     e.preventDefault();
     if (
-      clase.keys &&
-      clase.coursename &&
-      clase.level &&
-      clase.teacher &&
-      clase.weeklyfrequency &&
-      clase.maximumcapacity
+      clase.nombre &&
+      clase.cursosImp &&
+      clase.numero
     )
       updateClass(clase);
   };
@@ -191,61 +167,28 @@ export default function Profesores() {
       </h3>
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
-        label="Curso"
-        onChange={(e) => setCoursename(e.target.value)}
-        value={coursename}
+        label="Nombre"
+        onChange={(e) => setNombre(e.target.value)}
+        value={nombre}
         autoFocus
       />
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
-        label="Clave"
-        onChange={(e) => setKey(e.target.value)}
-        value={keys}
-        autoFocus
-      />
-      <br />
-      <TextField
-        style={{ paddingBottom: "15px", width: "24ch", fontFamily: "arial" }}
-        label="Nivel"
-        onChange={(e) => setLevel(e.target.value)}
-        value={level}
-        select
-        id="filled-select-currency"
-      >
-        {niveles.map((option) => (
-          <MenuItem
-            key={option.value}
-            value={option.value}
-            sx={{ fontFamily: "arial" }}
-          >
-            {option.label}
-          </MenuItem>
-        ))}
-      </TextField>
-      <br />
-      <Autocomplete
-        value={teacher}
-        onChange={(event, newValue) => {
-          setTeacher(newValue);
-        }}
-        id="profesores-insertar"
-        options={profes}
-        renderInput={(params) => <TextField {...params} label="Profesor" />}
-      />
-      <br />
-      <TextField
-        style={{ paddingBottom: "15px", fontFamily: "arial" }}
-        label="Frecuencia Semanal"
-        onChange={(e) => setWeeklyfrequency(e.target.value)}
-        value={weeklyfrequency}
-      />
-      <br />
-      <TextField
-        style={{ paddingBottom: "15px", fontFamily: "arial" }}
-        label="Capacidad"
+        label="Cursos Impartidos"
         type="number"
-        onChange={(e) => setMaximumcapacity(e.target.value)}
-        value={maximumcapacity}
+        onChange={(e) => serCursosImp(e.target.value)}
+        value={cursosImp}
+        autoFocus
+      />
+      <br />
+
+      <br />
+      <TextField
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
+        label="Numero"
+        type="number"
+        onChange={(e) => setNumero(e.target.value)}
+        value={numero}
       />
       <br />
       <br />
@@ -304,10 +247,10 @@ export default function Profesores() {
       <br/>
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
-        label="Horas"
+        label="Numero"
         name="maximumcapacity"
         type="number"
-        value={clase.horas}
+        value={clase.numero}
         onChange={handleChange}
       />
       <br />
@@ -331,7 +274,7 @@ export default function Profesores() {
       { field: "id", headerName: "Id", width: 54, hide: true },
       { field: "nombre", headerName: "Nombre", width: 300 },
       { field: "cursosImp", headerName: "Cursos Impartidos", width: 200 },
-      { field: "horas", headerName: "Horas", width: 100 },
+      { field: "numero", headerName: "Numero", width: 200 },
 
       {
         field: "actions",
@@ -390,7 +333,7 @@ export default function Profesores() {
       <Box
 
         sx={{
-          width: '740px',
+          width: '1000px',
           padding: "15px",
           height: '450px',
           position: "absolute",
