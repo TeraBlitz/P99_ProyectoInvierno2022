@@ -41,13 +41,13 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
         // Enviar esta informacion a bd
         e.preventDefault();
         setNewStudentInfo(studentData);
-        console.log(studentData);
+        //console.log(studentData);
         setAddStudent(!addStudent);
         createStudent(urlEncondeRespose(studentData)).then((data) => {
-            console.log(data);
+            //console.log(data);
         })
         .catch((error) => {
-            console.log(error.message);
+            //console.log(error.message);
             if (error.message.includes('Un documen')){
                 setAlertMessage('Estudiante agregado correctamente.')
                 setSuccessOpen(true);

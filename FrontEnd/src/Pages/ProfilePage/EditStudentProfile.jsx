@@ -35,11 +35,11 @@ const EditStudentProfile = ({
         // Enviar esta informacion a bd
         e.preventDefault();
         setNewStudentInfo(studentData);
-        console.log(studentData);
+        //console.log(studentData);
         setOpenEditModal(!openEditModal)
         setIsEditing(!isEditing);
         updateStudent(urlEncondeRespose(studentData)).then((data) => {
-            console.log(data);
+            //console.log(data);
         })
         .catch((error) => {
             

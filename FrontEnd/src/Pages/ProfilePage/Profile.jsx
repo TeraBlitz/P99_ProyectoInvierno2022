@@ -46,7 +46,7 @@ const Profile = () =>{
                 (data) => {
                     const currentUser = data.find(user => user._id === userValues._id);
                     setUserInfo(currentUser);
-                    console.log(currentUser)
+                    //console.log(currentUser)
                 });
         }
         getUserInfo();
@@ -58,7 +58,7 @@ const Profile = () =>{
                 (data) => {
                     const students = data.filter(student => student.idUsuario === userValues._id);
                     setStudents(students);
-                    console.log(students)
+                    //console.log(students)
                 });
         }
         getUserStudents();
@@ -95,7 +95,7 @@ const Profile = () =>{
                     Mi perfil
                 </Box>
                 {
-                    userInfo.rol === 'student' ?
+                    userValues.rol === 'student' ?
                     <Box sx={{ display: 'flex', flexDirection: 'column', position: 'absolute',  bottom: 16,  right: 16}}>
                         <Fab color="primary" aria-label="add" sx={{ display: addStudent ? 'none' : ''}} 
                                 onClick={() => { setAddStudent(!addStudent); }}>
@@ -114,13 +114,13 @@ const Profile = () =>{
             </Box>
 
             <Box sx={{ fontFamily: 'default', fontSize: 'h6.fontSize', py: 2,
-                     display: userInfo.rol === 'student' ? 'flex' : 'none' }}>
+                     display: userValues.rol === 'student' ? 'flex' : 'none' }}>
                 Estudiante(s)
             </Box>
    
             <Box>
                 {
-                    students !== null && students.length === 0 && userInfo.rol === 'student' ?
+                    students !== null && students.length === 0 && userValues.rol === 'student' ?
                     <Box sx={{ fontFamily: 'default', fontSize: 'h3.fontSize', py: 2, display:'flex' }}>
                         Registra un estudiante para poder inscribir clases!
                     </Box>
