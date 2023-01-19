@@ -7,7 +7,6 @@ const validateProfesor = require('../validators/validateProfesor')
 
 router.get('/', profesorController.getAllProfesor)
 router.post('/create', validateProfesor.validateProfesor, profesorController.createProfesor)
-router.post('/find', profesorController.findProfesor)
 router.put('/update', validateProfesor.validateProfesor, profesorController.updateProfesor)
 router.delete('/delete', profesorController.deleteProfesor)
 
