@@ -26,24 +26,13 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
 
     const handleChange = e => setStudentInfo(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
 
-    const urlEncondeRespose = (studentData) => {
-        let body = [];
-        for (let property in studentData) {
-            var encodedKey = encodeURIComponent(property);
-            var encodedValue = encodeURIComponent(studentData[property]);
-            body.push(encodedKey + "=" + encodedValue);
-        }
-        body = body.join("&");
-        return body;
-    }
-
     const handleSubmit = (e) => {
         // Enviar esta informacion a bd
         e.preventDefault();
         setNewStudentInfo(studentData);
         //console.log(studentData);
         setAddStudent(!addStudent);
-        createStudent(urlEncondeRespose(studentData)).then((data) => {
+        createStudent(new URLSearchParams(studentData)).then((data) => {
             //console.log(data);
         })
         .catch((error) => {

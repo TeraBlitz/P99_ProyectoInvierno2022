@@ -26,6 +26,12 @@ const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
+const userValues = {
+    '_id': '63c85788d7f5ef2ec08b41ae',
+    'correo': '',
+    'rol': 'student'
+}
+
 const Profile = () =>{
 
     const [successOpen, setSuccessOpen] = useState(false);
@@ -38,7 +44,9 @@ const Profile = () =>{
     const [openEditModal, setOpenEditModal] = useState(false);
     const [currentStudent, setCurrentStudent] = useState(studentInfo)
 
-    const userValues = useContext(userContext)
+    //const userValues = useContext(userContext)
+
+
 
     useEffect(() => {
         const getUserInfo = () =>{

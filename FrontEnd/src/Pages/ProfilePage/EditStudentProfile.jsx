@@ -19,18 +19,6 @@ const EditStudentProfile = ({
 
     const handleChange = e => setStudentInfo(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
 
-    const urlEncondeRespose = (studentData) => {
-        let body = [];
-        for (let property in studentData) {
-            var encodedKey = encodeURIComponent(property);
-            var encodedValue = encodeURIComponent(studentData[property]);
-            body.push(encodedKey + "=" + encodedValue);
-        }
-        body = body.join("&");
-        return body;
-    }
-    
-
     const handleSubmit = (e) => {
         // Enviar esta informacion a bd
         e.preventDefault();
@@ -38,7 +26,7 @@ const EditStudentProfile = ({
         //console.log(studentData);
         setOpenEditModal(!openEditModal)
         setIsEditing(!isEditing);
-        updateStudent(urlEncondeRespose(studentData)).then((data) => {
+        updateStudent(new URLSearchParams(studentData)).then((data) => {
             //console.log(data);
         })
         .catch((error) => {
