@@ -413,7 +413,8 @@ export default function ShowClass() {
         renderCell: (params) => <Actions {...{ params, seleccionarConsola }} />,
       },
     ],[data]);
-
+// Filter 
+const [items, setItems] = useState([]);
   return (
     <div>
       <Card
@@ -512,6 +513,10 @@ export default function ShowClass() {
                   theme.palette.mode === "light" ? grey[200] : grey[900],
                 fontFamily: "arial",
               },
+            }}
+            disableSelectionOnClick={true}
+            filterModel={{
+              items: items,
             }}
           />
         </Box>
