@@ -5,10 +5,9 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
 import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
-import { createStudent, getStudents } from '../../api/students';
+import { updateStudent, getStudents } from '../../api/students';
 import ParentInfo from './ParentInfo'
 
 
@@ -18,9 +17,8 @@ const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStudents}) =>{
+const EditStudentProfile = ({openEditModal, setOpenEditModal, studentInfo, isEditing, setIsEditing, setStudents}) =>{
 
-    studentInfo['idUsuario'] = userID;
     const [successOpen, setSuccessOpen] = useState(false);
     const [errorOpen, setErrorOpen] = useState(false);
     const [studentData, setStudentInfo] = useState(studentInfo)
@@ -38,14 +36,15 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
         body = body.join("&");
         return body;
     }
+    
 
     const handleSubmit = (e) => {
         // Enviar esta informacion a bd
         e.preventDefault();
         setNewStudentInfo(studentData);
         console.log(studentData);
-        setAddStudent(!addStudent);
-        createStudent(urlEncondeRespose(studentData)).then((data) => {
+        setOpenEditModal(!openEditModal)
+        updateStudent(urlEncondeRespose(studentData)).then((data) => {
             console.log(data);
             setSuccessOpen(true);
         })
@@ -70,7 +69,7 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
 
     const handleCancel = () => {
         setStudentInfo(newStudentInfo);
-        setAddStudent(!addStudent);
+        setIsEditing(!isEditing);
     }
 
     // Funcion para calcular edad si es menor de 18 se pide
@@ -100,45 +99,48 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
                         justifyContent: 'space-between'}}
                 >
                     Datos Estudiante
+                    <IconButton aria-label="edit" color="primary" onClick={() => { setIsEditing(!isEditing); }}>
+                        <EditIcon />
+                    </IconButton>
                 </Box>
-                <TextField name="nombre" label="Nombre(s)" value={studentData.nombre || ''} onChange={handleChange}  helperText=" " required/>
-                <TextField name="apellido_paterno" label="Primer Apellido" value={studentData.apellido_paterno || ''} onChange={handleChange} helperText=" " required/>       
-                <TextField name="apellido_materno" label="Segundo Apellido" value={studentData.apellido_materno || ''} onChange={handleChange}  helperText=" " required/>       
-                <TextField name="num_telefono" label="Núm. Telefonico" value={studentData.num_telefono || ''} onChange={handleChange} helperText=" " required/>    
-                <TextField name="curp" label="CURP" value={studentData.curp || ''} onChange={handleChange} required
+                <TextField name="nombre" label="Nombre(s)" InputProps={{readOnly: !isEditing}} value={studentData.nombre || ''} onChange={handleChange}  helperText=" " required/>
+                <TextField name="apellido_paterno" label="Primer Apellido" InputProps={{readOnly: !isEditing}} value={studentData.apellido_paterno || ''} onChange={handleChange} helperText=" " required/>       
+                <TextField name="apellido_materno" label="Segundo Apellido" InputProps={{readOnly: !isEditing}} value={studentData.apellido_materno || ''} onChange={handleChange}  helperText=" " required/>       
+                <TextField name="num_telefono" label="Núm. Telefonico" InputProps={{readOnly: !isEditing}} value={studentData.num_telefono || ''} onChange={handleChange} helperText=" " required/>    
+                <TextField name="curp" label="CURP" InputProps={{readOnly: !isEditing}} value={studentData.curp || ''} onChange={handleChange} required
                     helperText={
                         <Link href="https://www.gob.mx/curp/" underline="hover" target="_blank">
                                 &#9432; Obten tu CURP
                         </Link>
                     }
                 />
-                <TextField name='fecha_de_nacimiento' label="Fecha de nacimiento" type='date' InputLabelProps={{ shrink: true }} value={studentData.fecha_de_nacimiento || ''} onChange={handleChange}  helperText=" " required/>        
-                <TextField name="escolaridad" label="Escolaridad" value={studentData.escolaridad || ''} onChange={handleChange} helperText=" " required/>        
-                <TextField name="ultima_escuela" label="Ultima Escuela" value={studentData.ultima_escuela || ''} onChange={handleChange} helperText=" " required/>        
-                <TextField name="estado" label="Estado" value={studentData.estado || ''} onChange={handleChange} helperText=" " required/>   
-                <TextField name="ciudad" label="Ciudad" value={studentData.ciudad || ''} onChange={handleChange}  helperText=" "required/>        
-                <TextField name="codigo_postal" label="Codigo Postal" type="number" value={studentData.codigo_postal || ''}  onChange={handleChange}  helperText=" "/>
-                <TextField name="colonia" label="Colonia" value={studentData.colonia || ''} onChange={handleChange}  helperText=" " required/>
+                <TextField name='fecha_de_nacimiento' label="Fecha de nacimiento" type='date' InputProps={{readOnly: !isEditing}} InputLabelProps={{ shrink: true }} value={studentData.fecha_de_nacimiento || ''} onChange={handleChange}  helperText=" " required/>        
+                <TextField name="escolaridad" label="Escolaridad" InputProps={{readOnly: !isEditing}} value={studentData.escolaridad || ''} onChange={handleChange} helperText=" " required/>        
+                <TextField name="ultima_escuela" label="Ultima Escuela" InputProps={{readOnly: !isEditing}} value={studentData.ultima_escuela || ''} onChange={handleChange} helperText=" " required/>        
+                <TextField name="estado" label="Estado" InputProps={{readOnly: !isEditing}} value={studentData.estado || ''} onChange={handleChange} helperText=" " required/>   
+                <TextField name="ciudad" label="Ciudad" InputProps={{readOnly: !isEditing}} value={studentData.ciudad || ''} onChange={handleChange}  helperText=" "required/>        
+                <TextField name="codigo_postal" label="Codigo Postal" type="number" InputProps={{readOnly: !isEditing}} value={studentData.codigo_postal || ''}  onChange={handleChange}  helperText=" "/>
+                <TextField name="colonia" label="Colonia" InputProps={{readOnly: !isEditing}} value={studentData.colonia || ''} onChange={handleChange}  helperText=" " required/>
                 {calculate_age(studentData.fecha_de_nacimiento) < 18 ? <ParentInfo studentData={studentData} handleChange={handleChange}/> : null}
                 <Box sx={{width: '100%' }}></Box>
 
                 <Box sx={{display:'flex', m: 1, p: 1, justifyContent: 'flex-end', width: '100%'}}>
                     <Button variant="contained" color='error' 
-                        sx={{mx: 2}}
+                        sx={{ display: !isEditing ? 'none' : '', mx: 2}}
                         onClick={handleCancel}>
                         Cancelar
                     </Button>
-                    <Button variant="contained" type='submit'  size="medium">
+                    <Button variant="contained" type='submit' sx={{ display: !isEditing ? 'none' : ''}} size="medium">
                         Guardar
                     </Button>
                     <Snackbar open={successOpen} autoHideDuration={4000} onClose={handleClose}>
                         <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                            Estudiante agregado correctamente.
+                            Información de estudiante actualizada correctamente.
                         </Alert>
                     </Snackbar>
                     <Snackbar open={errorOpen} autoHideDuration={4000} onClose={handleClose}>
                         <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-                            Se produjo un error al agregar al estudiante.
+                            Se produjo un error al actualizar la información del estudiante.
                         </Alert>
                     </Snackbar>
                 </Box>
@@ -147,4 +149,4 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
     )
 }
 
-export default StudentProfile
+export default EditStudentProfile

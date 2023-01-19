@@ -1,10 +1,11 @@
-import { postData, getData } from '../utils/requestUtils'
+import { postData, getData, putData } from '../utils/requestUtils'
 
 export const createStudent = (student) => {
-    postData('http://127.0.0.1:3000/v1/alumnos/create', {student})
-    .then((data) => {
-    console.log(data); // JSON data parsed by `data.json()` call
-    });
+    return postData('http://127.0.0.1:3000/v1/alumnos/create/', student)
+}
+
+export const updateStudent = (student) => {
+    return putData('http://127.0.0.1:3000/v1/alumnos/update/', student)
 }
 
 export const getStudents = () => {

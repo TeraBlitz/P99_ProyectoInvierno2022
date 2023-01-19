@@ -9,18 +9,24 @@ import StudentItem from '../../Components/Profile/StudentItem';
 import StudentProfile from './StudentProfile';
 import { getUser } from '../../api/users';
 import { getStudents } from '../../api/students';
+import EditStudentProfile from './EditStudentProfile';
 
 
-const students = [
-
-]
+const studentInfo = {
+    'nombre': '', 'apellido_paterno': '', 'apellido_materno': '',
+    'num_telefono': '', 'curp': '', 'fecha_de_nacimiento':'',
+    'escolaridad': '', 'ultima_escuela':'','estado':'', 'ciudad':'', 'colonia': '',
+    'codigo_postal':''
+};
 
 const Profile = ({userID}) =>{
     
-    const [isEditing, setIsEditing] = useState(true)
+    const [isEditing, setIsEditing] = useState(false)
     const [userInfo, setUserInfo] = useState(null);
     const [addStudent, setAddStudent] = useState(false);
     const [students, setStudents] = useState(null);
+    const [openEditModal, setOpenEditModal] = useState(false);
+    const [currentStudent, setCurrentStudent] = useState(studentInfo)
 
     useEffect(() => {
         const getUserInfo = () =>{
@@ -45,6 +51,11 @@ const Profile = ({userID}) =>{
         }
         getUserStudents();
     }, []);
+
+    const editStudent = (student) => {
+        setCurrentStudent(student);
+        setOpenEditModal(!openEditModal);
+    };
 
     
     const handleChange = e => setUserInfo(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
@@ -96,9 +107,10 @@ const Profile = ({userID}) =>{
                         <StudentItem
                             key={student._id}
                             name={student.nombre}
+                            studentInfo={student}
                             first_lastname={student.apellido_paterno}
                             second_lastname={student.apellido_materno}
-
+                            editStudent={editStudent}
                         />    
                     )
                 } 
@@ -110,10 +122,27 @@ const Profile = ({userID}) =>{
             >
                 <>                
                     <StudentProfile 
-                        setIsEditing={setIsEditing}
-                        isEditing={isEditing}
+                        studentInfo={studentInfo}
+                        userID={'63c85788d7f5ef2ec08b41ae'}
                         setAddStudent={setAddStudent}
                         addStudent={addStudent}
+                        setStudents={setStudents}
+                    />
+                </>
+            </Modal>
+            <Modal
+                open={openEditModal}
+                onClose={() => setOpenEditModal(!openEditModal)}
+                sx={{overflow: 'scroll'}}
+            >
+                <>                
+                    <EditStudentProfile 
+                        openEditModal={openEditModal}
+                        setOpenEditModal={setOpenEditModal}
+                        studentInfo={currentStudent}
+                        setIsEditing={setIsEditing}
+                        isEditing={isEditing}
+                        setStudents={setStudents}
                     />
                 </>
             </Modal>

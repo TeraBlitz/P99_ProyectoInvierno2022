@@ -4,10 +4,10 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import CardActionArea  from '@mui/material/CardActionArea';
 
-const StudentItem = ({studentInfo, name, first_lastname, second_lastname}) => {
+const StudentItem = ({studentInfo, name, first_lastname, second_lastname, editStudent}) => {
   return (
     <Card sx={{ my: 2}}>
-      <CardActionArea>
+      <CardActionArea onClick={() =>  editStudent(studentInfo)}>
         <CardContent>
           <Typography variant="body2" component="div">
             {name} {first_lastname} {second_lastname} 
