@@ -38,16 +38,18 @@ async function login(req, res = response) {
 
         // Verificar el password.
         const validPassword = bcryptjs.compareSync(password, result[0].password)
+        delete result[0].password
         if(!validPassword){
             return res.status(400).json({
-                msg: "Password incorrecto."
+                msg: "Password incorrecto.",
             })
         }
 
         // Generar JWT.
 
         res.json({
-            msg: 'Login OK'
+            msg: 'Login OK',
+            data_user: result[0]
         })
     }catch(err){
         console.log(err)
