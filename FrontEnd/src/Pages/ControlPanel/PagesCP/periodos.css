@@ -1,0 +1,23 @@
+
+.container{
+    padding: 40px;
+}
+.spacer{
+    height: 15px;
+    padding: 15px;
+}
+.card-grid{
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit,minmax(400px,1fr));
+}
+
+.grid-botones{
+    display: grid;
+    gap: 20px;
+}
+
+.spacer-botones{
+    width: 30px;
+    display: inline-block;
+}
