@@ -42,6 +42,7 @@ async function createClase(req, res) {
         cupo_actual: req.body.cupo_actual,
         matriculaMaestro: req.body.matriculaMaestro,
         clavePeriodo: req.body.clavePeriodo,
+
       },
     ];
 
@@ -82,6 +83,7 @@ async function updateClase(req, res) {
         cupo_actual: req.body.cupo_actual,
         matriculaMaestro: req.body.matriculaMaestro,
         clavePeriodo: req.body.clavePeriodo,
+
       },
     };
 
