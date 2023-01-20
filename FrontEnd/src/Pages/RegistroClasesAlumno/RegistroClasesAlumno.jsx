@@ -2,11 +2,12 @@ import Box from '@mui/material/Box'
 import React, { useState, useEffect } from 'react'
 import Clase from '../../Components/Clase/Clase'
 import CircularProgress from '@mui/material/CircularProgress'
-import { Alert, Button } from '@mui/material'
+import { Alert, Button, Link } from '@mui/material'
 import { AlertTitle } from '@mui/material'
 import { Card, CardContent, Typography, TextField, MenuItem } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { getStudents } from '../../api/students'
 
 const userValues = {
     '_id': '63c85788d7f5ef2ec08b41',
@@ -621,26 +622,15 @@ function RegistroClasesAlumnos({changeContent}) {
 
     useEffect(() => {
         const getUserStudents = () =>{
-            fetch(`http://127.0.0.1:3000/v1/alumnos/find`,
-            {
-                method: 'POST',
-                redirect: 'follow',
-                body: new URLSearchParams(
-                    {
-                        idUsuario : userValues._id
-                    }
-                )
-            })
-            .then(response => response.json())
-            .then(result => {
-                setStudents(result)
-            })
-            .catch(error =>{
-                console.log(error)
-            })
-        }
-        getUserStudents();
-    }, []);
+             getStudents().then(
+                 (data) => {
+                     const students = data.filter(student => student.idUsuario === userValues._id);
+                     setStudents(students);
+                     //console.log(students)
+             });
+         }
+         getUserStudents();
+     }, []);
 
 
     if (!students) {
@@ -652,10 +642,20 @@ function RegistroClasesAlumnos({changeContent}) {
     }
     if (students.length === 0 && students !== null){
         return(
-            <Box>
-                <Button onClick={() => changeContent('Profile')}>
-                    Ir a perfil
-                </Button>
+            <Box sx={{ height: '100vh', display: 'flex',
+                alignContent: 'center', justifyContent: 'center', flexWrap: 'wrap'}}>
+                <Typography variant='h3' component='div' textAlign='center'>
+                    No tienes alumnos registrados, ve a  
+                     <Link
+                    component="button"
+                    onClick={() => changeContent('Profile')}
+                    variant='h2'
+                    sx={{p: 1}}
+                    >
+                        <i> Perfil </i>
+                    </Link> 
+                     para agregar alumnos
+                </Typography>
             </Box>
         )
     }
