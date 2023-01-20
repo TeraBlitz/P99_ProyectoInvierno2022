@@ -4,13 +4,16 @@ import Grid from '@mui/material/Grid'
 import PanelCard from '../../Components/ControlPanel/PanelCard';
 import PanelInfo from '../../Components/ControlPanel/PanelInfo';
 
+import Periodos from './PagesCP/Periodos.jsx';
+
+
 // Possible function to get users, this goes in another file
 const fetchUsers = () => {
     //const res = await fetch(`http://localhost:3000/users`);
     //const userData = res.json();
     // Se reciben todos los usuarios este array se pasa como prop al componente de Alumnos
     const users = [];
-    return users; 
+    return users;
 };
 
 const fetchTeachers = () => {
@@ -18,7 +21,7 @@ const fetchTeachers = () => {
     //const userData = res.json();
     // Se reciben todos los usuarios este array se pasa como prop al componente de Alumnos
     const teachers = [];
-    return teachers; 
+    return teachers;
 };
 
 
@@ -65,7 +68,8 @@ const panelInfoCards = [
 ]
 
 
-const ControlPanel = () => {
+const ControlPanel = ({changeContent}) => {
+
 
     const [users, setUsersInfo] = useState(fetchUsers);
     const [teachers, setTeachersInfo] = useState(fetchTeachers);
@@ -85,7 +89,10 @@ const ControlPanel = () => {
         getTeachersInfo();
     }, []);
 
+
+
     return (
+        <div>
         <Box sx={{ ml: 1, p: 1 }} >
             <Box sx={{ fontFamily: 'default', fontSize: 'h3.fontSize', py: 2, display: 'flex', justifyContent: 'space-between' }}>
                 Panel de control
@@ -93,16 +100,17 @@ const ControlPanel = () => {
             <Grid container spacing={2} sx={{my: 2}}>
                 {panelInfoCards.map(infoCard =>
                     <Grid item sm={12} md={6} key={infoCard.id}>
-                        <PanelInfo title={infoCard.title} data={infoCard.data} bgColor={infoCard.color} />
+                        <PanelInfo title={infoCard.title} data={infoCard.data} bgColor={infoCard.color}/>
                     </Grid>
                 )}
                 {cards.map(card =>
                     <Grid item sm={12} md={6} key={card.id}>
-                        <PanelCard title={card.title} body={card.body} bgColor={card.color} />
+                        <PanelCard title={card.title} body={card.body} bgColor={card.color} changeContent={changeContent}/>
                     </Grid>
                 )}
             </Grid>
         </Box>
+        </div>
     )
 }
 

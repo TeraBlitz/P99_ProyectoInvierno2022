@@ -38,13 +38,15 @@ export default function ShowClass() {
 
   //Estados de creacion, actualizacion y eliminacion
   const [modalInsertar, setModalInsertar] = useState(false);
-  const [clavePeriodo, setClavePeriodo] = useState("");
+  const [clave, setClave] = useState("");
   const [nombre_curso, setNombreCurso] = useState("");
   const [nivel, setNivel] = useState("");
-  const [idMaestro, setIdMaestro] = useState("");
   const [frecuencia_semanal, setFrecuencia_semanal] = useState("");
+  const [horario, setHorario] = useState("");
+  const [rango_edades, setRango_edades] = useState("");
   const [cupo_maximo, setCupo_maximo] = useState("");
   const [cupo_actual, setCupo_actual] = useState("");
+  const [matriculaMaestro, setMatriculaMaestro] = useState("");
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
@@ -54,8 +56,10 @@ export default function ShowClass() {
     frecuencia_semanal: "",
     cupo_maximo: "",
     cupo_actual: "",
-    idMaestro: "",
-    clavePeriodo: "",
+    matriculaMaestro: "",
+    clave: "",
+    horario: "",
+    rango_edades: ""
   });
 
   // Nos dice que texto fue seleccionado
@@ -106,19 +110,23 @@ export default function ShowClass() {
           frecuencia_semanal: frecuencia_semanal,
           cupo_maximo: cupo_maximo,
           cupo_actual: cupo_actual,
-          idMaestro: idMaestro,
-          clavePeriodo: clavePeriodo,
+          matriculaMaestro: matriculaMaestro,
+          clave: clave,
+          horario: horario,
+          rango_edades: rango_edades
         }),
       });
       abrirCerrarModalInsertar();
       getClases();
-      setClavePeriodo("");
+      setClave("");
       setNombreCurso("");
       setNivel("");
-      setIdMaestro("");
+      setMatriculaMaestro("");
       setFrecuencia_semanal("");
       setCupo_maximo("");
       setCupo_actual("");
+      setHorario("");
+      setRango_edades("");
     } catch (error) {
       console.log(error);
     }
@@ -140,8 +148,10 @@ export default function ShowClass() {
           frecuencia_semanal: consolaSeleccionada.frecuencia_semanal,
           cupo_maximo: consolaSeleccionada.cupo_maximo,
           cupo_actual: consolaSeleccionada.cupo_actual,
-          idMaestro: consolaSeleccionada.idMaestro,
-          clavePeriodo: consolaSeleccionada.clavePeriodo,
+          matriculaMaestro: consolaSeleccionada.matriculaMaestro,
+          clave: consolaSeleccionada.clave,
+          horario: consolaSeleccionada.horario,
+          rango_edades: consolaSeleccionada.rango_edades
         }),
       });
       abrirCerrarModalEditar();
@@ -176,7 +186,7 @@ export default function ShowClass() {
       style={{
         position: "absolute",
         width: 260,
-        height: 630,
+        height: 780,
         backgroundColor: "#fefefd",
         top: "48%",
         left: "50%",
@@ -194,21 +204,27 @@ export default function ShowClass() {
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
         label="Clave"
-        onChange={(e) => setClavePeriodo(e.target.value)}
-        value={clavePeriodo}
+        onChange={(e) => setClave(e.target.value)}
+        value={clave}
         autoFocus/>
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
         label="Curso"
         onChange={(e) => setNombreCurso(e.target.value)}
         value={nombre_curso}
-        autoFocus/>
-      <br />
-      <TextField
-        style={{ paddingBottom: "15px", width: "24ch", fontFamily: "arial" }}
+        />
+        <TextField
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
         label="Nivel"
         onChange={(e) => setNivel(e.target.value)}
         value={nivel}
+        />
+    
+      <TextField
+        style={{ paddingBottom: "15px", width: "24ch", fontFamily: "arial" }}
+        label="Rango de edades"
+        onChange={(e) => setRango_edades(e.target.value)}
+        value={rango_edades}
         select
         id="filled-select-currency">
         {niveles.map((option) => (
@@ -221,26 +237,32 @@ export default function ShowClass() {
         ))}
       </TextField>
       <Autocomplete
-        value={idMaestro}
+        value={matriculaMaestro}
         onChange={(event, newValue) => {
-          setIdMaestro(newValue);
+          setMatriculaMaestro(newValue);
         }}
         id="profesores-insertar"
         options={profes}
         renderInput={(params) => <TextField {...params} label="Profesor" />}/>
-      <br />
+      < br />
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
         label="Frecuencia Semanal"
         onChange={(e) => setFrecuencia_semanal(e.target.value)}
         value={frecuencia_semanal}/>
-      <br />
+     
+      <TextField
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
+        label="Horario"
+        onChange={(e) => setHorario(e.target.value)}
+        value={horario}
+        />
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
         label="Capacidad"
         onChange={(e) => setCupo_maximo(e.target.value)}
         value={cupo_maximo}/>
-      <br />
+   
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
         label="Cupo Actual"
@@ -289,10 +311,10 @@ export default function ShowClass() {
       <br />
       <TextField
         style={{ paddingBottom: "15px", width: "24ch", fontFamily: "arial" }}
-        label="Nivel"
+        label="Horario"
         onChange={handleChange}
-        name="nivel"
-        value={consolaSeleccionada && consolaSeleccionada.nivel}
+        name="horario"
+        value={consolaSeleccionada && consolaSeleccionada.horario}
         select
         id="filled-select-currency">
         {niveles.map((option) => (
@@ -306,8 +328,8 @@ export default function ShowClass() {
         style={{ paddingBottom: "15px", width: "24ch", fontFamily: "arial" }}
         label="Profesor"
         onChange={handleChange}
-        name="idMaestro"
-        value={consolaSeleccionada && consolaSeleccionada.idMaestro}
+        name="matriculaMaestro"
+        value={consolaSeleccionada && consolaSeleccionada.matriculaMaestro}
         select
         id="filled-select-currency">
         {profes.map((option) => (
@@ -393,15 +415,18 @@ export default function ShowClass() {
 
   const columns = useMemo(() => [
       { field: "_id", headerName: "Id", width: 4, hide: true },
-      { field: "clavePeriodo", headerName: "Clave", width: 84 },
+      { field: "clave", headerName: "Clave", width: 84 },
       { field: "nombre_curso", headerName: "Curso", width: 80 },
+      { field: "rango_edades", headerName: "Rango edades", width: 120 },
       { field: "nivel", headerName: "Nivel", width: 141 },
       {
-        field: "idMaestro",
+        field: "matriculaMaestro",
         headerName: "Profesor",
         width: 140,
         sortable: false,
       },
+      { field: "horario", headerName: "Horario", width: 100 },
+      
       { field: "frecuencia_semanal", headerName: "Frecuencia", width: 100 },
       { field: "cupo_maximo", headerName: "Capacidad", width: 100 },
       { field: "cupo_actual", headerName: "Cupo actual", width: 100 },
@@ -413,8 +438,10 @@ export default function ShowClass() {
         renderCell: (params) => <Actions {...{ params, seleccionarConsola }} />,
       },
     ],[data]);
+
 // Filter 
 const [items, setItems] = useState([]);
+
   return (
     <div>
       <Card
@@ -465,7 +492,7 @@ const [items, setItems] = useState([]);
             onChange={(e) => {
               setItems([
                 {
-                  columnField: "idMaestro",
+                  columnField: "matriculaMaestro",
                   operatorValue: "contains",
                   value: e.target.value,
                 },
@@ -515,9 +542,11 @@ const [items, setItems] = useState([]);
               },
             }}
             disableSelectionOnClick={true}
+
             filterModel={{
               items: items,
             }}
+
           />
         </Box>
         <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>

@@ -11,9 +11,13 @@ import ControlPanel from './Pages/ControlPanel/ControlPanel'
 import ShowClass from "./Components/Pages/AdministratorClassRegister/ShowClass";
 import SignIn from './Pages/SignIn/SignIn'
 import MisClases from './Pages/MisClases/MisClasesEstudiante'
+import Periodos from './Pages/ControlPanel/PagesCP/Periodos'
+import Alumnos from './Pages/ControlPanel/PagesCP/Alumnos/Alumnos'
+import Profesores from './Pages/ControlPanel/PagesCP/profesores/Profesores'
 import ForgotPassword from './Pages/ForgotPassword/ForgotPassword'
 import SignUp from './Pages/SignUp/SignUp'
 import { createUser } from './api/users'
+
 
 
 export const userContext = createContext()
@@ -36,16 +40,31 @@ function App() {
     }
     const PagesToRender = {
         RegistroClasesAlumnos: <RegistroClasesAlumno />,
+
         MisClasesProfesor: <MisClasesProfesor />,
+
         Profile: <Profile />,
-        ControlPanel: <ControlPanel />,
+
+
+        ControlPanel: <ControlPanel changeContent={changeContent}/>,
+
         MisClases: <MisClases />,
-        Registro: <ShowClass />
+
+        Incripción: <ShowClass />,
+
+        Periodos: <Periodos/>,
+
+        Alumnos: <Alumnos/>,
+
+        Profesores: <Profesores/>
+
     }
+
 
     const handleSignIn =  (e) => {
         e.preventDefault()
         setIsSignedIn(!isSignedIn)
+
     }
 
     return !isSignedIn ?
