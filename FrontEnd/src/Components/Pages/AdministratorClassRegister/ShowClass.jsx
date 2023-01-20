@@ -21,8 +21,9 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import MenuItem from "@mui/material/MenuItem";
 import { minWidth, minHeight } from "@mui/system";
-import {periodosPrueba} from './../../../data/periodosprueba.js'
+import { periodosPrueba } from './../../../data/periodosprueba.js'
 import DeleteDialog from './DeleteDialog'
+import { InsertDriveFile } from "@mui/icons-material";
 
 
 export default function ShowClass() {
@@ -42,22 +43,22 @@ export default function ShowClass() {
     const [weeklyfrequency, setWeeklyfrequency] = useState("");
     const [maximumcapacity, setMaximumcapacity] = useState("");
     const [periodo, setPeriodo] = useState("");
-    const [currentRowId, setCurrentRowId] = useState(null); 
+    const [currentRowId, setCurrentRowId] = useState(null);
 
     //Funcion click para abrir el modal
     const abrirCerrarModalInsertar = () => {
         setModalInsertar(!modalInsertar);
     };
-     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
-  const handleClickOpen = () => {
-    setOpenDeleteDialog(true);
-  };
+    const handleClickOpen = () => {
+        setOpenDeleteDialog(true);
+    };
 
-  const handleClose = () => {
-    setOpenDeleteDialog(false);
-  };
-  
+    const handleClose = () => {
+        setOpenDeleteDialog(false);
+    };
+
 
 
     //Evento que dado un nuevos datos los agrega
@@ -111,7 +112,7 @@ export default function ShowClass() {
                 teacher: datas.teacher,
                 weeklyfrequency: datas.weeklyfrequency,
                 maximumcapacity: datas.maximumcapacity,
-                periodo:datas.periodo
+                periodo: datas.periodo
             },
         ]);
         abrirCerrarModalInsertar();
@@ -128,7 +129,7 @@ export default function ShowClass() {
         teacher: "",
         weeklyfrequency: "",
         maximumcapacity: 0,
-        periodo:"",
+        periodo: "",
     };
     const [claseActual, setClaseActual] = useState(claseInicial);
     //Function que abre o cierra el modal
@@ -157,6 +158,61 @@ export default function ShowClass() {
         setClase({ ...clase, [name]: value });
     };
 
+    const importFile = () => {
+        var input = document.createElement('input'); // input that selects the file
+        input.type = 'file';
+
+        input.click(); // click the input to select the file
+
+        // what to do when it gatters the file
+        input.onchange = e => {
+            let target = e.target;
+            if (!target.files) {
+                return
+            }
+            let file;
+            file = target.files[0];
+
+            let reader = new FileReader(); // file reader
+            reader.readAsText(file) // read the file gatered
+            // when it is called
+            reader.onload = e => {
+
+                if (file.name.includes(".csv")) { // check if the file is markdown or txt
+                    let result = e.target?.result?.toString();
+                    result !== undefined ? sendCSV(result) : alert("error");
+                }
+                else {
+                    alert("error: el archivo necesita ser tipo markdown o txt")
+                }
+            }
+        }
+
+    }
+
+    const sendCSV = (csv) => {
+        const csvArray = csv.split("\n")
+        csvArray.shift()
+        let csvJson = [];
+        let iterator;
+        for (let i = 0; i < csvArray.length; i++) {
+            iterator = csvArray[i];
+            let iteratorArray  = iterator.split(',')
+            csvJson[i] = {};
+            csvJson[i].clave = iteratorArray[0] || ""
+            csvJson[i].matriculaMaestro = iteratorArray[1] || ""
+            csvJson[i].nombre_curso = iteratorArray[2] || ""
+            csvJson[i].nivel = iteratorArray[3] || ""
+            csvJson[i].rango_edades = iteratorArray[4] || ""
+            csvJson[i].horario = iteratorArray[5] || ""
+            csvJson[i].cupo_maximo = iteratorArray[6] || ""
+            csvJson[i].frequencia_semanal = iteratorArray[7] || ""
+            csvJson[i].cupo_actual = iteratorArray[8] || ""
+        }
+        console.log(csvJson)
+
+    }
+
 
     //Funciones que actualiza los datos con las modificacioness
     const handleClick2 = (e) => {
@@ -173,7 +229,7 @@ export default function ShowClass() {
         )
             updateClass(clase);
     };
- const updateClass = (nuevaClase) => {
+    const updateClass = (nuevaClase) => {
         setData(
             data.map((datos) => (datos.id === claseActual.id ? nuevaClase : datos))
         );
@@ -181,17 +237,17 @@ export default function ShowClass() {
         abrirCerrarModalEditar();
     };
 
-  //------------------------------------Eliminar-------------------------------------
-  // Se agrego un componente de dialogo para confirmar la eliminacion de una clase
-  
-  const classToDelete = (id, clase) => {
-    setClaseActual(clase);
-  };
+    //------------------------------------Eliminar-------------------------------------
+    // Se agrego un componente de dialogo para confirmar la eliminacion de una clase
 
-  function deleteClass() {
-    setData(data.filter((datos) => datos.id !== claseActual.id));
-    handleClose();
-  }
+    const classToDelete = (id, clase) => {
+        setClaseActual(clase);
+    };
+
+    function deleteClass() {
+        setData(data.filter((datos) => datos.id !== claseActual.id));
+        handleClose();
+    }
 
 
     //-------------------------------Datos de ventanas modales---------------
@@ -259,11 +315,11 @@ export default function ShowClass() {
                 select
                 id="filled-select-currency"
             >
-                {periodosPrueba.map(e =>{
-                    if (e.active == true){
+                {periodosPrueba.map(e => {
+                    if (e.active == true) {
                         return <MenuItem key={e.key} value={e.value}>
-                                {e.value}
-                            </MenuItem>
+                            {e.value}
+                        </MenuItem>
                     }
                 })}
 
@@ -400,11 +456,11 @@ export default function ShowClass() {
                 select
                 id="filled-select-currency"
             >
-                {periodosPrueba.map(e =>{
-                    if (e.active == true){
+                {periodosPrueba.map(e => {
+                    if (e.active == true) {
                         return <MenuItem key={e.key} value={e.value}>
-                                {e.value}
-                            </MenuItem>
+                            {e.value}
+                        </MenuItem>
                     }
                 })}
 
@@ -534,48 +590,60 @@ export default function ShowClass() {
                     sx={{ textAlign: "left", mt: 3, mb: 3, fontFamily: "arial" }}
                 >
                     Clases
-                    <Button
-                        sx={{ marginLeft: "350px" }}
-                        variant="contained"
-                        color="success"
-                        onClick={() => abrirCerrarModalInsertar()}
-                    >
-                        {<AddCircleOutlineIcon />} Crear
-                    </Button>
-                </Typography>
-                <Box sx={{height:'80vh' , width:'70vw'}}>
+                    <div style={{ display: 'flex', width: '50%', justifyContent: 'space-evenly' }}>
 
-                <DataGrid
-                    columns={columns}
-                    rows={data}
-                    getRowId={(row) => row.id}
-                    rowsPerPageOptions={[5, 10]}
-                    pageSize={pageSize}
-                    onPageSizeChange={(newPageSize) => SetPageSize(newPageSize)}
-                    getRowSpacing={(params) => ({
-                        top: params.isFirstVisible ? 0 : 5,
-                        bottom: params.isLastVisible ? 0 : 5,
-                    })}
-                    sx={{
-                        [`& .${gridClasses.row}`]: {
-                            bgcolor: (theme) =>
-                                theme.palette.mode === "light" ? grey[200] : grey[900],
-                            fontFamily: "arial",
-                        },
-                    }}
-                    disableSelectionOnClick={true}
-                    filterModel={{
-                        items: items,
-                    }}
-                />
+                        <Button
+                            variant="contained"
+                            color="success"
+                            onClick={() => abrirCerrarModalInsertar()}
+                        >
+                            {<AddCircleOutlineIcon />} Crear
+                        </Button>
+                        <Button
+
+                            variant="contained"
+                            color="info"
+                            onClick={() => importFile()}
+                        >
+                            <InsertDriveFile /> Importar CSV
+
+                        </Button>
+
+                    </div>
+                </Typography>
+                <Box sx={{ height: '80vh', width: '70vw' }}>
+
+                    <DataGrid
+                        columns={columns}
+                        rows={data}
+                        getRowId={(row) => row.id}
+                        rowsPerPageOptions={[5, 10]}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newPageSize) => SetPageSize(newPageSize)}
+                        getRowSpacing={(params) => ({
+                            top: params.isFirstVisible ? 0 : 5,
+                            bottom: params.isLastVisible ? 0 : 5,
+                        })}
+                        sx={{
+                            [`& .${gridClasses.row}`]: {
+                                bgcolor: (theme) =>
+                                    theme.palette.mode === "light" ? grey[200] : grey[900],
+                                fontFamily: "arial",
+                            },
+                        }}
+                        disableSelectionOnClick={true}
+                        filterModel={{
+                            items: items,
+                        }}
+                    />
                 </Box>
 
                 {/* Creacion de modales */}
-                   <DeleteDialog deleteClass={deleteClass} handleClose={handleClose} open={openDeleteDialog}/>
-        {/* Creacion de modales */}
-        <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
-          {bodyInsertar}
-        </Modal>
+                <DeleteDialog deleteClass={deleteClass} handleClose={handleClose} open={openDeleteDialog} />
+                {/* Creacion de modales */}
+                <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
+                    {bodyInsertar}
+                </Modal>
                 <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
                     {bodyInsertar}
                 </Modal>

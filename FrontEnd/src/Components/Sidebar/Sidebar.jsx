@@ -28,7 +28,7 @@ function Sidebar(props) {
             key: 3,
             title: 'Registro clases de Administrador',
             content: 'Registro',
-            rol: 'administrador'
+            rol: 'admin'
         },
         {
             key: 4,
@@ -46,7 +46,7 @@ function Sidebar(props) {
             key: 6,
             title: 'Panel de control',
             content: 'ControlPanel',
-            rol: 'administrador'
+            rol: 'admin'
 
         },
         {
