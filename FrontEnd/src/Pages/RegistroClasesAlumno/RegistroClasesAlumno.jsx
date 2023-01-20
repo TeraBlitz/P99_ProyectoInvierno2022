@@ -180,7 +180,7 @@ function RegistroClasesAlumnos({changeContent}) {
 
                 {
                     clases.map(e => (
-                        <Clase changeClaseRegistrada={changeClaseRegistrada} key={e._id} title={e.nombre} periodo={e.clavePeriodo} cupo={e.cupo} cupoMax={e.cupo_maximo} rango_edades={e.rango_edades} />
+                        <Clase changeClaseRegistrada={changeClaseRegistrada} key={e._id} title={e.nombre_curso} periodo={e.clavePeriodo} cupo={e.cupo_actual} cupoMax={e.cupo_maximo} rango_edades={e.rango_edades} />
                     ))
                 }
             </Box >
@@ -209,7 +209,7 @@ function RegistroClasesAlumnos({changeContent}) {
                         <TextField
                             style={{ paddingBottom: "15px", fontFamily: 'arial', width: '25ch' }}
                             label="Curso"
-                            onChange={e => { setItems([{ columnField: 'title', operatorValue: 'contains', value: e.target.value }]) }}></TextField>
+                            onChange={e => { setItems([{ columnField: 'nombre_curso', operatorValue: 'contains', value: e.target.value }]) }}></TextField>
                         <TextField
                             style={{ paddingBottom: "15px", width: "25ch", fontFamily: 'arial' }}
                             label="Nivel"
@@ -228,14 +228,14 @@ function RegistroClasesAlumnos({changeContent}) {
                             style={{ paddingBottom: "15px", width: "25ch", fontFamily: 'arial' }}
                             label="Periodo"
                             id="filled-select-currency"
-                            onChange={e => { setItems([{ columnField: 'periodo', operatorValue: 'contains', value: e.target.value }]) }}
+                            onChange={e => { setItems([{ columnField: 'clavePeriodo', operatorValue: 'contains', value: e.target.value }]) }}
                         >
                         </TextField>
                         <TextField
                             style={{ paddingBottom: "15px", width: "25ch", fontFamily: 'arial' }}
                             label="Cupo Maximo"
                             id="filled-select-currency"
-                            onChange={e => { setItems([{ columnField: 'cupoMax', operatorValue: 'contains', value: e.target.value }]) }}
+                            onChange={e => { setItems([{ columnField: 'cupo_maximo', operatorValue: 'contains', value: e.target.value }]) }}
                         >
                         </TextField>
                     </CardContent>
