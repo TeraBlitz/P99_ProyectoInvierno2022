@@ -35,7 +35,7 @@ function App() {
         setContent(newContent)
     }
     const PagesToRender = {
-        RegistroClasesAlumnos: <RegistroClasesAlumno />,
+        RegistroClasesAlumnos: <RegistroClasesAlumno changeContent={changeContent}/>,
         MisClasesProfesor: <MisClasesProfesor />,
         Profile: <Profile />,
         ControlPanel: <ControlPanel />,
