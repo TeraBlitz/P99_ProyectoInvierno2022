@@ -91,6 +91,19 @@ const Profile = () =>{
         getUserStudents();
     }, []);
 
+    useEffect(() => {
+       const getUserStudents = () =>{
+            getStudents().then(
+                (data) => {
+                    const students = data.filter(student => student.idUsuario === userValues._id);
+                    setStudents(students);
+                    //console.log(students)
+            });
+        }
+        getUserStudents();
+    }, []);
+
+
     const editStudent = (student) => {
         setCurrentStudent(student);
         setOpenEditModal(!openEditModal);
