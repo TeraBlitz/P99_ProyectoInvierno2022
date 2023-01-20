@@ -14,7 +14,7 @@ function Sidebar(props) {
     const options = [
         {
             key: 1,
-            title: 'Profile',
+            title: 'Perfil',
             content: 'Profile',
             rol: 'any'
         },
@@ -24,7 +24,12 @@ function Sidebar(props) {
             content: 'RegistroClasesAlumnos',
             rol: 'estudiante'
         },
-
+        {
+            key: 3,
+            title: 'Registro clases de Administrador',
+            content: 'Registro',
+            rol: 'admin'
+        },
         {
             key: 4,
             title: 'Mis Clases (Profesor)',
@@ -56,14 +61,13 @@ function Sidebar(props) {
     const listItems = (
         <List sx={{ bgcolor: 'info.main', width: '240px', height: '100vh', spacingY: '10px' }}>
             {options.map(e => {
-
                 if (userValues.rol == e.rol || e.rol=='any') {
-
                     return (
                         <SidebarButton key={e.key} content={e.content} title={e.title} setOpen={props.setOpen} changeContent={props.changeContent} changeDrawerState={props.changeDrawerState} />
                     )
                 }
-            })}
+            }
+        )}
         </List >
     )
 

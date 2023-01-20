@@ -47,7 +47,7 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
             }
             getStudents().then(
                 (data) => {
-                    const students = data.filter(student => student.idUsuario === studentInfo.idUsuario);
+                    const students = data.filter(student => student.idUsuario === userID);
                     setStudents(students);
             });
         });

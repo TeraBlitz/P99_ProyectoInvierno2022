@@ -21,6 +21,9 @@ import { Password } from '@mui/icons-material'
 
 
 
+import { Password } from '@mui/icons-material'
+
+
 
 export const userContext = createContext()
 function App() {
@@ -62,7 +65,6 @@ function App() {
     }
 
 
-
     const handleSignIn = (e) => {
         e.preventDefault();
         // Mandar y validad esta informacion
@@ -91,13 +93,10 @@ function App() {
             })
 
             .catch(error => console.log('error', error));
-
     }
 
     return !isSignedIn ?
         <SignIn handleSignIn={handleSignIn} handleUser={handleUser}  loginError={loginError} />
-
-
         :
         <userContext.Provider value={user}>
             <Box id="main" sx={{ display: 'flex' }}>

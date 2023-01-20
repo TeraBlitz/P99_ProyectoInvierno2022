@@ -28,11 +28,6 @@ const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const userValues = {
-    '_id': '63c85788d7f5ef2ec08b41ae',
-    'correo': '',
-    'rol': 'student'
-}
 
 const Profile = () =>{
 
@@ -55,9 +50,7 @@ const Profile = () =>{
       setOpenDeleteDialog(false);
     };
 
-    //const userValues = useContext(userContext)
-
-
+    const userValues = useContext(userContext)
 
     useEffect(() => {
         const getUserInfo = () =>{
@@ -85,7 +78,10 @@ const Profile = () =>{
             })
             .then(response => response.json())
             .then(result => {
-                setStudents(result)
+                setStudents(result);
+            })
+            .catch(error => {
+                console.log(error);
             })
         }
         getUserStudents();
@@ -128,9 +124,11 @@ const Profile = () =>{
         .finally(() => {
             findStudents(new URLSearchParams({'idUsuario': userValues._id})).then(
                 (data) => {
+                    console.log(data);
                     setStudents(data);
             });
-        });
+        })
+
     }
 
     const handleChange = e => setUserInfo(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
@@ -159,7 +157,7 @@ const Profile = () =>{
                     Mi perfil
                 </Box>
                 {
-                    userValues.rol === 'student' ?
+                    userValues.rol === 'estudiante' ?
                     <Box sx={{ display: 'flex', flexDirection: 'column', position: 'absolute',  bottom: 16,  right: 16}}>
                         <Fab color="primary" aria-label="add" sx={{ display: addStudent ? 'none' : ''}} 
                                 onClick={() => { setAddStudent(!addStudent); }}>
@@ -178,13 +176,13 @@ const Profile = () =>{
             </Box>
 
             <Box sx={{ fontFamily: 'default', fontSize: 'h6.fontSize', py: 2,
-                     display: userValues.rol === 'student' ? 'flex' : 'none' }}>
+                     display: userValues.rol === 'estudiante' ? 'flex' : 'none' }}>
                 Estudiante(s)
             </Box>
    
             <Box>
                 {
-                    students !== null && students.length === 0 && userValues.rol === 'student' ?
+                    students !== null && students.length === 0 && userValues.rol === 'estudiante' ?
                     <Box sx={{ fontFamily: 'default', fontSize: 'h3.fontSize', py: 2, display:'flex' }}>
                         Registra un estudiante para poder inscribir clases!
                     </Box>
@@ -212,7 +210,7 @@ const Profile = () =>{
                 <>                
                     <StudentProfile 
                         studentInfo={studentInfo}
-                        userID={'63c85788d7f5ef2ec08b41ae'}
+                        userID={userValues._id}
                         setAddStudent={setAddStudent}
                         addStudent={addStudent}
                         setStudents={setStudents}
