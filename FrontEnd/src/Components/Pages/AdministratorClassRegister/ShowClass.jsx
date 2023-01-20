@@ -96,7 +96,6 @@ export default function ShowClass() {
 
     //Se encarga de guardar la nueva informacion
     useEffect(() => {
-        setData(information);
     }, []);
 
     //Actualiza las clases
@@ -199,6 +198,7 @@ export default function ShowClass() {
             iterator = csvArray[i];
             let iteratorArray  = iterator.split(',')
             csvJson[i] = {};
+            csvJson[i].id = i
             csvJson[i].clave = iteratorArray[0] || ""
             csvJson[i].matriculaMaestro = iteratorArray[1] || ""
             csvJson[i].nombre_curso = iteratorArray[2] || ""
@@ -210,6 +210,8 @@ export default function ShowClass() {
             csvJson[i].cupo_actual = iteratorArray[8] || ""
         }
         console.log(csvJson)
+        setData(csvJson)
+
 
     }
 
@@ -484,19 +486,18 @@ export default function ShowClass() {
 
     const columns = useMemo(
         () => [
-            { field: "id", headerName: "Id", width: 124, hide: true },
-            { field: "keys", headerName: "Clave", width: 124 },
-            { field: "coursename", headerName: "Curso", width: 160 },
-            { field: "level", headerName: "Nivel", width: 221 },
-            { field: "teacher", headerName: "Profesor", width: 210, sortable: false },
-            { field: "weeklyfrequency", headerName: "Frecuencia", width: 155 },
-            { field: "maximumcapacity", headerName: "Capacidad", width: 150 },
-            { field: "periodo", headerName: "Periodo", width: 150 },
+            { field: "id", headerName: "Id", width: 134, hide: true },
+            { field: "clave", headerName: "Clave", width: 134 },
+            { field: "nombre_curso", headerName: "Curso", width: 170 },
+            { field: "nivel", headerName: "Nivel", width: 231 },
+            { field: "matriculaMaestro", headerName: "Profesor", width: 220, sortable: false },
+            { field: "horario", headerName: "Frecuencia", width: 165 },
+            { field: "cupo_maximo", headerName: "Capacidad", width: 160 },
             {
                 field: "actions",
                 headerName: "Acciones",
                 type: "actions",
-                width: 165,
+                width: 175,
                 renderCell: (params) => (
                     <Actions {...{ params, deleteClass, editClasses }} />
                 ),
@@ -617,7 +618,7 @@ export default function ShowClass() {
                         columns={columns}
                         rows={data}
                         getRowId={(row) => row.id}
-                        rowsPerPageOptions={[5, 10]}
+                        rowsPerPageOptions={[5, 10,20]}
                         pageSize={pageSize}
                         onPageSizeChange={(newPageSize) => SetPageSize(newPageSize)}
                         getRowSpacing={(params) => ({
