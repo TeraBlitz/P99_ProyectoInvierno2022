@@ -16,8 +16,10 @@ const profesoroSchema = {
       "fecha_de_nacimiento",
       "num_telefono",
       "num_cursos_impartidos",
+      "idUser"
     ],
-    additionalProperties: true,
+    additionalProperties: false,
+
     errorMessage: {
       type: "Debe ser un Objeto", // will not replace internal "type" error for the property "foo"
     },

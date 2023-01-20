@@ -16,39 +16,39 @@ function Sidebar(props) {
             key: 1,
             title: 'Profile',
             content: 'Profile',
-            userType: 'any'
+            rol: 'any'
         },
         {
             key: 2,
             title: 'Registro Clases',
             content: 'RegistroClasesAlumnos',
-            userType: 'student'
+            rol: 'estudiante'
         },
 
         {
             key: 4,
             title: 'Mis Clases (Profesor)',
             content: 'MisClasesProfesor',
-            userType: 'profesor'
+            rol: 'profesor'
         },
         {
             key: 5,
             title: 'Mis Clases (Estudiantes)',
             content: 'MisClases',
-            userType: 'student'
+            rol: 'estudiante'
         },
         {
             key: 6,
             title: 'Panel de control',
             content: 'ControlPanel',
-            userType: 'administrador'
+            rol: 'admin'
 
         },
         {
             key: 7,
             title: <SignOutButton handleSignOut={props.handleSignOut} />,
             content: '',
-            userType: 'any'
+            rol: 'any'
         },
 
     ]
@@ -56,7 +56,9 @@ function Sidebar(props) {
     const listItems = (
         <List sx={{ bgcolor: 'info.main', width: '240px', height: '100vh', spacingY: '10px' }}>
             {options.map(e => {
-                //if (userValues.userType == e.userType || e.userType=='any') {
+
+                if (userValues.rol == e.rol || e.rol=='any') {
+
                     return (
                         <SidebarButton key={e.key} content={e.content} title={e.title} setOpen={props.setOpen} changeContent={props.changeContent} changeDrawerState={props.changeDrawerState} />
                     )

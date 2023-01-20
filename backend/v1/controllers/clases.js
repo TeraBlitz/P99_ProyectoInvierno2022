@@ -43,7 +43,6 @@ async function createClase(req, res) {
         matriculaMaestro: req.body.matriculaMaestro,
         clavePeriodo: req.body.clavePeriodo,
 
-
       },
     ];
 

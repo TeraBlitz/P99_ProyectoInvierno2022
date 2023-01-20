@@ -22,7 +22,8 @@ const clasesSchema = {
         "cupo_maximo",
         "cupo_actual",
         "matriculaMaestro",
-       
+        "clavePeriodo"
+
     ],
     additionalProperties: true,
     errorMessage: {

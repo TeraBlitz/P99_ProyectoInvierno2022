@@ -30,25 +30,29 @@ const cards = [
         'id': '1',
         'title': 'Incripción',
         'body': 'Acceder a sistema de inscripciones. Crea, actualiza y elimina los cursos.',
-        'color': '#366ac3'
+        'color': '#366ac3',
+        'link':'Registro'
     },
     {
         'id': '2',
         'title': 'Profesores',
         'body': 'Administrar los profesores y visualizar su información.',
-        'color': '#5F8AD4'
+        'color': '#5F8AD4',
+        'link':'Profesores'
     },
     {
         'id': '3',
         'title': 'Alumnos',
         'body': 'Administrar los alumnos y visualizar su información.',
-        'color': '#89ABE4'
+        'color': '#89ABE4',
+        'link':'Alumnos'
     },
     {
         'id': '4',
         'title': 'Periodos',
         'body': 'Administrar el periodo escolar actual y proximos periodos.',
-        'color': '#b2cbf5'
+        'color': '#b2cbf5',
+        'link':'Periodos'
     }
 ]
 
@@ -69,7 +73,6 @@ const panelInfoCards = [
 
 
 const ControlPanel = ({changeContent}) => {
-
 
     const [users, setUsersInfo] = useState(fetchUsers);
     const [teachers, setTeachersInfo] = useState(fetchTeachers);
@@ -104,8 +107,10 @@ const ControlPanel = ({changeContent}) => {
                     </Grid>
                 )}
                 {cards.map(card =>
-                    <Grid item sm={12} md={6} key={card.id}>
-                        <PanelCard title={card.title} body={card.body} bgColor={card.color} changeContent={changeContent}/>
+
+                    <Grid item sm={12} md={6} key={card.id} onClick={()=>changeContent(card.link)}>
+                        <PanelCard title={card.title} body={card.body} bgColor={card.color} />
+
                     </Grid>
                 )}
             </Grid>
