@@ -142,7 +142,7 @@ export default function Alumnos() {
       style={{
         position: "absolute",
         width: 260,
-        height: 700,
+        height: 620,
         backgroundColor: "#fefefd",
         top: "48%",
         left: "50%",
@@ -198,14 +198,7 @@ export default function Alumnos() {
         value={consolaSeleccionada && consolaSeleccionada.ciudad}
       />
       <br />
-      <TextField
-        style={{ paddingBottom: "15px", fontFamily: "arial" }}
-        label="Colonia"
-        onChange={handleChange}
-        name="colonia"
-        value={consolaSeleccionada && consolaSeleccionada.colonia}
-      />
-      <br />
+      
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
         label="Escolaridad"
@@ -362,11 +355,12 @@ export default function Alumnos() {
 
       <Box
         sx={{
-          width: "1200",
+          
           padding: "15px",
           height: "450px",
           position: "absolute",
           marginLeft: "400px",
+          width: 800
         }}
       >
         <Typography

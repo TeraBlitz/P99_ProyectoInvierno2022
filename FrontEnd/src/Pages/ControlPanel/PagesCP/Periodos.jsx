@@ -25,7 +25,7 @@ export default function Periodos() {
 
   //DAtos
   const [data, setData] = useState([]);
-//----------------------Obtencion de datos de la base de datos
+  //----------------------Obtencion de datos de la base de datos
   const getPeriodos = () => {
     axios
       .get("http://127.0.0.1:3000/v1/periodos")
@@ -146,33 +146,33 @@ export default function Periodos() {
     }));
     console.log(consolaSeleccionada);
   };
-// Editar
-const postEditar = async (e) => {
-  e.preventDefault();
-  try {
-    await fetch("http://127.0.0.1:3000/v1/periodos/update", {
-      method: "Put",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
-        _id: consolaSeleccionada._id,
-    clave: consolaSeleccionada.clave,
-    status: consolaSeleccionada.status,
-    fecha_inicio: consolaSeleccionada.fecha_inicio,
-    fecha_fin: consolaSeleccionada.fecha_fin,
-    fecha_inicio_insc: consolaSeleccionada.fecha_inicio_insc,
-    fecha_fin_insc: consolaSeleccionada.fecha_fin_insc,
-    cursos_max_por_alumno: consolaSeleccionada.cursos_max_por_alumno,
-    idiomas_max_por_alumno: consolaSeleccionada.idiomas_max_por_alumno,
-      }),
-    });
-    abrirCerrarModalEditar();
-    getPeriodos();
-  } catch (error) {
-    console.log(error);
-  }
-};
+  // Editar
+  const postEditar = async (e) => {
+    e.preventDefault();
+    try {
+      await fetch("http://127.0.0.1:3000/v1/periodos/update", {
+        method: "Put",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          _id: consolaSeleccionada._id,
+          clave: consolaSeleccionada.clave,
+          status: consolaSeleccionada.status,
+          fecha_inicio: consolaSeleccionada.fecha_inicio,
+          fecha_fin: consolaSeleccionada.fecha_fin,
+          fecha_inicio_insc: consolaSeleccionada.fecha_inicio_insc,
+          fecha_fin_insc: consolaSeleccionada.fecha_fin_insc,
+          cursos_max_por_alumno: consolaSeleccionada.cursos_max_por_alumno,
+          idiomas_max_por_alumno: consolaSeleccionada.idiomas_max_por_alumno,
+        }),
+      });
+      abrirCerrarModalEditar();
+      getPeriodos();
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const debug = "debug";
   return (
     <div className="container">
@@ -250,10 +250,14 @@ const postEditar = async (e) => {
               onChange={(e) => setidiomas_max_por_alumno(e.target.value)}
               autoFocus
             />
-            <Button color="primary" onClick={postCrea}>
+            <Button color="primary" variant="contained" onClick={postCrea}>
               Insertar
             </Button>
-            <Button onClick={() => abrirCerrarModalInsertar()} color="error">
+            <Button
+              variant="contained"
+              onClick={() => abrirCerrarModalInsertar()}
+              color="error"
+            >
               Cancelar
             </Button>
           </div>
@@ -308,11 +312,20 @@ const postEditar = async (e) => {
               </Typography>
             </CardContent>
             <CardActions>
-              <Button variant="contained" onClick={()=>seleccionarConsola(item, 'Editar')}>Editar</Button>
+              <Button
+                variant="contained"
+                onClick={() => seleccionarConsola(item, "Editar")}
+              >
+                Editar
+              </Button>
 
               <div className="spacer-botones"></div>
 
-              <Button variant="contained" color="error"  onClick={()=>seleccionarConsola(item, 'Eliminar')}>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => seleccionarConsola(item, "Eliminar")}
+              >
                 Borrar Periodo
               </Button>
 
@@ -328,12 +341,17 @@ const postEditar = async (e) => {
                   </Typography>
                   <div className="spacer"></div>
                   <div className="spacer-botones"></div>
-                  <Button color="error" variant="contained"onClick={postDelete}>
+                  <Button
+                    color="error"
+                    variant="contained"
+                    onClick={postDelete}
+                  >
                     Borrar
                   </Button>
                   <Button
                     onClick={() => abrirCerrarModalEliminar()}
-                    color="primary" variant="contained"
+                    color="primary"
+                    variant="contained"
                   >
                     Cancelar
                   </Button>
@@ -356,7 +374,9 @@ const postEditar = async (e) => {
                     <TextField
                       style={{ paddingBottom: "15px", fontFamily: "arial" }}
                       label="Clave"
-                      defaultValue={consolaSeleccionada && consolaSeleccionada.clave }
+                      defaultValue={
+                        consolaSeleccionada && consolaSeleccionada.clave
+                      }
                       name="clave"
                       onChange={handleChange}
                       autoFocus
@@ -364,57 +384,80 @@ const postEditar = async (e) => {
                     <TextField
                       style={{ paddingBottom: "15px", fontFamily: "arial" }}
                       label="Status"
-                      defaultValue={consolaSeleccionada && consolaSeleccionada.status}
+                      defaultValue={
+                        consolaSeleccionada && consolaSeleccionada.status
+                      }
                       name="status"
                       onChange={handleChange}
                     />
                     <TextField
                       style={{ paddingBottom: "15px", fontFamily: "arial" }}
                       label="Fecha de inicio"
-                      defaultValue={consolaSeleccionada && consolaSeleccionada.fecha_inicio}
+                      defaultValue={
+                        consolaSeleccionada && consolaSeleccionada.fecha_inicio
+                      }
                       name="fecha_inicio"
                       onChange={handleChange}
                     />
                     <TextField
                       style={{ paddingBottom: "15px", fontFamily: "arial" }}
                       label="fecha de Fin"
-                      defaultValue={consolaSeleccionada && consolaSeleccionada.fecha_fin}
+                      defaultValue={
+                        consolaSeleccionada && consolaSeleccionada.fecha_fin
+                      }
                       name="fecha_fin"
                       onChange={handleChange}
                     />
                     <TextField
                       style={{ paddingBottom: "15px", fontFamily: "arial" }}
                       label="Fecha de inicio de incripciones"
-                      defaultValue={consolaSeleccionada && consolaSeleccionada.fecha_inicio_insc}
+                      defaultValue={
+                        consolaSeleccionada &&
+                        consolaSeleccionada.fecha_inicio_insc
+                      }
                       name="fecha_inicio_insc"
                       onChange={handleChange}
                     />
                     <TextField
                       style={{ paddingBottom: "15px", fontFamily: "arial" }}
                       label="Fecha de fin de inscripciones"
-                      defaultValue={consolaSeleccionada && consolaSeleccionada.fecha_fin_insc}
+                      defaultValue={
+                        consolaSeleccionada &&
+                        consolaSeleccionada.fecha_fin_insc
+                      }
                       name="fecha_fin_insc"
                       onChange={handleChange}
                     />
                     <TextField
                       style={{ paddingBottom: "15px", fontFamily: "arial" }}
                       label="Cursos Maximos por Alumno"
-                      defaultValue={consolaSeleccionada && consolaSeleccionada.cursos_max_por_alumno}
+                      defaultValue={
+                        consolaSeleccionada &&
+                        consolaSeleccionada.cursos_max_por_alumno
+                      }
                       name="cursos_max_por_alumno"
                       onChange={handleChange}
                     />
                     <TextField
                       style={{ paddingBottom: "15px", fontFamily: "arial" }}
                       label="Idiomas Max"
-                      defaultValue={consolaSeleccionada && consolaSeleccionada.idiomas_max_por_alumno}
+                      defaultValue={
+                        consolaSeleccionada &&
+                        consolaSeleccionada.idiomas_max_por_alumno
+                      }
                       name="idiomas_max_por_alumno"
                       onChange={handleChange}
                     />
 
-                    <Button color="primary" onClick={postEditar}>
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      onClick={postEditar}
+                    >
                       Editar
                     </Button>
                     <Button
+                      variant="contained"
                       onClick={() => abrirCerrarModalInsertar()}
                       color="error"
                     >

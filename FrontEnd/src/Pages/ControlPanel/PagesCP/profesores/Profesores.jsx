@@ -1,4 +1,4 @@
-//Importancioon de datos
+//Importancion de datos
 import React from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import {
@@ -7,12 +7,7 @@ import {
   TextField,
   Box,
   Typography,
-  Autocomplete,
 } from "@mui/material";
-//import { data as information } from "../../../../data/datosprueba";
-
-import { data as information } from "./datos/profesores";
-
 import { useState, useEffect } from "react";
 import { grey } from "@mui/material/colors";
 import { DataGrid, gridClasses } from "@mui/x-data-grid";
@@ -20,125 +15,89 @@ import { useMemo } from "react";
 import Actions from "./ActProfes";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import MenuItem from "@mui/material/MenuItem";
-import { minWidth,minHeight } from "@mui/system";
+import axios from "axios";
 export default function Profesores() {
-  //--------------------------------------------Agregar----------------
-  //Agregar numeros
-  const [number, setNumber] = useState(5);
-  function add() {
-    setNumber((prevNumber) => prevNumber + 1);
-  }
-//Estados de agregar
+  //------------------------------------Obtener info----------------
   const [data, setData] = useState([]);
+  const getProfesores = () => {
+    axios
+      .get("http://127.0.0.1:3000/v1/profesores")
+      .then((res) => setData(res.data))
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    getProfesores();
+  }, []);
+
+  //----------------------Estados para el cud
   const [modalInsertar, setModalInsertar] = useState(false);
-
   const [nombre, setNombre] = useState("");
-  const [cursosImp, serCursosImp] = useState("");
-  const [numero, setNumero] = useState("");
-
-
-  //Funcion click para abrir el modal
+  const [apellido_paterno, setApellido_paterno] = useState("");
+  const [apellido_materno, setApellido_materno] = useState("");
+  const [fecha_de_nacimiento, setFecha_de_nacimiento] = useState("");
+  const [num_telefono, setNum_telefono] = useState("");
+  const [num_cursos_impartidos, setNum_cursos_impartidos] = useState("");
+  const [idUser, setIdUser] = useState("");
+  const [modalEditar, setModalEditar] = useState(false);
+  const [modalEliminar, setModalEliminar] = useState(false);
+  const [consolaSeleccionada, setConsolaSeleccionada] = useState({
+    _id: "",
+    nombre: "",
+    apellido_paterno: "",
+    apellido_materno: "",
+    fecha_de_nacimiento: "",
+    num_telefono: "",
+    num_cursos_impartidos: "",
+    idUser:"",
+  });
+  // Funcion para abrir y cerra ventanas modales
   const abrirCerrarModalInsertar = () => {
     setModalInsertar(!modalInsertar);
   };
 
-  //Evento que dado un nuevos datos los agrega
-  const handleClick = (e) => {
-    e.preventDefault();
-    if (
-      nombre !== "" &&
-      cursosImp !== "" &&
-      numero !== ""
-
-    ) {
-      createClasses({
-        nombre,
-        cursosImp,
-        numero,
-
-      });
-
-
-      abrirCerrarModalInsertar();
-    } else {
-      alert("No se puede enviar, si hay algo vacio");
-    }
-  };
-
-  //Se encarga de guardar la nueva informacion
-  useEffect(() => {
-    setData(information);
-  }, []);
-
-  //Actualiza las clases
-  function createClasses(datas) {
-    setData((prevData) => [        ...prevData,        {            id: prevData.length + 1,            nombre: datas.nombre,            cursosImp: datas.cursosImp,            numero: datas.numero        }    ]);
-    setNombre("");
-    serCursosImp("");
-    setNumero("");
-
-}
-
-
-  //-------------------------------Editar----------------------------------
-  // Estados para editar
-  const [modalEditar, setModalEditar] = useState(false);
-  const claseInicial = {
-    id: -1,
-    nombre: "",
-    cursosImp: "",
-    numero: "",
-  };
-  const [claseActual, setClaseActual] = useState(claseInicial);
-  //Function que abre o cierra el modal
+  
   const abrirCerrarModalEditar = () => {
     setModalEditar(!modalEditar);
   };
 
-  const editClasses = (id, clase) => {
-    setClaseActual(clase);
-    abrirCerrarModalEditar();
+  const abrirCerrarModalEliminar = () => {
+    setModalEliminar(!modalEliminar);
   };
 
-  //Funcion que guarda informacion del modal
-  const dataMemo = useMemo(() => information, []);
 
-  //Estado que guarda el array modificado
-  const [clase, setClase] = useState(claseActual);
-
-  //Funcion que modifica los daors
-  const handleChange = (e) => {
-    console.log(e.target);
-    const { name, value } = e.target;
-    setClase({ ...clase, [name]: value });
-  };
-
-  //Funciones que actualiza los datos con las modificacioness
-  const handleClick2 = (e) => {
+  //procedimiento para crear datos
+  const postCrea = async (e) => {
     e.preventDefault();
-    if (
-      clase.nombre &&
-      clase.cursosImp &&
-      clase.numero
-    )
-      updateClass(clase);
+    try {
+      await fetch("http://127.0.0.1:3000/v1/profesores/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          nombre: nombre,
+          apellido_paterno: apellido_paterno,
+          apellido_materno: apellido_materno,
+          fecha_de_nacimiento: fecha_de_nacimiento,
+          num_telefono: num_telefono,
+          num_cursos_impartidos: num_cursos_impartidos,
+          idUser : idUser
+        }),
+      });
+      abrirCerrarModalInsertar();
+      getProfesores();
+      setNombre("");
+      setApellido_paterno("");
+      setApellido_materno("");
+      setFecha_de_nacimiento("");
+      setNum_telefono("");
+      setNum_cursos_impartidos("");
+      setIdUser("");
+    } catch (error) {
+      console.log(error);
+    }
   };
-
-  const updateClass = (nuevaClase) => {
-    setData(
-      data.map((datos) => (datos.id === claseActual.id ? nuevaClase : datos))
-    );
-    setClaseActual(claseInicial);
-    abrirCerrarModalEditar();
-  };
-
-  //--------------------------------------------Eliminar--------------
-  // Solo se usa un filter para eliminar
-  function deleteClass(classId) {
-    console.log(classId);
-    setData(data.filter((datos) => datos.id !== classId));
-  }
 
   //-------------------------------Datos de ventanas modales---------------
   const bodyInsertar = (
@@ -170,28 +129,45 @@ export default function Profesores() {
         value={nombre}
         autoFocus
       />
+      <br />
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
-        label="Cursos Impartidos"
-        type="number"
-        onChange={(e) => serCursosImp(e.target.value)}
-        value={cursosImp}
-        autoFocus
+        label="Apellido paterno"
+        onChange={(e) => setApellido_paterno(e.target.value)}
+        value={apellido_paterno}
       />
       <br />
-
+      <TextField
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
+        label="Apellido materno"
+        onChange={(e) => setApellido_materno(e.target.value)}
+        value={apellido_materno}
+      />
       <br />
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
-        label="Numero"
-        type="number"
-        onChange={(e) => setNumero(e.target.value)}
-        value={numero}
+        label="Fecha de nacimiento"
+        onChange={(e) => setFecha_de_nacimiento(e.target.value)}
+        value={fecha_de_nacimiento}
+      />
+      <br />
+      <TextField
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
+        label="Telefono"
+        onChange={(e) => setNum_telefono(e.target.value)}
+        value={num_telefono}
+      />
+      <br />
+      <TextField
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
+        label="Cursos impartidos"
+        onChange={(e) => setNum_cursos_impartidos(e.target.value)}
+        value={num_cursos_impartidos}
       />
       <br />
       <br />
       <div align="center">
-        <Button color="primary" onClick={handleClick}>
+        <Button color="primary" onClick={postCrea}>
           Insertar
         </Button>
         <Button onClick={() => abrirCerrarModalInsertar()} color="error">
@@ -199,89 +175,222 @@ export default function Profesores() {
         </Button>
       </div>
     </div>
-
-
   );
-// -----------------------------Modal para editar---------------------------
-  const bodyEditar = (
-    <div
-      style={{
-        position: "absolute",
-        width: 260,
-        height: 480,
-        backgroundColor: "#fefefd",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        border: "4px solid  rgb(165, 165, 180)",
-        margin: "auto",
-        borderRadius: "10px",
-        padding: "20px",
-      }}
-    >
-      <h3
-        style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" }}
-        align="center"
+//-----------------Editar y eliminar--------------------------
+
+// Nos dice que texto fue seleccionado
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setConsolaSeleccionada((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+    console.log(consolaSeleccionada);
+  };
+
+   // Funcion para eliminar o editar
+   const seleccionarConsola = (consola, caso) => {
+    setConsolaSeleccionada(consola);
+    if (caso === "Editar") {
+      abrirCerrarModalEditar();
+    } else {
+      abrirCerrarModalEliminar();
+    }
+  };
+
+  // Procedimiento para editar
+  const postEditar = async (e) => {
+    e.preventDefault();
+    try {
+      await fetch("http://127.0.0.1:3000/v1/profesores/update", {
+        method: "Put",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          _id: consolaSeleccionada._id,
+          nombre: consolaSeleccionada.nombre,
+          apellido_paterno: consolaSeleccionada.apellido_paterno,
+          apellido_materno: consolaSeleccionada.apellido_materno,
+          fecha_de_nacimiento: consolaSeleccionada.fecha_de_nacimiento,
+          num_telefono: consolaSeleccionada.num_telefono,
+          num_cursos_impartidos: consolaSeleccionada.num_cursos_impartidos,
+          idUser : consolaSeleccionada.idUser
+        }),
+      });
+      abrirCerrarModalEditar();
+      getProfesores();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+  //  -----------------------------Modal para editar---------------------------
+    const bodyEditar = (
+      <div
+        style={{
+          position: "absolute",
+          width: 260,
+          height: 580,
+          backgroundColor: "#fefefd",
+          top: "48%",
+          left: "50%",
+          transform: "translate(-48%, -50%)",
+          border: "4px solid  rgb(165, 165, 180)",
+          margin: "auto",
+          borderRadius: "10px",
+          padding: "20px",
+        }}
       >
-        Cambiar Datos Profesor
-      </h3>
-      <TextField
+        <h3
+          style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" }}
+          align="center"
+        >
+          Actualizar Profesor
+        </h3>
+        <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
         label="Nombre"
-        value={clase.nombre}
-        name="coursename"
         onChange={handleChange}
+        value={consolaSeleccionada && consolaSeleccionada.nombre}
+        name="nombre"
         autoFocus
       />
       <br />
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
-        label="Cursos Impartidos"
-        name="maximumcapacity"
-        type="number"
-        value={clase.cursosImp}
+        label="Apellido paterno"
         onChange={handleChange}
+        value={consolaSeleccionada && consolaSeleccionada.apellido_paterno}
+        name="apellido_paterno"
       />
-      <br/>
+      <br />
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
-        label="Numero"
-        name="maximumcapacity"
-        type="number"
-        value={clase.numero}
+        label="Apellido materno"
         onChange={handleChange}
+        value={consolaSeleccionada && consolaSeleccionada.apellido_materno}
+        name="apellido_materno"
+      />
+      <br />
+      <TextField
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
+        label="Fecha de nacimiento"
+        onChange={handleChange}
+        value={consolaSeleccionada && consolaSeleccionada.fecha_de_nacimiento}
+        name="fecha_de_nacimiento"
+      />
+      <br />
+      <TextField
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
+        label="Telefono"
+        onChange={handleChange}
+        value={consolaSeleccionada && consolaSeleccionada.num_telefono}
+        name="num_telefono"
+      />
+      <br />
+      <TextField
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
+        label="Cursos impartidos"
+        onChange={handleChange}
+        value={consolaSeleccionada && consolaSeleccionada.num_cursos_impartidos}
+        name="num_cursos_impartidos"
       />
       <br />
       <br />
-      <div align="center">
-        <Button color="primary" onClick={handleClick2}>
-          Editar
-        </Button>
-        <Button onClick={() => abrirCerrarModalEditar()} color="error">
-          Cancelar
-        </Button>
+        <div align="center">
+          <Button color="primary" onClick={postEditar}>
+            Editar
+          </Button>
+          <Button onClick={() => abrirCerrarModalEditar()} color="error">
+            Cancelar
+          </Button>
+        </div>
       </div>
-    </div>
-  );
+    );
+//-------------------------Modal Eliminar----------------------------------
 
+const postDelete = async (e) => {
+  try {
+    await fetch("http://127.0.0.1:3000/v1/profesores/delete", {
+      method: "Delete",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        _id: consolaSeleccionada._id,
+      }),
+    });
+    abrirCerrarModalEliminar();
+    getProfesores();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+const bodyEliminar = (
+  <div
+    style={{
+      position: "absolute",
+      width: 260,
+      height: 280,
+      backgroundColor: "#fefefd",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      border: "4px solid  rgb(165, 165, 180)",
+      margin: "auto",
+      borderRadius: "10px",
+      padding: "20px",
+    }}>
+    <h3
+      style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" }}
+      align="center">
+      Eliminar una clase
+    </h3>
+    <Typography style={{ align: "justify", fontFamily: "arial" }}>
+      El profesor de {consolaSeleccionada && consolaSeleccionada.nombre} y
+      todo lo relacionado a el se va a eliminar por completo. No vas a poder
+      acceder a estos datos de nuevo.
+    </Typography>
+    <br />
+    <br />
+    <div align="center">
+      <Button color="error" onClick={postDelete}>
+        Confirmar
+      </Button>
+      <Button onClick={() => abrirCerrarModalEliminar()} color="primary">
+        Cancelar
+      </Button>
+    </div>
+  </div>
+);
   //---------------------------------------Show--------------
   const [pageSize, SetPageSize] = useState(5);
 
   const columns = useMemo(
     () => [
-      { field: "id", headerName: "Id", width: 54, hide: true },
-      { field: "nombre", headerName: "Nombre", width: 400 },
-      { field: "cursosImp", headerName: "Cursos Impartidos", width: 200 },
-      { field: "numero", headerName: "Numero", width: 250 },
+      { field: "_id", headerName: "Id", width: 54, hide: true },
+      { field: "nombre", headerName: "Nombre", width: 120 },
+      { field: "apellido_paterno", headerName: "Apellido Paterno", width: 180 },
+      { field: "apellido_materno", headerName: "Apellido Materno", width: 180 },
+      { field: "num_telefono", headerName: "Telefono", width: 120 },
+      { field: "fecha_de_nacimiento", headerName: "Nacimiento", width: 100 },
+      {
+        field: "num_cursos_impartidos",
+        headerName: "Cursos Impartidos",
+        width: 120,
+      },
+      { field: "idUser", headerName: "Usuario", width: 250, hide: true },
 
       {
         field: "actions",
         headerName: "Acciones",
         type: "actions",
         width: 95,
-        renderCell: (params) => (
-          <Actions {...{ params, deleteClass, editClasses }} />
-        ),
+        renderCell: (params) => <Actions {...{ params, seleccionarConsola }}></Actions>,
       },
     ],
     [data]
@@ -311,7 +420,7 @@ export default function Profesores() {
           >
             Filtro
           </Typography>
-          <TextField
+           <TextField
             style={{ paddingBottom: "15px", fontFamily: "arial" , width:300, marginLeft:7}}
             label="Ingrese un nombre para buscar"
             onChange={(e) => {
@@ -322,18 +431,16 @@ export default function Profesores() {
                   value: e.target.value,
                 },
               ]);
-            }}
+            }} 
           ></TextField>
-
         </CardContent>
       </Card>
 
       <Box
-
         sx={{
-          width: '1000px',
+          width: "1000px",
           padding: "15px",
-          height: '450px',
+          height: "450px",
           position: "absolute",
           marginLeft: "400px",
         }}
@@ -357,7 +464,7 @@ export default function Profesores() {
         <DataGrid
           columns={columns}
           rows={data}
-          getRowId={(row) => row.id}
+          getRowId={(row) => row._id}
           rowsPerPageOptions={[5, 10]}
           pageSize={pageSize}
           onPageSizeChange={(newPageSize) => SetPageSize(newPageSize)}
@@ -382,10 +489,15 @@ export default function Profesores() {
         <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
           {bodyInsertar}
         </Modal>
-
+        
         <Modal open={modalEditar} onClose={() => abrirCerrarModalEditar()}>
           {bodyEditar}
+        </Modal> 
+
+        <Modal open={modalEliminar} onClose={abrirCerrarModalEliminar}>
+          {bodyEliminar}
         </Modal>
+
       </Box>
     </div>
   );
