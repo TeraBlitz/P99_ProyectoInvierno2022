@@ -1,14 +1,23 @@
 import Box from '@mui/material/Box'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Clase from '../../Components/Clase/Clase'
+import CircularProgress from '@mui/material/CircularProgress'
 import { Alert, Button } from '@mui/material'
 import { AlertTitle } from '@mui/material'
 import { Card, CardContent, Typography, TextField, MenuItem } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-function RegistroClasesAlumnos() {
+const userValues = {
+    '_id': '63c85788d7f5ef2ec08b41',
+    'correo': '',
+    'rol': 'student'
+}
+
+function RegistroClasesAlumnos({changeContent}) {
     const [items, setItems] = useState([]);
+    const [students, setStudents] = useState(null)
+
     const columns = [
         { field: 'id', headerName: 'ID', width: 110 },
         {
@@ -609,6 +618,47 @@ function RegistroClasesAlumnos() {
             nivel: 'intermedio'
         }
     ])
+
+    useEffect(() => {
+        const getUserStudents = () =>{
+            fetch(`http://127.0.0.1:3000/v1/alumnos/find`,
+            {
+                method: 'POST',
+                redirect: 'follow',
+                body: new URLSearchParams(
+                    {
+                        idUsuario : userValues._id
+                    }
+                )
+            })
+            .then(response => response.json())
+            .then(result => {
+                setStudents(result)
+            })
+            .catch(error =>{
+                console.log(error)
+            })
+        }
+        getUserStudents();
+    }, []);
+
+
+    if (!students) {
+        return(
+            <Box sx={{ display: 'flex', alignItems: 'center', height: '100vh', justifyContent: 'center'}}>
+                <CircularProgress />
+            </Box>
+        )
+    }
+    if (students.length === 0 && students !== null){
+        return(
+            <Box>
+                <Button onClick={() => changeContent('Profile')}>
+                    Ir a perfil
+                </Button>
+            </Box>
+        )
+    }
     return (
         <>
             <Box sx={{ display: error, bgcolor: 'rgba(50, 50, 50, 0.60)', zIndex: '1000', width: { xs: '100vw', sm: '86vw' }, position: 'absolute', top: 0, left: 0, bottom: 0, right: 0 }}>
