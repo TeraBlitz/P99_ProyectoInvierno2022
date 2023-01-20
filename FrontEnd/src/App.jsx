@@ -40,7 +40,7 @@ function App() {
         RegistroClasesAlumnos: <RegistroClasesAlumno />,
         MisClasesProfesor: <MisClasesProfesor />,
         Profile: <Profile />,
-        ControlPanel: <ControlPanel />,
+        ControlPanel: <ControlPanel changeContent={changeContent}/>,
         MisClases: <MisClases />,
         Registro: <ShowClass />
     }
