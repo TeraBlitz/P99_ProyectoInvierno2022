@@ -40,7 +40,7 @@ function App() {
     }
     const PagesToRender = {
         RegistroClasesAlumnos: <RegistroClasesAlumno />,
-        
+
         MisClasesProfesor: <MisClasesProfesor />,
 
         Profile: <Profile />,
@@ -50,7 +50,7 @@ function App() {
 
         MisClases: <MisClases />,
 
-        Registro: <ShowClass />,
+        Incripción: <ShowClass />,
 
         Periodos: <Periodos/>,
 

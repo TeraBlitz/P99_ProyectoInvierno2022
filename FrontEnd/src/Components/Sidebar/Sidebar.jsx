@@ -24,12 +24,7 @@ function Sidebar(props) {
             content: 'RegistroClasesAlumnos',
             userType: 'student'
         },
-        {
-            key: 3,
-            title: 'Registro clases de Administrador',
-            content: 'Registro',
-            userType: 'administrador'
-        },
+
         {
             key: 4,
             title: 'Mis Clases (Profesor)',
