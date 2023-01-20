@@ -16,7 +16,7 @@ import Alumnos from './Pages/ControlPanel/PagesCP/Alumnos/Alumnos'
 import Profesores from './Pages/ControlPanel/PagesCP/profesores/Profesores'
 import ForgotPassword from './Pages/ForgotPassword/ForgotPassword'
 import SignUp from './Pages/SignUp/SignUp'
-import {createUser} from './api/users'
+import { createUser } from './api/users'
 
 
 
@@ -61,16 +61,13 @@ function App() {
     }
 
 
+    const handleSignIn =  (e) => {
+        e.preventDefault()
+        setIsSignedIn(!isSignedIn)
 
-    const handleSignIn = (e) => {
-        e.preventDefault();
-        // Mandar y validad esta informacion
-        console.log('test');
-        setIsSignedIn(!isSignedIn);
     }
 
     return !isSignedIn ?
-
         <SignIn handleSignIn={handleSignIn} handleUser={handleUser} />
         :
         <userContext.Provider value={user}>
@@ -92,7 +89,6 @@ function App() {
                 </Box>
             </Box>
         </userContext.Provider>
-
 
 }
 export default App
