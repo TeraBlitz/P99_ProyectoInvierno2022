@@ -56,7 +56,7 @@ export default function Profesores() {
     setModalInsertar(!modalInsertar);
   };
 
-  
+
   const abrirCerrarModalEditar = () => {
     setModalEditar(!modalEditar);
   };
@@ -402,12 +402,12 @@ const bodyEliminar = (
     <div>
       <Card
         sx={{
-          width: 350,
+          width: 970,
           position: "absolute",
           textAlign: "left",
-          marginLeft: "20px",
+          marginLeft: "65px",
           marginTop: "120px",
-          border: "2px solid  rgb(165, 165, 180)",
+          bgcolor: "grey.200",
           borderRadius: "8px",
         }}
       >
@@ -416,12 +416,12 @@ const bodyEliminar = (
             gutterBottom
             variant="h5"
             component="div"
-            sx={{ textAlign: "center", fontFamily: "arial" }}
+            sx={{ textAlign: "left", fontFamily: "arial", marginLeft:1}}
           >
             Filtro
           </Typography>
            <TextField
-            style={{ paddingBottom: "15px", fontFamily: "arial" , width:300, marginLeft:7}}
+            style={{ paddingBottom: "10px", fontFamily: "arial" , width:920, marginLeft:7}}
             label="Ingrese un nombre para buscar"
             onChange={(e) => {
               setItems([
@@ -431,7 +431,7 @@ const bodyEliminar = (
                   value: e.target.value,
                 },
               ]);
-            }} 
+            }}
           ></TextField>
         </CardContent>
       </Card>
@@ -440,9 +440,9 @@ const bodyEliminar = (
         sx={{
           width: "1000px",
           padding: "15px",
-          height: "450px",
+          height: "150px",
           position: "absolute",
-          marginLeft: "400px",
+          marginLeft: "50px",
         }}
       >
         <Typography
@@ -460,6 +460,18 @@ const bodyEliminar = (
             {<AddCircleOutlineIcon />} Agregar Profesor
           </Button>
         </Typography>
+
+        </Box>
+
+        <Box
+        sx={{
+          width: "1000px",
+          padding: "15px",
+          height: "450px",
+          position: "absolute",
+          marginLeft: "50px",
+          marginTop: "300px"
+        }}>
 
         <DataGrid
           columns={columns}
@@ -489,10 +501,10 @@ const bodyEliminar = (
         <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
           {bodyInsertar}
         </Modal>
-        
+
         <Modal open={modalEditar} onClose={() => abrirCerrarModalEditar()}>
           {bodyEditar}
-        </Modal> 
+        </Modal>
 
         <Modal open={modalEliminar} onClose={abrirCerrarModalEliminar}>
           {bodyEliminar}
