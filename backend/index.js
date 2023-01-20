@@ -10,6 +10,7 @@ const port = 3000
 //const auth = require('./v1/routes/auth')
 
 // Rutas de los modelos
+const auth = require('./v1/routes/auth')
 const user = require('./v1/routes/users')
 const clase = require('./v1/routes/clases')
 const periodo = require('./v1/routes/periodos')
@@ -38,7 +39,7 @@ app.use(cors());
 app.use(urlencodedParser);
 // Autentificaciones
 
-//app.use('/v1/auth', auth)
+app.use('/v1/auth', auth)
 
 // Rutas Modelos
 app.use('/v1/users', user)
