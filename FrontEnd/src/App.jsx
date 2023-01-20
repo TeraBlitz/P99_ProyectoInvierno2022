@@ -51,7 +51,7 @@ function App() {
 
         MisClases: <MisClases />,
 
-        Incripción: <ShowClass />,
+        inscripcion: <ShowClass />,
 
         Periodos: <Periodos/>,
 

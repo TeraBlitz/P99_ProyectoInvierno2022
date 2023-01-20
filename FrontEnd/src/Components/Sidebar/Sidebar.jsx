@@ -62,7 +62,7 @@ function Sidebar(props) {
                     return (
                         <SidebarButton key={e.key} content={e.content} title={e.title} setOpen={props.setOpen} changeContent={props.changeContent} changeDrawerState={props.changeDrawerState} />
                     )
-                //}
+                }
             })}
         </List >
     )

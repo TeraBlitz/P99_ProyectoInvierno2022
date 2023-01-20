@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid'
 import PanelCard from '../../Components/ControlPanel/PanelCard';
 import PanelInfo from '../../Components/ControlPanel/PanelInfo';
-
 import Periodos from './PagesCP/Periodos.jsx';
 
 
@@ -31,7 +30,7 @@ const cards = [
         'title': 'Incripción',
         'body': 'Acceder a sistema de inscripciones. Crea, actualiza y elimina los cursos.',
         'color': '#366ac3',
-        'link':'Registro'
+        'link':'inscripcion'
     },
     {
         'id': '2',
