@@ -40,9 +40,9 @@ async function createClase(req, res) {
         rango_edades: req.body.rango_edades,
         cupo_maximo: req.body.cupo_maximo,
         cupo_actual: req.body.cupo_actual,
-
         matriculaMaestro: req.body.matriculaMaestro,
         clavePeriodo: req.body.clavePeriodo,
+
 
       },
     ];
