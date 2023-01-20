@@ -40,10 +40,14 @@ function App() {
     }
     const PagesToRender = {
         RegistroClasesAlumnos: <RegistroClasesAlumno />,
+        
         MisClasesProfesor: <MisClasesProfesor />,
+
         Profile: <Profile />,
 
+
         ControlPanel: <ControlPanel changeContent={changeContent}/>,
+
         MisClases: <MisClases />,
 
         Registro: <ShowClass />,

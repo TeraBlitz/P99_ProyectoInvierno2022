@@ -413,7 +413,7 @@ export default function ShowClass() {
         renderCell: (params) => <Actions {...{ params, seleccionarConsola }} />,
       },
     ],[data]);
-
+    const [items, setItems] = useState([]);
   return (
     <div>
       <Card
@@ -513,6 +513,10 @@ export default function ShowClass() {
                 fontFamily: "arial",
               },
             }}
+            disableSelectionOnClick={true}
+          filterModel={{
+            items: items,
+          }}
           />
         </Box>
         <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
