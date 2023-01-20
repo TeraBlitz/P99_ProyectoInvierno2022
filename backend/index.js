@@ -7,7 +7,7 @@ const port = 3000
 
 // Rutas Autentificaciones
 
-const auth = require('./v1/routes/auth')
+//const auth = require('./v1/routes/auth')
 
 // Rutas de los modelos
 const user = require('./v1/routes/users')
@@ -38,7 +38,7 @@ app.use(cors());
 app.use(urlencodedParser);
 // Autentificaciones
 
-app.use('/v1/auth', auth)
+//app.use('/v1/auth', auth)
 
 // Rutas Modelos
 app.use('/v1/users', user)
