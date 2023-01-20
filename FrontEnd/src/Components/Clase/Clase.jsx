@@ -10,7 +10,7 @@ function Clase(props) {
                 <br />
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography>Periodo: {props.periodo}</Typography>
-                    <Typography>Edades: {props.edadMin} a {props.edadMax}</Typography>
+                    <Typography>Edades: {props.rango_edades}</Typography>
                         <Typography sx={{ color: props.cupo / props.cupoMax >= 1 ? "red" : "black" }}>{props.cupo/props.cupoMax >=1?"Lleno" :  (props.cupoMax - props.cupo).toString() +" puestos"}</Typography>
                 </Box>
             </Box>
