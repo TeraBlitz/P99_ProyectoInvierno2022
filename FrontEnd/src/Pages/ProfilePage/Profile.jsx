@@ -87,7 +87,6 @@ const Profile = () =>{
             .then(result => {
                 setStudents(result)
             })
-
         }
         getUserStudents();
     }, []);
@@ -98,7 +97,6 @@ const Profile = () =>{
     };
 
     const deleteCurrentStudent = () => {
-        console.log(currentStudent);
         handleCloseDialog();
         deleteStudent(new URLSearchParams({'_id': currentStudent._id})).then((data) => {
             console.log(data)
