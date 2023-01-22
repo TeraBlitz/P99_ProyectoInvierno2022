@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Clase from '../../Components/Clase/Clase'
 import CircularProgress from '@mui/material/CircularProgress'
 import { Alert, Button, Link } from '@mui/material'
@@ -12,17 +12,14 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { getStudents } from '../../api/students'
 import { getClasses } from '../../api/classes'
-
-const userValues = {
-    '_id': '63c85788d7f5ef2ec08b41ae',
-    'correo': '',
-    'rol': 'student'
-}
+import { userContext } from './../../App.jsx'
 
 function RegistroClasesAlumnos({changeContent}) {
     const [items, setItems] = useState([]);
     const [students, setStudents] = useState(null)
     const [currentStudent, setCurrentStudent] = useState(null)
+
+    const userValues = useContext(userContext)
 
     const columns = [
         { field: 'clave', headerName: 'Clave', width: 110 },
