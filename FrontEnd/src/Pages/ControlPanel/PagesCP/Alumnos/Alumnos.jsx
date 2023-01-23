@@ -10,6 +10,8 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import axios from "axios";
 
+
+
 export default function Alumnos() {
   //Encargado de guardar la data
   const [data, setData] = useState([]);
@@ -26,6 +28,7 @@ export default function Alumnos() {
   }, []);
 
   // ------------Editar---------------
+  const [modalMas, setModalMas] = useState(false);
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
@@ -61,6 +64,10 @@ export default function Alumnos() {
   };
 
   // Abrir y cerra modales
+  const abrirCerrarModalMas = () => {
+    setModalMas(!modalMas);
+  };
+
   const abrirCerrarModalEditar = () => {
     setModalEditar(!modalEditar);
   };
@@ -73,7 +80,11 @@ export default function Alumnos() {
     setConsolaSeleccionada(consola);
     if (caso === "Editar") {
       abrirCerrarModalEditar();
-    } else {
+    }
+    if(caso ==="MasInfo"){
+      abrirCerrarModalMas();
+    }
+    else {
       abrirCerrarModalEliminar();
     }
   };
@@ -135,6 +146,84 @@ export default function Alumnos() {
     }
   };
   //-------------------------------Datos de ventanas modales---------------
+
+  //-----------------------------Modal Mas informacion----------------------
+
+  const bodyMas=(
+    <div style={{
+        position: "absolute",
+        width: 800,
+        height: 620,
+        backgroundColor: "#fefefd",
+        top: "48%",
+        left: "50%",
+        transform: "translate(-48%, -50%)",
+        border: "4px solid  rgb(165, 165, 180)",
+        margin: "auto",
+        borderRadius: "10px",
+        padding: "20px",
+    }}>
+      <h1
+        style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" ,width:750}}
+        align="center"
+      >
+        Informacion completa de Alumno
+      </h1>
+      <Typography style={{ align: "justify", fontFamily: "arial", fontSize:20, marginBottom:5}}>
+        Nombre: {consolaSeleccionada.nombre}
+      </Typography>
+      <Typography style={{ align: "justify", fontFamily: "arial", fontSize:20, marginBottom:5 }}>
+        Apellido paterno: {consolaSeleccionada.apellido_paterno}
+      </Typography>
+      <Typography style={{ align: "justify", fontFamily: "arial", fontSize:20, marginBottom:5 }}>
+        Apellido materno: {consolaSeleccionada.apellido_materno}
+      </Typography>
+      <Typography style={{ align: "justify", fontFamily: "arial", fontSize:20, marginBottom:5 }}>
+        Fecha de Nacimiento: {consolaSeleccionada.fecha_de_nacimiento}
+      </Typography>
+      <Typography style={{ align: "justify", fontFamily: "arial", fontSize:20, marginBottom:5 }}>
+        Telefono Estudiante: {consolaSeleccionada.num_telefono}
+      </Typography>
+      <Typography style={{ align: "justify", fontFamily: "arial", fontSize:20, marginBottom:5 }}>
+        Nombre del Tutor: {consolaSeleccionada.tutor_nombre}
+      </Typography>
+      <Typography style={{ align: "justify", fontFamily: "arial", fontSize:20, marginBottom:5 }}>
+        Apellido paterno del Tutor: {consolaSeleccionada.tutor_apellido_paterno}
+      </Typography>
+      <Typography style={{ align: "justify", fontFamily: "arial", fontSize:20, marginBottom:5 }}>
+        Apellido materno del Tutor: {consolaSeleccionada.tutor_apellido_materno}
+      </Typography>
+      <Typography style={{ align: "justify", fontFamily: "arial", fontSize:20, marginBottom:5 }}>
+        Correo del Tutor: {consolaSeleccionada.tutor_correo}
+      </Typography>
+      <Typography style={{ align: "justify", fontFamily: "arial", fontSize:20, marginBottom:5 }}>
+        Telefono del Tutor: {consolaSeleccionada.tutor_num_telefono}
+      </Typography>
+      <Typography style={{ align: "justify", fontFamily: "arial", fontSize:20, marginBottom:5 }}>
+        Estado: {consolaSeleccionada.estado}
+      </Typography>
+      <Typography style={{ align: "justify", fontFamily: "arial", fontSize:20, marginBottom:5 }}>
+        Ciudad: {consolaSeleccionada.ciudad}
+      </Typography>
+      <Typography style={{ align: "justify", fontFamily: "arial", fontSize:20, marginBottom:5 }}>
+        Colonia: {consolaSeleccionada.colonia}
+      </Typography>
+      <Typography style={{ align: "justify", fontFamily: "arial", fontSize:20, marginBottom:5 }}>
+        Codigo Postal: {consolaSeleccionada.codigo_postal}
+      </Typography>
+      <Typography style={{ align: "justify", fontFamily: "arial", fontSize:20, marginBottom:5 }}>
+        Escolaridad: {consolaSeleccionada.escolaridad}
+      </Typography>
+      <Typography style={{ align: "justify", fontFamily: "arial", fontSize:20, marginBottom:5 }}>
+        Ultima Escuela: {consolaSeleccionada.ultima_escuela}
+      </Typography>
+
+
+
+
+
+    </div>
+  )
 
   // -----------------------------Modal para editar---------------------------
   const bodyEditar = (
@@ -198,7 +287,7 @@ export default function Alumnos() {
         value={consolaSeleccionada && consolaSeleccionada.ciudad}
       />
       <br />
-      
+
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
         label="Escolaridad"
@@ -272,36 +361,36 @@ export default function Alumnos() {
     () => [
       { field: "_id", headerName: "Id", width: 54, hide: true },
       { field: "idUsuario", headerName: "idUsuario", width: 54, hide: true },
-      { field: "curp", headerName: "CURP", width: 200 },
-      { field: "nombre", headerName: "Nombre", width: 80 },
-      { field: "apellido_paterno", headerName: "Apellido Paterno", width: 120 },
-      { field: "apellido_materno", headerName: "Apellido Materno", width: 120 },
-      { field: "fecha_de_nacimiento", headerName: "Nacimiento", width: 100 },
-      { field: "tutor_nombre", headerName: "Tutor nombre", width: 124 },
+      { field: "curp", headerName: "CURP", width: 200 ,hide: true},
+      { field: "nombre", headerName: "Nombre", width: 170 },
+      { field: "apellido_paterno", headerName: "Apellido Paterno", width: 170 },
+      { field: "apellido_materno", headerName: "Apellido Materno", width: 170 },
+      { field: "fecha_de_nacimiento", headerName: "Nacimiento", width: 135 },
+      { field: "tutor_nombre", headerName: "Tutor nombre", width: 124 ,hide: true},
       {
         field: "tutor_apellido_paterno",
         headerName: "Tutor apellido paterno",
-        width: 154,
+        width: 154 ,hide: true
       },
       {
         field: "tutor_apellido_materno",
         headerName: "Tutor apellido materno",
-        width: 160,
+        width: 160,hide: true
       },
-      { field: "tutor_correo", headerName: "Tutor correo", width: 154 },
-      { field: "tutor_num_telefono", headerName: "Tutor telefono", width: 104 },
-      { field: "num_telefono", headerName: "Telefono", width: 100 },
-      { field: "estado", headerName: "Estado", width: 84 },
-      { field: "ciudad", headerName: "Ciudad", width: 84 },
-      { field: "colonia", headerName: "Colonia", width: 84 },
-      { field: "codigo_postal", headerName: "codigo postal", width: 84 },
-      { field: "escolaridad", headerName: "Escolaridad", width: 84 },
-      { field: "ultima_escuela", headerName: "Ultima escuela", width: 104 },
+      { field: "tutor_correo", headerName: "Tutor correo", width: 154, hide: true},
+      { field: "tutor_num_telefono", headerName: "Tutor telefono", width: 104 ,hide: true},
+      { field: "num_telefono", headerName: "Telefono", width: 120 },
+      { field: "estado", headerName: "Estado", width: 84 ,hide: true},
+      { field: "ciudad", headerName: "Ciudad", width: 84 ,hide: true},
+      { field: "colonia", headerName: "Colonia", width: 84 ,hide: true},
+      { field: "codigo_postal", headerName: "codigo postal", width: 84 ,hide: true},
+      { field: "escolaridad", headerName: "Escolaridad", width: 84 ,hide: true},
+      { field: "ultima_escuela", headerName: "Ultima escuela", width: 104 ,hide: true},
       {
         field: "actions",
         headerName: "Acciones",
         type: "actions",
-        width: 95,
+        width: 200,
         renderCell: (params) => <Actions {...{ params, seleccionarConsola }} />,
       },
     ],
@@ -312,14 +401,32 @@ export default function Alumnos() {
   const [items, setItems] = useState([]);
   return (
     <div>
+      <Box
+        sx={{
+          width: "1000px",
+          padding: "15px",
+          height: "150px",
+          position: "absolute",
+          marginLeft: "50px",
+        }}
+      >
+        <Typography
+          variant="h3"
+          component="h3"
+          sx={{ textAlign: "left", mt: 3, mb: 3, fontFamily: "arial" }}
+        >
+          Alumnos Inscritos
+        </Typography>
+
+        </Box>
       <Card
         sx={{
-          width: 350,
+          width: 970,
           position: "absolute",
           textAlign: "left",
-          marginLeft: "20px",
+          marginLeft: "65px",
           marginTop: "120px",
-          border: "2px solid  rgb(165, 165, 180)",
+          bgcolor: 'grey.200',
           borderRadius: "8px",
         }}
       >
@@ -328,15 +435,15 @@ export default function Alumnos() {
             gutterBottom
             variant="h5"
             component="div"
-            sx={{ textAlign: "center", fontFamily: "arial" }}
+            sx={{ textAlign: "left", fontFamily: "arial", marginLeft:1}}
           >
             Filtro
           </Typography>
           <TextField
             style={{
-              paddingBottom: "15px",
+              paddingBottom: "10px",
               fontFamily: "arial",
-              width: 300,
+              width: 920,
               marginLeft: 7,
             }}
             label="Ingrese un nombre para buscar"
@@ -355,21 +462,16 @@ export default function Alumnos() {
 
       <Box
         sx={{
-          
+          width:"1000px",
           padding: "15px",
           height: "450px",
           position: "absolute",
-          marginLeft: "400px",
-          width: 800
+          marginLeft: "50px",
+          marginTop:"300px"
+
         }}
       >
-        <Typography
-          variant="h3"
-          component="h3"
-          sx={{ textAlign: "left", mt: 3, mb: 3, fontFamily: "arial" }}
-        >
-          Alumnos Inscritos
-        </Typography>
+
         <DataGrid
           columns={columns}
           rows={data}
@@ -394,6 +496,9 @@ export default function Alumnos() {
           }}
         />
         {/* Creacion de modales */}
+        <Modal open={modalMas} onClose={() => abrirCerrarModalMas()}>
+          {bodyMas}
+        </Modal>
         <Modal open={modalEditar} onClose={() => abrirCerrarModalEditar()}>
           {bodyEditar}
         </Modal>
