@@ -3,6 +3,8 @@ import './MisClases.css'
 import data from './DataClases'
 import TarjetaMisC from './TarjetaMisC'
 
+import { Button } from "@mui/material";
+
 
 export default function MisClasesEstudiante(){
 
@@ -21,7 +23,8 @@ export default function MisClasesEstudiante(){
 
 
             <div className="caja-tarjetas">
-            <h1>Mis Clases</h1>
+            <h1 className="titulo">Mis Clases</h1>
+            <Button variant="contained" className="btnContacto" href="https://es-la.facebook.com/">Contactanos</Button>
             <div className="card-container">
             {cardData}
             </div>

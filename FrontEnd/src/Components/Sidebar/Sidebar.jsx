@@ -24,12 +24,7 @@ function Sidebar(props) {
             content: 'RegistroClasesAlumnos',
             rol: 'estudiante'
         },
-        {
-            key: 3,
-            title: 'Registro clases de Administrador',
-            content: 'Registro',
-            rol: 'admin'
-        },
+
         {
             key: 4,
             title: 'Mis Clases (Profesor)',
@@ -55,6 +50,7 @@ function Sidebar(props) {
             content: '',
             rol: 'any'
         },
+
     ]
 
     const listItems = (
@@ -66,7 +62,7 @@ function Sidebar(props) {
                     return (
                         <SidebarButton key={e.key} content={e.content} title={e.title} setOpen={props.setOpen} changeContent={props.changeContent} changeDrawerState={props.changeDrawerState} />
                     )
-                //}
+                }
             })}
         </List >
     )
@@ -77,7 +73,7 @@ function Sidebar(props) {
             <Drawer variant="permanent" sx={{ width: '240px', height: '100vh', display: { xs: 'none', sm: 'block' } }}>
                 {listItems}
             </Drawer>
-            <Drawer variant="temporary" open={props.open} onClose={() => props.changeDrawerState()} sx={{ width: '240px', height: '100vh', display: { xs: 'block', sm: 'none' } }}>
+            <Drawer variant="temporary" open={props.open} onClose={() => props.changeDrawerState()} sx={{ width: '240px', height: '100vh', display: { xs: 'block', sm: 'none' } }} >
                 {listItems}
             </Drawer>
         </Box>
