@@ -17,8 +17,8 @@ import Profesores from './Pages/ControlPanel/PagesCP/profesores/Profesores'
 import ForgotPassword from './Pages/ForgotPassword/ForgotPassword'
 import SignUp from './Pages/SignUp/SignUp'
 import { createUser } from './api/users'
-import { Password } from '@mui/icons-material'
 
+import { Password } from '@mui/icons-material'
 
 
 
@@ -62,7 +62,6 @@ function App() {
     }
 
 
-
     const handleSignIn = (e) => {
         e.preventDefault();
         // Mandar y validad esta informacion
@@ -91,13 +90,10 @@ function App() {
             })
 
             .catch(error => console.log('error', error));
-
     }
 
     return !isSignedIn ?
         <SignIn handleSignIn={handleSignIn} handleUser={handleUser}  loginError={loginError} />
-
-
         :
         <userContext.Provider value={user}>
             <Box id="main" sx={{ display: 'flex' }}>
