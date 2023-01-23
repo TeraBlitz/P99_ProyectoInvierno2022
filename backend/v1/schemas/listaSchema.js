@@ -7,7 +7,10 @@ const listaSchema = {
         status: {type: "string"}
     },
     required: [
-        "idAlumno","idClase","lugar_de_espera","status"
+        "idAlumno",
+        "idClase",
+        "lugar_de_espera",
+        "status"
     ],
     additionalProperties: true,
     errorMessage: {
