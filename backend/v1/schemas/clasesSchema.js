@@ -23,6 +23,7 @@ const clasesSchema = {
         "cupo_actual",
         "matriculaMaestro",
         "clavePeriodo"
+
     ],
     additionalProperties: true,
     errorMessage: {

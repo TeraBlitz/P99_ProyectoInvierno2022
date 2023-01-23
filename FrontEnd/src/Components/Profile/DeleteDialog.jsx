@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export default function DeleteDialog({deleteClass, handleClose, open, currentRowId}) {
+export default function DeleteDialog({deleteStudent, handleClose, open, student}) {
   return (
     <div>
       <Dialog
@@ -16,16 +16,16 @@ export default function DeleteDialog({deleteClass, handleClose, open, currentRow
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"¿Borrar esta clase?"}
+          ¿Eliminar este estudiante?
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            La clase y todo lo relacionado a ella se va a eliminar por completo. No vas a poder acceder a estos datos de nuevo.
+            El estudiante <strong>{student.nombre} {student.apellido_paterno} {student.apellido_materno} </strong>y su información va a ser eliminada por completo. No va a poder acceder a estos datos de nuevo.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancelar</Button>
-          <Button onClick={deleteClass} autoFocus>
+          <Button onClick={deleteStudent} autoFocus>
             Confirmar
           </Button>
         </DialogActions>
