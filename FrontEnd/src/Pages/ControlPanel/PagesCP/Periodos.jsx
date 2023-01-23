@@ -65,10 +65,10 @@ export default function Periodos() {
         body: new URLSearchParams({
           clave: clave,
           status: status,
-          fecha_inicio: fecha_inicio,
-          fecha_fin: fecha_fin,
-          fecha_inicio_insc: fecha_inicio_insc,
-          fecha_fin_insc: fecha_fin_insc,
+          fecha_inicio: fecha_inicio + ":00",
+          fecha_fin: fecha_fin + ":00",
+          fecha_inicio_insc: fecha_inicio_insc + ":00",
+          fecha_fin_insc: fecha_fin_insc + ":00",
           cursos_max_por_alumno: cursos_max_por_alumno,
           idiomas_max_por_alumno: idiomas_max_por_alumno,
         }),
@@ -77,12 +77,13 @@ export default function Periodos() {
       getPeriodos();
       setClave("");
       setStatus("");
-      setFecha_inicioe("");
+      setFecha_inicio("");
       setFecha_fin("");
       setFecha_inicio_insc("");
       setFecha_fin_insc("");
       setCursos_max_por_alumno("");
       setidiomas_max_por_alumno("");
+      console.log(fecha_inicio);
     } catch (error) {
       console.log(error);
     }
@@ -140,11 +141,25 @@ export default function Periodos() {
   };
   const handleChange = (e) => {
     const { name, value } = e.target;
+    
     setConsolaSeleccionada((prevState) => ({
       ...prevState,
       [name]: value,
     }));
-    console.log(consolaSeleccionada);
+
+    if(name === "fecha_inicio"){
+      consolaSeleccionada.fecha_inicio = consolaSeleccionada.fecha_inicio+':00'
+    } 
+    if(name === "fecha_fin"){
+      consolaSeleccionada.fecha_fin = consolaSeleccionada.fecha_fin+':00'
+    } 
+    if(name === "fecha_inicio_insc"){
+      consolaSeleccionada.fecha_inicio_insc = consolaSeleccionada.fecha_inicio_insc+':00'
+    } 
+    if(name === "fecha_fin_insc"){
+      consolaSeleccionada.fecha_fin_insc = consolaSeleccionada.fecha_fin_insc+':00'
+    } 
+    //console.log(consolaSeleccionada);
   };
   // Editar
   const postEditar = async (e) => {
@@ -159,7 +174,7 @@ export default function Periodos() {
           _id: consolaSeleccionada._id,
           clave: consolaSeleccionada.clave,
           status: consolaSeleccionada.status,
-          fecha_inicio: consolaSeleccionada.fecha_inicio,
+          fecha_inicio: consolaSeleccionada.fecha_inicio ,
           fecha_fin: consolaSeleccionada.fecha_fin,
           fecha_inicio_insc: consolaSeleccionada.fecha_inicio_insc,
           fecha_fin_insc: consolaSeleccionada.fecha_fin_insc,
@@ -212,6 +227,11 @@ export default function Periodos() {
               style={{ paddingBottom: "15px", fontFamily: "arial" }}
               label="Fecha de inicio"
               name="fecha_inicio"
+              id="datetime-local"
+              type="datetime-local"
+              InputLabelProps={{
+                shrink: true,
+              }}
               onChange={(e) => setFecha_inicio(e.target.value)}
               autoFocus
             />
@@ -219,20 +239,35 @@ export default function Periodos() {
               style={{ paddingBottom: "15px", fontFamily: "arial" }}
               label="fecha de Fin"
               name="fecha_fin"
+              id="datetime-local"
+              type="datetime-local"
+              InputLabelProps={{
+                shrink: true,
+              }}
               onChange={(e) => setFecha_fin(e.target.value)}
               autoFocus
             />
             <TextField
               style={{ paddingBottom: "15px", fontFamily: "arial" }}
               label="Fecha de inicio de incripciones"
-              name="fecha_inicio_insces"
+              name="fecha_inicio_insc"
+              id="datetime-local"
+              type="datetime-local"
+              InputLabelProps={{
+                shrink: true,
+              }}
               onChange={(e) => setFecha_inicio_insc(e.target.value)}
               autoFocus
             />
             <TextField
               style={{ paddingBottom: "15px", fontFamily: "arial" }}
               label="Fecha de fin de inscripciones"
-              name="fecha_fin_insces"
+              name="fecha_fin_insc"
+              id="datetime-local"
+              type="datetime-local"
+              InputLabelProps={{
+                shrink: true,
+              }}
               onChange={(e) => setFecha_fin_insc(e.target.value)}
               autoFocus
             />
@@ -268,13 +303,6 @@ export default function Periodos() {
         {data.map((item) => (
           <Card key={item._id} sx={{ minWidth: 275, bgcolor: "grey.200" }}>
             <CardContent>
-              <Typography
-                sx={{ fontSize: 14 }}
-                color="text.secondary"
-                gutterBottom
-              >
-                {item._id}
-              </Typography>
               <Typography variant="h5" component="div">
                 {item.clave}
               </Typography>
@@ -291,7 +319,9 @@ export default function Periodos() {
                 {item.fecha_fin}
               </Typography>
 
-              <h5 className="leyendaFaltas">Fecha de inicio de _insces: </h5>
+              <h5 className="leyendaFaltas">
+                Fecha de inicio de _inscripciones:{" "}
+              </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
                 {item.fecha_inicio_insc}
               </Typography>
@@ -396,6 +426,11 @@ export default function Periodos() {
                       defaultValue={
                         consolaSeleccionada && consolaSeleccionada.fecha_inicio
                       }
+                      id="datetime-local"
+                      type="datetime-local"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                       name="fecha_inicio"
                       onChange={handleChange}
                     />
@@ -405,6 +440,11 @@ export default function Periodos() {
                       defaultValue={
                         consolaSeleccionada && consolaSeleccionada.fecha_fin
                       }
+                      id="datetime-local"
+                      type="datetime-local"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                       name="fecha_fin"
                       onChange={handleChange}
                     />
@@ -415,6 +455,11 @@ export default function Periodos() {
                         consolaSeleccionada &&
                         consolaSeleccionada.fecha_inicio_insc
                       }
+                      id="datetime-local"
+                      type="datetime-local"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                       name="fecha_inicio_insc"
                       onChange={handleChange}
                     />
@@ -425,6 +470,11 @@ export default function Periodos() {
                         consolaSeleccionada &&
                         consolaSeleccionada.fecha_fin_insc
                       }
+                      id="datetime-local"
+                      type="datetime-local"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                       name="fecha_fin_insc"
                       onChange={handleChange}
                     />
