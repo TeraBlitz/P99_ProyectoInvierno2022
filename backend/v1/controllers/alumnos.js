@@ -32,24 +32,25 @@ async function createAlumno(req, res) {
     // Crear un Doc
     const doc = [
       {
-        idUsuario: req.body.idUsuario,
         curp: req.body.curp,
+        clave_unica_identificacion: req.body.clave_unica_identificacion,
         nombre: req.body.nombre,
         apellido_paterno: req.body.apellido_paterno,
         apellido_materno: req.body.apellido_materno,
         fecha_de_nacimiento: req.body.fecha_de_nacimiento,
-        ...(req.body.tutor_nombre && { tutor_nombre: req.body.tutor_nombre }),
-        ...(req.body.tutor_apellido_paterno && { tutor_apellido_paterno: req.body.tutor_apellido_paterno }),
-        ...(req.body.tutor_apellido_materno && { tutor_apellido_materno: req.body.tutor_apellido_materno }),
-        ...(req.body.tutor_correo && { tutor_correo: req.body.tutor_correo }),
-        ...(req.body.tutor_num_telefono && { tutor_num_telefono: req.body.tutor_num_telefono }),
+        tutor_nombre: req.body.tutor_nombre,
+        tutor_apellido_paterno: req.body.tutor_apellido_paterno,
+        tutor_apellido_materno: req.body.tutor_apellido_materno,
+        tutor_correo: req.body.tutor_correo,
+        tutor_num_telefono: req.body.tutor_num_telefono,
         num_telefono: req.body.num_telefono,
+        pais: req.body.pais,
         estado: req.body.estado,
         ciudad: req.body.ciudad,
         colonia: req.body.colonia,
         codigo_postal: req.body.codigo_postal,
         escolaridad: req.body.escolaridad,
-        ultima_escuela: req.body.ultima_escuela,
+        ultima_escuela: req.body.ultima_escuela
       },
     ];
 
@@ -80,24 +81,25 @@ async function updateAlumno(req, res) {
     };
     const doc = {
       $set: {
-        idUsuario: req.body.idUsuario,
         curp: req.body.curp,
+        clave_unica_identificacion: req.body.clave_unica_identificacion,
         nombre: req.body.nombre,
         apellido_paterno: req.body.apellido_paterno,
         apellido_materno: req.body.apellido_materno,
         fecha_de_nacimiento: req.body.fecha_de_nacimiento,
-        ...(req.body.tutor_nombre && { tutor_nombre: req.body.tutor_nombre }),
-        ...(req.body.tutor_apellido_paterno && { tutor_apellido_paterno: req.body.tutor_apellido_paterno }),
-        ...(req.body.tutor_apellido_materno && { tutor_apellido_materno: req.body.tutor_apellido_materno }),
-        ...(req.body.tutor_correo && { tutor_correo: req.body.tutor_correo }),
-        ...(req.body.tutor_num_telefono && { tutor_num_telefono: req.body.tutor_num_telefono }),
+        tutor_nombre: req.body.tutor_nombre,
+        tutor_apellido_paterno: req.body.tutor_apellido_paterno,
+        tutor_apellido_materno: req.body.tutor_apellido_materno,
+        tutor_correo: req.body.tutor_correo,
+        tutor_num_telefono: req.body.tutor_num_telefono,
         num_telefono: req.body.num_telefono,
+        pais: req.body.pais,
         estado: req.body.estado,
         ciudad: req.body.ciudad,
         colonia: req.body.colonia,
         codigo_postal: req.body.codigo_postal,
         escolaridad: req.body.escolaridad,
-        ultima_escuela: req.body.ultima_escuela,
+        ultima_escuela: req.body.ultima_escuela
       },
     };
 
