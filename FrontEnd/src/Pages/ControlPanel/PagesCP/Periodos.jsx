@@ -43,8 +43,15 @@ export default function Periodos() {
   const [status, setStatus] = useState("");
   const [fecha_inicio, setFecha_inicio] = useState("");
   const [fecha_fin, setFecha_fin] = useState("");
-  const [fecha_inicio_insc, setFecha_inicio_insc] = useState("");
-  const [fecha_fin_insc, setFecha_fin_insc] = useState("");
+  const [fecha_inicio_insc_talleres, setFecha_inicio_insc_talleres] =
+    useState("");
+  const [fecha_fin_insc_talleres, setFecha_fin_insc_talleres] = useState("");
+  const [fecha_inicio_insc_idiomas, setFecha_inicio_insc_idiomas] =
+    useState("");
+  const [fecha_fin_insc_idiomas, setFecha_fin_insc_idiomas] = useState("");
+  const [fecha_inicio_insc_asesorias, setFecha_inicio_insc_asesorias] =
+    useState("");
+  const [fecha_fin_insc_asesorias, setFecha_fin_insc_asesorias] = useState("");
   const [cursos_max_por_alumno, setCursos_max_por_alumno] = useState("");
   const [idiomas_max_por_alumno, setidiomas_max_por_alumno] = useState("");
 
@@ -67,8 +74,12 @@ export default function Periodos() {
           status: status,
           fecha_inicio: fecha_inicio + ":00",
           fecha_fin: fecha_fin + ":00",
-          fecha_inicio_insc: fecha_inicio_insc + ":00",
-          fecha_fin_insc: fecha_fin_insc + ":00",
+          fecha_inicio_insc_talleres: fecha_inicio_insc_talleres + ":00",
+          fecha_fin_insc_talleres: fecha_fin_insc_talleres + ":00",
+          fecha_inicio_insc_idiomas: fecha_inicio_insc_idiomas + ":00",
+          fecha_fin_insc_idiomas: fecha_fin_insc_idiomas + ":00",
+          fecha_inicio_insc_asesorias: fecha_inicio_insc_asesorias + ":00",
+          fecha_fin_insc_asesorias: fecha_fin_insc_asesorias + ":00",
           cursos_max_por_alumno: cursos_max_por_alumno,
           idiomas_max_por_alumno: idiomas_max_por_alumno,
         }),
@@ -79,11 +90,14 @@ export default function Periodos() {
       setStatus("");
       setFecha_inicio("");
       setFecha_fin("");
-      setFecha_inicio_insc("");
-      setFecha_fin_insc("");
+      setFecha_inicio_insc_talleres("");
+      setFecha_fin_insc_talleres("");
+      setFecha_inicio_insc_idiomas("");
+      setFecha_fin_insc_idiomas("");
+      setFecha_inicio_insc_asesorias("");
+      setFecha_fin_insc_asesorias("");
       setCursos_max_por_alumno("");
       setidiomas_max_por_alumno("");
-      console.log(fecha_inicio);
     } catch (error) {
       console.log(error);
     }
@@ -97,8 +111,12 @@ export default function Periodos() {
     status: "",
     fecha_inicio: "",
     fecha_fin: "",
-    fecha_inicio_insc: "",
-    fecha_fin_insc: "",
+    fecha_inicio_insc_talleres: "",
+    fecha_fin_insc_talleres: "",
+    fecha_inicio_insc_idiomas: "",
+    fecha_fin_insc_idiomas: "",
+    fecha_inicio_insc_asesorias: "",
+    fecha_fin_insc_asesorias: "",
     cursos_max_por_alumno: "",
     idiomas_max_por_alumno: "",
   });
@@ -139,27 +157,83 @@ export default function Periodos() {
       console.log(error);
     }
   };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     
     setConsolaSeleccionada((prevState) => ({
       ...prevState,
-      [name]: value,
-    }));
+      [name] : value, 
+      
+    })
+    );
 
-    if(name === "fecha_inicio"){
-      consolaSeleccionada.fecha_inicio = consolaSeleccionada.fecha_inicio+':00'
-    } 
-    if(name === "fecha_fin"){
-      consolaSeleccionada.fecha_fin = consolaSeleccionada.fecha_fin+':00'
-    } 
-    if(name === "fecha_inicio_insc"){
-      consolaSeleccionada.fecha_inicio_insc = consolaSeleccionada.fecha_inicio_insc+':00'
-    } 
-    if(name === "fecha_fin_insc"){
-      consolaSeleccionada.fecha_fin_insc = consolaSeleccionada.fecha_fin_insc+':00'
-    } 
-    //console.log(consolaSeleccionada);
+    if (name === "fecha_inicio") {
+       const valor = value + ":00";
+      setConsolaSeleccionada((prevState) => ({
+        ...prevState,
+        fecha_inicio: valor, 
+        
+      }));
+    }
+    if (name === "fecha_fin") {
+      const valor = value + ":00";
+      setConsolaSeleccionada((prevState) => ({
+        ...prevState,
+        fecha_fin: valor, 
+        
+      }));
+    }
+    if (name === "fecha_inicio_insc_talleres") {
+      const valor = value + ":00";
+      setConsolaSeleccionada((prevState) => ({
+        ...prevState,
+        fecha_inicio_insc_talleres: valor, 
+        
+      }));
+    }
+    if (name === "fecha_fin_insc_talleres") {
+      const valor = value + ":00";
+      setConsolaSeleccionada((prevState) => ({
+        ...prevState,
+        fecha_fin_insc_talleres: valor, 
+        
+      }));
+    }
+    if (name === "fecha_inicio_insc_idiomas") {
+      const valor = value + ":00";
+      setConsolaSeleccionada((prevState) => ({
+        ...prevState,
+        fecha_inicio_insc_idiomas: valor, 
+        
+      }));
+    }
+    if (name === "fecha_fin_insc_idiomas") {
+      const valor = value + ":00";
+      setConsolaSeleccionada((prevState) => ({
+        ...prevState,
+        fecha_fin_insc_idiomas: valor, 
+        
+      }));
+    }
+    if (name === "fecha_inicio_insc_asesorias") {
+      const valor = value + ":00";
+      setConsolaSeleccionada((prevState) => ({
+        ...prevState,
+        fecha_inicio_insc_asesorias: valor, 
+        
+      }));
+    }
+    if (name === "fecha_fin_insc_asesorias") {
+      const valor = value + ":00";
+      setConsolaSeleccionada((prevState) => ({
+        ...prevState,
+        fecha_fin_insc_asesorias: valor, 
+        
+      }));
+    }
+    console.log(consolaSeleccionada.fecha_inicio )
+    
   };
   // Editar
   const postEditar = async (e) => {
@@ -174,10 +248,14 @@ export default function Periodos() {
           _id: consolaSeleccionada._id,
           clave: consolaSeleccionada.clave,
           status: consolaSeleccionada.status,
-          fecha_inicio: consolaSeleccionada.fecha_inicio ,
+          fecha_inicio: consolaSeleccionada.fecha_inicio,
           fecha_fin: consolaSeleccionada.fecha_fin,
-          fecha_inicio_insc: consolaSeleccionada.fecha_inicio_insc,
-          fecha_fin_insc: consolaSeleccionada.fecha_fin_insc,
+          fecha_inicio_insc_talleres: consolaSeleccionada.fecha_inicio_insc_talleres,
+          fecha_fin_insc_talleres: consolaSeleccionada.fecha_fin_insc_talleres,
+          fecha_inicio_insc_idiomas: consolaSeleccionada.fecha_inicio_insc_idiomas,
+          fecha_fin_insc_idiomas: consolaSeleccionada.fecha_fin_insc_idiomas,
+          fecha_inicio_insc_asesorias: consolaSeleccionada.fecha_inicio_insc_asesorias,
+          fecha_fin_insc_asesorias: consolaSeleccionada.fecha_fin_insc_asesorias,
           cursos_max_por_alumno: consolaSeleccionada.cursos_max_por_alumno,
           idiomas_max_por_alumno: consolaSeleccionada.idiomas_max_por_alumno,
         }),
@@ -221,7 +299,6 @@ export default function Periodos() {
               label="Status"
               name="status"
               onChange={(e) => setStatus(e.target.value)}
-              autoFocus
             />
             <TextField
               style={{ paddingBottom: "15px", fontFamily: "arial" }}
@@ -233,7 +310,6 @@ export default function Periodos() {
                 shrink: true,
               }}
               onChange={(e) => setFecha_inicio(e.target.value)}
-              autoFocus
             />
             <TextField
               style={{ paddingBottom: "15px", fontFamily: "arial" }}
@@ -245,32 +321,76 @@ export default function Periodos() {
                 shrink: true,
               }}
               onChange={(e) => setFecha_fin(e.target.value)}
-              autoFocus
             />
             <TextField
               style={{ paddingBottom: "15px", fontFamily: "arial" }}
-              label="Fecha de inicio de incripciones"
-              name="fecha_inicio_insc"
+              label="Fecha de inicio de incripciones de talleres"
+              name="fecha_inicio_insc_talleres"
               id="datetime-local"
               type="datetime-local"
               InputLabelProps={{
                 shrink: true,
               }}
-              onChange={(e) => setFecha_inicio_insc(e.target.value)}
-              autoFocus
+              onChange={(e) => setFecha_inicio_insc_talleres(e.target.value)}
             />
             <TextField
               style={{ paddingBottom: "15px", fontFamily: "arial" }}
-              label="Fecha de fin de inscripciones"
-              name="fecha_fin_insc"
+              label="Fecha de fin de inscripciones de talleres"
+              name="fecha_fin_insc_talleres"
               id="datetime-local"
               type="datetime-local"
               InputLabelProps={{
                 shrink: true,
               }}
-              onChange={(e) => setFecha_fin_insc(e.target.value)}
-              autoFocus
+              onChange={(e) => setFecha_fin_insc_talleres(e.target.value)}
             />
+
+            <TextField
+              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              label="Fecha de inicio de incripciones de idiomas"
+              name="fecha_inicio_insc_idiomas"
+              id="datetime-local"
+              type="datetime-local"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onChange={(e) => setFecha_inicio_insc_idiomas(e.target.value)}
+            />
+            <TextField
+              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              label="Fecha de fin de inscripciones de idiomas"
+              name="fecha_fin_insc_idiomas"
+              id="datetime-local"
+              type="datetime-local"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onChange={(e) => setFecha_fin_insc_idiomas(e.target.value)}
+            />
+
+            <TextField
+              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              label="Fecha de inicio de incripciones de asesorias"
+              name="fecha_inicio_insc_asesorias"
+              id="datetime-local"
+              type="datetime-local"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onChange={(e) => setFecha_inicio_insc_asesorias(e.target.value)}
+            />
+            <TextField
+              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              label="Fecha de fin de inscripciones de asesorias"
+              name="fecha_fin_insc_asesorias"
+              id="datetime-local"
+              type="datetime-local"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onChange={(e) => setFecha_fin_insc_asesorias(e.target.value)}
+            />
+
             <TextField
               style={{ paddingBottom: "15px", fontFamily: "arial" }}
               label="Cursos Maximos por Alumno"
@@ -320,18 +440,44 @@ export default function Periodos() {
               </Typography>
 
               <h5 className="leyendaFaltas">
-                Fecha de inicio de _inscripciones:{" "}
+                Fecha de inicio de inscripciones de talleres:{" "}
               </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {item.fecha_inicio_insc}
+                {item.fecha_inicio_insc_talleres}
+              </Typography>
+              <h5 className="leyendaFaltas">
+                Fecha de cierre de inscripciones de talleres:{" "}
+              </h5>
+              <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                {item.fecha_fin_insc_talleres}
               </Typography>
 
               <h5 className="leyendaFaltas">
-                Fecha de cierre de inscripciones:{" "}
+                Fecha de inicio de inscripciones de idiomas:{" "}
               </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {item.fecha_fin_insc}
+                {item.fecha_inicio_insc_idiomas}
               </Typography>
+              <h5 className="leyendaFaltas">
+                Fecha de cierre de inscripciones de idiomas:{" "}
+              </h5>
+              <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                {item.fecha_fin_insc_idiomas}
+              </Typography>
+
+              <h5 className="leyendaFaltas">
+                Fecha de inicio de inscripciones de asesorias:{" "}
+              </h5>
+              <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                {item.fecha_inicio_insc_asesorias}
+              </Typography>
+              <h5 className="leyendaFaltas">
+                Fecha de cierre de inscripciones de asesorias:{" "}
+              </h5>
+              <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                {item.fecha_fin_insc_asesorias}
+              </Typography>
+
               <h5 className="leyendaFaltas">Cursos Maximos por Alumno </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
                 {item.cursos_max_por_alumno}
@@ -423,6 +569,8 @@ export default function Periodos() {
                     <TextField
                       style={{ paddingBottom: "15px", fontFamily: "arial" }}
                       label="Fecha de inicio"
+                      name="fecha_inicio"
+                      onChange={handleChange}
                       defaultValue={
                         consolaSeleccionada && consolaSeleccionada.fecha_inicio
                       }
@@ -431,8 +579,7 @@ export default function Periodos() {
                       InputLabelProps={{
                         shrink: true,
                       }}
-                      name="fecha_inicio"
-                      onChange={handleChange}
+                      
                     />
                     <TextField
                       style={{ paddingBottom: "15px", fontFamily: "arial" }}
@@ -450,34 +597,97 @@ export default function Periodos() {
                     />
                     <TextField
                       style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                      label="Fecha de inicio de incripciones"
+                      label="Fecha de inicio de incripciones de talleres"
                       defaultValue={
                         consolaSeleccionada &&
-                        consolaSeleccionada.fecha_inicio_insc
+                        consolaSeleccionada.fecha_inicio_insc_talleres
                       }
                       id="datetime-local"
                       type="datetime-local"
                       InputLabelProps={{
                         shrink: true,
                       }}
-                      name="fecha_inicio_insc"
+                      name="fecha_inicio_insc_talleres"
                       onChange={handleChange}
                     />
                     <TextField
                       style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                      label="Fecha de fin de inscripciones"
+                      label="Fecha de fin de inscripciones de talleres"
                       defaultValue={
                         consolaSeleccionada &&
-                        consolaSeleccionada.fecha_fin_insc
+                        consolaSeleccionada.fecha_fin_insc_talleres
                       }
                       id="datetime-local"
                       type="datetime-local"
                       InputLabelProps={{
                         shrink: true,
                       }}
-                      name="fecha_fin_insc"
+                      name="fecha_fin_insc_talleres"
                       onChange={handleChange}
                     />
+
+                    <TextField
+                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      label="Fecha de inicio de incripciones de idiomas"
+                      defaultValue={
+                        consolaSeleccionada &&
+                        consolaSeleccionada.fecha_inicio_insc_idiomas
+                      }
+                      id="datetime-local"
+                      type="datetime-local"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      name="fecha_inicio_insc_idiomas"
+                      onChange={handleChange}
+                    />
+                    <TextField
+                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      label="Fecha de fin de inscripciones de idiomas"
+                      defaultValue={
+                        consolaSeleccionada &&
+                        consolaSeleccionada.fecha_fin_insc_idiomas
+                      }
+                      id="datetime-local"
+                      type="datetime-local"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      name="fecha_fin_insc_idiomas"
+                      onChange={handleChange}
+                    />
+
+                    <TextField
+                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      label="Fecha de inicio de incripciones de asesorias"
+                      defaultValue={
+                        consolaSeleccionada &&
+                        consolaSeleccionada.fecha_inicio_insc_asesorias
+                      }
+                      id="datetime-local"
+                      type="datetime-local"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      name="fecha_inicio_insc_asesorias"
+                      onChange={handleChange}
+                    />
+                    <TextField
+                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      label="Fecha de fin de inscripciones de asesorias"
+                      defaultValue={
+                        consolaSeleccionada &&
+                        consolaSeleccionada.fecha_fin_insc_asesorias
+                      }
+                      id="datetime-local"
+                      type="datetime-local"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      name="fecha_fin_insc_asesorias"
+                      onChange={handleChange}
+                    />
+
                     <TextField
                       style={{ paddingBottom: "15px", fontFamily: "arial" }}
                       label="Cursos Maximos por Alumno"
