@@ -2,9 +2,9 @@ const profesoroSchema = {
     type: "object",
     properties: {
       nombre: { type: "string" },
-      apellido_paterno: { type: "string" },
-      apellido_materno: { type: "string" },
+      apellidos: { type: "string" },
       matricula: { type: "string" },
+      correo: { type: "string" },
       fecha_de_nacimiento: { type: "string", format: "date" },
       num_telefono: { type: "string", minLength:10, maxLength:10, pattern: "^([0-9])*$" },
       num_cursos_impartidos: { type: "string" },
@@ -12,13 +12,9 @@ const profesoroSchema = {
     },
     required: [
       "nombre",
-      "apellido_paterno",
-      "apellido_materno",
+      "apellidos",
       "matricula",
-      "fecha_de_nacimiento",
-      "num_telefono",
-      "num_cursos_impartidos",
-      "idUser"
+      "correo",
     ],
     additionalProperties: false,
     errorMessage: {
