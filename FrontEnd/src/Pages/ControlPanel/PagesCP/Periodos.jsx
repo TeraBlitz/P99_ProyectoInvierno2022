@@ -192,6 +192,7 @@ export default function Periodos() {
         
       }));
     }
+    
     if (name === "fecha_fin_insc_talleres") {
       const valor = value + ":00";
       setConsolaSeleccionada((prevState) => ({
