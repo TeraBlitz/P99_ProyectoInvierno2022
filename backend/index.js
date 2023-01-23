@@ -4,13 +4,7 @@ const { connection } = require('./v1/connection.js')
 const bodyParser = require('body-parser')
 const app = express()
 const port = 3000
-
-// Rutas Autentificaciones
-
-//const auth = require('./v1/routes/auth')
-
 // Rutas de los modelos
-const auth = require('./v1/routes/auth')
 const user = require('./v1/routes/users')
 const clase = require('./v1/routes/clases')
 const periodo = require('./v1/routes/periodos')
@@ -18,7 +12,8 @@ const asistencia = require('./v1/routes/asistencias')
 const alumno = require('./v1/routes/alumnos')
 const lista = require('./v1/routes/listas')
 const profesor = require('./v1/routes/profesores')
-
+// Rutas Autentificaciones
+const auth = require('./v1/routes/auth')
 // Testeo de la Conexion
 connection().catch(console.error);
 
