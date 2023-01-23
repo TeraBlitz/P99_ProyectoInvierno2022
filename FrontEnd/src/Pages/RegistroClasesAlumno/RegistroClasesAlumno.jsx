@@ -89,18 +89,6 @@ function RegistroClasesAlumnos({changeContent}) {
      }, []);
 
      useEffect(() => {
-        const getUserStudents = () =>{
-             getStudents().then(
-                 (data) => {
-                     const students = data.filter(student => student.idUsuario === userValues._id);
-                     setStudents(students);
-                     //console.log(students)
-             });
-         }
-         getUserStudents();
-     }, []);
-
-     useEffect(() => {
         const getStudentClasses = () =>{
              getClasses().then(
                  (data) => {
@@ -108,6 +96,7 @@ function RegistroClasesAlumnos({changeContent}) {
              });
          }
          getStudentClasses();
+         console.log(clases)
      }, []);
 
 
@@ -127,19 +116,19 @@ function RegistroClasesAlumnos({changeContent}) {
                      <Link
                     component="button"
                     onClick={() => changeContent('Profile')}
-                    variant='h2'
-                    sx={{p: 1}}
+                    variant='h3'
+                    sx={{mx: 2}}
                     >
                         <i> Perfil </i>
                     </Link> 
-                     para agregar alumnos
+                     para agregar alumnos.
                 </Typography>
             </Box>
         )
     }
     return (
         <>
-            <Box  sx={{m: 2}}>
+            <Box sx={{m: 2}}>
                 <FormControl fullWidth>
                     <InputLabel>Estudiantes</InputLabel>
                     <Select
@@ -149,10 +138,10 @@ function RegistroClasesAlumnos({changeContent}) {
                     >
                         {students.map((student) => (
                             <MenuItem
-                            key={student._id}
-                            value={student}
+                                key={student._id}
+                                value={student}
                             >
-                            {student.nombre} {student.apellido_paterno} {student.apellido_materno}
+                                {student.nombre} {student.apellido_paterno} {student.apellido_materno}
                             </MenuItem>
                         ))}
                     </Select>
@@ -174,11 +163,18 @@ function RegistroClasesAlumnos({changeContent}) {
                 </Alert >
             </Box>
             <Box sx={{ textAlign: 'center', width: '100%', paddingX: '20px', height: '100%', paddingBottom: '10px', overflowY: 'scroll', display: { xs: 'block', sm: 'none' } }}>
-
                 {
-                    clases.map(e => (
-                        <Clase changeClaseRegistrada={changeClaseRegistrada} key={e._id} title={e.nombre_curso} periodo={e.clavePeriodo} cupo={e.cupo_actual} cupoMax={e.cupo_maximo} rango_edades={e.rango_edades} />
-                    ))
+                    clases !== null ?    
+                        clases.map(e => (
+                            <Clase changeClaseRegistrada={changeClaseRegistrada} key={e._id} title={e.nombre_curso} periodo={e.clavePeriodo} cupo={e.cupo_actual} cupoMax={e.cupo_maximo} rango_edades={e.rango_edades} />
+                        ))
+                    :
+                        <Box sx={{ height: '100vh', display: 'flex',
+                            alignContent: 'center', justifyContent: 'center', flexWrap: 'wrap'}}>
+                            <Typography variant='h3' component='div' textAlign='center'>
+                                No hay clases disponibles por el momento.
+                            </Typography>
+                        </Box>
                 }
             </Box >
             <Box sx={{ width: '100%', visibility: { xs: 'hidden', sm: 'visible' }, display: 'flex', height: '100%', justifyContent: 'space-around', alignItems: 'center', flexWrap: 'wrap' }}>
@@ -191,7 +187,8 @@ function RegistroClasesAlumnos({changeContent}) {
                         width: { lg: '30%', sm: '40%' },
                         height: '40%',
                         minHeight: '293px',
-                        minWidth: '340px'
+                        minWidth: '340px',
+                        overflow: 'scroll'
                     }}
                 >
                     <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
