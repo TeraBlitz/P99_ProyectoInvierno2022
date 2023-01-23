@@ -81,7 +81,7 @@ export default function Alumnos() {
     if (caso === "Editar") {
       abrirCerrarModalEditar();
     }
-    if(caso ==="MasInfo"){
+    else if(caso === "MasInfo"){
       abrirCerrarModalMas();
     }
     else {
@@ -153,7 +153,7 @@ export default function Alumnos() {
     <div style={{
         position: "absolute",
         width: 800,
-        height: 620,
+        height: 700,
         backgroundColor: "#fefefd",
         top: "48%",
         left: "50%",
@@ -169,7 +169,7 @@ export default function Alumnos() {
       >
         Informacion completa de Alumno
       </h1>
-      <Typography style={{ align: "justify", fontFamily: "arial", fontSize:20, marginBottom:5}}>
+      <Typography style={{ align: "justify", fontFamily: "arial", fontSize:20, marginBottom:5, }}>
         Nombre: {consolaSeleccionada.nombre}
       </Typography>
       <Typography style={{ align: "justify", fontFamily: "arial", fontSize:20, marginBottom:5 }}>
@@ -363,9 +363,9 @@ export default function Alumnos() {
       { field: "idUsuario", headerName: "idUsuario", width: 54, hide: true },
       { field: "curp", headerName: "CURP", width: 200 ,hide: true},
       { field: "nombre", headerName: "Nombre", width: 170 },
-      { field: "apellido_paterno", headerName: "Apellido Paterno", width: 170 },
-      { field: "apellido_materno", headerName: "Apellido Materno", width: 170 },
-      { field: "fecha_de_nacimiento", headerName: "Nacimiento", width: 135 },
+      { field: "apellido_paterno", headerName: "Apellido Paterno", width: 190 },
+      { field: "apellido_materno", headerName: "Apellido Materno", width: 190 },
+      { field: "fecha_de_nacimiento", headerName: "Nacimiento", width: 165 },
       { field: "tutor_nombre", headerName: "Tutor nombre", width: 124 ,hide: true},
       {
         field: "tutor_apellido_paterno",
@@ -379,7 +379,7 @@ export default function Alumnos() {
       },
       { field: "tutor_correo", headerName: "Tutor correo", width: 154, hide: true},
       { field: "tutor_num_telefono", headerName: "Tutor telefono", width: 104 ,hide: true},
-      { field: "num_telefono", headerName: "Telefono", width: 120 },
+      { field: "num_telefono", headerName: "Telefono", width: 160 },
       { field: "estado", headerName: "Estado", width: 84 ,hide: true},
       { field: "ciudad", headerName: "Ciudad", width: 84 ,hide: true},
       { field: "colonia", headerName: "Colonia", width: 84 ,hide: true},
@@ -403,7 +403,7 @@ export default function Alumnos() {
     <div>
       <Box
         sx={{
-          width: "1000px",
+          width: 1100,
           padding: "15px",
           height: "150px",
           position: "absolute",
@@ -421,7 +421,7 @@ export default function Alumnos() {
         </Box>
       <Card
         sx={{
-          width: 970,
+          width: 1100,
           position: "absolute",
           textAlign: "left",
           marginLeft: "65px",
@@ -443,7 +443,7 @@ export default function Alumnos() {
             style={{
               paddingBottom: "10px",
               fontFamily: "arial",
-              width: 920,
+              width: 1050,
               marginLeft: 7,
             }}
             label="Ingrese un nombre para buscar"
@@ -462,7 +462,7 @@ export default function Alumnos() {
 
       <Box
         sx={{
-          width:"1000px",
+          width:"1130px",
           padding: "15px",
           height: "450px",
           position: "absolute",

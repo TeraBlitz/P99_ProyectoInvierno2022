@@ -9,7 +9,7 @@ function Actions({params,seleccionarConsola}) {
     <Box>
         <Tooltip title='Mas Informacion'>
             <Button >
-                <Edit color="primary" onClick={()=>seleccionarConsola(params.row, 'MasInfo')}/>
+                <MoreIcon color="primary" onClick={()=>seleccionarConsola(params.row, 'MasInfo')}/>
             </Button>
         </Tooltip>
         <Tooltip title='Editar'>
