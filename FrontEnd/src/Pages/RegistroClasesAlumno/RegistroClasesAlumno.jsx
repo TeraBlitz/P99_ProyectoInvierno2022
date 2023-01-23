@@ -164,7 +164,7 @@ function RegistroClasesAlumnos({changeContent}) {
             </Box>
             <Box sx={{ textAlign: 'center', width: '100%', paddingX: '20px', height: '100%', paddingBottom: '10px', overflowY: 'scroll', display: { xs: 'block', sm: 'none' } }}>
                 {
-                    clases !== null ?    
+                    clases.length !== 0 ?    
                         clases.map(e => (
                             <Clase changeClaseRegistrada={changeClaseRegistrada} key={e._id} title={e.nombre_curso} periodo={e.clavePeriodo} cupo={e.cupo_actual} cupoMax={e.cupo_maximo} rango_edades={e.rango_edades} />
                         ))
@@ -188,7 +188,7 @@ function RegistroClasesAlumnos({changeContent}) {
                         height: '40%',
                         minHeight: '293px',
                         minWidth: '340px',
-                        overflow: 'scroll'
+                        overflowY: 'scroll'
                     }}
                 >
                     <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
