@@ -35,3 +35,12 @@ h1{
 .spacer{
     height: 20px;
 }
+.titulo{
+    font-size: 40px;
+    margin-top: 50px;
+    width: 300px;
+
+}
+.btnContacto{
+    margin-bottom: 20px;
+}
