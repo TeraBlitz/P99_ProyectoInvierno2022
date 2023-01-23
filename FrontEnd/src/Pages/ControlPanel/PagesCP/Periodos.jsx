@@ -282,7 +282,17 @@ export default function Periodos() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Card sx={style}>
+        <Card sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "680px",
+          bgcolor: "background.paper",
+          border: "2px solid #000",
+          boxShadow: 24,
+          p: 4,
+        }}>
           <Typography variant="h5" component="div">
             Ingrese los nuevos datos
           </Typography>
@@ -290,20 +300,20 @@ export default function Periodos() {
 
           <div>
             <TextField
-              style={{ paddingBottom: "15px", fontFamily: "arial"}}
+              style={{ paddingBottom: "15px", fontFamily: "arial",width:281}}
               label="Clave"
               name="clave"
               onChange={(e) => setClave(e.target.value)}
               autoFocus
             />
             <TextField
-              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
               label="Status"
               name="status"
               onChange={(e) => setStatus(e.target.value)}
             />
             <TextField
-              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
               label="Fecha de inicio"
               name="fecha_inicio"
               id="datetime-local"
@@ -314,7 +324,7 @@ export default function Periodos() {
               onChange={(e) => setFecha_inicio(e.target.value)}
             />
             <TextField
-              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              style={{ paddingBottom: "15px", fontFamily: "arial",width:281 }}
               label="fecha de Fin"
               name="fecha_fin"
               id="datetime-local"
@@ -325,7 +335,7 @@ export default function Periodos() {
               onChange={(e) => setFecha_fin(e.target.value)}
             />
             <TextField
-              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              style={{ paddingBottom: "15px", fontFamily: "arial",width:281 }}
               label="Fecha de inicio de incripciones de talleres"
               name="fecha_inicio_insc_talleres"
               id="datetime-local"
@@ -336,7 +346,7 @@ export default function Periodos() {
               onChange={(e) => setFecha_inicio_insc_talleres(e.target.value)}
             />
             <TextField
-              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
               label="Fecha de fin de inscripciones de talleres"
               name="fecha_fin_insc_talleres"
               id="datetime-local"
@@ -348,7 +358,7 @@ export default function Periodos() {
             />
 
             <TextField
-              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
               label="Fecha de inicio de incripciones de idiomas"
               name="fecha_inicio_insc_idiomas"
               id="datetime-local"
@@ -359,7 +369,7 @@ export default function Periodos() {
               onChange={(e) => setFecha_inicio_insc_idiomas(e.target.value)}
             />
             <TextField
-              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              style={{ paddingBottom: "15px", fontFamily: "arial",width:281 }}
               label="Fecha de fin de inscripciones de idiomas"
               name="fecha_fin_insc_idiomas"
               id="datetime-local"
@@ -371,7 +381,7 @@ export default function Periodos() {
             />
 
             <TextField
-              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
               label="Fecha de inicio de incripciones de asesorias"
               name="fecha_inicio_insc_asesorias"
               id="datetime-local"
@@ -382,7 +392,7 @@ export default function Periodos() {
               onChange={(e) => setFecha_inicio_insc_asesorias(e.target.value)}
             />
             <TextField
-              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
               label="Fecha de fin de inscripciones de asesorias"
               name="fecha_fin_insc_asesorias"
               id="datetime-local"
@@ -407,6 +417,7 @@ export default function Periodos() {
               onChange={(e) => setidiomas_max_por_alumno(e.target.value)}
               autoFocus
             />
+            <br/>
             <Button color="primary" variant="contained" onClick={postCrea}>
               Insertar
             </Button>
@@ -580,7 +591,7 @@ export default function Periodos() {
                       onChange={handleChange}
                     />
                     <TextField
-                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
                       label="Fecha de inicio"
                       name="fecha_inicio"
                       onChange={handleChange}
@@ -595,7 +606,7 @@ export default function Periodos() {
 
                     />
                     <TextField
-                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
                       label="fecha de Fin"
                       defaultValue={
                         consolaSeleccionada && consolaSeleccionada.fecha_fin
@@ -609,7 +620,7 @@ export default function Periodos() {
                       onChange={handleChange}
                     />
                     <TextField
-                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      style={{ paddingBottom: "15px", fontFamily: "arial",width:281 }}
                       label="Fecha de inicio de incripciones de talleres"
                       defaultValue={
                         consolaSeleccionada &&
@@ -624,7 +635,7 @@ export default function Periodos() {
                       onChange={handleChange}
                     />
                     <TextField
-                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
                       label="Fecha de fin de inscripciones de talleres"
                       defaultValue={
                         consolaSeleccionada &&
@@ -640,7 +651,7 @@ export default function Periodos() {
                     />
 
                     <TextField
-                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
                       label="Fecha de inicio de incripciones de idiomas"
                       defaultValue={
                         consolaSeleccionada &&
@@ -655,7 +666,7 @@ export default function Periodos() {
                       onChange={handleChange}
                     />
                     <TextField
-                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
                       label="Fecha de fin de inscripciones de idiomas"
                       defaultValue={
                         consolaSeleccionada &&
@@ -671,7 +682,7 @@ export default function Periodos() {
                     />
 
                     <TextField
-                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
                       label="Fecha de inicio de incripciones de asesorias"
                       defaultValue={
                         consolaSeleccionada &&
@@ -686,7 +697,7 @@ export default function Periodos() {
                       onChange={handleChange}
                     />
                     <TextField
-                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
                       label="Fecha de fin de inscripciones de asesorias"
                       defaultValue={
                         consolaSeleccionada &&
