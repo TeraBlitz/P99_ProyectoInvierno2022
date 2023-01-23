@@ -1,8 +1,8 @@
-import { IconButton } from '@mui/material'
+import { Alert, IconButton, Snackbar } from '@mui/material'
 import React, { useState, useEffect, createContext } from 'react'
 import './App.css'
 import Sidebar from './Components/Sidebar/Sidebar.jsx'
-import { Box } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
 import RegistroClasesAlumno from './Pages/RegistroClasesAlumno/RegistroClasesAlumno'
 import MisClasesProfesor from './Pages/MisClasesProfesor/MisClasesProfesor'
@@ -15,6 +15,7 @@ import ForgotPassword from './Pages/ForgotPassword/ForgotPassword'
 import SignUp from './Pages/SignUp/SignUp'
 import { createUser } from './api/users'
 import { Password } from '@mui/icons-material'
+import CloseIcon from '@mui/icons-material/Close'
 
 
 
@@ -24,8 +25,19 @@ function App() {
     const [content, setContent] = useState('content')
     const [isSignedIn, setIsSignedIn] = useState(false)
     const [user, setUser] = useState({})
-    const [loginError, setLoginError]= useState('none');
+    const [loginError, setLoginError] = useState('none');
+    const [snack, setSnack] = useState(false)
 
+    useEffect(() => {
+        // paso 1 : encontrar el usuario en usuario-alumno
+        // paso 2 : checar si el usuario tiene un alumno
+        // paso 3 : si no lo tiene, sacar la snackbar
+        // por ahora solo saca la snackbar al principio
+        if (user.rol == "estudiante") {
+            setSnack(true);
+        }
+
+    }, [user])
     const handleUser = (params) => {
         setUser(params)
     }
@@ -40,7 +52,7 @@ function App() {
         RegistroClasesAlumnos: <RegistroClasesAlumno />,
         MisClasesProfesor: <MisClasesProfesor />,
         Profile: <Profile />,
-        ControlPanel: <ControlPanel changeContent={changeContent}/>,
+        ControlPanel: <ControlPanel changeContent={changeContent} />,
         MisClases: <MisClases />,
         Registro: <ShowClass />
     }
@@ -57,18 +69,18 @@ function App() {
                 redirect: 'follow',
                 body: new URLSearchParams(
                     {
-                        correo:user.correo,
-                        password:user.contraseña
+                        correo: user.correo,
+                        password: user.contraseña
                     }
                 )
             })
             .then(response => response.json())
             .then(result => {
-                if(result.msg=="Login OK"){
+                if (result.msg == "Login OK") {
                     handleUser(result.data_user)
                     setIsSignedIn(true)
                 }
-                else{
+                else {
                     setLoginError('block')
                 }
             })
@@ -77,9 +89,7 @@ function App() {
     }
 
     return !isSignedIn ?
-        <SignIn handleSignIn={handleSignIn} handleUser={handleUser}  loginError={loginError} />
-
-
+        <SignIn handleSignIn={handleSignIn} handleUser={handleUser} loginError={loginError} />
         :
         <userContext.Provider value={user}>
             <Box id="main" sx={{ display: 'flex' }}>
@@ -96,6 +106,23 @@ function App() {
                     </IconButton>
                     <div style={{ width: 'calc(100vw-240px)', height: '100vh' }}>
                         {PagesToRender[content]}
+                        <Snackbar open={snack}>
+                            <Alert severity='warning'>
+                                No has creado tu Alumno aun
+                                <IconButton
+                                    size="small"
+                                    aria-label="close"
+                                    color="inherit"
+                                    onClick={() => setSnack(false)}
+                                >
+                                    <CloseIcon fontSize="small" />
+                                </IconButton>
+                                <br/>
+                                <Button color="warning" size="small" onClick={() => changeContent('Profile')}>
+                                    Crear Alumno
+                                </Button>
+                            </Alert>
+                        </Snackbar>
                     </div>
                 </Box>
             </Box>
