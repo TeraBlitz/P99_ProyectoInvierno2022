@@ -9,6 +9,8 @@ import Actions from "./ActAlumnos";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import axios from "axios";
+import{CSVLink} from 'react-csv'
+
 
 
 
@@ -413,10 +415,17 @@ export default function Alumnos() {
         <Typography
           variant="h3"
           component="h3"
-          sx={{ textAlign: "left", mt: 3, mb: 3, fontFamily: "arial" }}
+          sx={{ textAlign: "left", mt: 3, mb: 3, fontFamily: "arial" ,display:"flex"}}
         >
           Alumnos Inscritos
+
         </Typography>
+
+          <CSVLink data={data} filename="alumnos.csv">
+          <Button  color="primary" variant="contained" sx={{marginLeft: "950px", marginTop:'-120px'}}>
+            Exportar a CSV
+            </Button>
+          </CSVLink>
 
         </Box>
       <Card
