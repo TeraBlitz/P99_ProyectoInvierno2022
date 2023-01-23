@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
+import { width } from "@mui/system";
 export default function Periodos() {
   // config de modal estilo
 
@@ -160,11 +161,11 @@ export default function Periodos() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
+
     setConsolaSeleccionada((prevState) => ({
       ...prevState,
-      [name] : value, 
-      
+      [name] : value,
+
     })
     );
 
@@ -172,69 +173,69 @@ export default function Periodos() {
        const valor = value + ":00";
       setConsolaSeleccionada((prevState) => ({
         ...prevState,
-        fecha_inicio: valor, 
-        
+        fecha_inicio: valor,
+
       }));
     }
     if (name === "fecha_fin") {
       const valor = value + ":00";
       setConsolaSeleccionada((prevState) => ({
         ...prevState,
-        fecha_fin: valor, 
-        
+        fecha_fin: valor,
+
       }));
     }
     if (name === "fecha_inicio_insc_talleres") {
       const valor = value + ":00";
       setConsolaSeleccionada((prevState) => ({
         ...prevState,
-        fecha_inicio_insc_talleres: valor, 
-        
+        fecha_inicio_insc_talleres: valor,
+
       }));
     }
-    
+
     if (name === "fecha_fin_insc_talleres") {
       const valor = value + ":00";
       setConsolaSeleccionada((prevState) => ({
         ...prevState,
-        fecha_fin_insc_talleres: valor, 
-        
+        fecha_fin_insc_talleres: valor,
+
       }));
     }
     if (name === "fecha_inicio_insc_idiomas") {
       const valor = value + ":00";
       setConsolaSeleccionada((prevState) => ({
         ...prevState,
-        fecha_inicio_insc_idiomas: valor, 
-        
+        fecha_inicio_insc_idiomas: valor,
+
       }));
     }
     if (name === "fecha_fin_insc_idiomas") {
       const valor = value + ":00";
       setConsolaSeleccionada((prevState) => ({
         ...prevState,
-        fecha_fin_insc_idiomas: valor, 
-        
+        fecha_fin_insc_idiomas: valor,
+
       }));
     }
     if (name === "fecha_inicio_insc_asesorias") {
       const valor = value + ":00";
       setConsolaSeleccionada((prevState) => ({
         ...prevState,
-        fecha_inicio_insc_asesorias: valor, 
-        
+        fecha_inicio_insc_asesorias: valor,
+
       }));
     }
     if (name === "fecha_fin_insc_asesorias") {
       const valor = value + ":00";
       setConsolaSeleccionada((prevState) => ({
         ...prevState,
-        fecha_fin_insc_asesorias: valor, 
-        
+        fecha_fin_insc_asesorias: valor,
+
       }));
     }
     console.log(consolaSeleccionada.fecha_inicio )
-    
+
   };
   // Editar
   const postEditar = async (e) => {
@@ -267,7 +268,7 @@ export default function Periodos() {
       console.log(error);
     }
   };
-  const debug = "debug";
+
   return (
     <div className="container">
       <h1>Periodos</h1>
@@ -289,7 +290,7 @@ export default function Periodos() {
 
           <div>
             <TextField
-              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              style={{ paddingBottom: "15px", fontFamily: "arial"}}
               label="Clave"
               name="clave"
               onChange={(e) => setClave(e.target.value)}
@@ -409,6 +410,7 @@ export default function Periodos() {
             <Button color="primary" variant="contained" onClick={postCrea}>
               Insertar
             </Button>
+
             <Button
               variant="contained"
               onClick={() => abrirCerrarModalInsertar()}
@@ -541,7 +543,17 @@ export default function Periodos() {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
               >
-                <Card sx={style}>
+                <Card sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: "680px",
+                  bgcolor: "background.paper",
+                  border: "2px solid #000",
+                  boxShadow: 24,
+                  p: 4,
+                }}>
                   <Typography variant="h5" component="div">
                     Ingrese los nuevos datos
                   </Typography>
@@ -549,7 +561,7 @@ export default function Periodos() {
 
                   <div>
                     <TextField
-                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      style={{ paddingBottom: "15px", fontFamily: "arial",width:281 }}
                       label="Clave"
                       defaultValue={
                         consolaSeleccionada && consolaSeleccionada.clave
@@ -559,7 +571,7 @@ export default function Periodos() {
                       autoFocus
                     />
                     <TextField
-                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      style={{ paddingBottom: "15px", fontFamily: "arial",width:281  }}
                       label="Status"
                       defaultValue={
                         consolaSeleccionada && consolaSeleccionada.status
@@ -580,7 +592,7 @@ export default function Periodos() {
                       InputLabelProps={{
                         shrink: true,
                       }}
-                      
+
                     />
                     <TextField
                       style={{ paddingBottom: "15px", fontFamily: "arial" }}
@@ -709,6 +721,7 @@ export default function Periodos() {
                       name="idiomas_max_por_alumno"
                       onChange={handleChange}
                     />
+                    <br/>
 
                     <Button
                       color="primary"
