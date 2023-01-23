@@ -192,27 +192,58 @@ export default function ShowClass() {
     const sendCSV = (csv) => {
         const csvArray = csv.split("\n")
         csvArray.shift()
-        let csvJson = [];
+        let clasesJson = [];
+        let profesoresJson = [];
         let iterator;
         for (let i = 0; i < csvArray.length; i++) {
             iterator = csvArray[i];
-            let iteratorArray  = iterator.split(',')
-            csvJson[i] = {};
-            csvJson[i].id = i
-            csvJson[i].clave = iteratorArray[0] || ""
-            csvJson[i].matriculaMaestro = iteratorArray[1] || ""
-            csvJson[i].nombre_curso = iteratorArray[2] || ""
-            csvJson[i].nivel = iteratorArray[3] || ""
-            csvJson[i].rango_edades = iteratorArray[4] || ""
-            csvJson[i].horario = iteratorArray[5] || ""
-            csvJson[i].cupo_maximo = iteratorArray[6] || ""
-            csvJson[i].frequencia_semanal = iteratorArray[7] || ""
-            csvJson[i].cupo_actual = iteratorArray[8] || ""
+            let iteratorArray = iterator.split(',')
+            // agregar clases
+            clasesJson[i] = {};
+            clasesJson[i].clave = iteratorArray[0]
+            clasesJson[i].nombre_curso = iteratorArray[1]
+            clasesJson[i].nivel = iteratorArray[2]
+            clasesJson[i].area = iteratorArray[3]
+            clasesJson[i].modalidad = iteratorArray[4]
+            clasesJson[i].clavePeriodo = iteratorArray[5]
+            clasesJson[i].cupo_maximo = iteratorArray[6]
+            clasesJson[i].edad_minima = iteratorArray[7]
+            clasesJson[i].edad_maxima = iteratorArray[8]
+            clasesJson[i].lunes = iteratorArray[9]
+            clasesJson[i].martes = iteratorArray[10]
+            clasesJson[i].miercoles = iteratorArray[11]
+            clasesJson[i].jueves = iteratorArray[12]
+            clasesJson[i].viernes = iteratorArray[13]
+            clasesJson[i].sabado = iteratorArray[14]
+            clasesJson[i].cupo_actual = "0"
+
+            // agregar profesores
+            profesoresJson[i] = {}
+            profesoresJson[i].nombre = iteratorArray[15]
+            profesoresJson[i].apellidos = iteratorArray[16]
+            profesoresJson[i].matricula = iteratorArray[17]
+            profesoresJson[i].correo = iteratorArray[18]
+            profesoresJson[i].fecha_de_nacimiento = ""
+            profesoresJson[i].num_telefono = ""
+            profesoresJson[i].num_cursos_impartidos = "0"
+            profesoresJson[i].idUser = ""
         }
-        console.log(csvJson)
-        setData(csvJson)
+        fetch("http://localhost:3000/v1/csv/subirClases",
+            {
+                method:'POST',
+                body:clasesJson,
+            }
+        ).then(e=>{
 
+        })
+        fetch("http://localhost:3000/v1/csv/subirProfesores",
+            {
+                method:'POST',
+                body:profesoresJson,
+            }
+        ).then(e=>{
 
+        })
     }
 
 
@@ -618,7 +649,7 @@ export default function ShowClass() {
                         columns={columns}
                         rows={data}
                         getRowId={(row) => row.id}
-                        rowsPerPageOptions={[5, 10,20]}
+                        rowsPerPageOptions={[5, 10, 20]}
                         pageSize={pageSize}
                         onPageSizeChange={(newPageSize) => SetPageSize(newPageSize)}
                         getRowSpacing={(params) => ({
