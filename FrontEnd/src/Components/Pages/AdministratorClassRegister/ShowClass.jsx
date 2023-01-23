@@ -179,7 +179,7 @@ export default function ShowClass() {
                     result !== undefined ? sendCSV(result) : alert("error");
                 }
                 else {
-                    alert("error: el archivo necesita ser tipo markdown o txt")
+                    alert("error: el archivo necesita ser tipo csv")
                 }
             }
         }
