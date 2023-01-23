@@ -15,6 +15,8 @@ const asistencia = require('./v1/routes/asistencias')
 const alumno = require('./v1/routes/alumnos')
 const lista = require('./v1/routes/listas')
 const profesor = require('./v1/routes/profesores')
+// Ruta para Excels
+const csv = require('./v1/routes/csv')
 
 // Testeo de la Conexion
 connection().catch(console.error);
@@ -38,6 +40,7 @@ app.use('/v1/asistencias', asistencia)
 app.use('/v1/alumnos', alumno)
 app.use('/v1/listas', lista)
 app.use('/v1/profesores', profesor)
+app.use('/v1/csv', csv)
 
 app.listen(port, ()=>{
     console.log(`Aplicacion corriendo | Puerto:${port}`)
