@@ -21,6 +21,7 @@ const alumnoSchema = {
     codigo_postal: { type: "string", minLength:5, maxLength:5, pattern: "^([0-9])*$" },
     escolaridad: { type: "string" },
     ultima_escuela: { type: "string" },
+    idUser: { type: "string" },
   },
   required: [
     "nombre",

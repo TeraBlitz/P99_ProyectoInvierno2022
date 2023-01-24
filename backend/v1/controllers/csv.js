@@ -37,17 +37,22 @@ async function subirClases(req, res) {
         }
     
         const result = await collection.insertMany(docs);
+
+        // Estructuracion del mensaje de respuesta.
         let msg = []
         for (i = 0; i < result.insertedCount; i++){
             msg[i] = {}
-            msg[i].i = `Un documento fue insertado con el ID: ${result.insertedIds[i]}`
+            msg[i].msg = `Un documento fue insertado con el ID: ${result.insertedIds[i]}`
         }
+
         res.json({
             "msg": msg
         })
     } catch (err) {
-        res.json({
-            "msg": `ERROR: ${err}`
+        console.log(err)
+        res.status(500).json({
+            "msg": `Ha ocurrido un error.`,
+            "error": `${err}`,
         });
     } finally {
         await client.close();
@@ -61,33 +66,39 @@ async function subirProfesores(req, res) {
         const collection = database.collection("profesores");
   
         // Crear el arreglo de Docs
-        req.body.clasesJson = JSON.parse(req.body.clasesJson)
+        req.body.profesoresJson = JSON.parse(req.body.profesoresJson)
+        // console.log(req.body.profesoresJson)
   
         let docs = []
-        for (let i = 0; i < req.body.clasesJson.length; i++) {
+        for (let i = 0; i < req.body.profesoresJson.length; i++) {
             docs[i] = {}
-            docs[i].nombre = req.body.clasesJson[i].nombre
-            docs[i].apellidos = req.body.clasesJson[i].apellidos
-            docs[i].matricula = req.body.clasesJson[i].matricula
-            docs[i].correo = req.body.clasesJson[i].correo
-            docs[i].fecha_de_nacimiento = req.body.clasesJson[i].fecha_de_nacimiento
-            docs[i].num_telefono = req.body.clasesJson[i].num_telefono
-            docs[i].num_cursos_impartidos = req.body.clasesJson[i].num_cursos_impartidos
-            docs[i].idUser = req.body.clasesJson[i].idUser
+            docs[i].nombre = req.body.profesoresJson[i].nombre
+            docs[i].apellidos = req.body.profesoresJson[i].apellidos
+            docs[i].matricula = req.body.profesoresJson[i].matricula
+            docs[i].correo = req.body.profesoresJson[i].correo
+            docs[i].fecha_de_nacimiento = req.body.profesoresJson[i].fecha_de_nacimiento
+            docs[i].num_telefono = req.body.profesoresJson[i].num_telefono
+            docs[i].num_cursos_impartidos = req.body.profesoresJson[i].num_cursos_impartidos
+            docs[i].idUser = req.body.profesoresJson[i].idUser
         }
     
         const result = await collection.insertMany(docs);
+        
+        // Estructuracion del mensaje de respuesta.
         let msg = []
         for (i = 0; i < result.insertedCount; i++){
             msg[i] = {}
-            msg[i].i = `Un documento fue insertado con el ID: ${result.insertedIds[i]}`
+            msg[i].msg = `Documento insertado de manera exitosa. ID: ${result.insertedIds[i]}`
         }
+
         res.json({
-            "msg": msg
+            "msg": msg,
         })
     } catch (err) {
-        res.json({
-            "msg": `ERROR: ${err}`
+        // console.log(err)
+        res.status(500).json({
+            "msg": `Ha ocurrido un error.`,
+            "error": `${err}`,
         });
     } finally {
         await client.close();
