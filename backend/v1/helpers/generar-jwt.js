@@ -7,7 +7,7 @@ async function generateJWT(uid = ''){
         const payload = {uid}
 
         jwt.sign(payload, 'P99-ON-WEB', {
-            expiresIn: '2h'
+            expiresIn: '4h'
         },
         (err, token) => {
             if(err){
