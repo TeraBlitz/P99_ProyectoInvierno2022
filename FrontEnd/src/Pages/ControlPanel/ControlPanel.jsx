@@ -67,7 +67,14 @@ const panelInfoCards = [
         'title': 'Profesores inscritos',
         'data': fetchTeachers,
         'color': '#00B8D6'
-    }
+    },
+    {
+        'id': '3',
+        'title': 'Cursos Registrados',
+        'data': fetchTeachers,
+        'color': '#366ac3'
+    },
+
 ]
 
 
@@ -96,15 +103,18 @@ const ControlPanel = ({changeContent}) => {
     return (
         <div>
         <Box sx={{ ml: 1, p: 1 }} >
-            <Box sx={{ fontFamily: 'default', fontSize: 'h3.fontSize', py: 2, display: 'flex', justifyContent: 'space-between' }}>
+            <Box sx={{ fontFamily: 'default', fontSize: 'h3.fontSize', py: 2, display: 'flex', justifyContent: 'space-between',marginBottom:5,marginTop:2}}>
                 Panel de control
             </Box>
-            <Grid container spacing={2} sx={{my: 2}}>
+                <Grid container spacing={2} >
                 {panelInfoCards.map(infoCard =>
-                    <Grid item sm={12} md={6} key={infoCard.id}>
+                    <Grid item sm={12} md={4} key={infoCard.id}>
                         <PanelInfo title={infoCard.title} data={infoCard.data} bgColor={infoCard.color}/>
                     </Grid>
+
                 )}
+                </Grid>
+                <Grid container spacing={2} sx={{my: 2}}>
                 {cards.map(card =>
 
                     <Grid item sm={12} md={6} key={card.id} onClick={()=>changeContent(card.link)}>
