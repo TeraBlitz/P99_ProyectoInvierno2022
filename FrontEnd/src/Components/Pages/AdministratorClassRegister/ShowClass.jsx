@@ -216,6 +216,7 @@ export default function ShowClass() {
             clasesJson[i].viernes = iteratorArray[13]
             clasesJson[i].sabado = iteratorArray[14]
             clasesJson[i].cupo_actual = "0"
+            // JSON.stringify(clasesJson[i])
 
             // agregar profesores
             profesoresJson[i] = {}
@@ -228,22 +229,32 @@ export default function ShowClass() {
             profesoresJson[i].num_cursos_impartidos = "0"
             profesoresJson[i].idUser = ""
         }
+        
+        //console.log(clasesJson)
         fetch("http://localhost:3000/v1/csv/subirClases",
             {
-                method:'POST',
-                body:clasesJson,
+                method: "POST",
+                headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                    clasesJson: JSON.stringify(clasesJson)
+                  }),
             }
-        ).then(e=>{
-
+        )
+        .then(response => response.json())
+        .then(result => {
+            console.log(result)
         })
-        fetch("http://localhost:3000/v1/csv/subirProfesores",
+        .catch(error => console.log('Error(ShowClass): ', error));
+        /* fetch("http://localhost:3000/v1/csv/subirProfesores",
             {
                 method:'POST',
                 body:profesoresJson,
             }
         ).then(e=>{
 
-        })
+        }) */
     }
 
 
