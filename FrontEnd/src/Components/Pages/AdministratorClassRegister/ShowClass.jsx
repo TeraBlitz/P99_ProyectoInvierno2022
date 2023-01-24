@@ -57,7 +57,6 @@ export default function ShowClass() {
     };
 
 
-
     //Evento que dado un nuevos datos los agrega
     const handleClick = (e) => {
         e.preventDefault();

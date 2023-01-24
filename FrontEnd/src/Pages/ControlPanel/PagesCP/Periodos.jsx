@@ -51,6 +51,47 @@ export default function Periodos() {
   useEffect(() => {
     getPeriodos();
   }, []);
+//Profesores
+
+  const [dataProfesor, setDataProfesor] = useState([]);
+  const getProfesor = () => {
+    axios
+      .get("http://127.0.0.1:3000/v1/profesores")
+      .then((res) => setDataProfesor(res.data))
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    getProfesor();
+  }, []);
+
+  //Clases
+
+  const [dataClase, setDataClase] = useState([]);
+  const getClase = () => {
+    axios
+      .get("http://127.0.0.1:3000/v1/clases")
+      .then((res) => setDataClase(res.data))
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    getClase();
+  }, []);
+
+   //Alumnos
+
+   const [dataAlumno, setDataAlumno] = useState([]);
+   const getAlumno = () => {
+     axios
+       .get("http://127.0.0.1:3000/v1/alumnos")
+       .then((res) => setDataAlumno(res.data))
+       .catch((err) => console.log(err));
+   };
+ 
+   useEffect(() => {
+     getAlumno();
+   }, []);
 
   // Variables para agregar tarjeta
   const [modalInsertar, setModalInsertar] = useState(false);
@@ -514,14 +555,30 @@ export default function Periodos() {
                 Hora: {traducirTime(item.fecha_fin_insc_asesorias)}
               </Typography>
 
-              <h5 className="leyendaFaltas">Cursos Maximos por Alumno </h5>
+              <h5 className="leyendaFaltas">Cursos Maximos por Alumno:</h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
                 {item.cursos_max_por_alumno}
               </Typography>
-              <h5 className="leyendaFaltas">Idiomas Maximos por Alumno </h5>
+              <h5 className="leyendaFaltas">Idiomas Maximos por Alumno: </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
                 {item.idiomas_max_por_alumno}
               </Typography>
+
+              <h5 className="leyendaFaltas">Profesores inscritos: </h5>
+              <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                {dataProfesor.length}
+              </Typography>
+        
+              <h5 className="leyendaFaltas">Alumnos inscritos: </h5>
+              <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                {dataAlumno.length}
+              </Typography>
+
+              <h5 className="leyendaFaltas">Clases inscritas: </h5>
+              <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                {dataClase.length}
+              </Typography>
+
             </CardContent>
             <CardActions>
               <Button
