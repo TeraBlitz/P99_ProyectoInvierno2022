@@ -26,6 +26,15 @@ function RegistroClasesAlumnos({changeContent}) {
     
     const userValues = useContext(userContext)
 
+    // Funcion para calcular edad si es menor de 18 se pide
+    //  un nombre de Tutor al estudiante
+    const calculate_age = (dateString) => {
+        var birthday = +new Date(dateString);
+        // The magic number: 31557600000 is 24 * 3600 * 365.25 * 1000, which is the length of a year
+        const magic_number = 31557600000;
+        return ~~((Date.now() - birthday) / (magic_number));
+    }
+
     const columns = [
         { field: 'clave', headerName: 'Clave', width: 110 },
         {
@@ -77,6 +86,9 @@ function RegistroClasesAlumnos({changeContent}) {
 
     const handleChange = (e) => {
         setCurrentStudent(e.target.value);
+        const age = calculate_age(currentStudent.fecha_de_nacimiento);
+        const filteredClasses = clases.filter(clase => Number(clase.edad_minima) < age && age < Number(clase.edad_maxima))
+        setClases(filteredClasses);
     }
 
     useEffect(() => {
