@@ -49,6 +49,38 @@ export default function ShowClass() {
     const abrirCerrarModalInsertar = () => {
         setModalInsertar(!modalInsertar);
     };
+    const resetClases = async () => {
+        await fetch("http://localhost:3000/v1/clases/", {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            }
+        }).then(response => response.json()).then(result => {
+            setData([]);
+            for (let i = 0; i < result.length; i++) {
+                let fechas = ""
+                result[i].lunes != "" ? fechas += "lunes, " : fechas += ""
+                result[i].martes != "" ? fechas += "martes, " : fechas += ""
+                result[i].miercoles != "" ? fechas += "miercoles, " : fechas += ""
+                result[i].jueves != "" ? fechas += "jueves, " : fechas += ""
+                result[i].viernes != "" ? fechas += "viernes, " : fechas += ""
+                result[i].sabado != "" ? fechas += "sabado, " : fechas += ""
+                console.log(fechas)
+                setData(data => [...data, {
+                    _id: i,
+                    clave: result[i].clave,
+                    nombre_curso: result[i].nombre_curso,
+                    nivel: result[i].nivel,
+                    matriculaMaestro: result[i].matriculaMaestro,
+                    edades: result[i].edad_minima + "-" + result[i].edad_maxima,
+                    cupo_maximo: result[i].cupo_maximo,
+                    modalidad: result[i].modalidad,
+                    fechas: fechas
+                }])
+            }
+        })
+    }
+    useEffect(() => { resetClases() }, [])
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
     const handleClickOpen = () => {
@@ -249,7 +281,7 @@ export default function ShowClass() {
             {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
+                     "Content-Type": "application/x-www-form-urlencoded",
                 },
                 body: new URLSearchParams({
                     clasesJson: JSON.stringify(clasesJson)
