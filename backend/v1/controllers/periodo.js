@@ -62,7 +62,9 @@ async function createPeriodo(req, res) {
       );
   } catch (err) {
     res.send(`ERROR: ${err}`);
-  } 
+  } finally {
+    await client.close();
+  }
 }
 // Test createPeriodo
 // createPeriodo().catch(console.dir);

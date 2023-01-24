@@ -38,50 +38,41 @@ export default function Periodos() {
     p: 4,
   };
 
-  //DAtos
+  //Datos
   const [data, setData] = useState([]);
   //----------------------Obtencion de datos de la base de datos
-  const getPeriodos = () => {
-    axios
-      .get("http://127.0.0.1:3000/v1/periodos")
-      .then((res) => setData(res.data))
-      .catch((err) => console.log(err));
-  };
 
+  const  getPeriodos = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
+    setData(res.data);
+  };
 
 //Profesores
 
   const [dataProfesor, setDataProfesor] = useState([]);
-  const getProfesor = () => {
-    axios
-      .get("http://127.0.0.1:3000/v1/profesores")
-      .then((res) => setDataProfesor(res.data))
-      .catch((err) => console.log(err));
+  
+  const  getProfesor  = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/profesores");
+    setDataProfesor(res.data);
   };
-
-
 
   //Clases
 
   const [dataClase, setDataClase] = useState([]);
-  const getClase = () => {
-    axios
-      .get("http://127.0.0.1:3000/v1/clases")
-      .then((res) => setDataClase(res.data))
-      .catch((err) => console.log(err));
+
+  const  getClase  = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/clases");
+    setDataClase(res.data);
   };
-
-
 
    //Alumnos
 
    const [dataAlumno, setDataAlumno] = useState([]);
-   const getAlumno = () => {
-     axios
-       .get("http://127.0.0.1:3000/v1/alumnos")
-       .then((res) => setDataAlumno(res.data))
-       .catch((err) => console.log(err));
-   };
+
+   const  getAlumno  = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/alumnos");
+    setDataAlumno(res.data);
+  };
 
    useEffect(() => {
     console.log('empieza use efect')

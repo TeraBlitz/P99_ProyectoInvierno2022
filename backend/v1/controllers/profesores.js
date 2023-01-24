@@ -49,7 +49,9 @@ async function createProfesor(req, res) {
       );
   } catch (err) {
     res.send(`ERROR: ${err}`);
-  } 
+  } finally {
+    await client.close();
+  }
 }
 // Test createProfesor
 // createProfesor().catch(console.dir);
