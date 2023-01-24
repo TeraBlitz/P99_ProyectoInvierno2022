@@ -33,15 +33,22 @@ async function createClase(req, res) {
     const doc = [
       {
         clave: req.body.clave,
+        area: req.body.area,
+        modalidad: req.body.modalidad,
         nombre_curso: req.body.nombre_curso,
         nivel: req.body.nivel,
-        frecuencia_semanal: req.body.frecuencia_semanal,
-        horario: req.body.horario,
-        rango_edades: req.body.rango_edades,
-        cupo_maximo: req.body.cupo_maximo,
-        cupo_actual: req.body.cupo_actual,
         matriculaMaestro: req.body.matriculaMaestro,
         clavePeriodo: req.body.clavePeriodo,
+        edad_minima: req.body.edad_minima,
+        edad_maxima: req.body.edad_maxima,
+        lunes: req.body.lunes,
+        martes: req.body.martes,
+        miercoles: req.body.miercoles,
+        jueves: req.body.jueves,
+        viernes: req.body.viernes,
+        sabado: req.body.sabado,
+        cupo_maximo: req.body.cupo_maximo,
+        cupo_actual: req.body.cupo_actual,
       },
     ];
 
@@ -73,17 +80,22 @@ async function updateClase(req, res) {
     const doc = {
       $set: {
         clave: req.body.clave,
+        area: req.body.area,
+        modalidad: req.body.modalidad,
         nombre_curso: req.body.nombre_curso,
         nivel: req.body.nivel,
-        frecuencia_semanal: req.body.frecuencia_semanal,
-        horario: req.body.horario,
-        rango_edades: req.body.rango_edades,
-        cupo_maximo: req.body.cupo_maximo,
-        cupo_actual: req.body.cupo_actual,
-        clavePeriodo:  req.body.clavePeriodo
         matriculaMaestro: req.body.matriculaMaestro,
         clavePeriodo: req.body.clavePeriodo,
-
+        edad_minima: req.body.edad_minima,
+        edad_maxima: req.body.edad_maxima,
+        lunes: req.body.lunes,
+        martes: req.body.martes,
+        miercoles: req.body.miercoles,
+        jueves: req.body.jueves,
+        viernes: req.body.viernes,
+        sabado: req.body.sabado,
+        cupo_maximo: req.body.cupo_maximo,
+        cupo_actual: req.body.cupo_actual,
       },
     };
 
