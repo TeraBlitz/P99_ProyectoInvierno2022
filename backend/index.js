@@ -12,6 +12,8 @@ const asistencia = require('./v1/routes/asistencias')
 const alumno = require('./v1/routes/alumnos')
 const lista = require('./v1/routes/listas')
 const profesor = require('./v1/routes/profesores')
+// Ruta para Excels
+const csv = require('./v1/routes/csv')
 
 // Rutas Autentificaciones
 const auth = require('./v1/routes/auth')

@@ -185,30 +185,99 @@ export default function ShowClass() {
 
     }
 
-    const sendCSV = (csv) => {
+    const sendCSV = async(csv) => {
         const csvArray = csv.split("\n")
         csvArray.shift()
-        let csvJson = [];
+        let clasesJson = [];
+        let profesoresJson = [];
         let iterator;
+        // hash table profesores ( para no mandar profesores repetidos)
+        let profesorHash = [];
+        
+        const profesorFunc = (i) => {
+            i = i.slice(2)
+            return Number(i)
+
+        }
+
+        let j = 0;
         for (let i = 0; i < csvArray.length; i++) {
             iterator = csvArray[i];
-            let iteratorArray  = iterator.split(',')
-            csvJson[i] = {};
-            csvJson[i].id = i
-            csvJson[i].clave = iteratorArray[0] || ""
-            csvJson[i].matriculaMaestro = iteratorArray[1] || ""
-            csvJson[i].nombre_curso = iteratorArray[2] || ""
-            csvJson[i].nivel = iteratorArray[3] || ""
-            csvJson[i].rango_edades = iteratorArray[4] || ""
-            csvJson[i].horario = iteratorArray[5] || ""
-            csvJson[i].cupo_maximo = iteratorArray[6] || ""
-            csvJson[i].frequencia_semanal = iteratorArray[7] || ""
-            csvJson[i].cupo_actual = iteratorArray[8] || ""
+            let iteratorArray = iterator.split(',')
+            // agregar clases
+            clasesJson[i] = {};
+            clasesJson[i].clave = iteratorArray[0]
+            clasesJson[i].nombre_curso = iteratorArray[1]
+            clasesJson[i].nivel = iteratorArray[2]
+            clasesJson[i].area = iteratorArray[3]
+            clasesJson[i].modalidad = iteratorArray[4]
+            clasesJson[i].clavePeriodo = iteratorArray[5]
+            clasesJson[i].cupo_maximo = iteratorArray[6]
+            clasesJson[i].edad_minima = iteratorArray[7]
+            clasesJson[i].edad_maxima = iteratorArray[8]
+            clasesJson[i].lunes = iteratorArray[9]
+            clasesJson[i].martes = iteratorArray[10]
+            clasesJson[i].miercoles = iteratorArray[11]
+            clasesJson[i].jueves = iteratorArray[12]
+            clasesJson[i].viernes = iteratorArray[13]
+            clasesJson[i].sabado = iteratorArray[14]
+            clasesJson[i].cupo_actual = "0"
+            // JSON.stringify(clasesJson[i])
+
+            // Agregar Profesores
+            if (!profesorHash[profesorFunc(iteratorArray[17])]) {
+                profesoresJson[j] = {}
+                profesoresJson[j].nombre = iteratorArray[15]
+                profesoresJson[j].apellidos = iteratorArray[16]
+                profesoresJson[j].matricula = iteratorArray[17]
+                profesoresJson[j].correo = iteratorArray[18]
+                profesoresJson[j].fecha_de_nacimiento = ""
+                profesoresJson[j].num_telefono = ""
+                profesoresJson[j].num_cursos_impartidos = "0"
+                profesoresJson[j].idUser = ""
+
+                profesorHash[profesorFunc(iteratorArray[17])] = true
+                j++
+            }
         }
-        console.log(csvJson)
-        setData(csvJson)
 
+        // clasesJson & profesoresJson
 
+        //console.log(clasesJson)
+        await fetch("http://localhost:3000/v1/csv/subirClases",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                    clasesJson: JSON.stringify(clasesJson)
+                }),
+            }
+        )
+        .then(response => response.json())
+        .then(result => {
+            console.log(result)
+        })
+        .catch(error => console.log('Error(ShowClass): ', error));
+
+        //console.log(profesoresJson)
+        await fetch("http://localhost:3000/v1/csv/subirProfesores",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                    profesoresJson: JSON.stringify(profesoresJson)
+                }),
+            }
+        )
+        .then(response => response.json())
+        .then(result => {
+            console.log(result)
+        })
+        .catch(error => console.log('Error(ShowClass): ', error));
     }
 
 
@@ -614,7 +683,7 @@ export default function ShowClass() {
                         columns={columns}
                         rows={data}
                         getRowId={(row) => row.id}
-                        rowsPerPageOptions={[5, 10,20]}
+                        rowsPerPageOptions={[5, 10, 20]}
                         pageSize={pageSize}
                         onPageSizeChange={(newPageSize) => SetPageSize(newPageSize)}
                         getRowSpacing={(params) => ({

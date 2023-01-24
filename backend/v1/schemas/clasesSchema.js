@@ -26,7 +26,6 @@ const clasesSchema = {
         "nombre_curso",
         "nivel",
         "matriculaMaestro",
-
         "clavePeriodo",
         "edad_minima",
         "edad_maxima",
