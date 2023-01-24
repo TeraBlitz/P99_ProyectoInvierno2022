@@ -140,6 +140,8 @@ async function deleteClase(req, res) {
 }
 // Test deleteClase
 // deleteClase().catch(console.dir);
+
+
 // Metodo find
 async function findClase(req, res) {
   try {
