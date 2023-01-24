@@ -11,9 +11,16 @@ import ControlPanel from './Pages/ControlPanel/ControlPanel'
 import ShowClass from "./Components/Pages/AdministratorClassRegister/ShowClass";
 import SignIn from './Pages/SignIn/SignIn'
 import MisClases from './Pages/MisClases/MisClasesEstudiante'
+import Periodos from './Pages/ControlPanel/PagesCP/Periodos'
+import Alumnos from './Pages/ControlPanel/PagesCP/Alumnos/Alumnos'
+import Profesores from './Pages/ControlPanel/PagesCP/profesores/Profesores'
 import ForgotPassword from './Pages/ForgotPassword/ForgotPassword'
 import SignUp from './Pages/SignUp/SignUp'
 import { createUser } from './api/users'
+
+import { Password } from '@mui/icons-material'
+
+
 import { Password } from '@mui/icons-material'
 
 
@@ -37,12 +44,24 @@ function App() {
         setContent(newContent)
     }
     const PagesToRender = {
-        RegistroClasesAlumnos: <RegistroClasesAlumno />,
+        RegistroClasesAlumnos: <RegistroClasesAlumno changeContent={changeContent}/>,
+
         MisClasesProfesor: <MisClasesProfesor />,
+
         Profile: <Profile />,
+
         ControlPanel: <ControlPanel changeContent={changeContent}/>,
+
         MisClases: <MisClases />,
-        Registro: <ShowClass />
+
+        inscripcion: <ShowClass />,
+
+        Periodos: <Periodos/>,
+
+        Alumnos: <Alumnos/>,
+
+        Profesores: <Profesores/>
+
     }
 
 
@@ -78,8 +97,6 @@ function App() {
 
     return !isSignedIn ?
         <SignIn handleSignIn={handleSignIn} handleUser={handleUser}  loginError={loginError} />
-
-
         :
         <userContext.Provider value={user}>
             <Box id="main" sx={{ display: 'flex' }}>

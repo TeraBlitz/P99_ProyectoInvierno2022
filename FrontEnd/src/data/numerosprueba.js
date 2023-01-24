@@ -1,14 +1,18 @@
 export const niveles = [
     {
-      value: "de 8 a 12 años",
-      label: "de 8 a 12 años",
+      value: "8-12",
+      label: "8-12",
     },
     {
-      value: "de 13 a 17 años",
-      label: "de 13 a 17 años",
+      value: "13-17",
+      label: "13-17",
     },
     {
-      value: "Mayores de 18 años",
-      label: "Mayores de 18 años",
+      value: "Más de 18",
+      label: "Más de 18",
+    },
+    {
+      value: "Más de 15",
+      label: "Más de 15",
     },
   ];
