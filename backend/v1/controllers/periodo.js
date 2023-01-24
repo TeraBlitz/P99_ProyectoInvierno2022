@@ -16,9 +16,7 @@ async function getAllPeriodo(req, res) {
     res.send(JSON.stringify(result));
   } catch (err) {
     res.send(`ERROR: ${err}`);
-  } finally {
-    await client.close();
-  }
+  } 
 }
 // Test getAllPeriodo
 // getAllPeriodo().catch(console.dir);
@@ -51,6 +49,9 @@ async function createPeriodo(req, res) {
         fecha_fin_insc_asesorias: req.body.fecha_fin_insc_asesorias,
         cursos_max_por_alumno: req.body.cursos_max_por_alumno,
         idiomas_max_por_alumno: req.body.idiomas_max_por_alumno,
+        cursos_inscritos:  req.body.cursos_inscritos,
+        alumnos_inscritos:  req.body.alumnos_inscritos,
+        profesores_inscritos:  req.body.profesores_inscritos
       },
     ];
 
@@ -104,6 +105,9 @@ async function updatePeriodo(req, res) {
         fecha_fin_insc_asesorias: req.body.fecha_fin_insc_asesorias,
         cursos_max_por_alumno: req.body.cursos_max_por_alumno,
         idiomas_max_por_alumno: req.body.idiomas_max_por_alumno,
+        cursos_inscritos:  req.body.cursos_inscritos,
+        alumnos_inscritos:  req.body.alumnos_inscritos,
+        profesores_inscritos:  req.body.profesores_inscritos
       },
     };
 

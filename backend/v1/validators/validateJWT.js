@@ -7,7 +7,6 @@ async function validarJWT(req, res, next){
     console.log(token)
 
     next()
-
 }
 
 module.exports = {
