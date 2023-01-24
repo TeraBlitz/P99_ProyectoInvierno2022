@@ -59,7 +59,7 @@ function RegistroClasesAlumnos({changeContent}) {
             type: "actions",
             width: 115,
             renderCell: (params) => (
-                <Button onClick={handleOpenDialog} variant="contained">Inscribir</Button>
+                <Button onClick={() => handleOpenDialog(params.row)} variant="contained">Inscribir</Button>
             ),
 
         }
@@ -71,6 +71,7 @@ function RegistroClasesAlumnos({changeContent}) {
             setError('block')
         } else {
             setClaseRegistrada([classId])
+            handleCloseDialog();
         }
     }
 
@@ -102,7 +103,8 @@ function RegistroClasesAlumnos({changeContent}) {
      }, []);
 
      
-    const handleOpenDialog = () => {
+    const handleOpenDialog = (clase) => {
+        setClaseRegistrada(clase);
         setOpenConfirmationDialog(true);
     };
     

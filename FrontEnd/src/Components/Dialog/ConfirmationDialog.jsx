@@ -20,14 +20,13 @@ export default function ConfirmationDialog({changeClaseRegistrada, handleClose, 
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Estas seguro que quieres inscribir la clase 
-            <strong>{clase.clave} {clase.nombre_curso} {clase.nivel} </strong>, 
+            Estas seguro que quieres inscribir la clase <strong> {clase.clave} {clase.nombre_curso} {clase.nivel} </strong>, 
             recuerda que hay inscripciones limitadas.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancelar</Button>
-          <Button onClick={changeClaseRegistrada} autoFocus>
+          <Button onClick={() => changeClaseRegistrada(clase._id)} autoFocus>
             Confirmar
           </Button>
         </DialogActions>
