@@ -38,60 +38,52 @@ export default function Periodos() {
     p: 4,
   };
 
-  //DAtos
+  //Datos
   const [data, setData] = useState([]);
   //----------------------Obtencion de datos de la base de datos
-  const getPeriodos = () => {
-    axios
-      .get("http://127.0.0.1:3000/v1/periodos")
-      .then((res) => setData(res.data))
-      .catch((err) => console.log(err));
+
+  const  getPeriodos = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
+    setData(res.data);
   };
 
-  useEffect(() => {
-    getPeriodos();
-  }, []);
 //Profesores
 
-  // const [dataProfesor, setDataProfesor] = useState([]);
-  // const getProfesor = () => {
-  //   axios
-  //     .get("http://127.0.0.1:3000/v1/profesores")
-  //     .then((res) => setDataProfesor(res.data))
-  //     .catch((err) => console.log(err));
-  // };
 
-  // useEffect(() => {
-  //   getProfesor();
-  // }, []);
+
+  const [dataProfesor, setDataProfesor] = useState([]);
+  
+  const  getProfesor  = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/profesores");
+    setDataProfesor(res.data);
+  };
 
   //Clases
 
-  // const [dataClase, setDataClase] = useState([]);
-  // const getClase = () => {
-  //   axios
-  //     .get("http://127.0.0.1:3000/v1/clases")
-  //     .then((res) => setDataClase(res.data))
-  //     .catch((err) => console.log(err));
-  // };
+  const [dataClase, setDataClase] = useState([]);
 
-  // useEffect(() => {
-  //   getClase();
-  // }, []);
+  const  getClase  = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/clases");
+    setDataClase(res.data);
+  };
 
    //Alumnos
 
-  //  const [dataAlumno, setDataAlumno] = useState([]);
-  //  const getAlumno = () => {
-  //    axios
-  //      .get("http://127.0.0.1:3000/v1/alumnos")
-  //      .then((res) => setDataAlumno(res.data))
-  //      .catch((err) => console.log(err));
-  //  };
- 
-  //  useEffect(() => {
-  //    getAlumno();
-  //  }, []);
+   const [dataAlumno, setDataAlumno] = useState([]);
+
+   const  getAlumno  = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/alumnos");
+    setDataAlumno(res.data);
+  };
+
+   useEffect(() => {
+    console.log('empieza use efect')
+     getAlumno();
+     getPeriodos();
+     getClase();
+     getProfesor();
+   }, []);
+
 
   // Variables para agregar tarjeta
   const [modalInsertar, setModalInsertar] = useState(false);
@@ -324,7 +316,9 @@ export default function Periodos() {
     }
   };
 
+    console.log('data: ',data)
   return (
+
     <div className="container">
       <h1>Periodos</h1>
 
@@ -489,7 +483,7 @@ export default function Periodos() {
       </Modal>
 
       <div className="card-grid">
-        {data.map((item) => (
+        {Array.isArray(data) ? data.map((item) => (
           <Card key={item._id} sx={{ minWidth: 275, bgcolor: "grey.200" }}>
             <CardContent>
               <Typography variant="h5" component="div">
@@ -568,7 +562,7 @@ export default function Periodos() {
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
                5
               </Typography>
-        
+
               <h5 className="leyendaFaltas">Alumnos inscritos: </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
                 5
@@ -832,7 +826,7 @@ export default function Periodos() {
               </Modal>
             </CardActions>
           </Card>
-        ))}
+        )): null}
         <div className="spacer"></div>
       </div>
     </div>
