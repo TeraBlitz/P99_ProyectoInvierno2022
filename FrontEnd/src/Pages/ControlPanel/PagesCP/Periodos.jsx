@@ -10,8 +10,22 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import { width } from "@mui/system";
 export default function Periodos() {
-  // config de modal estilo
 
+  //funciones para cambiar el display de fechas
+  function traducirDate(raw){
+
+    const date = raw.split("T",2);
+    return(date[0])
+
+}
+  function traducirTime(raw){
+
+    const date = raw.split("T",2);
+    return(date[1])
+
+}
+
+  // config de modal estilo
   const style = {
     position: "absolute",
     top: "50%",
@@ -445,51 +459,59 @@ export default function Periodos() {
               </Typography>
               <h5 className="leyendaFaltas">Fecha de inicio: </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {item.fecha_inicio}
+              Fecha: {traducirDate( item.fecha_inicio)}<br/>
+                Hora: {traducirTime(item.fecha_inicio)}
               </Typography>
 
               <h5 className="leyendaFaltas">Fecha de cierre: </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {item.fecha_fin}
+              Fecha: {traducirDate( item.fecha_fin)}<br/>
+                Hora: {traducirTime(item.fecha_fin)}
               </Typography>
 
               <h5 className="leyendaFaltas">
                 Fecha de inicio de inscripciones de talleres:{" "}
               </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {item.fecha_inicio_insc_talleres}
+                Fecha: {traducirDate( item.fecha_inicio_insc_talleres)}<br/>
+                Hora: {traducirTime(item.fecha_inicio_insc_talleres)}
               </Typography>
               <h5 className="leyendaFaltas">
                 Fecha de cierre de inscripciones de talleres:{" "}
               </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {item.fecha_fin_insc_talleres}
+              Fecha: {traducirDate( item.fecha_fin_insc_talleres)}<br/>
+                Hora: {traducirTime(item.fecha_fin_insc_talleres)}
               </Typography>
 
               <h5 className="leyendaFaltas">
                 Fecha de inicio de inscripciones de idiomas:{" "}
               </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {item.fecha_inicio_insc_idiomas}
+              Fecha: {traducirDate( item.fecha_inicio_insc_idiomas)}<br/>
+                Hora: {traducirTime(item.fecha_inicio_insc_idiomas)}
               </Typography>
               <h5 className="leyendaFaltas">
                 Fecha de cierre de inscripciones de idiomas:{" "}
               </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {item.fecha_fin_insc_idiomas}
+              Fecha: {traducirDate( item.fecha_fin_insc_idiomas)}<br/>
+                Hora: {traducirTime(item.fecha_fin_insc_idiomas)}
               </Typography>
 
               <h5 className="leyendaFaltas">
                 Fecha de inicio de inscripciones de asesorias:{" "}
               </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {item.fecha_inicio_insc_asesorias}
+              Fecha: {traducirDate( item.fecha_inicio_insc_asesorias)}<br/>
+                Hora: {traducirTime(item.fecha_inicio_insc_asesorias)}
               </Typography>
               <h5 className="leyendaFaltas">
                 Fecha de cierre de inscripciones de asesorias:{" "}
               </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {item.fecha_fin_insc_asesorias}
+              Fecha: {traducirDate( item.fecha_fin_insc_asesorias)}<br/>
+                Hora: {traducirTime(item.fecha_fin_insc_asesorias)}
               </Typography>
 
               <h5 className="leyendaFaltas">Cursos Maximos por Alumno </h5>
