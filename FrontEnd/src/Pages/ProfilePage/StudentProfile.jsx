@@ -2,27 +2,47 @@ import React, {useState} from 'react'
 import Box from '@mui/material/Box'
 import Link from '@mui/material/Link'
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import EditIcon from '@mui/icons-material/Edit';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import Autocomplete from '@mui/material/Autocomplete';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText'
 import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
 import MuiAlert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
 import { createStudent, getStudents } from '../../api/students';
 import ParentInfo from './ParentInfo'
 
 
+const estados = [
+    'Aguascalientes', 'Baja California', 'Baja California Sur', 'Campeche',
+    'Coahuila', 'Colima', 'Chiapas', 'Chihuahua', 'Durango', 'Distrito Federal',
+    'Guanajuato', 'Guerrero', 'Hidalgo', 'Jalisco', 'México', 'Michoacán', 'Morelos',
+    'Nayarit', 'Nuevo León', 'Oaxaca', 'Puebla', 'Querétaro', 'Quintana Roo',
+    'San Luis Potosí', 'Sinaloa', 'Sonora', 'Tabasco', 'Tamaulipas', 'Tlaxcala',
+    'Veracruz', 'Yucatán', 'Zacatecas'
+    ]
 
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+const nivel_escolaridad = [
+    'Preescolar',
+    'Primaria',
+    'Secundaria',
+    'Bachillerato',
+    'Licenciatura',
+    'Universitario',
+    'Especialidad o Maestria',
+    'Doctorado'
+]
 
 const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStudents, setSuccessOpen, setErrorOpen, setAlertMessage}) =>{
 
     studentInfo['idUsuario'] = userID;
     const [studentData, setStudentInfo] = useState(studentInfo)
     const [newStudentInfo, setNewStudentInfo] = useState(studentInfo);
+    const [userStateInput, setUserStateInput] = useState('');
+    const [userState, setUserState] = useState(estados[0]);
+    const [userEducationInput, setUserEducationInput] = useState('');
+    const [userEducation, setUserEducation] = useState(nivel_escolaridad[0]);
 
     const handleChange = e => setStudentInfo(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
 
@@ -30,7 +50,7 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
         // Enviar esta informacion a bd
         e.preventDefault();
         setNewStudentInfo(studentData);
-        //console.log(studentData);
+        console.log(studentData);
         setAddStudent(!addStudent);
         createStudent(new URLSearchParams(studentData)).then((data) => {
             //console.log(data);
@@ -98,21 +118,65 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
                 <TextField name="apellido_paterno" label="Primer Apellido" value={studentData.apellido_paterno || ''} onChange={handleChange} helperText=" " required/>       
                 <TextField name="apellido_materno" label="Segundo Apellido" value={studentData.apellido_materno || ''} onChange={handleChange}  helperText=" " required/>       
                 <TextField name="num_telefono" label="Núm. Telefonico" value={studentData.num_telefono || ''} onChange={handleChange} helperText=" " required/>    
-                <TextField name="curp" label="CURP" value={studentData.curp || ''} onChange={handleChange} required
-                    helperText={
-                        <Link href="https://www.gob.mx/curp/" underline="hover" target="_blank">
-                                &#9432; Obten tu CURP
-                        </Link>
-                    }
-                />
+                <FormControl sx={{ m: 1, width: '35ch' }} required>
+                    <InputLabel>Nacionalidad</InputLabel>
+                    <Select
+                        value={studentData.pais}
+                        label="Nacionalidad"
+                        onChange={handleChange}
+                        name='pais'
+                    >
+                        <MenuItem value="">
+                        <em>N/A</em>
+                        </MenuItem>
+                        <MenuItem value={'Mexico'}>Mexicana</MenuItem>
+                        <MenuItem value={'Otro'}>Otro</MenuItem>
+                    </Select>
+                    <FormHelperText> </FormHelperText>
+                </FormControl>
+                {
+                    studentData.pais === "Mexico" ?
+                    <TextField name="curp" label="CURP" value={studentData.curp || ''} onChange={handleChange} required
+                        helperText={
+                            <Link href="https://www.gob.mx/curp/" underline="hover" target="_blank">
+                                    &#9432; Obten tu CURP
+                            </Link>
+                        }
+                    />
+                    : null
+                }
                 <TextField name='fecha_de_nacimiento' label="Fecha de nacimiento" type='date' InputLabelProps={{ shrink: true }} value={studentData.fecha_de_nacimiento || ''} onChange={handleChange}  helperText=" " required/>        
-                <TextField name="escolaridad" label="Escolaridad" value={studentData.escolaridad || ''} onChange={handleChange} helperText=" " required/>        
+                <Autocomplete
+                    value={userEducation || ''}
+                    onChange={(e, newValue) => {
+                        setUserEducation(newValue)
+                        studentInfo['escolaridad'] = newValue;
+
+                    }}
+                    inputValue={userEducationInput}
+                    onInputChange={(event, newInputValue) => {
+                        setUserEducationInput(newInputValue);
+                        studentInfo['escolaridad'] = newInputValue;
+                    }}
+                    options={nivel_escolaridad}
+                    renderInput={(params) => <TextField {...params} name='escolaridad' label="Escolaridad" helperText="Escolaridad o equivalente" required/>}
+                />
                 <TextField name="ultima_escuela" label="Ultima Escuela" value={studentData.ultima_escuela || ''} onChange={handleChange} helperText=" " required/>        
-                <TextField name="estado" label="Estado" value={studentData.estado || ''} onChange={handleChange} helperText=" " required/>   
+                <Autocomplete
+                    value={userState || ''}
+                    onChange={(e, newValue) => {setUserState(newValue)}}
+                    inputValue={userStateInput}
+                    onInputChange={(event, newInputValue) => {
+                        setUserStateInput(newInputValue);
+                        studentInfo['estado'] = newInputValue;
+                    }}
+                    options={estados}
+                    renderInput={(params) => <TextField {...params} name='estado' label="Estado" helperText=" " required/>}
+                />
                 <TextField name="ciudad" label="Ciudad" value={studentData.ciudad || ''} onChange={handleChange}  helperText=" "required/>        
                 <TextField name="codigo_postal" label="Codigo Postal" type="number" value={studentData.codigo_postal || ''}  onChange={handleChange}  helperText=" "/>
                 <TextField name="colonia" label="Colonia" value={studentData.colonia || ''} onChange={handleChange}  helperText=" " required/>
-                {calculate_age(studentData.fecha_de_nacimiento) < 18 ? <ParentInfo studentData={studentData} handleChange={handleChange}/> : null}
+                <ParentInfo studentData={studentData} handleChange={handleChange} underage={calculate_age(studentData.fecha_de_nacimiento) < 18}/> 
                 <Box sx={{width: '100%' }}></Box>
 
                 <Box sx={{display:'flex', m: 1, p: 1, justifyContent: 'flex-end', width: '100%'}}>

@@ -1,13 +1,19 @@
 import React, {useState} from 'react'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 
-const ParentInfo = ({studentData, handleChange}) =>{
+const ParentInfo = ({studentData, handleChange, underage}) =>{
 
     return (
         <>
-            <Box sx={{ typography: 'subtitle2', fontWeight: 'light', fontFamily: 'default', width: '100%', mt: 2}}>
-                Datos Tutor
+            <Box sx={{ fontFamily: 'default', width: '100%', mt: 2}}>
+                <Typography sx={{display: underage ? '' : 'none', typography: 'subtitle2', fontWeight: 'light'}}>
+                    Datos Tutor
+                </Typography>
+                <Typography sx={{display: !underage ? '' : 'none',typography: 'subtitle2', fontWeight: 'light'}}>
+                    Contacto Emergencia
+                </Typography>
             </Box>       
             <TextField name='tutor_nombre' label="Nombre(s)" value={studentData.tutor_nombre || ''} onChange={handleChange} helperText=" " required/>        
             <TextField name="tutor_apellido_paterno" label="Primer Apellido" value={studentData.tutor_apellido_paterno || ''} onChange={handleChange} helperText=" " required/>        
