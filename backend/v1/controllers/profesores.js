@@ -16,9 +16,7 @@ async function getAllProfesor(req, res) {
     res.send(JSON.stringify(result));
   } catch (err) {
     res.send(`ERROR: ${err}`);
-  } finally {
-    await client.close();
-  }
+  } 
 }
 // Test getAllProfesor
 // getAllProfesor().catch(console.dir);
@@ -51,9 +49,7 @@ async function createProfesor(req, res) {
       );
   } catch (err) {
     res.send(`ERROR: ${err}`);
-  } finally {
-    await client.close();
-  }
+  } 
 }
 // Test createProfesor
 // createProfesor().catch(console.dir);

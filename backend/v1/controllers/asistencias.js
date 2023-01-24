@@ -16,9 +16,7 @@ async function getAllAsistencia(req, res) {
     res.send(JSON.stringify(result));
   } catch (err) {
     res.send(`ERROR: ${err}`);
-  } finally {
-    await client.close();
-  }
+  } 
 }
 // Test getAllAsistencia
 // getAllAsistencia().catch(console.dir);

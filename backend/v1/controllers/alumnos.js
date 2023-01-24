@@ -15,9 +15,7 @@ async function getAllAlumno(req, res) {
     res.send(result);
   } catch (err) {
     res.send(`ERROR: ${err}`);
-  } finally {
-    await client.close();
-  }
+  } 
 }
 // Test getAllAlumno
 // getAllAlumno().catch(console.dir);
@@ -61,9 +59,7 @@ async function createAlumno(req, res) {
       );
   } catch (err) {
     res.send(`ERROR: ${err}`);
-  } finally {
-    await client.close();
-  }
+  } 
 }
 // Test createAlumno
 // createAlumno().catch(console.dir);

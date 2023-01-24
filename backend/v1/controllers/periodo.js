@@ -16,9 +16,7 @@ async function getAllPeriodo(req, res) {
     res.send(JSON.stringify(result));
   } catch (err) {
     res.send(`ERROR: ${err}`);
-  } finally {
-    await client.close();
-  }
+  } 
 }
 // Test getAllPeriodo
 // getAllPeriodo().catch(console.dir);
@@ -64,9 +62,7 @@ async function createPeriodo(req, res) {
       );
   } catch (err) {
     res.send(`ERROR: ${err}`);
-  } finally {
-    await client.close();
-  }
+  } 
 }
 // Test createPeriodo
 // createPeriodo().catch(console.dir);
