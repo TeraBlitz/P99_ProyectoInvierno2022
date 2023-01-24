@@ -17,11 +17,9 @@ import Profesores from './Pages/ControlPanel/PagesCP/profesores/Profesores'
 import ForgotPassword from './Pages/ForgotPassword/ForgotPassword'
 import SignUp from './Pages/SignUp/SignUp'
 import { createUser } from './api/users'
-
 import { Password } from '@mui/icons-material'
 
 
-import { Password } from '@mui/icons-material'
 
 
 
