@@ -195,6 +195,15 @@ export default function ShowClass() {
         let clasesJson = [];
         let profesoresJson = [];
         let iterator;
+        // hash table profesores ( para no mandar profesores repetidos)
+        let profesorHash = [];
+        const profesorFunc = (i) => {
+            i = i.slice(2)
+            return Number(i)
+
+        }
+        profesorFunc('a01198211')
+        let j = 0;
         for (let i = 0; i < csvArray.length; i++) {
             iterator = csvArray[i];
             let iteratorArray = iterator.split(',')
@@ -219,27 +228,32 @@ export default function ShowClass() {
             // JSON.stringify(clasesJson[i])
 
             // agregar profesores
-            profesoresJson[i] = {}
-            profesoresJson[i].nombre = iteratorArray[15]
-            profesoresJson[i].apellidos = iteratorArray[16]
-            profesoresJson[i].matricula = iteratorArray[17]
-            profesoresJson[i].correo = iteratorArray[18]
-            profesoresJson[i].fecha_de_nacimiento = ""
-            profesoresJson[i].num_telefono = ""
-            profesoresJson[i].num_cursos_impartidos = "0"
-            profesoresJson[i].idUser = ""
+            if (!profesorHash[profesorFunc(iteratorArray[17])]) {
+                profesoresJson[j] = {}
+                profesoresJson[j].nombre = iteratorArray[15]
+                profesoresJson[j].apellidos = iteratorArray[16]
+                profesoresJson[j].matricula = iteratorArray[17]
+                profesoresJson[j].correo = iteratorArray[18]
+                profesoresJson[j].fecha_de_nacimiento = ""
+                profesoresJson[j].num_telefono = ""
+                profesoresJson[j].num_cursos_impartidos = "0"
+                profesoresJson[j].idUser = ""
+
+                profesorHash[profesorFunc(iteratorArray[17])] = true
+                j++
+            }
         }
-        
+
         //console.log(clasesJson)
         fetch("http://localhost:3000/v1/csv/subirClases",
             {
                 method: "POST",
                 headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
+                    "Content-Type": "application/x-www-form-urlencoded",
                 },
                 body: new URLSearchParams({
                     clasesJson: JSON.stringify(clasesJson)
-                  }),
+                }),
             }
         )
         .then(response => response.json())
@@ -247,14 +261,19 @@ export default function ShowClass() {
             console.log(result)
         })
         .catch(error => console.log('Error(ShowClass): ', error));
-        /* fetch("http://localhost:3000/v1/csv/subirProfesores",
+        fetch("http://localhost:3000/v1/csv/subirProfesores",
             {
-                method:'POST',
-                body:profesoresJson,
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                    clasesJson: JSON.stringify(profesoresJson)
+                }),
             }
         ).then(e=>{
 
-        }) */
+        })
     }
 
 
