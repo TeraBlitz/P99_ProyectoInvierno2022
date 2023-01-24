@@ -48,9 +48,7 @@ export default function Periodos() {
       .catch((err) => console.log(err));
   };
 
-  useEffect(() => {
-    getPeriodos();
-  }, []);
+
 //Profesores
 
   const [dataProfesor, setDataProfesor] = useState([]);
@@ -61,9 +59,7 @@ export default function Periodos() {
       .catch((err) => console.log(err));
   };
 
-  useEffect(() => {
-    getProfesor();
-  }, []);
+
 
   //Clases
 
@@ -75,9 +71,7 @@ export default function Periodos() {
       .catch((err) => console.log(err));
   };
 
-  useEffect(() => {
-    getClase();
-  }, []);
+
 
    //Alumnos
 
@@ -88,9 +82,13 @@ export default function Periodos() {
        .then((res) => setDataAlumno(res.data))
        .catch((err) => console.log(err));
    };
- 
+
    useEffect(() => {
+    console.log('empieza use efect')
      getAlumno();
+     getPeriodos();
+     getClase();
+     getProfesor();
    }, []);
 
   // Variables para agregar tarjeta
@@ -324,7 +322,9 @@ export default function Periodos() {
     }
   };
 
+    console.log('data: ',data)
   return (
+
     <div className="container">
       <h1>Periodos</h1>
 
@@ -489,7 +489,7 @@ export default function Periodos() {
       </Modal>
 
       <div className="card-grid">
-        {data.map((item) => (
+        {Array.isArray(data) ? data.map((item) => (
           <Card key={item._id} sx={{ minWidth: 275, bgcolor: "grey.200" }}>
             <CardContent>
               <Typography variant="h5" component="div">
@@ -568,7 +568,7 @@ export default function Periodos() {
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
                 {dataProfesor.length}
               </Typography>
-        
+
               <h5 className="leyendaFaltas">Alumnos inscritos: </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
                 {dataAlumno.length}
@@ -832,7 +832,7 @@ export default function Periodos() {
               </Modal>
             </CardActions>
           </Card>
-        ))}
+        )): null}
         <div className="spacer"></div>
       </div>
     </div>
