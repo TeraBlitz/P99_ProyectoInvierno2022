@@ -253,7 +253,7 @@ export default function ShowClass() {
             clasesJson[i].cupo_actual = "0"
             // JSON.stringify(clasesJson[i])
 
-            // agregar profesores
+            // Agregar Profesores
             if (!profesorHash[profesorFunc(iteratorArray[17])]) {
                 profesoresJson[j] = {}
                 profesoresJson[j].nombre = iteratorArray[15]
@@ -282,24 +282,29 @@ export default function ShowClass() {
                 }),
             }
         )
-            .then(response => response.json())
-            .then(result => {
-                resetClases()
-            })
-            .catch(error => console.log('Error(ShowClass): ', error));
-        // fetch("http://localhost:3000/v1/csv/subirProfesores",
-        //     {
-        //         method: "POST",
-        //         headers: {
-        //             "Content-Type": "application/x-www-form-urlencoded",
-        //         },
-        //         body: new URLSearchParams({
-        //             clasesJson: JSON.stringify(profesoresJson)
-        //         }),
-        //     }
-        // ).then(e => {
-        //
-        // })
+        .then(response => response.json())
+        .then(result => {
+            console.log(result)
+        })
+        .catch(error => console.log('Error(ShowClass): ', error));
+
+        //console.log(profesoresJson)
+        fetch("http://localhost:3000/v1/csv/subirProfesores",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                    clasesJson: JSON.stringify(profesoresJson)
+                }),
+            }
+        )
+        .then(response => response.json())
+        .then(result => {
+            console.log(result)
+        })
+        .catch(error => console.log('Error(ShowClass): ', error));
     }
 
 
