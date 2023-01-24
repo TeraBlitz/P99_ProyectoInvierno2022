@@ -46,6 +46,7 @@ async function subirClases(req, res) {
             "msg": msg
         })
     } catch (err) {
+        console.log(err)
         res.json({
             "msg": `ERROR: ${err}`
         });
@@ -86,6 +87,7 @@ async function subirProfesores(req, res) {
             "msg": msg
         })
     } catch (err) {
+        console.log(err)
         res.json({
             "msg": `ERROR: ${err}`
         });
