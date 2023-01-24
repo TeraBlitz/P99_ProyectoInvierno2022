@@ -84,11 +84,16 @@ function RegistroClasesAlumnos({changeContent}) {
         }
     }
 
-    const handleChange = (e) => {
-        setCurrentStudent(e.target.value);
-        const age = calculate_age(currentStudent.fecha_de_nacimiento);
+    const filterClasses = (student) => {
+        console.log(student);
+        const age = calculate_age(student.fecha_de_nacimiento);
         const filteredClasses = clases.filter(clase => Number(clase.edad_minima) < age && age < Number(clase.edad_maxima))
         setClases(filteredClasses);
+    }
+
+    const handleChange = (e) => {
+        setCurrentStudent(e.target.value);
+        filterClasses(e.target.value);
     }
 
     useEffect(() => {
