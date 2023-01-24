@@ -12,35 +12,45 @@ async function subirClases(req, res) {
         const collection = database.collection("clases");
 
         // Crear el arreglo de Docs
+        req.body.clasesJson = JSON.parse(req.body.clasesJson)
+        // console.log(req.body.clasesJson)
+        // console.log(req.body.clasesJson.length)
         let docs = []
-        for (let i = 0; i < req.body.length; i++) {
+        for (let i = 0; i < req.body.clasesJson.length; i++) {
             docs[i] = {}
-            docs[i].clave = req.body[i].clave
-            docs[i].area = req.body[i].area
-            docs[i].modalidad = req.body[i].modalidad
-            docs[i].nombre_curso = req.body[i].nombre_curso
-            docs[i].nivel = req.body[i].nivel
-            docs[i].matriculaMaestro = req.body[i].matriculaMaestro
-            docs[i].clavePeriodo = req.body[i].clavePeriodo
-            docs[i].edad_minima = req.body[i].edad_minima
-            docs[i].edad_maxima = req.body[i].edad_maxima
-            docs[i].lunes = req.body[i].lunes
-            docs[i].martes = req.body[i].martes
-            docs[i].miercoles = req.body[i].miercoles
-            docs[i].jueves = req.body[i].jueves
-            docs[i].viernes = req.body[i].viernes
-            docs[i].sabado = req.body[i].sabado
-            docs[i].cupo_maximo = req.body[i].cupo_maximo
-            docs[i].cupo_actual = req.body[i].cupo_actual
+            docs[i].clave = req.body.clasesJson[i].clave
+            docs[i].area = req.body.clasesJson[i].area
+            docs[i].modalidad = req.body.clasesJson[i].modalidad
+            docs[i].nombre_curso = req.body.clasesJson[i].nombre_curso
+            docs[i].nivel = req.body.clasesJson[i].nivel
+            docs[i].matriculaMaestro = req.body.clasesJson[i].matriculaMaestro
+            docs[i].clavePeriodo = req.body.clasesJson[i].clavePeriodo
+            docs[i].edad_minima = req.body.clasesJson[i].edad_minima
+            docs[i].edad_maxima = req.body.clasesJson[i].edad_maxima
+            docs[i].lunes = req.body.clasesJson[i].lunes
+            docs[i].martes = req.body.clasesJson[i].martes
+            docs[i].miercoles = req.body.clasesJson[i].miercoles
+            docs[i].jueves = req.body.clasesJson[i].jueves
+            docs[i].viernes = req.body.clasesJson[i].viernes
+            docs[i].sabado = req.body.clasesJson[i].sabado
+            docs[i].cupo_maximo = req.body.clasesJson[i].cupo_maximo
+            docs[i].cupo_actual = req.body.clasesJson[i].cupo_actual
         }
+        console.log(docs)
     
         const result = await collection.insertMany(docs);
-        for (i = 0; i < result.insertedCount; i++)
-        res.send(
-            `Un documento fue insertado con el ID: ${result.insertedIds[i]}`
-        );
+        let msg = []
+        for (i = 0; i < result.insertedCount; i++){
+            msg[i] = {}
+            msg[i].i = `Un documento fue insertado con el ID: ${result.insertedIds[i]}`
+        }
+        res.json({
+            "msg": msg
+        })
     } catch (err) {
-        res.send(`ERROR: ${err}`);
+        res.json({
+            "msg": `ERROR en subirClases: ${err}`
+        });
     } finally {
         await client.close();
     }
