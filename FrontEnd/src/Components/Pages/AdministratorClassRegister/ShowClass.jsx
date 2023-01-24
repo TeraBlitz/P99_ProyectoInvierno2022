@@ -46,8 +46,39 @@ export default function ShowClass() {
     const abrirCerrarModalInsertar = () => {
         setModalInsertar(!modalInsertar);
     };
+    const resetClases = async () => {
+        await fetch("http://localhost:3000/v1/clases/", {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            }
+        }).then(response => response.json()).then(result => {
+            setData([]);
+            for (let i = 0; i < result.length; i++) {
+                let fechas = ""
+                result[i].lunes != "" ? fechas += "lunes, " : fechas += ""
+                result[i].martes != "" ? fechas += "martes, " : fechas += ""
+                result[i].miercoles != "" ? fechas += "miercoles, " : fechas += ""
+                result[i].jueves != "" ? fechas += "jueves, " : fechas += ""
+                result[i].viernes != "" ? fechas += "viernes, " : fechas += ""
+                result[i].sabado != "" ? fechas += "sabado, " : fechas += ""
+                console.log(fechas)
+                setData(data => [...data, {
+                    _id: i,
+                    clave: result[i].clave,
+                    nombre_curso: result[i].nombre_curso,
+                    nivel: result[i].nivel,
+                    matriculaMaestro: result[i].matriculaMaestro,
+                    edades: result[i].edad_minima + "-" + result[i].edad_maxima,
+                    cupo_maximo: result[i].cupo_maximo,
+                    modalidad: result[i].modalidad,
+                    fechas: fechas
+                }])
+            }
+        })
+    }
+    useEffect(() => { resetClases() }, [])
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-
     const handleClickOpen = () => {
         setOpenDeleteDialog(true);
     };
@@ -90,9 +121,6 @@ export default function ShowClass() {
         }
     };
 
-    //Se encarga de guardar la nueva informacion
-    useEffect(() => {
-    }, []);
 
     //Actualiza las clases
     function createClasses(datas) {
@@ -185,30 +213,97 @@ export default function ShowClass() {
 
     }
 
-    const sendCSV = (csv) => {
+    const sendCSV = async (csv) => {
         const csvArray = csv.split("\n")
         csvArray.shift()
-        let csvJson = [];
+        let clasesJson = [];
+        let profesoresJson = [];
         let iterator;
+        // hash table profesores ( para no mandar profesores repetidos)
+        let profesorHash = [];
+        const profesorFunc = (i) => {
+            i = i.slice(2)
+            return Number(i)
+
+        }
+        profesorFunc('a01198211')
+        let j = 0;
         for (let i = 0; i < csvArray.length; i++) {
             iterator = csvArray[i];
-            let iteratorArray  = iterator.split(',')
-            csvJson[i] = {};
-            csvJson[i].id = i
-            csvJson[i].clave = iteratorArray[0] || ""
-            csvJson[i].matriculaMaestro = iteratorArray[1] || ""
-            csvJson[i].nombre_curso = iteratorArray[2] || ""
-            csvJson[i].nivel = iteratorArray[3] || ""
-            csvJson[i].rango_edades = iteratorArray[4] || ""
-            csvJson[i].horario = iteratorArray[5] || ""
-            csvJson[i].cupo_maximo = iteratorArray[6] || ""
-            csvJson[i].frequencia_semanal = iteratorArray[7] || ""
-            csvJson[i].cupo_actual = iteratorArray[8] || ""
+            let iteratorArray = iterator.split(',')
+            // agregar clases
+            clasesJson[i] = {};
+            clasesJson[i].clave = iteratorArray[0]
+            clasesJson[i].nombre_curso = iteratorArray[1]
+            clasesJson[i].nivel = iteratorArray[2]
+            clasesJson[i].area = iteratorArray[3]
+            clasesJson[i].modalidad = iteratorArray[4]
+            clasesJson[i].clavePeriodo = iteratorArray[5]
+            clasesJson[i].cupo_maximo = iteratorArray[6]
+            clasesJson[i].edad_minima = iteratorArray[7]
+            clasesJson[i].edad_maxima = iteratorArray[8]
+            clasesJson[i].lunes = iteratorArray[9]
+            clasesJson[i].martes = iteratorArray[10]
+            clasesJson[i].miercoles = iteratorArray[11]
+            clasesJson[i].jueves = iteratorArray[12]
+            clasesJson[i].viernes = iteratorArray[13]
+            clasesJson[i].sabado = iteratorArray[14]
+            clasesJson[i].matriculaMaestro = iteratorArray[17]
+            clasesJson[i].cupo_actual = "0"
+            // JSON.stringify(clasesJson[i])
+
+            // Agregar Profesores
+            if (!profesorHash[profesorFunc(iteratorArray[17])]) {
+                profesoresJson[j] = {}
+                profesoresJson[j].nombre = iteratorArray[15]
+                profesoresJson[j].apellidos = iteratorArray[16]
+                profesoresJson[j].matricula = iteratorArray[17]
+                profesoresJson[j].correo = iteratorArray[18]
+                profesoresJson[j].fecha_de_nacimiento = ""
+                profesoresJson[j].num_telefono = ""
+                profesoresJson[j].num_cursos_impartidos = "0"
+                profesoresJson[j].idUser = ""
+
+                profesorHash[profesorFunc(iteratorArray[17])] = true
+                j++
+            }
         }
-        console.log(csvJson)
-        setData(csvJson)
 
+        //console.log(clasesJson)
+        await fetch("http://localhost:3000/v1/csv/subirClases",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                    clasesJson: JSON.stringify(clasesJson)
+                }),
+            }
+        )
+        .then(response => response.json())
+        .then(result => {
+            console.log(result)
+        })
+        .catch(error => console.log('Error(ShowClass): ', error));
 
+        //console.log(profesoresJson)
+        fetch("http://localhost:3000/v1/csv/subirProfesores",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                    clasesJson: JSON.stringify(profesoresJson)
+                }),
+            }
+        )
+        .then(response => response.json())
+        .then(result => {
+            console.log(result)
+        })
+        .catch(error => console.log('Error(ShowClass): ', error));
     }
 
 
@@ -482,13 +577,13 @@ export default function ShowClass() {
 
     const columns = useMemo(
         () => [
-            { field: "id", headerName: "Id", width: 134, hide: true },
             { field: "clave", headerName: "Clave", width: 134 },
             { field: "nombre_curso", headerName: "Curso", width: 170 },
             { field: "nivel", headerName: "Nivel", width: 231 },
             { field: "matriculaMaestro", headerName: "Profesor", width: 220, sortable: false },
-            { field: "horario", headerName: "Frecuencia", width: 165 },
             { field: "cupo_maximo", headerName: "Capacidad", width: 160 },
+            { field: 'edades', headerName: 'Edades', width: 160 },
+            { field: 'fechas', headerName: 'Fechas', width: 160 },
             {
                 field: "actions",
                 headerName: "Acciones",
@@ -613,8 +708,8 @@ export default function ShowClass() {
                     <DataGrid
                         columns={columns}
                         rows={data}
-                        getRowId={(row) => row.id}
-                        rowsPerPageOptions={[5, 10,20]}
+                        getRowId={(row) => row._id}
+                        rowsPerPageOptions={[5, 10, 20]}
                         pageSize={pageSize}
                         onPageSizeChange={(newPageSize) => SetPageSize(newPageSize)}
                         getRowSpacing={(params) => ({

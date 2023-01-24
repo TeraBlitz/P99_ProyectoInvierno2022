@@ -26,7 +26,6 @@ const clasesSchema = {
         "nombre_curso",
         "nivel",
         "matriculaMaestro",
-
         "clavePeriodo",
         "edad_minima",
         "edad_maxima",
@@ -38,6 +37,7 @@ const clasesSchema = {
         "sabado",
         "cupo_maximo",
         "cupo_actual"
+
     ],
     additionalProperties: true,
     errorMessage: {

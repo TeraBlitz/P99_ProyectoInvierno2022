@@ -22,6 +22,7 @@ import { Password } from '@mui/icons-material'
 
 
 
+
 export const userContext = createContext()
 function App() {
     const [open, setOpen] = useState(false)
@@ -41,7 +42,7 @@ function App() {
         setContent(newContent)
     }
     const PagesToRender = {
-        RegistroClasesAlumnos: <RegistroClasesAlumno />,
+        RegistroClasesAlumnos: <RegistroClasesAlumno changeContent={changeContent}/>,
 
         MisClasesProfesor: <MisClasesProfesor />,
 
@@ -60,7 +61,6 @@ function App() {
         Profesores: <Profesores/>
 
     }
-
 
 
     const handleSignIn = (e) => {
@@ -91,13 +91,10 @@ function App() {
             })
 
             .catch(error => console.log('error', error));
-
     }
 
     return !isSignedIn ?
         <SignIn handleSignIn={handleSignIn} handleUser={handleUser}  loginError={loginError} />
-
-
         :
         <userContext.Provider value={user}>
             <Box id="main" sx={{ display: 'flex' }}>
