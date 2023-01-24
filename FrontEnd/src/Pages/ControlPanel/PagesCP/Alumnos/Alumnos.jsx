@@ -556,7 +556,7 @@ export default function Alumnos() {
           Escolaridad:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.escolaridadl}
+        {consolaSeleccionada.escolaridad}
         </p>
       </Box>
 
