@@ -199,7 +199,7 @@ export default function Alumnos() {
           {consolaSeleccionada.nombre}
         </p>
       </Box>
-        
+
       <Box
         sx={{
           display: "grid",
@@ -247,7 +247,7 @@ export default function Alumnos() {
         {consolaSeleccionada.apellido_materno}
         </p>
       </Box>
-      
+
       <Box
         sx={{
           display: "grid",
@@ -271,7 +271,7 @@ export default function Alumnos() {
         {consolaSeleccionada.fecha_de_nacimiento}
         </p>
       </Box>
-      
+
       <Box
         sx={{
           display: "grid",
@@ -289,7 +289,7 @@ export default function Alumnos() {
             fontWeight: "bold",
           }}
         >
-          Telefono Estudiante: 
+          Telefono Estudiante:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
         {consolaSeleccionada.num_telefono}
@@ -319,7 +319,7 @@ export default function Alumnos() {
         {consolaSeleccionada.tutor_nombre}
         </p>
       </Box>
-      
+
       <Box
         sx={{
           display: "grid",
@@ -343,7 +343,7 @@ export default function Alumnos() {
         {consolaSeleccionada.tutor_apellido_paterno}
         </p>
       </Box>
-      
+
       <Box
         sx={{
           display: "grid",
@@ -367,7 +367,7 @@ export default function Alumnos() {
         {consolaSeleccionada.tutor_apellido_materno}
         </p>
       </Box>
-      
+
       <Box
         sx={{
           display: "grid",
@@ -385,7 +385,7 @@ export default function Alumnos() {
             fontWeight: "bold",
           }}
         >
-          Correo del Tutor: 
+          Correo del Tutor:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
         {consolaSeleccionada.tutor_correo}
@@ -409,7 +409,7 @@ export default function Alumnos() {
             fontWeight: "bold",
           }}
         >
-          Telefono del Tutor: 
+          Telefono del Tutor:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
         {consolaSeleccionada.tutor_num_telefono}
@@ -511,7 +511,7 @@ export default function Alumnos() {
         {consolaSeleccionada.colonia}
         </p>
       </Box>
-      
+
       <Box
         sx={{
           display: "grid",
@@ -583,7 +583,7 @@ export default function Alumnos() {
         {consolaSeleccionada.ultima_escuela}
         </p>
       </Box>
-      
+
     </div>
   );
 
@@ -885,13 +885,7 @@ export default function Alumnos() {
           marginTop: "300px",
         }}
       >
-        <Typography
-          variant="h3"
-          component="h3"
-          sx={{ textAlign: "left", mt: 3, mb: 3, fontFamily: "arial" }}
-        >
-          Alumnos Inscritos
-        </Typography>
+
 
         <DataGrid
           columns={columns}
