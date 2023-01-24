@@ -35,32 +35,63 @@ function RegistroClasesAlumnos({changeContent}) {
         return ~~((Date.now() - birthday) / (magic_number));
     }
 
+    const getHorario = (params) => {
+        return `${params.row.lunes ? `Lun: ${params.row.lunes}` : ''}
+                ${params.row.martes ? `Mar: ${params.row.martes}` : ''}
+                ${params.row.miercoles ? `Mierc: ${params.row.miercoles}` : ''}
+                ${params.row.jueves ? `Juev: ${params.row.jueves}` : ''}
+                ${params.row.viernes ? `Vier: ${params.row.viernes}` : ''}
+                ${params.row.sabado ? `Sab: ${params.row.sabado}` : ''}`
+    }
+
+    const getCupoActual = (params) => {
+        return `${Number(params.row.cupo_maximo) - Number(params.row.cupo_actual)}`
+    }
+
     const columns = [
-        { field: 'clave', headerName: 'Clave', width: 110 },
-        {
-            field: 'nombre_curso',
-            headerName: 'Curso',
-            width: 190,
-            editable: false,
-        },
         {
             field: 'clavePeriodo',
             headerName: 'Periodo',
-            width: 180,
+            width: 110,
             editable: false,
 
         },
+        { 
+            field: 'clave',
+            headerName: 'Clave',
+            width: 100 
+        },
         {
-            field: 'cupo_maximo',
-            headerName: 'Cupo Maximo',
-            width: 180,
-            editable: 'false'
+            field: 'nombre_curso',
+            headerName: 'Curso',
+            width: 120,
+            editable: false,
         },
         {
             field: 'nivel',
             headerName: 'Nivel',
-            width: 180,
+            width: 80,
             editable: false
+        },
+        {
+            field: 'modalidad',
+            headerName: 'Modalidad',
+            width: 120,
+            editable: false
+        },
+        {
+            field: 'horario',
+            headerName: 'Horario',
+            width: 150,
+            editable: false,
+            valueGetter: getHorario,
+        },
+        {
+            field: 'cupo_disponible',
+            headerName: 'Lugares disponibles',
+            width: 120,
+            editable: 'false',
+            valueGetter: getCupoActual,
         },
         {
             field: "actions",
@@ -265,7 +296,7 @@ function RegistroClasesAlumnos({changeContent}) {
                     </CardContent>
                 </Card>
                 <Box sx={{ width: { lg: '60%', sm: '90%' }, height: { lg: '95%', sm: '50%' }, maxHeight: '100vh', minWidth: '548px' }}>
-                    <DataGrid rows={clases} columns={columns} disableSelectionOnClick={true} getRowId={(row) => row._id}
+                    <DataGrid rows={clases} columns={columns} disableSelectionOnClick={true} getRowId={(row) => row._id} getRowHeight={() => 'auto'}
                         filterModel={{
                             items: items
                         }
