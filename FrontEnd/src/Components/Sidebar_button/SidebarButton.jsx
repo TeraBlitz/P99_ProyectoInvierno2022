@@ -6,14 +6,13 @@ import { Divider } from '@mui/material';
 function SidebarButton(props) {
     const handleClick = () => {
         props.changeContent(props.content)
-        props.changeDrawerState()
+        props.changeDrawerState(false)
 
     }
 
-
     return (
         <ListItemButton onClick={() => handleClick()}>
-            <ListItemText sx={{ color: 'white' }}>{props.title}</ListItemText>
+            <ListItemText>{props.title}</ListItemText>
         </ListItemButton>
     )
 }
