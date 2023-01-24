@@ -32,7 +32,6 @@ const alumnoSchema = {
     "estado",
     "ciudad",
     "colonia",
-    "codigo_postal",
     "escolaridad",
     "ultima_escuela",
   ],

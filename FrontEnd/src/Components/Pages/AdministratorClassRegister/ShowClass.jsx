@@ -9,7 +9,6 @@ import {
     Typography,
     Autocomplete,
 } from "@mui/material";
-import { data as information } from "../../../data/datosprueba";
 import { niveles } from "../../../data/numerosprueba";
 import { profes } from "../../../data/profesprueba";
 import { useState, useEffect } from "react";
@@ -20,9 +19,7 @@ import Actions from "./Actions";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import MenuItem from "@mui/material/MenuItem";
-import { minWidth, minHeight } from "@mui/system";
 import { periodosPrueba } from './../../../data/periodosprueba.js'
-import DeleteDialog from './DeleteDialog'
 import { InsertDriveFile } from "@mui/icons-material";
 
 
@@ -729,8 +726,6 @@ export default function ShowClass() {
                     />
                 </Box>
 
-                {/* Creacion de modales */}
-                <DeleteDialog deleteClass={deleteClass} handleClose={handleClose} open={openDeleteDialog} />
                 {/* Creacion de modales */}
                 <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
                     {bodyInsertar}
