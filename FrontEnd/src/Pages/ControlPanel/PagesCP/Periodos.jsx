@@ -53,45 +53,45 @@ export default function Periodos() {
   }, []);
 //Profesores
 
-  const [dataProfesor, setDataProfesor] = useState([]);
-  const getProfesor = () => {
-    axios
-      .get("http://127.0.0.1:3000/v1/profesores")
-      .then((res) => setDataProfesor(res.data))
-      .catch((err) => console.log(err));
-  };
+  // const [dataProfesor, setDataProfesor] = useState([]);
+  // const getProfesor = () => {
+  //   axios
+  //     .get("http://127.0.0.1:3000/v1/profesores")
+  //     .then((res) => setDataProfesor(res.data))
+  //     .catch((err) => console.log(err));
+  // };
 
-  useEffect(() => {
-    getProfesor();
-  }, []);
+  // useEffect(() => {
+  //   getProfesor();
+  // }, []);
 
   //Clases
 
-  const [dataClase, setDataClase] = useState([]);
-  const getClase = () => {
-    axios
-      .get("http://127.0.0.1:3000/v1/clases")
-      .then((res) => setDataClase(res.data))
-      .catch((err) => console.log(err));
-  };
+  // const [dataClase, setDataClase] = useState([]);
+  // const getClase = () => {
+  //   axios
+  //     .get("http://127.0.0.1:3000/v1/clases")
+  //     .then((res) => setDataClase(res.data))
+  //     .catch((err) => console.log(err));
+  // };
 
-  useEffect(() => {
-    getClase();
-  }, []);
+  // useEffect(() => {
+  //   getClase();
+  // }, []);
 
    //Alumnos
 
-   const [dataAlumno, setDataAlumno] = useState([]);
-   const getAlumno = () => {
-     axios
-       .get("http://127.0.0.1:3000/v1/alumnos")
-       .then((res) => setDataAlumno(res.data))
-       .catch((err) => console.log(err));
-   };
+  //  const [dataAlumno, setDataAlumno] = useState([]);
+  //  const getAlumno = () => {
+  //    axios
+  //      .get("http://127.0.0.1:3000/v1/alumnos")
+  //      .then((res) => setDataAlumno(res.data))
+  //      .catch((err) => console.log(err));
+  //  };
  
-   useEffect(() => {
-     getAlumno();
-   }, []);
+  //  useEffect(() => {
+  //    getAlumno();
+  //  }, []);
 
   // Variables para agregar tarjeta
   const [modalInsertar, setModalInsertar] = useState(false);
@@ -566,17 +566,17 @@ export default function Periodos() {
 
               <h5 className="leyendaFaltas">Profesores inscritos: </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {dataProfesor.length}
+               5
               </Typography>
         
               <h5 className="leyendaFaltas">Alumnos inscritos: </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {dataAlumno.length}
+                5
               </Typography>
 
               <h5 className="leyendaFaltas">Clases inscritas: </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {dataClase.length}
+                4
               </Typography>
 
             </CardContent>
