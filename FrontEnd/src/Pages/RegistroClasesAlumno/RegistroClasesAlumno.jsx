@@ -13,12 +13,17 @@ import Select from '@mui/material/Select';
 import { getStudents } from '../../api/students'
 import { getClasses } from '../../api/classes'
 import { userContext } from './../../App.jsx'
+import ConfirmationDialog from '../../Components/Dialog/ConfirmationDialog'
 
 function RegistroClasesAlumnos({changeContent}) {
     const [items, setItems] = useState([]);
-    const [students, setStudents] = useState(null)
-    const [currentStudent, setCurrentStudent] = useState(null)
-
+    const [students, setStudents] = useState(null);
+    const [currentStudent, setCurrentStudent] = useState(null);
+    const [error, setError] = useState('none');
+    const [clases, setClases] = useState(null);
+    const [claseRegistrada, setClaseRegistrada] = useState([]); // esto se obtendria de la base de datos
+    const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+    
     const userValues = useContext(userContext)
 
     const columns = [
@@ -50,17 +55,17 @@ function RegistroClasesAlumnos({changeContent}) {
         },
         {
             field: "actions",
-            headerName: "Acciones",
+            headerName: "Incripción",
             type: "actions",
             width: 115,
             renderCell: (params) => (
-                <AddCircleIcon sx={{ color: params.id == claseRegistrada[0] ? "green" : "black" }} onClick={() => changeClaseRegistrada(params.id)}></AddCircleIcon>
+                <Button onClick={handleOpenDialog} variant="contained">Inscribir</Button>
             ),
 
         }
 
     ];
-    const [claseRegistrada, setClaseRegistrada] = useState([]) // esto se obtendria de la base de datos
+    
     const changeClaseRegistrada = (classId) => {
         if (claseRegistrada[0]) {
             setError('block')
@@ -68,9 +73,6 @@ function RegistroClasesAlumnos({changeContent}) {
             setClaseRegistrada([classId])
         }
     }
-    const [error, setError] = useState('none')
-
-    const [clases, setClases] = useState(null)
 
     const handleChange = (e) => {
         setCurrentStudent(e.target.value);
@@ -98,6 +100,15 @@ function RegistroClasesAlumnos({changeContent}) {
          getStudentClasses();
          console.log(clases)
      }, []);
+
+     
+    const handleOpenDialog = () => {
+        setOpenConfirmationDialog(true);
+    };
+    
+    const handleCloseDialog = () => {
+        setOpenConfirmationDialog(false);
+    };
 
 
     if (!students || !clases) {
@@ -244,7 +255,7 @@ function RegistroClasesAlumnos({changeContent}) {
                     />
                 </Box>
             </Box>
-
+            <ConfirmationDialog clase={claseRegistrada} handleClose={handleCloseDialog} open={openConfirmationDialog} changeClaseRegistrada={changeClaseRegistrada}/>
 
         </>
     )
