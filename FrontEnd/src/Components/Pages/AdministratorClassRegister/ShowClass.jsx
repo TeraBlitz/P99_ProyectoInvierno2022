@@ -576,13 +576,13 @@ export default function ShowClass() {
 
     const columns = useMemo(
         () => [
-            { field: "id", headerName: "Id", width: 134, hide: true },
             { field: "clave", headerName: "Clave", width: 134 },
             { field: "nombre_curso", headerName: "Curso", width: 170 },
             { field: "nivel", headerName: "Nivel", width: 231 },
             { field: "matriculaMaestro", headerName: "Profesor", width: 220, sortable: false },
-            { field: "horario", headerName: "Frecuencia", width: 165 },
             { field: "cupo_maximo", headerName: "Capacidad", width: 160 },
+            { field: 'edades', headerName: 'Edades', width: 160 },
+            { field: 'fechas', headerName: 'Fechas', width: 160 },
             {
                 field: "actions",
                 headerName: "Acciones",
@@ -707,7 +707,7 @@ export default function ShowClass() {
                     <DataGrid
                         columns={columns}
                         rows={data}
-                        getRowId={(row) => row.id}
+                        getRowId={(row) => row._id}
                         rowsPerPageOptions={[5, 10, 20]}
                         pageSize={pageSize}
                         onPageSizeChange={(newPageSize) => SetPageSize(newPageSize)}
