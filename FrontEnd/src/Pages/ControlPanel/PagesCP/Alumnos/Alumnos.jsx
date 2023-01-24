@@ -9,7 +9,6 @@ import Actions from "./ActAlumnos";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import axios from "axios";
-import { CSVLink } from "react-csv";
 
 export default function Alumnos() {
   //Encargado de guardar la data
