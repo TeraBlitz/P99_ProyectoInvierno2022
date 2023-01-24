@@ -21,7 +21,8 @@ const studentInfo = {
     'nombre': '', 'apellido_paterno': '', 'apellido_materno': '',
     'num_telefono': '', 'curp': '', 'fecha_de_nacimiento':'',
     'escolaridad': '', 'ultima_escuela':'','estado':'', 'ciudad':'', 'colonia': '',
-    'codigo_postal':''
+    'codigo_postal':'', 'pais': '', 'tutor_nombre': '', 'tutor_apellido_paterno': '',
+    'tutor_apellido_materno': '', 'tutor_correo': '', 'tutor_num_telefono': ''
 };
 
 const Alert = React.forwardRef(function Alert(props, ref) {
