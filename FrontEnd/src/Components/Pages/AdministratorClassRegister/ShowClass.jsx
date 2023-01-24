@@ -82,7 +82,6 @@ export default function ShowClass() {
     }
     useEffect(() => { resetClases() }, [])
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-
     const handleClickOpen = () => {
         setOpenDeleteDialog(true);
     };
@@ -126,9 +125,6 @@ export default function ShowClass() {
         }
     };
 
-    //Se encarga de guardar la nueva informacion
-    useEffect(() => {
-    }, []);
 
     //Actualiza las clases
     function createClasses(datas) {
@@ -221,7 +217,7 @@ export default function ShowClass() {
 
     }
 
-    const sendCSV = (csv) => {
+    const sendCSV = async (csv) => {
         const csvArray = csv.split("\n")
         csvArray.shift()
         let clasesJson = [];
@@ -256,6 +252,7 @@ export default function ShowClass() {
             clasesJson[i].jueves = iteratorArray[12]
             clasesJson[i].viernes = iteratorArray[13]
             clasesJson[i].sabado = iteratorArray[14]
+            clasesJson[i].matriculaMaestro = iteratorArray[17]
             clasesJson[i].cupo_actual = "0"
             // JSON.stringify(clasesJson[i])
 
@@ -277,35 +274,35 @@ export default function ShowClass() {
         }
 
         //console.log(clasesJson)
-        fetch("http://localhost:3000/v1/csv/subirClases",
-            {
-                method: "POST",
-                headers: {
-                     "Content-Type": "application/x-www-form-urlencoded",
-                },
-                body: new URLSearchParams({
-                    clasesJson: JSON.stringify(clasesJson)
-                }),
-            }
-        )
-        .then(response => response.json())
-        .then(result => {
-            console.log(result)
-        })
-        .catch(error => console.log('Error(ShowClass): ', error));
-        fetch("http://localhost:3000/v1/csv/subirProfesores",
+        await fetch("http://localhost:3000/v1/csv/subirClases",
             {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
                 },
                 body: new URLSearchParams({
-                    clasesJson: JSON.stringify(profesoresJson)
+                    clasesJson: JSON.stringify(clasesJson)
                 }),
             }
-        ).then(e=>{
-
-        })
+        )
+            .then(response => response.json())
+            .then(result => {
+                resetClases()
+            })
+            .catch(error => console.log('Error(ShowClass): ', error));
+        // fetch("http://localhost:3000/v1/csv/subirProfesores",
+        //     {
+        //         method: "POST",
+        //         headers: {
+        //             "Content-Type": "application/x-www-form-urlencoded",
+        //         },
+        //         body: new URLSearchParams({
+        //             clasesJson: JSON.stringify(profesoresJson)
+        //         }),
+        //     }
+        // ).then(e => {
+        //
+        // })
     }
 
 
