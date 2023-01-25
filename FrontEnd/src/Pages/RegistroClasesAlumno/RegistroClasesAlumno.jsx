@@ -26,6 +26,8 @@ function RegistroClasesAlumnos({changeContent}) {
     const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
     const [openMoreInfo, setOpenMoreInfo] = useState(false);
     const [currentClase, setCurrentClase] = useState(); 
+    const [nameFilter, setNameFilter] = useState('');
+    const [filteredClasses, setFilteredClasses] = useState(null);
     
     const userValues = useContext(userContext)
 
@@ -143,11 +145,16 @@ function RegistroClasesAlumnos({changeContent}) {
     const filterClasses = (student) => {
         console.log(student);
         const age = calculate_age(student.fecha_de_nacimiento);
-        const filteredClasses = clases.filter(clase => Number(clase.edad_minima) < age && age < Number(clase.edad_maxima))
-        setClases(filteredClasses);
+        const filter = clases.filter(clase => Number(clase.edad_minima) < age && age < Number(clase.edad_maxima))
+        setFilteredClasses(filter);
     }
 
     const handleChange = (e) => {
+        if (e.target.value === ""){
+            setFilteredClasses(clases);
+            setCurrentStudent(null);
+            return
+        }
         setCurrentStudent(e.target.value);
         filterClasses(e.target.value);
     }
@@ -168,7 +175,8 @@ function RegistroClasesAlumnos({changeContent}) {
         const getStudentClasses = () =>{
              getClasses().then(
                  (data) => {
-                     setClases(data);
+                    setClases(data);
+                    setFilteredClasses(data);
              });
          }
          getStudentClasses();
@@ -185,6 +193,11 @@ function RegistroClasesAlumnos({changeContent}) {
         setOpenConfirmationDialog(false);
     };
 
+    const handleNameFilter = (e) => {
+        setNameFilter(e.target.value);
+        const filteredClasses = clases.filter(clase => clase.nombre_curso.toLowerCase().includes(e.target.value.trim().toLowerCase()));
+        setFilteredClasses(filteredClasses);
+    }
 
     if (!students || !clases) {
         return(
@@ -222,6 +235,9 @@ function RegistroClasesAlumnos({changeContent}) {
                         label="Estudiantes"
                         onChange={handleChange}
                     >
+                        <MenuItem value="">
+                            <em>Estudiante</em>
+                        </MenuItem>
                         {students.map((student) => (
                             <MenuItem
                                 key={student._id}
@@ -249,9 +265,10 @@ function RegistroClasesAlumnos({changeContent}) {
                 </Alert >
             </Box>
             <Box sx={{ textAlign: 'center', width: '100%', paddingX: '20px', height: '100%', paddingBottom: '10px', overflowY: 'scroll', display: { xs: 'block', sm: 'none' } }}>
+                <TextField label='Nombre' value={nameFilter || ''} onChange={handleNameFilter} helperText="Busca tu clase" fullWidth/>
                 {
-                    clases.length !== 0 ?    
-                        clases.map(e => (
+                    filteredClasses.length !== 0 ?    
+                        filteredClasses.map(e => (
                             <Clase changeClaseRegistrada={changeClaseRegistrada} handleMoreInfo={handleMoreInfo} key={e._id} clase={e} />
                         ))
                     :
@@ -297,9 +314,8 @@ function RegistroClasesAlumnos({changeContent}) {
                             onChange={e => { setItems([{ columnField: 'nivel', operatorValue: 'contains', value: e.target.value }]) }}
                             select
                         >
-                            {["Principiante", "Intermedio", "Avanzado"].map(e => (
+                            {["", "Desde cero", "Con bases", "Intermedio", "Avanzado"].map(e => (
                                 <MenuItem value={e} key={e}>
-
                                     {e}
                                 </MenuItem>
                             ))}
@@ -321,7 +337,7 @@ function RegistroClasesAlumnos({changeContent}) {
                     </CardContent>
                 </Card>
                 <Box sx={{ width: { lg: '60%', sm: '90%' }, height: { lg: '95%', sm: '50%' }, maxHeight: '100vh', minWidth: '548px' }}>
-                    <DataGrid rows={clases} columns={columns} disableSelectionOnClick={true} getRowId={(row) => row._id} getRowHeight={() => 'auto'}
+                    <DataGrid rows={filteredClasses} columns={columns} disableSelectionOnClick={true} getRowId={(row) => row._id} getRowHeight={() => 'auto'}
                         filterModel={{
                             items: items
                         }
