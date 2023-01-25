@@ -1,6 +1,13 @@
 //Importancioon de datos
 import React from "react";
-import { Button, Modal, TextField, Box, Typography } from "@mui/material";
+import {
+  Button,
+  Modal,
+  TextField,
+  Box,
+  Typography,
+  MenuItem,
+} from "@mui/material";
 import { useState, useEffect } from "react";
 import { grey } from "@mui/material/colors";
 import { DataGrid, gridClasses } from "@mui/x-data-grid";
@@ -11,19 +18,27 @@ import CardContent from "@mui/material/CardContent";
 import axios from "axios";
 import { CSVLink } from "react-csv";
 
+
 export default function Alumnos() {
   //Encargado de guardar la data
   const [data, setData] = useState([]);
 
-  const getAlumnos = () => {
-    axios
-      .get("http://127.0.0.1:3000/v1/alumnos")
-      .then((res) => setData(res.data))
-      .catch((err) => console.log(err));
+  const [periodo, setPeriodo] = useState("");
+  const [dataPeriodo, setDataPeriodo] = useState([]);
+
+  const getAlumnos = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/alumnos");
+    setData(res.data);
+  };
+
+  const  getPeriodos = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
+    setDataPeriodo(res.data);
   };
 
   useEffect(() => {
     getAlumnos();
+    getPeriodos();
   }, []);
 
   // ------------Editar---------------
@@ -220,7 +235,7 @@ export default function Alumnos() {
           Apellido paterno:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.apellido_paterno}
+          {consolaSeleccionada.apellido_paterno}
         </p>
       </Box>
 
@@ -244,7 +259,7 @@ export default function Alumnos() {
           Apellido materno:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.apellido_materno}
+          {consolaSeleccionada.apellido_materno}
         </p>
       </Box>
 
@@ -268,7 +283,7 @@ export default function Alumnos() {
           Fecha de Nacimiento:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.fecha_de_nacimiento}
+          {consolaSeleccionada.fecha_de_nacimiento}
         </p>
       </Box>
 
@@ -292,7 +307,7 @@ export default function Alumnos() {
           Telefono Estudiante:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.num_telefono}
+          {consolaSeleccionada.num_telefono}
         </p>
       </Box>
 
@@ -316,7 +331,7 @@ export default function Alumnos() {
           Nombre del Tutor:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.tutor_nombre}
+          {consolaSeleccionada.tutor_nombre}
         </p>
       </Box>
 
@@ -340,7 +355,7 @@ export default function Alumnos() {
           Apellido paterno del Tutor:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.tutor_apellido_paterno}
+          {consolaSeleccionada.tutor_apellido_paterno}
         </p>
       </Box>
 
@@ -364,7 +379,7 @@ export default function Alumnos() {
           Apellido materno del Tutor:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.tutor_apellido_materno}
+          {consolaSeleccionada.tutor_apellido_materno}
         </p>
       </Box>
 
@@ -388,7 +403,7 @@ export default function Alumnos() {
           Correo del Tutor:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.tutor_correo}
+          {consolaSeleccionada.tutor_correo}
         </p>
       </Box>
 
@@ -412,7 +427,7 @@ export default function Alumnos() {
           Telefono del Tutor:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.tutor_num_telefono}
+          {consolaSeleccionada.tutor_num_telefono}
         </p>
       </Box>
 
@@ -436,7 +451,7 @@ export default function Alumnos() {
           Pais:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.pais}
+          {consolaSeleccionada.pais}
         </p>
       </Box>
 
@@ -460,7 +475,7 @@ export default function Alumnos() {
           Estado:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.estado}
+          {consolaSeleccionada.estado}
         </p>
       </Box>
 
@@ -484,7 +499,7 @@ export default function Alumnos() {
           Ciudad:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.ciudad}
+          {consolaSeleccionada.ciudad}
         </p>
       </Box>
 
@@ -508,7 +523,7 @@ export default function Alumnos() {
           Colonia:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.colonia}
+          {consolaSeleccionada.colonia}
         </p>
       </Box>
 
@@ -532,7 +547,7 @@ export default function Alumnos() {
           Codigo Postal:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.codigo_postal}
+          {consolaSeleccionada.codigo_postal}
         </p>
       </Box>
 
@@ -556,7 +571,7 @@ export default function Alumnos() {
           Escolaridad:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.escolaridad}
+          {consolaSeleccionada.escolaridad}
         </p>
       </Box>
 
@@ -577,13 +592,12 @@ export default function Alumnos() {
             fontWeight: "bold",
           }}
         >
-         Ultima Escuela:
+          Ultima Escuela:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.ultima_escuela}
+          {consolaSeleccionada.ultima_escuela}
         </p>
       </Box>
-
     </div>
   );
 
@@ -828,19 +842,54 @@ export default function Alumnos() {
           <Button
             color="primary"
             variant="contained"
-            sx={{ marginLeft: "950px", marginTop: "-120px" }}
+            sx={{ marginLeft: "680px", marginTop: "-120px" }}
           >
             Exportar a CSV
           </Button>
         </CSVLink>
       </Box>
+
+      <Card sx={{
+          width: 250,
+          position: "absolute",
+          textAlign: "left",
+          marginLeft: "910px",
+          marginTop: "30px",
+          bgcolor: "grey.200",
+          borderRadius: "8px",
+          height: 90
+        }}>
+        <CardContent>
+          <TextField
+            style={{
+              paddingBottom: "15px",
+              width: "24ch",
+              fontFamily: "arial",
+            }}
+            label="Periodo"
+            onChange={(e) => setPeriodo(e.target.value)}
+            value={periodo}
+            select
+            id="filled-select-currency"
+          >
+            {dataPeriodo.map((e) => {
+                return (
+                  <MenuItem key={e._id} value={e.clave}>
+                    {e.clave}
+                  </MenuItem>
+                );
+            })}
+          </TextField>
+        </CardContent>
+      </Card>
+
       <Card
         sx={{
           width: 1100,
           position: "absolute",
           textAlign: "left",
           marginLeft: "65px",
-          marginTop: "120px",
+          marginTop: "150px",
           bgcolor: "grey.200",
           borderRadius: "8px",
         }}
@@ -875,6 +924,8 @@ export default function Alumnos() {
         </CardContent>
       </Card>
 
+
+
       <Box
         sx={{
           width: "1130px",
@@ -882,11 +933,9 @@ export default function Alumnos() {
           height: "450px",
           position: "absolute",
           marginLeft: "50px",
-          marginTop: "300px",
+          marginTop: "320px",
         }}
       >
-
-
         <DataGrid
           columns={columns}
           rows={data}
