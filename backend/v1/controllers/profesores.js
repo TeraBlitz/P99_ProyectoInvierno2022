@@ -124,6 +124,7 @@ async function deleteProfesor(req, res) {
 // Test deleteProfesor
 // deleteProfesor().catch(console.dir);
 
+
 module.exports = {
   getAllProfesor,
   createProfesor,
