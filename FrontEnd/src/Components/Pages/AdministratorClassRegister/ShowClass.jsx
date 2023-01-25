@@ -9,8 +9,6 @@ import {
     Typography,
     Autocomplete,
 } from "@mui/material";
-import { niveles } from "../../../data/numerosprueba";
-import { profes } from "../../../data/profesprueba";
 import { useState, useEffect } from "react";
 import { grey } from "@mui/material/colors";
 import { DataGrid, gridClasses } from "@mui/x-data-grid";
@@ -25,22 +23,65 @@ import { InsertDriveFile } from "@mui/icons-material";
 
 export default function ShowClass() {
     //--------------------------------------------Agregar----------------
-    //Agregar numeros
-    const [number, setNumber] = useState(5);
-    function add() {
-        setNumber((prevNumber) => prevNumber + 1);
-    }
     //Estados de agregar
     const [data, setData] = useState([]);
     const [modalInsertar, setModalInsertar] = useState(false);
-    const [keys, setKey] = useState("");
-    const [coursename, setCoursename] = useState("");
-    const [level, setLevel] = useState("");
-    const [teacher, setTeacher] = useState("");
-    const [weeklyfrequency, setWeeklyfrequency] = useState("");
-    const [maximumcapacity, setMaximumcapacity] = useState("");
-    const [periodo, setPeriodo] = useState("");
-    const [currentRowId, setCurrentRowId] = useState(null);
+    let profesores = []
+    const [profesorList, setProfesorList] = useState([])
+    const classAtributes = [
+        { key: 'area', value: 'Area' },
+        { key: 'clave', value: 'Clave' },
+        { key: 'nombre_curso', value: 'Curso' },
+        { key: 'edad_minima', value: 'Edad Minima' },
+        { key: 'edad_maxima', value: 'Edad Maxima' },
+        { key: 'cupo_maximo', value: 'Cupo Maximo' },
+        { key: 'cupo_actual', value: 'Cupo Actual' },
+        { key: 'lunes', value: 'Lunes' },
+        { key: 'martes', value: 'Martes' },
+        { key: 'miercoles', value: 'Miercoles' },
+        { key: 'jueves', value: 'Jueves' },
+        { key: 'viernes', value: 'Viernes' },
+        { key: 'sabado', value: 'Sabado' },
+    ]
+    let [nombreCursoOptions, setNombreCursoOptions] = useState([]);
+    let [nombreProfesoresOptions, setNombreProfesoresOptions] = useState([]);
+    let [clavePeriodoOptions, setClavePeriodoOptions] = useState([]);
+    let [modalidadOptions, setModalidadOptions] = useState([]);
+    let niveloptions = ["desde cero", "con bases", "intermedio", "avanzado"]
+    const classTemplate = {
+        clave: '',
+        nombre_curso: '',
+        nivel: '',
+        matriculaMaestro: '',
+        edad_minima: '',
+        edad_maxima: '',
+        cupo_maximo: '',
+        modalidad: '',
+        lunes: '',
+        martes: '',
+        miercoles: '',
+        jueves: '',
+        viernes: '',
+        sabado: '',
+        clavePeriodo: '',
+        area: '',
+        cupo_actual: '',
+        niveles:''
+
+    }
+    const [nuevaClase, setNuevaClase] = useState(classTemplate)
+    let edades = []
+
+    const getOptions = async () => {
+        await fetch("http://localhost:3000/v1/profesores/").then(e => {
+            console.log(e.text())
+
+
+        }).then(e => {
+            console.log(e)
+        })
+    }
+
 
     //Funcion click para abrir el modal
     const abrirCerrarModalInsertar = () => {
@@ -56,32 +97,51 @@ export default function ShowClass() {
             setData([]);
             for (let i = 0; i < result.length; i++) {
                 let fechas = ""
+                let edades = ""
+                let niveles = ""
                 result[i].lunes != "" ? fechas += "lunes, " : fechas += ""
                 result[i].martes != "" ? fechas += "martes, " : fechas += ""
                 result[i].miercoles != "" ? fechas += "miercoles, " : fechas += ""
                 result[i].jueves != "" ? fechas += "jueves, " : fechas += ""
                 result[i].viernes != "" ? fechas += "viernes, " : fechas += ""
                 result[i].sabado != "" ? fechas += "sabado, " : fechas += ""
-                console.log(fechas)
+                result[i].edad_maxima == "" ? edades = result[i].edad_minima + " en Adelante" : edades = result[i].edad_minima + "-" + result[i].edad_maxima
+                result[i].nivel == "1" ? niveles = "desde cero" : ""
+                result[i].nivel == "2" ? niveles = "con bases" : ""
+                result[i].nivel == "3" ? niveles = "intermedio" : ""
+                result[i].nivel == "4" ? niveles = "avanzado" : ""
+
                 setData(data => [...data, {
-                    _id: i,
+                    _id: result[i]._id,
                     clave: result[i].clave,
                     nombre_curso: result[i].nombre_curso,
                     nivel: result[i].nivel,
                     matriculaMaestro: result[i].matriculaMaestro,
-                    edades: result[i].edad_minima + "-" + result[i].edad_maxima,
+                    edades: edades,
+                    edad_minima: result[i].edad_minima,
+                    edad_maxima: result[i].edad_maxima,
                     cupo_maximo: result[i].cupo_maximo,
                     modalidad: result[i].modalidad,
-                    fechas: fechas
+                    fechas: fechas,
+                    lunes: result[i].lunes,
+                    martes: result[i].martes,
+                    miercoles: result[i].miercoles,
+                    jueves: result[i].jueves,
+                    viernes: result[i].viernes,
+                    sabado: result[i].sabado,
+                    clavePeriodo: result[i].clavePeriodo,
+                    area: result[i].area,
+                    cupo_actual: result[i].cupo_actual,
+                    niveles: niveles
                 }])
+                if (!profesores.includes(result[i].matriculaMaestro)) {
+                    profesores.push(result[i].matriculaMaestro)
+                }
             }
+            setProfesorList(profesores)
         })
     }
-    useEffect(() => { resetClases() }, [])
-    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-    const handleClickOpen = () => {
-        setOpenDeleteDialog(true);
-    };
+    useEffect(() => { resetClases(); getOptions() }, [])
 
     const handleClose = () => {
         setOpenDeleteDialog(false);
@@ -89,78 +149,44 @@ export default function ShowClass() {
 
 
     //Evento que dado un nuevos datos los agrega
-    const handleClick = (e) => {
+    const handleClick = async (e) => {
         e.preventDefault();
-        if (
-            keys !== "" &&
-            coursename !== "" &&
-            level !== "" &&
-            teacher !== "" &&
-            weeklyfrequency !== "" &&
-            maximumcapacity !== "" &&
-            periodo !== ""
-        ) {
-            createClasses({
-                keys,
-                coursename,
-                level,
-                teacher,
-                weeklyfrequency,
-                maximumcapacity,
-                periodo,
-            });
-            setKey("");
-            setCoursename("");
-            setLevel("");
-            setTeacher("");
-            setWeeklyfrequency("");
-            setMaximumcapacity("");
+        await fetch("http://localhost:3000/v1/clases/create", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams(nuevaClase),
+
+        }).then(() => {
             abrirCerrarModalInsertar();
-        } else {
-            alert("No se puede enviar, si hay algo vacio");
-        }
+            resetClases();
+        })
     };
 
 
-    //Actualiza las clases
-    function createClasses(datas) {
-        add();
-        setData([
-            ...data,
-            {
-                id: number + 1,
-                keys: datas.keys,
-                coursename: datas.coursename,
-                level: datas.level,
-                teacher: datas.teacher,
-                weeklyfrequency: datas.weeklyfrequency,
-                maximumcapacity: datas.maximumcapacity,
-                periodo: datas.periodo
-            },
-        ]);
-        abrirCerrarModalInsertar();
-    }
 
     //-------------------------------Editar----------------------------------
     // Estados para editar
     const [modalEditar, setModalEditar] = useState(false);
-    const claseInicial = {
-        id: -1,
-        keys: "",
-        coursename: "",
-        level: "",
-        teacher: "",
-        weeklyfrequency: "",
-        maximumcapacity: 0,
-        periodo: "",
-    };
-    const [claseActual, setClaseActual] = useState(claseInicial);
+    const [claseActual, setClaseActual] = useState({
+        _id: '',
+        clave: '',
+        nombre_curso: '',
+        nivel: '',
+        matriculaMaestro: '',
+        edades: '',
+        cupo_maximo: '',
+        modalidad: '',
+        fechas: '',
+        niveles:''
+    });
     //Function que abre o cierra el modal
     const abrirCerrarModalEditar = () => {
         setModalEditar(!modalEditar);
     };
 
-    const editClasses = (id, clase) => {
+    const editClasses = (clase) => {
         setClaseActual(clase);
         abrirCerrarModalEditar();
     };
@@ -176,11 +202,15 @@ export default function ShowClass() {
 
     //Funcion que modifica los daors
     const handleChange = (e) => {
-        console.log(e.target);
         const { name, value } = e.target;
         setClase({ ...clase, [name]: value });
     };
 
+    const handleChange2 = (e) => {
+        console.log(e.target);
+        const { name, value } = e.target;
+        setNuevaClase({ ...nuevaClase, [name]: value });
+    };
     const importFile = () => {
         var input = document.createElement('input'); // input that selects the file
         input.type = 'file';
@@ -200,7 +230,6 @@ export default function ShowClass() {
             reader.readAsText(file) // read the file gatered
             // when it is called
             reader.onload = e => {
-
                 if (file.name.includes(".csv")) { // check if the file is markdown or txt
                     let result = e.target?.result?.toString();
                     result !== undefined ? sendCSV(result) : alert("error");
@@ -253,7 +282,7 @@ export default function ShowClass() {
             clasesJson[i].cupo_actual = "0"
             // JSON.stringify(clasesJson[i])
 
-            // Agregar Profesores
+            // agregar profesores
             if (!profesorHash[profesorFunc(iteratorArray[17])]) {
                 profesoresJson[j] = {}
                 profesoresJson[j].nombre = iteratorArray[15]
@@ -284,11 +313,11 @@ export default function ShowClass() {
                 }),
             }
         )
-        .then(response => response.json())
-        .then(result => {
-            console.log(result)
-        })
-        .catch(error => console.log('Error(ShowClass): ', error));
+            .then(response => response.json())
+            .then(() => {
+                resetClases()
+            })
+            .catch(error => console.log('Error(ShowClass): ', error));
 
         //console.log(profesoresJson)
         await fetch("http://localhost:3000/v1/csv/subirProfesores",
@@ -302,46 +331,71 @@ export default function ShowClass() {
                 }),
             }
         )
-        .then(response => response.json())
-        .then(result => {
-            console.log(result)
-        })
-        .catch(error => console.log('Error(ShowClass): ', error));
     }
 
+    const seleccionarConsola = (consola, caso) => {
+        if (caso === "Editar") {
+            editClasses(consola)
+        } else if (caso === "Eliminar") {
+            deleteClass(consola._id)
+        } else {
+        }
+    };
 
     //Funciones que actualiza los datos con las modificacioness
     const handleClick2 = (e) => {
         e.preventDefault();
-        if (
-            clase.keys &&
-            clase.coursename &&
-            clase.level &&
-            clase.teacher &&
-            clase.weeklyfrequency &&
-            clase.maximumcapacity &&
-            clase.periodo
-
-        )
-            updateClass(clase);
+        updateClass(clase);
     };
     const updateClass = (nuevaClase) => {
-        setData(
-            data.map((datos) => (datos.id === claseActual.id ? nuevaClase : datos))
-        );
-        setClaseActual(claseInicial);
-        abrirCerrarModalEditar();
+        delete nuevaClase.fechas
+        delete nuevaClase.edades
+        if (nuevaClase.niveles == "desde cero") {
+            nuevaClase.nivel = "1";
+        }
+        else if(nuevaClase.niveles == "con bases") {
+            nuevaClase.nivel = "2"
+        } 
+        else if(nuevaClase.niveles == "intermedio") {
+            nuevaClase.nivel = "3"
+        }
+        else if(nuevaClase.niveles == "avanzado"){
+            nuevaClase.nivel = "4"
+        }
+        delete nuevaClase.niveles
+        fetch("http://localhost:3000/v1/clases/update", {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams(nuevaClase)
+
+        }).then(e => {
+            abrirCerrarModalEditar();
+            resetClases();
+        }
+        )
     };
 
     //------------------------------------Eliminar-------------------------------------
     // Se agrego un componente de dialogo para confirmar la eliminacion de una clase
 
-    const classToDelete = (id, clase) => {
-        setClaseActual(clase);
-    };
 
-    function deleteClass() {
-        setData(data.filter((datos) => datos.id !== claseActual.id));
+    async function deleteClass(id) {
+        await fetch("http://localhost:3000/v1/clases/delete", {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams(
+                {
+                    _id: id,
+                }
+            )
+
+        }).then(() => {
+            resetClases()
+        })
         handleClose();
     }
 
@@ -351,8 +405,8 @@ export default function ShowClass() {
         <div
             style={{
                 position: "absolute",
-                width: 260,
-                height: 560,
+                width: 520,
+                height: '90vh',
                 backgroundColor: "#fefefd",
                 top: "48%",
                 left: "50%",
@@ -361,95 +415,31 @@ export default function ShowClass() {
                 margin: "auto",
                 borderRadius: "10px",
                 padding: "20px",
+                display: 'flex',
+                justifyContent: 'center',
+                flexWrap: 'wrap',
 
             }}
         >
             <h3
-                style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" }}
+                style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial", width: '100%' }}
                 align="center"
             >
                 Crear una nueva clase
             </h3>
-            <TextField
-                style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                label="Curso"
-                onChange={(e) => setCoursename(e.target.value)}
-                value={coursename}
-                autoFocus
-            />
-            <TextField
-                style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                label="Clave"
-                onChange={(e) => setKey(e.target.value)}
-                value={keys}
-                autoFocus
-            />
-            <br />
-            <TextField
-                style={{ paddingBottom: "15px", width: "24ch", fontFamily: "arial" }}
-                label="Nivel"
-                onChange={(e) => setLevel(e.target.value)}
-                value={level}
-                select
-                id="filled-select-currency"
-            >
-                {niveles.map((option) => (
-                    <MenuItem
-                        key={option.value}
-                        value={option.value}
-                        sx={{ fontFamily: "arial" }}
-                    >
-                        {option.label}
-                    </MenuItem>
-                ))}
-            </TextField>
-            <TextField
-                style={{ paddingBottom: "15px", width: "24ch", fontFamily: "arial" }}
-                label="Periodo"
-                onChange={(e) => setPeriodo(e.target.value)}
-                value={periodo}
-                select
-                id="filled-select-currency"
-            >
-                {periodosPrueba.map(e => {
-                    if (e.active == true) {
-                        return <MenuItem key={e.key} value={e.value}>
-                            {e.value}
-                        </MenuItem>
-                    }
-                })}
 
-
-
-            </TextField>
-            <br />
-            <Autocomplete
-                value={teacher}
-                onChange={(event, newValue) => {
-                    setTeacher(newValue);
-                }}
-                id="profesores-insertar"
-                options={profes}
-                renderInput={(params) => <TextField {...params} label="Profesor" />}
-            />
-            <br />
-            <TextField
-                style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                label="Frecuencia Semanal"
-                onChange={(e) => setWeeklyfrequency(e.target.value)}
-                value={weeklyfrequency}
-            />
-            <br />
-            <TextField
-                style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                label="Capacidad"
-                type="number"
-                onChange={(e) => setMaximumcapacity(e.target.value)}
-                value={maximumcapacity}
-            />
-            <br />
-            <br />
-            <div align="center">
+            {classAtributes.map(atribute => (
+                <TextField
+                    style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10 }}
+                    label={atribute.value}
+                    onChange={e => { handleChange2(e) }}
+                    name={atribute.key}
+                    key={atribute.key}
+                    value={nuevaClase[atribute.key]}
+                    autoFocus
+                />
+            ))}
+            <div align="center" style={{ width: '100%' }}>
                 <Button color="primary" onClick={handleClick}>
                     Insertar
                 </Button>
@@ -467,104 +457,66 @@ export default function ShowClass() {
         <div
             style={{
                 position: "absolute",
-                width: 260,
-                height: 480,
+                width: 520,
+                height: '90vh',
                 backgroundColor: "#fefefd",
-                top: "50%",
+                top: "48%",
                 left: "50%",
-                transform: "translate(-50%, -50%)",
+                transform: "translate(-48%, -50%)",
                 border: "4px solid  rgb(165, 165, 180)",
                 margin: "auto",
                 borderRadius: "10px",
                 padding: "20px",
+                display: 'flex',
+                justifyContent: 'center',
+                flexWrap: 'wrap',
             }}
         >
 
             <h3
-                style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" }}
+                style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial", width: '100%' }}
                 align="center"
             >
                 Actualizar una clase
             </h3>
-            <TextField
-                style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                label="Curso"
-                value={clase.coursename}
-                name="coursename"
-                onChange={handleChange}
-                autoFocus
-            />
-            <br />
-            <TextField
-                style={{ paddingBottom: "15px", width: "24ch", fontFamily: "arial" }}
+            {classAtributes.map(atribute => (
+                <TextField
+                    style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10 }}
+                    label={atribute.value}
+                    onChange={e => { handleChange(e) }}
+                    name={atribute.key}
+                    key={atribute.key}
+                    value={clase[atribute.key]}
+                    autoFocus
+                />
+            ))}
+            <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10 }}
                 label="Nivel"
-                onChange={handleChange}
-                name="level"
-                value={clase.level}
-                select
-                id="filled-select-currency"
-            >
-                {niveles.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                    </MenuItem>
+                value={clase["niveles"]}
+                name="niveles"
+                onChange={(e) => { handleChange(e) }}
+                select>
+                {niveloptions.map(e => (
+                    <MenuItem value={e} key={e} >{e}</MenuItem>
+
                 ))}
             </TextField>
-            <br />
-            <TextField
-                style={{ paddingBottom: "15px", width: "24ch", fontFamily: "arial" }}
-                label="Nivel"
-                onChange={handleChange}
-                name="teacher"
-                value={clase.teacher}
-                select
-                id="filled-select-currency"
-            >
-                {profes.map((option) => (
-                    <MenuItem key={option} value={option}>
-                        {option}
-                    </MenuItem>
+        <div style={{width:'100%' , borderTop:'1 px solid gray'}}>
+            <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10 }}
+                label="Profesor"
+                value={clase["matriculaMaestro"]}
+                name="matriculaMaestro"
+                onChange={(e) => { handleChange(e) }}
+                select>
+                {profesorList.map(e => (
+                    <MenuItem value={e} key={e} >{e}</MenuItem>
+
                 ))}
             </TextField>
-            <br />
-            <TextField
-                style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                label="Frecuencia Semanal"
-                name="weeklyfrequency"
-                value={clase.weeklyfrequency}
-                onChange={handleChange}
-            />
-            <br />
-            <TextField
-                style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                label="Capacidad"
-                name="maximumcapacity"
-                type="number"
-                value={clase.maximumcapacity}
-                onChange={handleChange}
-            />
-            <TextField
-                style={{ paddingBottom: "15px", width: "24ch", fontFamily: "arial" }}
-                label="Periodo"
-                onChange={handleChange}
-                name="periodo"
-                value={clase.periodo}
-                select
-                id="filled-select-currency"
-            >
-                {periodosPrueba.map(e => {
-                    if (e.active == true) {
-                        return <MenuItem key={e.key} value={e.value}>
-                            {e.value}
-                        </MenuItem>
-                    }
-                })}
+        </div>
 
 
-            </TextField>
-            <br />
-            <br />
-            <div align="center">
+            <div align="center" style={{ width: '100%' }}>
                 <Button color="primary" onClick={handleClick2}>
                     Editar
                 </Button>
@@ -582,18 +534,19 @@ export default function ShowClass() {
         () => [
             { field: "clave", headerName: "Clave", width: 134 },
             { field: "nombre_curso", headerName: "Curso", width: 170 },
-            { field: "nivel", headerName: "Nivel", width: 231 },
-            { field: "matriculaMaestro", headerName: "Profesor", width: 220, sortable: false },
+            { field: "niveles", headerName: "Nivel", width: 100 },
+            { field: "matriculaMaestro", headerName: "Profesor", width: 140, sortable: false },
             { field: "cupo_maximo", headerName: "Capacidad", width: 160 },
             { field: 'edades', headerName: 'Edades', width: 160 },
             { field: 'fechas', headerName: 'Fechas', width: 160 },
+            { field: 'modalidad', headerName: 'modalidad', width: 111 },
             {
                 field: "actions",
                 headerName: "Acciones",
                 type: "actions",
                 width: 175,
                 renderCell: (params) => (
-                    <Actions {...{ params, deleteClass, editClasses }} />
+                    <Actions {...{ params, seleccionarConsola }} />
                 ),
             },
 
@@ -632,7 +585,7 @@ export default function ShowClass() {
                         onChange={(e) => {
                             setItems([
                                 {
-                                    columnField: "coursename",
+                                    columnField: "nombre_curso",
                                     operatorValue: "contains",
                                     value: e.target.value,
                                 },
@@ -645,7 +598,7 @@ export default function ShowClass() {
                         onChange={(e) => {
                             setItems([
                                 {
-                                    columnField: "level",
+                                    columnField: "nivel",
                                     operatorValue: "contains",
                                     value: e.target.value,
                                 },
@@ -658,7 +611,7 @@ export default function ShowClass() {
                         onChange={(e) => {
                             setItems([
                                 {
-                                    columnField: "teacher",
+                                    columnField: "matriculaMaestro",
                                     operatorValue: "contains",
                                     value: e.target.value,
                                 },
