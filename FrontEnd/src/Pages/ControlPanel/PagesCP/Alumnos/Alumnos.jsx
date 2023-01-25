@@ -17,7 +17,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import axios from "axios";
 import { CSVLink } from "react-csv";
-
+import Select from "react-select";
 
 export default function Alumnos() {
   //Encargado de guardar la data
@@ -31,7 +31,7 @@ export default function Alumnos() {
     setData(res.data);
   };
 
-  const  getPeriodos = async () => {
+  const getPeriodos = async () => {
     const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
     setDataPeriodo(res.data);
   };
@@ -811,6 +811,10 @@ export default function Alumnos() {
     [data]
   );
 
+  const handleSelectChange = (event) => {
+    console.log(event);
+  };
+
   //---------------------------------------Filter---------------------------
   const [items, setItems] = useState([]);
   return (
@@ -849,7 +853,8 @@ export default function Alumnos() {
         </CSVLink>
       </Box>
 
-      <Card sx={{
+      <Box
+        sx={{
           width: 250,
           position: "absolute",
           textAlign: "left",
@@ -857,31 +862,19 @@ export default function Alumnos() {
           marginTop: "30px",
           bgcolor: "grey.200",
           borderRadius: "8px",
-          height: 90
-        }}>
-        <CardContent>
-          <TextField
-            style={{
-              paddingBottom: "15px",
-              width: "24ch",
-              fontFamily: "arial",
-            }}
-            label="Periodo"
-            onChange={(e) => setPeriodo(e.target.value)}
-            value={periodo}
-            select
-            id="filled-select-currency"
-          >
-            {dataPeriodo.map((e) => {
-                return (
-                  <MenuItem key={e._id} value={e.clave}>
-                    {e.clave}
-                  </MenuItem>
-                );
-            })}
-          </TextField>
-        </CardContent>
-      </Card>
+          height: 90,
+        }}
+      >
+       
+          <Select
+            options={dataPeriodo.map((sup) => ({
+              label: sup.clave,
+              value: sup._id,
+            }))}
+            onChange={handleSelectChange}
+          />
+       
+      </Box>
 
       <Card
         sx={{
@@ -923,8 +916,6 @@ export default function Alumnos() {
           ></TextField>
         </CardContent>
       </Card>
-
-
 
       <Box
         sx={{
