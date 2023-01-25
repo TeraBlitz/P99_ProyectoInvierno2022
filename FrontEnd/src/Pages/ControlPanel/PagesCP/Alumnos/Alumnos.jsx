@@ -20,10 +20,13 @@ import { CSVLink } from "react-csv";
 
 
 export default function Alumnos() {
+
+  let periodoReciente = "Verano"
+
   //Encargado de guardar la data
   const [data, setData] = useState([]);
 
-  const [periodo, setPeriodo] = useState("");
+
   const [dataPeriodo, setDataPeriodo] = useState([]);
 
   const getAlumnos = async () => {
@@ -34,12 +37,54 @@ export default function Alumnos() {
   const  getPeriodos = async () => {
     const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
     setDataPeriodo(res.data);
+
+    periodoReciente = (compararFecha(res.data))
+    console.log("Periodo Reciente",periodoReciente)
   };
 
+
   useEffect(() => {
+    console.log("Empieza UseEfect")
     getAlumnos();
     getPeriodos();
+    //console.log("Despues de UseEfect", compararFecha(dataPeriodo))
   }, []);
+
+  const [periodo, setPeriodo] = useState("");
+
+  //const [periodoReciente, setPeriodoReciente] = useState("")
+  //----------------------------------Funcion para ver periodo mas reciente
+
+  function traducirDate(raw){
+
+    const date = raw.split("T",2);
+    return(date[0])
+
+}
+
+
+function compararFecha(data){
+    let periodos=[]
+    for (const element of data){
+        let fecha = traducirDate(element.fecha_inicio);
+        let separado = fecha.split('-',3);
+        let valorA = Number(separado[0])
+        let valorM = Number(separado[1])/100
+        let valorD = Number(separado[2])/10000
+        let valorT = valorA+valorM+valorD
+        var obj ={
+            id: element.clave,
+            fecha:valorT
+        }
+        periodos.push(obj)
+    }
+
+    periodos.sort((a,b)=>b.fecha-a.fecha)
+    let clave = periodos[0].id
+    return(clave)
+
+}
+
 
   // ------------Editar---------------
   const [modalMas, setModalMas] = useState(false);
@@ -811,10 +856,15 @@ export default function Alumnos() {
     [data]
   );
 
-  //---------------------------------------Filter---------------------------
+
+  //---------------------------------------Empieza el render---------------------------
   const [items, setItems] = useState([]);
+
   return (
+
     <div>
+
+      {console.log('valor Default: ',periodoReciente)}
       <Box
         sx={{
           width: 1100,
@@ -868,8 +918,9 @@ export default function Alumnos() {
             }}
             label="Periodo"
             onChange={(e) => setPeriodo(e.target.value)}
-            value={periodo}
+
             select
+            defaultValue= {periodoReciente}
             id="filled-select-currency"
           >
             {dataPeriodo.map((e) => {

@@ -64,22 +64,25 @@ const ControlPanel = ({changeContent}) => {
     const  getPeriodos = async () => {
       const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
       setData(res.data);
+      console.log('Fetch Periodos', res.data)
     };
 
     const  getAlumno  = async () => {
         const res = await axios.get("http://127.0.0.1:3000/v1/alumnos");
         setDataAlumno(res.data);
-        return dataAlumno
+        console.log('Fetch Alumnos', res.data)
       };
 
       const  getProfesor  = async () => {
         const res = await axios.get("http://127.0.0.1:3000/v1/profesores");
         setDataProfesor(res.data);
+        console.log('Fetch Profesores', res.data)
       };
 
       const  getClase  = async () => {
         const res = await axios.get("http://127.0.0.1:3000/v1/clases");
         setDataClase(res.data);
+        console.log('Fetch Clase', res.data)
       };
 
     useEffect(() => {
