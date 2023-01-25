@@ -90,6 +90,7 @@ export default function ShowClass() {
             for (let i = 0; i < result.length; i++) {
                 let fechas = ""
                 let edades = ""
+                let niveles=""
                 result[i].lunes != "" ? fechas += "lunes, " : fechas += ""
                 result[i].martes != "" ? fechas += "martes, " : fechas += ""
                 result[i].miercoles != "" ? fechas += "miercoles, " : fechas += ""
@@ -97,6 +98,11 @@ export default function ShowClass() {
                 result[i].viernes != "" ? fechas += "viernes, " : fechas += ""
                 result[i].sabado != "" ? fechas += "sabado, " : fechas += ""
                 result[i].edad_maxima ==""?edades =result[i].edad_minima + " en Adelante":edades = result[i].edad_minima + "-"+result[i].edad_maxima
+                result[i].nivel == "1"?niveles="desde cero":""
+                result[i].nivel == "2"?niveles="con bases":""
+                result[i].nivel == "3"?niveles="intermedio":""
+                result[i].nivel == "4"?niveles="avanzado":""
+
                 setData(data => [...data, {
                     _id: result[i]._id,
                     clave: result[i].clave,
@@ -117,7 +123,8 @@ export default function ShowClass() {
                     sabado: result[i].sabado,
                     clavePeriodo: result[i].clavePeriodo,
                     area: result[i].area,
-                    cupo_actual: result[i].cupo_actual
+                    cupo_actual: result[i].cupo_actual,
+                    niveles:niveles
                 }])
                 if (!profesores.includes(result[i].matriculaMaestro)) {
                     profesores.push(result[i].matriculaMaestro)
@@ -484,12 +491,12 @@ export default function ShowClass() {
         () => [
             { field: "clave", headerName: "Clave", width: 134 },
             { field: "nombre_curso", headerName: "Curso", width: 170 },
-            { field: "nivel", headerName: "Nivel", width: 100 },
-            { field: "matriculaMaestro", headerName: "Profesor", width: 220, sortable: false },
+            { field: "niveles", headerName: "Nivel", width: 100 },
+            { field: "matriculaMaestro", headerName: "Profesor", width: 140, sortable: false },
             { field: "cupo_maximo", headerName: "Capacidad", width: 160 },
             { field: 'edades', headerName: 'Edades', width: 160 },
             { field: 'fechas', headerName: 'Fechas', width: 160 },
-            { field: 'modalidad', headerName: 'modalidad', width: 160 },
+            { field: 'modalidad', headerName: 'modalidad', width: 111 },
             {
                 field: "actions",
                 headerName: "Acciones",
