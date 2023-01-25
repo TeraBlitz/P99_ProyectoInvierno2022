@@ -6,13 +6,9 @@ import PanelInfo from '../../Components/ControlPanel/PanelInfo';
 import axios from "axios";
 
 // Possible function to get users, this goes in another file
-const fetchUsers = () => {
-    //const res = await fetch(`http://localhost:3000/users`);
-    //const userData = res.json();
-    // Se reciben todos los usuarios este array se pasa como prop al componente de Alumnos
-    const users = [];
-    return users;
-};
+
+
+
 
 const fetchTeachers = () => {
     //const res = await fetch(`http://localhost:3000/teachers`);
@@ -54,34 +50,14 @@ const cards = [
     }
 ]
 
-const panelInfoCards = [
-    {
-        'id': '1',
-        'title': 'Estudiantes inscritos',
-        'data': fetchUsers,
-        'color': '#0094DF'
-    },
-    {
-        'id': '2',
-        'title': 'Profesores inscritos',
-        'data': fetchTeachers,
-        'color': '#00B8D6'
-    },
-    {
-        'id': '3',
-        'title': 'Cursos Registrados',
-        'data': fetchTeachers,
-        'color': '#366ac3'
-    },
 
-]
 
 
 const ControlPanel = ({changeContent}) => {
 
-    const [users, setUsersInfo] = useState(fetchUsers);
-    const [teachers, setTeachersInfo] = useState(fetchTeachers);
-
+    const [dataAlumno, setDataAlumno] = useState([]);
+    const [dataClase, setDataClase] = useState([]);
+    const [dataProfesor, setDataProfesor] = useState([]);
     const [data, setData] = useState([]);
     //----------------------Obtencion de datos de la base de datos
 
@@ -90,24 +66,51 @@ const ControlPanel = ({changeContent}) => {
       setData(res.data);
     };
 
+    const  getAlumno  = async () => {
+        const res = await axios.get("http://127.0.0.1:3000/v1/alumnos");
+        setDataAlumno(res.data);
+        return dataAlumno
+      };
+
+      const  getProfesor  = async () => {
+        const res = await axios.get("http://127.0.0.1:3000/v1/profesores");
+        setDataProfesor(res.data);
+      };
+
+      const  getClase  = async () => {
+        const res = await axios.get("http://127.0.0.1:3000/v1/clases");
+        setDataClase(res.data);
+      };
+
     useEffect(() => {
-        const getUsersInfo = () =>{
-            const users = fetchUsers();
-            setUsersInfo(users);
-        }
-
-        const getTeachersInfo = () =>{
-            const teachers = fetchTeachers();
-            setTeachersInfo(teachers);
-        }
-
-        getUsersInfo();
-        getTeachersInfo();
+        getAlumno();
+        getProfesor ();
+        getClase();
         getPeriodos();
-        console.log('Data: ',data)
+        
     }, []);
 
-
+    const panelInfoCards = [
+        {
+            'id': '1',
+            'title': 'Estudiantes inscritos',
+            'data': dataAlumno,
+            'color': '#0094DF'
+        },
+        {
+            'id': '2',
+            'title': 'Profesores inscritos',
+            'data': dataProfesor,
+            'color': '#00B8D6'
+        },
+        {
+            'id': '3',
+            'title': 'Cursos Registrados',
+            'data': dataClase,
+            'color': '#366ac3'
+        },
+    
+    ]
 
     return (
         <div>
