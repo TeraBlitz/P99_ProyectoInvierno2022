@@ -21,7 +21,8 @@ async function getAllAlumnoClases(req, res) {
         return res.status(500).json({
             msg: `ERROR: ${err}`
         });
-    } 
+
+    }
 }
 // Test getAllAlumnoClases
 // getAllAlumnoClases().catch(console.dir);
@@ -133,4 +134,4 @@ module.exports = {
     createAlumnoClases,
     updateAlumnoClases,
     deleteAlumnoClases,
-};
+}

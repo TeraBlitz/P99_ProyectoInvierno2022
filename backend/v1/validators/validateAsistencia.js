@@ -17,7 +17,7 @@ async function validateAsistencia(req, res, next){
 		res.status(400).send(`ERROR: ${ajv.errorsText(validate.errors, {separator: '\n'})}`)
 		console.log(ajv.errorsText(validate.errors, {separator: '\n'}))
 	}else{
-		console.log("La data es valida")
+		// console.log("La data es valida")
 		next()
 	}
 
