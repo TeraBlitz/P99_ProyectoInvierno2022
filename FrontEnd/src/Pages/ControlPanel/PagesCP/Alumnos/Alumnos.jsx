@@ -842,12 +842,46 @@ export default function Alumnos() {
           <Button
             color="primary"
             variant="contained"
-            sx={{ marginLeft: "950px", marginTop: "-120px" }}
+            sx={{ marginLeft: "680px", marginTop: "-120px" }}
           >
             Exportar a CSV
           </Button>
         </CSVLink>
       </Box>
+
+      <Card sx={{
+          width: 250,
+          position: "absolute",
+          textAlign: "left",
+          marginLeft: "910px",
+          marginTop: "30px",
+          bgcolor: "grey.200",
+          borderRadius: "8px",
+          height: 90
+        }}>
+        <CardContent>
+          <TextField
+            style={{
+              paddingBottom: "15px",
+              width: "24ch",
+              fontFamily: "arial",
+            }}
+            label="Periodo"
+            onChange={(e) => setPeriodo(e.target.value)}
+            value={periodo}
+            select
+            id="filled-select-currency"
+          >
+            {dataPeriodo.map((e) => {
+                return (
+                  <MenuItem key={e._id} value={e.clave}>
+                    {e.clave}
+                  </MenuItem>
+                );
+            })}
+          </TextField>
+        </CardContent>
+      </Card>
 
       <Card
         sx={{
@@ -855,7 +889,7 @@ export default function Alumnos() {
           position: "absolute",
           textAlign: "left",
           marginLeft: "65px",
-          marginTop: "120px",
+          marginTop: "150px",
           bgcolor: "grey.200",
           borderRadius: "8px",
         }}
@@ -890,39 +924,8 @@ export default function Alumnos() {
         </CardContent>
       </Card>
 
-      <Card sx={{
-          width: 250,
-          position: "absolute",
-          textAlign: "left",
-          marginLeft: "65px",
-          marginTop: "270px",
-          bgcolor: "grey.200",
-          borderRadius: "8px",
-        }}>
-        <CardContent>
-          <TextField
-            style={{
-              paddingBottom: "15px",
-              width: "24ch",
-              fontFamily: "arial",
-            }}
-            label="Periodo"
-            onChange={(e) => setPeriodo(e.target.value)}
-            value={periodo}
-            select
-            id="filled-select-currency"
-          >
-            {dataPeriodo.map((e) => {
-                return (
-                  <MenuItem key={e._id} value={e.clave}>
-                    {e.clave}
-                  </MenuItem>
-                );
-            })}
-          </TextField>
-        </CardContent>
-      </Card>
-      
+
+
       <Box
         sx={{
           width: "1130px",
@@ -930,7 +933,7 @@ export default function Alumnos() {
           height: "450px",
           position: "absolute",
           marginLeft: "50px",
-          marginTop: "400px",
+          marginTop: "320px",
         }}
       >
         <DataGrid

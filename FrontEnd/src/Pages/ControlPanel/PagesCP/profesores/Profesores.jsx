@@ -417,7 +417,7 @@ const bodyEliminar = (
           position: "absolute",
           textAlign: "left",
           marginLeft: "65px",
-          marginTop: "120px",
+          marginTop: "150px",
           bgcolor: "grey.200",
           borderRadius: "8px",
         }}
@@ -451,10 +451,11 @@ const bodyEliminar = (
           width: 250,
           position: "absolute",
           textAlign: "left",
-          marginLeft: "95px",
-          marginTop: "270px",
+          marginLeft: "785px",
+          marginTop: "45px",
           bgcolor: "grey.200",
           borderRadius: "8px",
+          height: 90
         }}>
         <CardContent>
           <TextField
@@ -479,7 +480,7 @@ const bodyEliminar = (
           </TextField>
         </CardContent>
       </Card>
-      
+
       <Box
         sx={{
           width: "1000px",
@@ -487,6 +488,7 @@ const bodyEliminar = (
           height: "150px",
           position: "absolute",
           marginLeft: "50px",
+          marginTop: '15px'
         }}
       >
         <Typography
@@ -497,7 +499,7 @@ const bodyEliminar = (
           Profesores
 
           <Button
-            sx={{ marginLeft: "535px" }}
+            sx={{ marginLeft: "270px" }}
             variant="contained"
             color="success"
             onClick={() => abrirCerrarModalInsertar()}
@@ -505,7 +507,7 @@ const bodyEliminar = (
             {<AddCircleOutlineIcon />} Agregar Profesor
           </Button>
         </Typography>
-        
+
 
         </Box>
 
