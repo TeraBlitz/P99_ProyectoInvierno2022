@@ -6,7 +6,7 @@ import { Alert, Button, Link } from '@mui/material'
 import { AlertTitle } from '@mui/material'
 import { Card, CardContent, Typography, TextField, MenuItem } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import Modal from '@mui/material/Modal'
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
@@ -14,6 +14,7 @@ import { getStudents } from '../../api/students'
 import { getClasses } from '../../api/classes'
 import { userContext } from './../../App.jsx'
 import ConfirmationDialog from '../../Components/Dialog/ConfirmationDialog'
+import ClaseModal from '../../Components/Clase/ClaseModal'
 
 function RegistroClasesAlumnos({changeContent}) {
     const [items, setItems] = useState([]);
@@ -23,16 +24,28 @@ function RegistroClasesAlumnos({changeContent}) {
     const [clases, setClases] = useState(null);
     const [claseRegistrada, setClaseRegistrada] = useState([]); // esto se obtendria de la base de datos
     const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+    const [openMoreInfo, setOpenMoreInfo] = useState(false);
+    const [currentClase, setCurrentClase] = useState(); 
     
     const userValues = useContext(userContext)
 
-    // Funcion para calcular edad si es menor de 18 se pide
-    //  un nombre de Tutor al estudiante
+    // Funcion para calcular edad 
     const calculate_age = (dateString) => {
         var birthday = +new Date(dateString);
         // The magic number: 31557600000 is 24 * 3600 * 365.25 * 1000, which is the length of a year
         const magic_number = 31557600000;
         return ~~((Date.now() - birthday) / (magic_number));
+    }
+
+    const nivelDict = {
+        '1' : 'Desde cero',
+        '2' : 'Con bases',
+        '3' : 'Intermedio',
+        '4' : 'Avanzado'
+    }
+
+    const getNivel = (params) => {
+        return  nivelDict[params.row.nivel]
     }
 
     const getHorario = (params) => {
@@ -71,6 +84,13 @@ function RegistroClasesAlumnos({changeContent}) {
             field: 'nivel',
             headerName: 'Nivel',
             width: 80,
+            editable: false,
+            valueGetter: getNivel,
+        },
+        {
+            field: 'area',
+            headerName: 'Area',
+            width: 120,
             editable: false
         },
         {
@@ -105,6 +125,11 @@ function RegistroClasesAlumnos({changeContent}) {
         }
 
     ];
+
+    const handleMoreInfo = (clase) => {
+        setCurrentClase(clase);
+        setOpenMoreInfo(!openMoreInfo);
+    };
     
     const changeClaseRegistrada = (classId) => {
         if (claseRegistrada[0]) {
@@ -227,7 +252,7 @@ function RegistroClasesAlumnos({changeContent}) {
                 {
                     clases.length !== 0 ?    
                         clases.map(e => (
-                            <Clase changeClaseRegistrada={changeClaseRegistrada} key={e._id} title={e.nombre_curso} periodo={e.clavePeriodo} cupo={e.cupo_actual} cupoMax={e.cupo_maximo} rango_edades={e.rango_edades} />
+                            <Clase changeClaseRegistrada={changeClaseRegistrada} handleMoreInfo={handleMoreInfo} key={e._id} clase={e} />
                         ))
                     :
                         <Box sx={{ height: '100vh', display: 'flex',
@@ -306,7 +331,15 @@ function RegistroClasesAlumnos({changeContent}) {
                 </Box>
             </Box>
             <ConfirmationDialog clase={claseRegistrada} handleClose={handleCloseDialog} open={openConfirmationDialog} changeClaseRegistrada={changeClaseRegistrada}/>
-
+            <Modal
+                open={openMoreInfo}
+                onClose={() => setOpenMoreInfo(!openMoreInfo)}
+                sx={{overflowY: 'scroll'}}
+            >
+                <>                
+                    <ClaseModal clase={currentClase} />
+                </>
+            </Modal>
         </>
     )
 }
