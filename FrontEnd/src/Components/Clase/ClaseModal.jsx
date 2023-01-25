@@ -1,6 +1,13 @@
 import React from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 
 const ClaseModal = ({clase}) => {
@@ -10,15 +17,6 @@ const ClaseModal = ({clase}) => {
         '2' : 'Con bases',
         '3' : 'Intermedio',
         '4' : 'Avanzado'
-    }
-
-    const getHorario = (clase) => {
-        return `${clase.lunes ? `Lun: ${clase.lunes} \n` : ''} 
-                ${clase.martes ? `Mar: ${clase.martes} \n` : ''}
-                ${clase.miercoles ? `Mierc: ${clase.miercoles} \n` : ''}
-                ${clase.jueves ? `Juev: ${clase.jueves} \n` : ''}
-                ${clase.viernes ? `Vier: ${clase.viernes} \n` : ''}
-                ${clase.sabado ? `Sab: ${clase.sabado} \n` : ''}`
     }
 
     return (
@@ -35,7 +33,30 @@ const ClaseModal = ({clase}) => {
             <Typography><strong>Nivel:</strong> {nivelDict[clase.nivel]}</Typography>
             <Typography><strong>Modalidad:</strong> {clase.modalidad}</Typography>
             <Typography><strong>Horario:</strong> </Typography>
-            <Typography> {getHorario(clase)} </Typography>
+            <TableContainer component={Paper} sx={{my: 1}}>
+                <Table sx={{ maxWidth: 100 }} size="small">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell align="center">Lunes</TableCell>
+                            <TableCell align="center">Martes</TableCell>
+                            <TableCell align="center">Miercoles</TableCell>
+                            <TableCell align="center">Jueves</TableCell>
+                            <TableCell align="center">Viernes</TableCell>
+                            <TableCell align="center">Sabado</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                            <TableRow sx={{ '&:last-child td': { border: 0 } }}>
+                                <TableCell align="center">{clase.lunes ? clase.lunes : '-'}</TableCell>
+                                <TableCell align="center">{clase.martes ? clase.martes : '-'}</TableCell>
+                                <TableCell align="center">{clase.miercoles ? clase.miercoles : '-'}</TableCell>
+                                <TableCell align="center">{clase.jueves ? clase.jueves : '-'}</TableCell>
+                                <TableCell align="center">{clase.viernes ? clase.viernes : '-'}</TableCell>
+                                <TableCell align="center">{clase.sabado ? clase.sabado : '-'}</TableCell>
+                            </TableRow>
+                    </TableBody>
+                </Table>
+            </TableContainer>
             <Typography><strong>Lugares disponibles:</strong> {(Number(clase.cupo_maximo) - Number(clase.cupo_actual)).toString()}</Typography>
         </Box>
         </>
