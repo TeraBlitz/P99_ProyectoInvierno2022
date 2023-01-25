@@ -213,7 +213,7 @@ export default function ShowClass() {
 
     }
 
-    const sendCSV = async (csv) => {
+    const sendCSV = async(csv) => {
         const csvArray = csv.split("\n")
         csvArray.shift()
         let clasesJson = [];
@@ -221,12 +221,13 @@ export default function ShowClass() {
         let iterator;
         // hash table profesores ( para no mandar profesores repetidos)
         let profesorHash = [];
+        
         const profesorFunc = (i) => {
             i = i.slice(2)
             return Number(i)
 
         }
-        profesorFunc('a01198211')
+
         let j = 0;
         for (let i = 0; i < csvArray.length; i++) {
             iterator = csvArray[i];
@@ -269,6 +270,8 @@ export default function ShowClass() {
             }
         }
 
+        // clasesJson & profesoresJson
+
         //console.log(clasesJson)
         await fetch("http://localhost:3000/v1/csv/subirClases",
             {
@@ -288,14 +291,14 @@ export default function ShowClass() {
         .catch(error => console.log('Error(ShowClass): ', error));
 
         //console.log(profesoresJson)
-        fetch("http://localhost:3000/v1/csv/subirProfesores",
+        await fetch("http://localhost:3000/v1/csv/subirProfesores",
             {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
                 },
                 body: new URLSearchParams({
-                    clasesJson: JSON.stringify(profesoresJson)
+                    profesoresJson: JSON.stringify(profesoresJson)
                 }),
             }
         )
