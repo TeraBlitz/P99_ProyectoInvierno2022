@@ -24,7 +24,7 @@ async function subirClasesYMaestros(req, res) {
 
 module.exports = {
     subirClasesYMaestros,
-=======
+}
 async function subirClases(req, res) {
     try {
         await client.connect();
