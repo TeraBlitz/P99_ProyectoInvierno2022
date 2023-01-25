@@ -83,20 +83,20 @@ function RegistroClasesAlumnos({changeContent}) {
         {
             field: 'nivel',
             headerName: 'Nivel',
-            width: 80,
+            width: 100,
             editable: false,
             valueGetter: getNivel,
         },
         {
             field: 'area',
             headerName: 'Area',
-            width: 120,
+            width: 110,
             editable: false
         },
         {
             field: 'modalidad',
             headerName: 'Modalidad',
-            width: 120,
+            width: 110,
             editable: false
         },
         {

@@ -15,7 +15,7 @@ function Clase({changeClaseRegistrada, handleMoreInfo, clase}) {
     }
 
     return (
-        <Card sx={{ my: 2 }}>
+        <Card sx={{ my: 2, '& .MuiTypography-root': { mb: 1 }}}>
             <CardContent>
                 <Typography variant="h6">{clase.clave}. {clase.nombre_curso}</Typography>
                 <br />
@@ -24,8 +24,9 @@ function Clase({changeClaseRegistrada, handleMoreInfo, clase}) {
                     <Typography variant='body1'><strong>Modalidad:</strong> {clase.modalidad}</Typography>
                     <Typography variant='body1'><strong>Nivel:</strong> {nivelDict[clase.nivel]}</Typography>
                         <Typography sx={{ color: clase.cupo_actual / clase.cupo_maximo >= 1 ? "red" : "black" }} variant='body1'>
-                            { Number(clase.cupo_actual) / Number(clase.cupo_maximo)  >=1 ? "Lleno"
-                                : "Quedan " + (Number(clase.cupo_maximo) - Number(clase.cupo_actual)).toString() + " puestos"}
+                            { Number(clase.cupo_actual) / Number(clase.cupo_maximo)  >=1 ? <strong>Lleno</strong>
+                                : <strong>Quedan  {(Number(clase.cupo_maximo) - Number(clase.cupo_actual)).toString()}  puestos!</strong> 
+                            }
                         </Typography>
                 </Box>
             </CardContent>
