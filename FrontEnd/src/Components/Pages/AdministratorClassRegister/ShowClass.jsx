@@ -41,6 +41,16 @@ export default function ShowClass() {
     const [maximumcapacity, setMaximumcapacity] = useState("");
     const [periodo, setPeriodo] = useState("");
     const [currentRowId, setCurrentRowId] = useState(null);
+    
+    // Para periodos
+
+    const [periodo2, setPeriodo2] = useState("");
+  const [dataPeriodo, setDataPeriodo] = useState([]);
+
+  const  getPeriodos = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
+    setDataPeriodo(res.data);
+  };
 
     //Funcion click para abrir el modal
     const abrirCerrarModalInsertar = () => {
@@ -77,8 +87,13 @@ export default function ShowClass() {
             }
         })
     }
-    useEffect(() => { resetClases() }, [])
+    useEffect(() => { 
+        resetClases()  
+        getPeriodos()
+    }, [])
+    
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
     const handleClickOpen = () => {
         setOpenDeleteDialog(true);
     };
@@ -415,9 +430,6 @@ export default function ShowClass() {
                         </MenuItem>
                     }
                 })}
-
-
-
             </TextField>
             <br />
             <Autocomplete
@@ -664,6 +676,39 @@ export default function ShowClass() {
                     ></TextField>
                 </CardContent>
             </Card>
+
+            <Card sx={{
+          width: 250,
+          position: "absolute",
+          textAlign: "left",
+        
+          marginTop: "470px",
+          bgcolor: "grey.200",
+          borderRadius: "8px",
+        }}>
+        <CardContent>
+          <TextField
+            style={{
+              paddingBottom: "15px",
+              width: "24ch",
+              fontFamily: "arial",
+            }}
+            label="Periodo"
+            onChange={(e) => setPeriodo2(e.target.value)}
+            value={periodo2}
+            select
+            id="filled-select-currency"
+          >
+            {dataPeriodo.map((e) => {
+                return (
+                  <MenuItem key={e._id} value={e.clave}>
+                    {e.clave}
+                  </MenuItem>
+                );
+            })}
+          </TextField>
+        </CardContent>
+      </Card>
 
 
             <Box
