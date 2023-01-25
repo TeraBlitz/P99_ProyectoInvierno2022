@@ -4,6 +4,7 @@ const router = express.Router()
 const csvController = require('../controllers/csv')
 
 router.post('/subirClases', csvController.subirClases)
+router.post('/subirProfesores', csvController.subirProfesores)
 
 
 module.exports = router
