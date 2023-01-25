@@ -3,8 +3,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid'
 import PanelCard from '../../Components/ControlPanel/PanelCard';
 import PanelInfo from '../../Components/ControlPanel/PanelInfo';
-import Periodos from './PagesCP/Periodos.jsx';
-
+import axios from "axios";
 
 // Possible function to get users, this goes in another file
 const fetchUsers = () => {
@@ -83,6 +82,14 @@ const ControlPanel = ({changeContent}) => {
     const [users, setUsersInfo] = useState(fetchUsers);
     const [teachers, setTeachersInfo] = useState(fetchTeachers);
 
+    const [data, setData] = useState([]);
+    //----------------------Obtencion de datos de la base de datos
+
+    const  getPeriodos = async () => {
+      const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
+      setData(res.data);
+    };
+
     useEffect(() => {
         const getUsersInfo = () =>{
             const users = fetchUsers();
@@ -96,6 +103,8 @@ const ControlPanel = ({changeContent}) => {
 
         getUsersInfo();
         getTeachersInfo();
+        getPeriodos();
+        console.log('Data: ',data)
     }, []);
 
 
@@ -103,9 +112,11 @@ const ControlPanel = ({changeContent}) => {
     return (
         <div>
         <Box sx={{ ml: 1, p: 1 }} >
-            <Box sx={{ fontFamily: 'default', fontSize: 'h3.fontSize', py: 2, display: 'flex', justifyContent: 'space-between',marginBottom:5,marginTop:2}}>
+            <Box sx={{ fontFamily: 'default', fontSize: 'h3.fontSize', py: 2, display: 'flex', justifyContent: 'space-between',marginBottom:0,marginTop:2}}>
                 Panel de control
             </Box>
+            <Box sx={{fontFamily: 'default', fontSize: 'h5.fontSize', py: 2, display: 'flex', justifyContent: 'space-between',textAlign:'right',float:'right', marginRight:0.5}}>
+                Periodo 2022</Box>
                 <Grid container spacing={2} >
                 {panelInfoCards.map(infoCard =>
                     <Grid item sm={12} md={4} key={infoCard.id}>
