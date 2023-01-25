@@ -119,7 +119,9 @@ function RegistroClasesAlumnos({changeContent}) {
             type: "actions",
             width: 115,
             renderCell: (params) => (
-                <Button onClick={() => handleOpenDialog(params.row)} variant="contained">Inscribir</Button>
+                params.row.cupo_actual >= params.row.cupo_maximo ?
+                <Button onClick={() => handleListaEspera(params.row)} variant="contained">Lista Espera</Button> :
+                <Button onClick={() => handleOpenDialog(params.row)} variant="contained">Inscribir</Button> 
             ),
 
         }
@@ -175,6 +177,17 @@ function RegistroClasesAlumnos({changeContent}) {
          console.log(clases)
      }, []);
 
+    const handleListaEspera = (clase) =>{
+        clase.status = 'ListaEspera'
+        console.log(clase)
+        // Enviar esta info a BD
+        const body = {
+            'idAlumno': currentStudent._id,
+            'idClase': clase._id,
+            'timeStamp': Date.now()
+        }
+        console.log(body);
+    }
      
     const handleOpenDialog = (clase) => {
         setClaseRegistrada(clase);
@@ -321,13 +334,29 @@ function RegistroClasesAlumnos({changeContent}) {
                     </CardContent>
                 </Card>
                 <Box sx={{ width: { lg: '60%', sm: '90%' }, height: { lg: '95%', sm: '50%' }, maxHeight: '100vh', minWidth: '548px' }}>
-                    <DataGrid rows={clases} columns={columns} disableSelectionOnClick={true} getRowId={(row) => row._id} getRowHeight={() => 'auto'}
-                        filterModel={{
-                            items: items
-                        }
-                        }
+                    <Box
+                        sx={{
+                            height: 400,
+                            width: '100%',
+                            '& .theme--ListaEspera': {
+                            bgcolor: 'lightyellow'
+                            },
+                            '& .theme--Inscrito': {
+                            bgcolor: 'green'
+                            }
+                        }}
+                    >
+                        <DataGrid 
+                            rows={clases} columns={columns} 
+                            disableSelectionOnClick={true}
+                            getRowId={(row) => row._id}
+                            filterModel={{
+                                items: items
+                            }}
+                            getRowClassName={(params) => `theme--${params.row.status}`}
 
-                    />
+                        />
+                    </Box>
                 </Box>
             </Box>
             <ConfirmationDialog clase={claseRegistrada} handleClose={handleCloseDialog} open={openConfirmationDialog} changeClaseRegistrada={changeClaseRegistrada}/>
