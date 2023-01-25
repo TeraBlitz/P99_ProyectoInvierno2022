@@ -87,7 +87,9 @@ const ControlPanel = ({changeContent}) => {
         getProfesor ();
         getClase();
         getPeriodos();
-        
+
+
+
     }, []);
 
     const panelInfoCards = [
@@ -109,7 +111,7 @@ const ControlPanel = ({changeContent}) => {
             'data': dataClase,
             'color': '#366ac3'
         },
-    
+
     ]
 
     return (

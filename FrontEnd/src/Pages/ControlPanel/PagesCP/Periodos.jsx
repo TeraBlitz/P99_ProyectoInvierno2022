@@ -8,7 +8,17 @@ import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
+
 export default function Periodos() {
+
+  useEffect(() => {
+    console.log('empieza use efect')
+     getAlumno();
+     getPeriodos();
+     getClase();
+     getProfesor();
+     console.log('Periodos: ',data)
+   }, []);
 
   //funciones para cambiar el display de fechas
   function traducirDate(raw){
@@ -44,12 +54,13 @@ export default function Periodos() {
   const  getPeriodos = async () => {
     const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
     setData(res.data);
+    console.log('fetch datos',res.data)
   };
 
 //Profesores
 
   const [dataProfesor, setDataProfesor] = useState([]);
-  
+
   const  getProfesor  = async () => {
     const res = await axios.get("http://127.0.0.1:3000/v1/profesores");
     setDataProfesor(res.data);
@@ -73,13 +84,7 @@ export default function Periodos() {
     setDataAlumno(res.data);
   };
 
-   useEffect(() => {
-    console.log('empieza use efect')
-     getAlumno();
-     getPeriodos();
-     getClase();
-     getProfesor();
-   }, []);
+
 
   // Variables para agregar tarjeta
   const [modalInsertar, setModalInsertar] = useState(false);
@@ -145,6 +150,7 @@ export default function Periodos() {
     } catch (error) {
       console.log(error);
     }
+    console.log('Datos Posteados: ',data)
   };
 
   const [modalEditar, setModalEditar] = useState(false);
@@ -312,7 +318,7 @@ export default function Periodos() {
     }
   };
 
-    console.log('data: ',data)
+
   return (
 
     <div className="container">
@@ -812,7 +818,7 @@ export default function Periodos() {
                     </Button>
                     <Button
                       variant="contained"
-                      onClick={() => abrirCerrarModalInsertar()}
+                      onClick={() => abrirCerrarModalEditar()}
                       color="error"
                     >
                       Cancelar
