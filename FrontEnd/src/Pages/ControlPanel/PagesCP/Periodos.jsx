@@ -8,9 +8,24 @@ import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
+import { width } from "@mui/system";
 export default function Periodos() {
-  // config de modal estilo
 
+  //funciones para cambiar el display de fechas
+  function traducirDate(raw){
+
+    const date = raw.split("T",2);
+    return(date[0])
+
+}
+  function traducirTime(raw){
+
+    const date = raw.split("T",2);
+    return(date[1])
+
+}
+
+  // config de modal estilo
   const style = {
     position: "absolute",
     top: "50%",
@@ -23,19 +38,52 @@ export default function Periodos() {
     p: 4,
   };
 
-  //DAtos
+  //Datos
   const [data, setData] = useState([]);
   //----------------------Obtencion de datos de la base de datos
-  const getPeriodos = () => {
-    axios
-      .get("http://127.0.0.1:3000/v1/periodos")
-      .then((res) => setData(res.data))
-      .catch((err) => console.log(err));
+
+  const  getPeriodos = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
+    setData(res.data);
   };
 
-  useEffect(() => {
-    getPeriodos();
-  }, []);
+//Profesores
+
+
+
+  const [dataProfesor, setDataProfesor] = useState([]);
+  
+  const  getProfesor  = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/profesores");
+    setDataProfesor(res.data);
+  };
+
+  //Clases
+
+  const [dataClase, setDataClase] = useState([]);
+
+  const  getClase  = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/clases");
+    setDataClase(res.data);
+  };
+
+   //Alumnos
+
+   const [dataAlumno, setDataAlumno] = useState([]);
+
+   const  getAlumno  = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/alumnos");
+    setDataAlumno(res.data);
+  };
+
+   useEffect(() => {
+    console.log('empieza use efect')
+     getAlumno();
+     getPeriodos();
+     getClase();
+     getProfesor();
+   }, []);
+
 
   // Variables para agregar tarjeta
   const [modalInsertar, setModalInsertar] = useState(false);
@@ -160,11 +208,11 @@ export default function Periodos() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
+
     setConsolaSeleccionada((prevState) => ({
       ...prevState,
-      [name] : value, 
-      
+      [name] : value,
+
     })
     );
 
@@ -172,69 +220,69 @@ export default function Periodos() {
        const valor = value + ":00";
       setConsolaSeleccionada((prevState) => ({
         ...prevState,
-        fecha_inicio: valor, 
-        
+        fecha_inicio: valor,
+
       }));
     }
     if (name === "fecha_fin") {
       const valor = value + ":00";
       setConsolaSeleccionada((prevState) => ({
         ...prevState,
-        fecha_fin: valor, 
-        
+        fecha_fin: valor,
+
       }));
     }
     if (name === "fecha_inicio_insc_talleres") {
       const valor = value + ":00";
       setConsolaSeleccionada((prevState) => ({
         ...prevState,
-        fecha_inicio_insc_talleres: valor, 
-        
+        fecha_inicio_insc_talleres: valor,
+
       }));
     }
-    
+
     if (name === "fecha_fin_insc_talleres") {
       const valor = value + ":00";
       setConsolaSeleccionada((prevState) => ({
         ...prevState,
-        fecha_fin_insc_talleres: valor, 
-        
+        fecha_fin_insc_talleres: valor,
+
       }));
     }
     if (name === "fecha_inicio_insc_idiomas") {
       const valor = value + ":00";
       setConsolaSeleccionada((prevState) => ({
         ...prevState,
-        fecha_inicio_insc_idiomas: valor, 
-        
+        fecha_inicio_insc_idiomas: valor,
+
       }));
     }
     if (name === "fecha_fin_insc_idiomas") {
       const valor = value + ":00";
       setConsolaSeleccionada((prevState) => ({
         ...prevState,
-        fecha_fin_insc_idiomas: valor, 
-        
+        fecha_fin_insc_idiomas: valor,
+
       }));
     }
     if (name === "fecha_inicio_insc_asesorias") {
       const valor = value + ":00";
       setConsolaSeleccionada((prevState) => ({
         ...prevState,
-        fecha_inicio_insc_asesorias: valor, 
-        
+        fecha_inicio_insc_asesorias: valor,
+
       }));
     }
     if (name === "fecha_fin_insc_asesorias") {
       const valor = value + ":00";
       setConsolaSeleccionada((prevState) => ({
         ...prevState,
-        fecha_fin_insc_asesorias: valor, 
-        
+        fecha_fin_insc_asesorias: valor,
+
       }));
     }
     console.log(consolaSeleccionada.fecha_inicio )
-    
+
   };
   // Editar
   const postEditar = async (e) => {
@@ -267,8 +315,10 @@ export default function Periodos() {
       console.log(error);
     }
   };
-  const debug = "debug";
+
+    console.log('data: ',data)
   return (
+
     <div className="container">
       <h1>Periodos</h1>
 
@@ -281,7 +331,17 @@ export default function Periodos() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Card sx={style}>
+        <Card sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "680px",
+          bgcolor: "background.paper",
+          border: "2px solid #000",
+          boxShadow: 24,
+          p: 4,
+        }}>
           <Typography variant="h5" component="div">
             Ingrese los nuevos datos
           </Typography>
@@ -289,20 +349,20 @@ export default function Periodos() {
 
           <div>
             <TextField
-              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              style={{ paddingBottom: "15px", fontFamily: "arial",width:281}}
               label="Clave"
               name="clave"
               onChange={(e) => setClave(e.target.value)}
               autoFocus
             />
             <TextField
-              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
               label="Status"
               name="status"
               onChange={(e) => setStatus(e.target.value)}
             />
             <TextField
-              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
               label="Fecha de inicio"
               name="fecha_inicio"
               id="datetime-local"
@@ -313,7 +373,7 @@ export default function Periodos() {
               onChange={(e) => setFecha_inicio(e.target.value)}
             />
             <TextField
-              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              style={{ paddingBottom: "15px", fontFamily: "arial",width:281 }}
               label="fecha de Fin"
               name="fecha_fin"
               id="datetime-local"
@@ -324,7 +384,7 @@ export default function Periodos() {
               onChange={(e) => setFecha_fin(e.target.value)}
             />
             <TextField
-              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              style={{ paddingBottom: "15px", fontFamily: "arial",width:281 }}
               label="Fecha de inicio de incripciones de talleres"
               name="fecha_inicio_insc_talleres"
               id="datetime-local"
@@ -335,7 +395,7 @@ export default function Periodos() {
               onChange={(e) => setFecha_inicio_insc_talleres(e.target.value)}
             />
             <TextField
-              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
               label="Fecha de fin de inscripciones de talleres"
               name="fecha_fin_insc_talleres"
               id="datetime-local"
@@ -347,7 +407,7 @@ export default function Periodos() {
             />
 
             <TextField
-              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
               label="Fecha de inicio de incripciones de idiomas"
               name="fecha_inicio_insc_idiomas"
               id="datetime-local"
@@ -358,7 +418,7 @@ export default function Periodos() {
               onChange={(e) => setFecha_inicio_insc_idiomas(e.target.value)}
             />
             <TextField
-              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              style={{ paddingBottom: "15px", fontFamily: "arial",width:281 }}
               label="Fecha de fin de inscripciones de idiomas"
               name="fecha_fin_insc_idiomas"
               id="datetime-local"
@@ -370,7 +430,7 @@ export default function Periodos() {
             />
 
             <TextField
-              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
               label="Fecha de inicio de incripciones de asesorias"
               name="fecha_inicio_insc_asesorias"
               id="datetime-local"
@@ -381,7 +441,7 @@ export default function Periodos() {
               onChange={(e) => setFecha_inicio_insc_asesorias(e.target.value)}
             />
             <TextField
-              style={{ paddingBottom: "15px", fontFamily: "arial" }}
+              style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
               label="Fecha de fin de inscripciones de asesorias"
               name="fecha_fin_insc_asesorias"
               id="datetime-local"
@@ -406,9 +466,11 @@ export default function Periodos() {
               onChange={(e) => setidiomas_max_por_alumno(e.target.value)}
               autoFocus
             />
+            <br/>
             <Button color="primary" variant="contained" onClick={postCrea}>
               Insertar
             </Button>
+
             <Button
               variant="contained"
               onClick={() => abrirCerrarModalInsertar()}
@@ -421,7 +483,7 @@ export default function Periodos() {
       </Modal>
 
       <div className="card-grid">
-        {data.map((item) => (
+        {Array.isArray(data) ? data.map((item) => (
           <Card key={item._id} sx={{ minWidth: 275, bgcolor: "grey.200" }}>
             <CardContent>
               <Typography variant="h5" component="div">
@@ -432,61 +494,85 @@ export default function Periodos() {
               </Typography>
               <h5 className="leyendaFaltas">Fecha de inicio: </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {item.fecha_inicio}
+              Fecha: {traducirDate( item.fecha_inicio)}<br/>
+                Hora: {traducirTime(item.fecha_inicio)}
               </Typography>
 
               <h5 className="leyendaFaltas">Fecha de cierre: </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {item.fecha_fin}
+              Fecha: {traducirDate( item.fecha_fin)}<br/>
+                Hora: {traducirTime(item.fecha_fin)}
               </Typography>
 
               <h5 className="leyendaFaltas">
                 Fecha de inicio de inscripciones de talleres:{" "}
               </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {item.fecha_inicio_insc_talleres}
+                Fecha: {traducirDate( item.fecha_inicio_insc_talleres)}<br/>
+                Hora: {traducirTime(item.fecha_inicio_insc_talleres)}
               </Typography>
               <h5 className="leyendaFaltas">
                 Fecha de cierre de inscripciones de talleres:{" "}
               </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {item.fecha_fin_insc_talleres}
+              Fecha: {traducirDate( item.fecha_fin_insc_talleres)}<br/>
+                Hora: {traducirTime(item.fecha_fin_insc_talleres)}
               </Typography>
 
               <h5 className="leyendaFaltas">
                 Fecha de inicio de inscripciones de idiomas:{" "}
               </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {item.fecha_inicio_insc_idiomas}
+              Fecha: {traducirDate( item.fecha_inicio_insc_idiomas)}<br/>
+                Hora: {traducirTime(item.fecha_inicio_insc_idiomas)}
               </Typography>
               <h5 className="leyendaFaltas">
                 Fecha de cierre de inscripciones de idiomas:{" "}
               </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {item.fecha_fin_insc_idiomas}
+              Fecha: {traducirDate( item.fecha_fin_insc_idiomas)}<br/>
+                Hora: {traducirTime(item.fecha_fin_insc_idiomas)}
               </Typography>
 
               <h5 className="leyendaFaltas">
                 Fecha de inicio de inscripciones de asesorias:{" "}
               </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {item.fecha_inicio_insc_asesorias}
+              Fecha: {traducirDate( item.fecha_inicio_insc_asesorias)}<br/>
+                Hora: {traducirTime(item.fecha_inicio_insc_asesorias)}
               </Typography>
               <h5 className="leyendaFaltas">
                 Fecha de cierre de inscripciones de asesorias:{" "}
               </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {item.fecha_fin_insc_asesorias}
+              Fecha: {traducirDate( item.fecha_fin_insc_asesorias)}<br/>
+                Hora: {traducirTime(item.fecha_fin_insc_asesorias)}
               </Typography>
 
-              <h5 className="leyendaFaltas">Cursos Maximos por Alumno </h5>
+              <h5 className="leyendaFaltas">Cursos Maximos por Alumno:</h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
                 {item.cursos_max_por_alumno}
               </Typography>
-              <h5 className="leyendaFaltas">Idiomas Maximos por Alumno </h5>
+              <h5 className="leyendaFaltas">Idiomas Maximos por Alumno: </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
                 {item.idiomas_max_por_alumno}
               </Typography>
+
+              <h5 className="leyendaFaltas">Profesores inscritos: </h5>
+              <Typography sx={{ mb: 1.5 }} color="text.secondary">
+               5
+              </Typography>
+
+              <h5 className="leyendaFaltas">Alumnos inscritos: </h5>
+              <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                5
+              </Typography>
+
+              <h5 className="leyendaFaltas">Clases inscritas: </h5>
+              <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                4
+              </Typography>
+
             </CardContent>
             <CardActions>
               <Button
@@ -541,7 +627,17 @@ export default function Periodos() {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
               >
-                <Card sx={style}>
+                <Card sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: "680px",
+                  bgcolor: "background.paper",
+                  border: "2px solid #000",
+                  boxShadow: 24,
+                  p: 4,
+                }}>
                   <Typography variant="h5" component="div">
                     Ingrese los nuevos datos
                   </Typography>
@@ -549,7 +645,7 @@ export default function Periodos() {
 
                   <div>
                     <TextField
-                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      style={{ paddingBottom: "15px", fontFamily: "arial",width:281 }}
                       label="Clave"
                       defaultValue={
                         consolaSeleccionada && consolaSeleccionada.clave
@@ -559,7 +655,7 @@ export default function Periodos() {
                       autoFocus
                     />
                     <TextField
-                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      style={{ paddingBottom: "15px", fontFamily: "arial",width:281  }}
                       label="Status"
                       defaultValue={
                         consolaSeleccionada && consolaSeleccionada.status
@@ -568,7 +664,7 @@ export default function Periodos() {
                       onChange={handleChange}
                     />
                     <TextField
-                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
                       label="Fecha de inicio"
                       name="fecha_inicio"
                       onChange={handleChange}
@@ -580,10 +676,10 @@ export default function Periodos() {
                       InputLabelProps={{
                         shrink: true,
                       }}
-                      
+
                     />
                     <TextField
-                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
                       label="fecha de Fin"
                       defaultValue={
                         consolaSeleccionada && consolaSeleccionada.fecha_fin
@@ -597,7 +693,7 @@ export default function Periodos() {
                       onChange={handleChange}
                     />
                     <TextField
-                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      style={{ paddingBottom: "15px", fontFamily: "arial",width:281 }}
                       label="Fecha de inicio de incripciones de talleres"
                       defaultValue={
                         consolaSeleccionada &&
@@ -612,7 +708,7 @@ export default function Periodos() {
                       onChange={handleChange}
                     />
                     <TextField
-                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
                       label="Fecha de fin de inscripciones de talleres"
                       defaultValue={
                         consolaSeleccionada &&
@@ -628,7 +724,7 @@ export default function Periodos() {
                     />
 
                     <TextField
-                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
                       label="Fecha de inicio de incripciones de idiomas"
                       defaultValue={
                         consolaSeleccionada &&
@@ -643,7 +739,7 @@ export default function Periodos() {
                       onChange={handleChange}
                     />
                     <TextField
-                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
                       label="Fecha de fin de inscripciones de idiomas"
                       defaultValue={
                         consolaSeleccionada &&
@@ -659,7 +755,7 @@ export default function Periodos() {
                     />
 
                     <TextField
-                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
                       label="Fecha de inicio de incripciones de asesorias"
                       defaultValue={
                         consolaSeleccionada &&
@@ -674,7 +770,7 @@ export default function Periodos() {
                       onChange={handleChange}
                     />
                     <TextField
-                      style={{ paddingBottom: "15px", fontFamily: "arial" }}
+                      style={{ paddingBottom: "15px", fontFamily: "arial" ,width:281}}
                       label="Fecha de fin de inscripciones de asesorias"
                       defaultValue={
                         consolaSeleccionada &&
@@ -709,6 +805,7 @@ export default function Periodos() {
                       name="idiomas_max_por_alumno"
                       onChange={handleChange}
                     />
+                    <br/>
 
                     <Button
                       color="primary"
@@ -729,7 +826,7 @@ export default function Periodos() {
               </Modal>
             </CardActions>
           </Card>
-        ))}
+        )): null}
         <div className="spacer"></div>
       </div>
     </div>

@@ -20,7 +20,11 @@ type: "object",
         fecha_inicio_insc_asesorias: {type: "string", format: "date-time"},
         fecha_fin_insc_asesorias: {type: "string", format: "date-time"},
         cursos_max_por_alumno: {type: "string", pattern: "^([0-9])*$"},
-        idiomas_max_por_alumno: {type: "string", pattern: "^([0-9])*$"}
+        idiomas_max_por_alumno: {type: "string", pattern: "^([0-9])*$"},
+        cursos_inscritos: {type: "string", pattern: "^([0-9])*$"},
+        alumnos_inscritos: {type: "string", pattern: "^([0-9])*$"},
+        profesores_inscritos: {type: "string", pattern: "^([0-9])*$"}
+
     },
     required: [
         "clave",

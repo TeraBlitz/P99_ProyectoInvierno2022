@@ -144,7 +144,6 @@ export default function ShowClass() {
     };
 
 
-
     //Evento que dado un nuevos datos los agrega
     const handleClick = async (e) => {
         e.preventDefault();
