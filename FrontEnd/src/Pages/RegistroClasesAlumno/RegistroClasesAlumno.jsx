@@ -119,9 +119,9 @@ function RegistroClasesAlumnos({changeContent}) {
             type: "actions",
             width: 115,
             renderCell: (params) => (
-                params.row.cupo_actual >= params.row.cupo_maximo ?
-                <Button onClick={() => handleListaEspera(params.row)} variant="contained">Lista Espera</Button> :
-                <Button onClick={() => handleOpenDialog(params.row)} variant="contained">Inscribir</Button> 
+                Number(params.row.cupo_actual) >= Number(params.row.cupo_maximo) ?
+                <Button onClick={() => handleListaEspera(params.row)} variant="outlined">Lista Espera</Button> :
+                <Button onClick={() => handleOpenDialog(params.row)} variant="outlined">Inscribir</Button> 
             ),
 
         }
@@ -171,15 +171,19 @@ function RegistroClasesAlumnos({changeContent}) {
              getClasses().then(
                  (data) => {
                      setClases(data);
-             });
-         }
-         getStudentClasses();
-         console.log(clases)
+                    });
+                }
+        getStudentClasses();
+        console.log(clases)
      }, []);
 
     const handleListaEspera = (clase) =>{
-        clase.status = 'ListaEspera'
         console.log(clase)
+        if (currentStudent == null) {
+            alert("Selecciona un alumno para inscribir clases o entrar a la lista de espera");
+            return
+        }        
+        clase.status = 'ListaEspera'
         // Enviar esta info a BD
         const body = {
             'idAlumno': currentStudent._id,
