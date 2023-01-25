@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import Clase from '../../Components/Clase/Clase'
 import CircularProgress from '@mui/material/CircularProgress'
 import { Alert, Button, Link } from '@mui/material'
+import Snackbar from '@mui/material/Snackbar'
 import { AlertTitle } from '@mui/material'
 import { Card, CardContent, Typography, TextField, MenuItem } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
@@ -26,6 +27,7 @@ function RegistroClasesAlumnos({changeContent}) {
     const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
     const [openMoreInfo, setOpenMoreInfo] = useState(false);
     const [currentClase, setCurrentClase] = useState(); 
+    const [selectAlertOpen, setSelectAlertOpen] = useState(false)
     
     const userValues = useContext(userContext)
 
@@ -120,8 +122,8 @@ function RegistroClasesAlumnos({changeContent}) {
             width: 115,
             renderCell: (params) => (
                 Number(params.row.cupo_actual) >= Number(params.row.cupo_maximo) ?
-                <Button onClick={() => handleListaEspera(params.row)} variant="outlined">Lista Espera</Button> :
-                <Button onClick={() => handleOpenDialog(params.row)} variant="outlined">Inscribir</Button> 
+                <Button size='small' onClick={() => handleListaEspera(params.row)} variant="outlined">Lista Espera</Button> :
+                <Button size='small' onClick={() => handleOpenDialog(params.row)} variant="outlined">Inscribir</Button> 
             ),
 
         }
@@ -180,7 +182,7 @@ function RegistroClasesAlumnos({changeContent}) {
     const handleListaEspera = (clase) =>{
         console.log(clase)
         if (currentStudent == null) {
-            alert("Selecciona un alumno para inscribir clases o entrar a la lista de espera");
+            setSelectAlertOpen(true);
             return
         }        
         clase.status = 'ListaEspera'
@@ -288,7 +290,7 @@ function RegistroClasesAlumnos({changeContent}) {
                         border: "2px solid  rgb(165, 165, 180)",
                         borderRadius: "8px",
                         width: { lg: '30%', sm: '40%' },
-                        height: '40%',
+                        
                         minHeight: '293px',
                         minWidth: '340px',
                         overflowY: 'scroll'
@@ -337,33 +339,31 @@ function RegistroClasesAlumnos({changeContent}) {
                         </TextField>
                     </CardContent>
                 </Card>
-                <Box sx={{ width: { lg: '60%', sm: '90%' }, height: { lg: '95%', sm: '50%' }, maxHeight: '100vh', minWidth: '548px' }}>
-                    <Box
-                        sx={{
-                            height: 400,
-                            width: '100%',
-                            '& .theme--ListaEspera': {
-                            bgcolor: 'lightyellow'
-                            },
-                            '& .theme--Inscrito': {
-                            bgcolor: 'green'
-                            }
+                <Box
+                    sx={{
+                        width: { lg: '60%', sm: '90%' },
+                        height: { lg: '95%', sm: '50%' },
+                        maxHeight: '100vh', minWidth: '548px',
+                        '& .theme--ListaEspera': {
+                        bgcolor: 'lightyellow'
+                        },
+                        '& .theme--Inscrito': {
+                        bgcolor: 'green'
+                        }
+                    }}
+                >
+                    <DataGrid 
+                        rows={clases} columns={columns} 
+                        disableSelectionOnClick={true}
+                        getRowId={(row) => row._id}
+                        filterModel={{
+                            items: items
                         }}
-                    >
-                        <DataGrid 
-                            rows={clases} columns={columns} 
-                            disableSelectionOnClick={true}
-                            getRowId={(row) => row._id}
-                            filterModel={{
-                                items: items
-                            }}
-                            getRowClassName={(params) => `theme--${params.row.status}`}
+                        getRowClassName={(params) => `theme--${params.row.status}`}
 
-                        />
-                    </Box>
+                    />
                 </Box>
-            </Box>
-            <ConfirmationDialog clase={claseRegistrada} handleClose={handleCloseDialog} open={openConfirmationDialog} changeClaseRegistrada={changeClaseRegistrada}/>
+            </Box>           
             <Modal
                 open={openMoreInfo}
                 onClose={() => setOpenMoreInfo(!openMoreInfo)}
@@ -373,6 +373,12 @@ function RegistroClasesAlumnos({changeContent}) {
                     <ClaseModal clase={currentClase} />
                 </>
             </Modal>
+            <ConfirmationDialog clase={claseRegistrada} handleClose={handleCloseDialog} open={openConfirmationDialog} changeClaseRegistrada={changeClaseRegistrada}/> 
+            <Snackbar open={selectAlertOpen} autoHideDuration={8000} onClose={() => setSelectAlertOpen(false)}>
+                <Alert severity='info'>
+                    Selecciona un alumno para inscribir clases o entrar a la lista de espera
+                </Alert>
+            </Snackbar>
         </>
     )
 }
