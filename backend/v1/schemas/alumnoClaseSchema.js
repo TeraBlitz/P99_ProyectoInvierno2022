@@ -1,7 +1,6 @@
 const alumnoClaseSchema = {
     type: "object",
     properties: {
-      _id: { type: "string" },
       idAlumno: { type: "string" },
       idClase: { type: "string" },
       idPeriodo: { type: "string" },
@@ -11,7 +10,7 @@ const alumnoClaseSchema = {
       "idClase",
       "idPeriodo",
     ],
-    additionalProperties: false,
+    additionalProperties: true,
     errorMessage: {
       type: "Debe ser un Objeto", // will not replace internal "type" error for the property "foo"
     },

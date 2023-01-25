@@ -16,7 +16,7 @@ const profesoroSchema = {
       "matricula",
       "correo",
     ],
-    additionalProperties: false,
+    additionalProperties: true,
     errorMessage: {
       type: "Debe ser un Objeto", // will not replace internal "type" error for the property "foo"
     },
