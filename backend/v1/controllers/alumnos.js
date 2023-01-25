@@ -62,9 +62,7 @@ async function createAlumno(req, res) {
       );
   } catch (err) {
     res.send(`ERROR: ${err}`);
-  } finally {
-    await client.close();
-  }
+  } 
 }
 // Test createAlumno
 // createAlumno().catch(console.dir);
