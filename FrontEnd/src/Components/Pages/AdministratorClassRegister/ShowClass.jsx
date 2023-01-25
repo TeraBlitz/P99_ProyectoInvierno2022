@@ -23,35 +23,31 @@ import { InsertDriveFile } from "@mui/icons-material";
 
 export default function ShowClass() {
     //--------------------------------------------Agregar----------------
-    //Agregar numeros
-    const [number, setNumber] = useState(5);
-    function add() {
-        setNumber((prevNumber) => prevNumber + 1);
-    }
     //Estados de agregar
     const [data, setData] = useState([]);
     const [modalInsertar, setModalInsertar] = useState(false);
     let profesores = []
     const [profesorList, setProfesorList] = useState([])
     const classAtributes = [
+        { key: 'area', value: 'Area' },
         { key: 'clave', value: 'Clave' },
         { key: 'nombre_curso', value: 'Curso' },
-        { key: 'nivel', value: 'Nivel' },
-        { key: 'matriculaMaestro', value: 'Matricula Maestro' },
         { key: 'edad_minima', value: 'Edad Minima' },
         { key: 'edad_maxima', value: 'Edad Maxima' },
         { key: 'cupo_maximo', value: 'Cupo Maximo' },
         { key: 'cupo_actual', value: 'Cupo Actual' },
-        { key: 'modalidad', value: 'Modalidad' },
         { key: 'lunes', value: 'Lunes' },
         { key: 'martes', value: 'Martes' },
         { key: 'miercoles', value: 'Miercoles' },
         { key: 'jueves', value: 'Jueves' },
         { key: 'viernes', value: 'Viernes' },
         { key: 'sabado', value: 'Sabado' },
-        { key: 'clavePeriodo', value: 'Clave Periodo' },
-        { key: 'area', value: 'Area' },
     ]
+    let [nombreCursoOptions, setNombreCursoOptions] = useState([]);
+    let [nombreProfesoresOptions, setNombreProfesoresOptions] = useState([]);
+    let [clavePeriodoOptions, setClavePeriodoOptions] = useState([]);
+    let [modalidadOptions, setModalidadOptions] = useState([]);
+    let niveloptions = ["desde cero", "con bases", "intermedio", "avanzado"]
     const classTemplate = {
         clave: '',
         nombre_curso: '',
@@ -70,10 +66,22 @@ export default function ShowClass() {
         clavePeriodo: '',
         area: '',
         cupo_actual: '',
+        niveles:''
 
     }
     const [nuevaClase, setNuevaClase] = useState(classTemplate)
     let edades = []
+
+    const getOptions = async () => {
+        await fetch("http://localhost:3000/v1/profesores/").then(e => {
+            console.log(e.text())
+
+
+        }).then(e => {
+            console.log(e)
+        })
+    }
+
 
     //Funcion click para abrir el modal
     const abrirCerrarModalInsertar = () => {
@@ -90,18 +98,18 @@ export default function ShowClass() {
             for (let i = 0; i < result.length; i++) {
                 let fechas = ""
                 let edades = ""
-                let niveles=""
+                let niveles = ""
                 result[i].lunes != "" ? fechas += "lunes, " : fechas += ""
                 result[i].martes != "" ? fechas += "martes, " : fechas += ""
                 result[i].miercoles != "" ? fechas += "miercoles, " : fechas += ""
                 result[i].jueves != "" ? fechas += "jueves, " : fechas += ""
                 result[i].viernes != "" ? fechas += "viernes, " : fechas += ""
                 result[i].sabado != "" ? fechas += "sabado, " : fechas += ""
-                result[i].edad_maxima ==""?edades =result[i].edad_minima + " en Adelante":edades = result[i].edad_minima + "-"+result[i].edad_maxima
-                result[i].nivel == "1"?niveles="desde cero":""
-                result[i].nivel == "2"?niveles="con bases":""
-                result[i].nivel == "3"?niveles="intermedio":""
-                result[i].nivel == "4"?niveles="avanzado":""
+                result[i].edad_maxima == "" ? edades = result[i].edad_minima + " en Adelante" : edades = result[i].edad_minima + "-" + result[i].edad_maxima
+                result[i].nivel == "1" ? niveles = "desde cero" : ""
+                result[i].nivel == "2" ? niveles = "con bases" : ""
+                result[i].nivel == "3" ? niveles = "intermedio" : ""
+                result[i].nivel == "4" ? niveles = "avanzado" : ""
 
                 setData(data => [...data, {
                     _id: result[i]._id,
@@ -124,20 +132,16 @@ export default function ShowClass() {
                     clavePeriodo: result[i].clavePeriodo,
                     area: result[i].area,
                     cupo_actual: result[i].cupo_actual,
-                    niveles:niveles
+                    niveles: niveles
                 }])
                 if (!profesores.includes(result[i].matriculaMaestro)) {
                     profesores.push(result[i].matriculaMaestro)
                 }
-                else {
-                    console.log("profeRepetido")
-                }
             }
             setProfesorList(profesores)
-            setEdadesList(edades)
         })
     }
-    useEffect(() => { resetClases() }, [])
+    useEffect(() => { resetClases(); getOptions() }, [])
 
     const handleClose = () => {
         setOpenDeleteDialog(false);
@@ -149,22 +153,19 @@ export default function ShowClass() {
     const handleClick = async (e) => {
         e.preventDefault();
         await fetch("http://localhost:3000/v1/clases/create", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
-                body: new URLSearchParams(nuevaClase),
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams(nuevaClase),
 
-        }).then(()=>{
+        }).then(() => {
             abrirCerrarModalInsertar();
             resetClases();
         })
     };
 
 
-    //Actualiza las clases
-    function createClasses(datas) {
-    }
 
     //-------------------------------Editar----------------------------------
     // Estados para editar
@@ -178,14 +179,15 @@ export default function ShowClass() {
         edades: '',
         cupo_maximo: '',
         modalidad: '',
-        fechas: ''
+        fechas: '',
+        niveles:''
     });
     //Function que abre o cierra el modal
     const abrirCerrarModalEditar = () => {
         setModalEditar(!modalEditar);
     };
 
-    const editClasses = (id, clase) => {
+    const editClasses = (clase) => {
         setClaseActual(clase);
         abrirCerrarModalEditar();
     };
@@ -201,7 +203,6 @@ export default function ShowClass() {
 
     //Funcion que modifica los daors
     const handleChange = (e) => {
-        console.log(e.target);
         const { name, value } = e.target;
         setClase({ ...clase, [name]: value });
     };
@@ -311,7 +312,7 @@ export default function ShowClass() {
             }
         )
             .then(response => response.json())
-            .then(result => {
+            .then(() => {
                 resetClases()
             })
             .catch(error => console.log('Error(ShowClass): ', error));
@@ -331,7 +332,7 @@ export default function ShowClass() {
 
     const seleccionarConsola = (consola, caso) => {
         if (caso === "Editar") {
-            editClasses(consola._id, consola)
+            editClasses(consola)
         } else if (caso === "Eliminar") {
             deleteClass(consola._id)
         } else {
@@ -346,6 +347,19 @@ export default function ShowClass() {
     const updateClass = (nuevaClase) => {
         delete nuevaClase.fechas
         delete nuevaClase.edades
+        if (nuevaClase.niveles == "desde cero") {
+            nuevaClase.nivel = "1";
+        }
+        else if(nuevaClase.niveles == "con bases") {
+            nuevaClase.nivel = "2"
+        } 
+        else if(nuevaClase.niveles == "intermedio") {
+            nuevaClase.nivel = "3"
+        }
+        else if(nuevaClase.niveles == "avanzado"){
+            nuevaClase.nivel = "4"
+        }
+        delete nuevaClase.niveles
         fetch("http://localhost:3000/v1/clases/update", {
             method: 'PUT',
             headers: {
@@ -405,7 +419,7 @@ export default function ShowClass() {
             }}
         >
             <h3
-                style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial", width:'100%' }}
+                style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial", width: '100%' }}
                 align="center"
             >
                 Crear una nueva clase
@@ -415,14 +429,14 @@ export default function ShowClass() {
                 <TextField
                     style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10 }}
                     label={atribute.value}
-                    onChange={e => {handleChange2(e)}}
+                    onChange={e => { handleChange2(e) }}
                     name={atribute.key}
                     key={atribute.key}
                     value={nuevaClase[atribute.key]}
                     autoFocus
                 />
             ))}
-            <div align="center" style={{width:'100%'}}>
+            <div align="center" style={{ width: '100%' }}>
                 <Button color="primary" onClick={handleClick}>
                     Insertar
                 </Button>
@@ -457,7 +471,7 @@ export default function ShowClass() {
         >
 
             <h3
-                style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" , width:'100%'}}
+                style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial", width: '100%' }}
                 align="center"
             >
                 Actualizar una clase
@@ -466,14 +480,40 @@ export default function ShowClass() {
                 <TextField
                     style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10 }}
                     label={atribute.value}
-                    onChange={e => {handleChange(e)}}
+                    onChange={e => { handleChange(e) }}
                     name={atribute.key}
                     key={atribute.key}
                     value={clase[atribute.key]}
                     autoFocus
                 />
             ))}
-            <div align="center" style={{width:'100%'}}>
+            <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10 }}
+                label="Nivel"
+                value={clase["niveles"]}
+                name="niveles"
+                onChange={(e) => { handleChange(e) }}
+                select>
+                {niveloptions.map(e => (
+                    <MenuItem value={e} key={e} >{e}</MenuItem>
+
+                ))}
+            </TextField>
+        <div style={{width:'100%' , borderTop:'1 px solid gray'}}>
+            <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10 }}
+                label="Profesor"
+                value={clase["matriculaMaestro"]}
+                name="matriculaMaestro"
+                onChange={(e) => { handleChange(e) }}
+                select>
+                {profesorList.map(e => (
+                    <MenuItem value={e} key={e} >{e}</MenuItem>
+
+                ))}
+            </TextField>
+        </div>
+
+
+            <div align="center" style={{ width: '100%' }}>
                 <Button color="primary" onClick={handleClick2}>
                     Editar
                 </Button>
