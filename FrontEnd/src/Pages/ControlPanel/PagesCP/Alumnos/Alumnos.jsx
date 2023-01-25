@@ -21,10 +21,10 @@ import Select from "react-select";
 
 export default function Alumnos() {
   //Encargado de guardar la data
+  let IdAlumnos = []
   const [data, setData] = useState([]);
-
-  const [periodo, setPeriodo] = useState("");
   const [dataPeriodo, setDataPeriodo] = useState([]);
+  const [dataAlumnoClase, setDataAlumnoClase] = useState([]);
 
   const getAlumnos = async () => {
     const res = await axios.get("http://127.0.0.1:3000/v1/alumnos");
@@ -36,9 +36,15 @@ export default function Alumnos() {
     setDataPeriodo(res.data);
   };
 
+  const getAlumnoClase = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/alumnoClases");
+    setDataAlumnoClase(res.data);
+  };
+
   useEffect(() => {
     getAlumnos();
     getPeriodos();
+    getAlumnoClase();
   }, []);
 
   // ------------Editar---------------
@@ -813,6 +819,9 @@ export default function Alumnos() {
 
   const handleSelectChange = (event) => {
     console.log(event);
+    
+    IdAlumnos = dataAlumnoClase.filter((data) => data.data.idPeriodos === event.value)
+    console.log(IdAlumnos)
   };
 
   //---------------------------------------Filter---------------------------
