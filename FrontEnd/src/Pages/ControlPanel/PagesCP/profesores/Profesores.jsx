@@ -7,6 +7,7 @@ import {
   TextField,
   Box,
   Typography,
+  MenuItem
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { grey } from "@mui/material/colors";
@@ -22,15 +23,22 @@ import {CSVLink} from 'react-csv'
 export default function Profesores() {
   //------------------------------------Obtener info----------------
   const [data, setData] = useState([]);
-  const getProfesores = () => {
-    axios
-      .get("http://127.0.0.1:3000/v1/profesores")
-      .then((res) => setData(res.data))
-      .catch((err) => console.log(err));
+  const [periodo, setPeriodo] = useState("");
+  const [dataPeriodo, setDataPeriodo] = useState([]);
+
+  const  getProfesores  = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/profesores");
+    setData(res.data);
+  };
+
+  const  getPeriodos = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
+    setDataPeriodo(res.data);
   };
 
   useEffect(() => {
     getProfesores();
+    getPeriodos();
   }, []);
 
   //----------------------Estados para el cud
@@ -439,6 +447,39 @@ const bodyEliminar = (
         </CardContent>
       </Card>
 
+      <Card sx={{
+          width: 250,
+          position: "absolute",
+          textAlign: "left",
+          marginLeft: "95px",
+          marginTop: "270px",
+          bgcolor: "grey.200",
+          borderRadius: "8px",
+        }}>
+        <CardContent>
+          <TextField
+            style={{
+              paddingBottom: "15px",
+              width: "24ch",
+              fontFamily: "arial",
+            }}
+            label="Periodo"
+            onChange={(e) => setPeriodo(e.target.value)}
+            value={periodo}
+            select
+            id="filled-select-currency"
+          >
+            {dataPeriodo.map((e) => {
+                return (
+                  <MenuItem key={e._id} value={e.clave}>
+                    {e.clave}
+                  </MenuItem>
+                );
+            })}
+          </TextField>
+        </CardContent>
+      </Card>
+      
       <Box
         sx={{
           width: "1000px",
@@ -454,6 +495,7 @@ const bodyEliminar = (
           sx={{ textAlign: "left", mt: 3, mb: 3, fontFamily: "arial" }}
         >
           Profesores
+
           <Button
             sx={{ marginLeft: "535px" }}
             variant="contained"
@@ -463,6 +505,7 @@ const bodyEliminar = (
             {<AddCircleOutlineIcon />} Agregar Profesor
           </Button>
         </Typography>
+        
 
         </Box>
 
