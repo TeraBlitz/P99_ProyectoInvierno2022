@@ -14,6 +14,7 @@ import Select from '@mui/material/Select';
 import { getStudents } from '../../api/students'
 import { getClasses } from '../../api/classes'
 import { userContext } from './../../App.jsx'
+import { createClassStudent } from '../../api/classStudent'
 import ConfirmationDialog from '../../Components/Dialog/ConfirmationDialog'
 import ClaseModal from '../../Components/Clase/ClaseModal'
 
@@ -121,9 +122,9 @@ function RegistroClasesAlumnos({changeContent}) {
             type: "actions",
             width: 115,
             renderCell: (params) => (
-                Number(params.row.cupo_actual) >= Number(params.row.cupo_maximo) ?
-                <Button size='small' onClick={() => handleListaEspera(params.row)} variant="outlined">Lista Espera</Button> :
-                <Button size='small' onClick={() => handleOpenDialog(params.row)} variant="outlined">Inscribir</Button> 
+                Number(params.row.cupo_actual) < Number(params.row.cupo_maximo) ?
+                <Button size='small' onClick={() => handleOpenDialog(params.row)} variant="outlined">Inscribir</Button>  :
+                <Button size='small' onClick={() => handleOpenDialog(params.row)} variant="outlined">Lista Espera</Button> 
             ),
 
         }
@@ -135,10 +136,23 @@ function RegistroClasesAlumnos({changeContent}) {
         setOpenMoreInfo(!openMoreInfo);
     };
     
-    const changeClaseRegistrada = (classId) => {
+    const changeClaseRegistrada = (clase) => {
+        if (currentStudent == null) {
+            setSelectAlertOpen(true);
+            return
+        }  
+ 
         if (claseRegistrada[0]) {
             setError('block')
         } else {
+            createClassStudent(new URLSearchParams({
+                'idClase' : clase._id,
+                'idAlumno' : currentStudent._id,
+                'idPeriodo' : clase.p
+
+            })).then((data) => {
+                //console.log(data);
+            }) 
             setClaseRegistrada([classId])
             handleCloseDialog();
         }
@@ -193,6 +207,7 @@ function RegistroClasesAlumnos({changeContent}) {
             'timeStamp': Date.now()
         }
         console.log(body);
+        handleCloseDialog();
     }
      
     const handleOpenDialog = (clase) => {
@@ -362,18 +377,18 @@ function RegistroClasesAlumnos({changeContent}) {
                         getRowClassName={(params) => `theme--${params.row.status}`}
 
                     />
-                </Box>
-            </Box>           
-            <Modal
-                open={openMoreInfo}
-                onClose={() => setOpenMoreInfo(!openMoreInfo)}
-                sx={{overflowY: 'scroll'}}
-            >
-                <>                
-                    <ClaseModal clase={currentClase} />
-                </>
-            </Modal>
-            <ConfirmationDialog clase={claseRegistrada} handleClose={handleCloseDialog} open={openConfirmationDialog} changeClaseRegistrada={changeClaseRegistrada}/> 
+                </Box>          
+                <Modal
+                    open={openMoreInfo}
+                    onClose={() => setOpenMoreInfo(!openMoreInfo)}
+                    sx={{overflowY: 'scroll'}}
+                >
+                    <>                
+                        <ClaseModal clase={currentClase} />
+                    </>
+                </Modal>
+            </Box>
+            <ConfirmationDialog clase={claseRegistrada} handleClose={handleCloseDialog} open={openConfirmationDialog} changeClaseRegistrada={changeClaseRegistrada} handleListaEspera={handleListaEspera}/> 
             <Snackbar open={selectAlertOpen} autoHideDuration={8000} onClose={() => setSelectAlertOpen(false)}>
                 <Alert severity='info'>
                     Selecciona un alumno para inscribir clases o entrar a la lista de espera
