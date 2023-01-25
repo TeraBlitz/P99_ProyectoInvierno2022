@@ -34,24 +34,30 @@ const ClaseModal = ({clase}) => {
             <Typography><strong>Modalidad:</strong> {clase.modalidad}</Typography>
             <Typography><strong>Horario:</strong> </Typography>
             <TableContainer component={Paper} sx={{my: 1}}>
-                <Table sx={{ maxWidth: 100 }} size="small">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell align="center">Lunes</TableCell>
-                            <TableCell align="center">Martes</TableCell>
-                            <TableCell align="center">Miercoles</TableCell>
-                            <TableCell align="center">Jueves</TableCell>
-                            <TableCell align="center">Viernes</TableCell>
-                            <TableCell align="center">Sabado</TableCell>
-                        </TableRow>
-                    </TableHead>
+                <Table  size="small">
                     <TableBody>
                             <TableRow sx={{ '&:last-child td': { border: 0 } }}>
+                                <TableCell align="center"><strong>Lunes</strong></TableCell>
                                 <TableCell align="center">{clase.lunes ? clase.lunes : '-'}</TableCell>
+                            </TableRow>
+                            <TableRow sx={{ '&:last-child td': { border: 0 } }}>
+                                <TableCell align="center"><strong>Martes</strong> </TableCell>
                                 <TableCell align="center">{clase.martes ? clase.martes : '-'}</TableCell>
+                            </TableRow>
+                            <TableRow sx={{ '&:last-child td': { border: 0 } }}>
+                                <TableCell align="center"><strong>Miercoles</strong></TableCell>
                                 <TableCell align="center">{clase.miercoles ? clase.miercoles : '-'}</TableCell>
+                            </TableRow>
+                            <TableRow sx={{ '&:last-child td': { border: 0 } }}>
+                                <TableCell align="center"><strong>Jueves</strong></TableCell>
                                 <TableCell align="center">{clase.jueves ? clase.jueves : '-'}</TableCell>
+                            </TableRow>
+                            <TableRow sx={{ '&:last-child td': { border: 0 } }}>
+                                <TableCell align="center"><strong>Viernes</strong></TableCell>
                                 <TableCell align="center">{clase.viernes ? clase.viernes : '-'}</TableCell>
+                            </TableRow>
+                            <TableRow sx={{ '&:last-child td': { border: 0 } }}>
+                                <TableCell align="center"><strong>Sabado</strong></TableCell>
                                 <TableCell align="center">{clase.sabado ? clase.sabado : '-'}</TableCell>
                             </TableRow>
                     </TableBody>
