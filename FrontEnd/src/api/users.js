@@ -1,4 +1,4 @@
-import { postData } from '../utils/requestUtils'
+import { postData, getData } from '../utils/requestUtils'
 
 export const createUser = (user) => {
     //getUsers('http://127.0.0.1:3000/v1/users')
@@ -6,4 +6,8 @@ export const createUser = (user) => {
     .then((data) => {
     console.log(data); // JSON data parsed by `data.json()` call
     });
+}
+
+export const getUser = () => {
+    return getData(`http://127.0.0.1:3000/v1/users/`)
 }

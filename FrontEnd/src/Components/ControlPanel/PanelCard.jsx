@@ -6,9 +6,10 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 
 const PanelCard = ({title, body, bgColor}) => {
+
   return (
     <Card>
-        <CardActionArea>
+        <CardActionArea >
             <CardMedia
                 component="img"
                 height="100"

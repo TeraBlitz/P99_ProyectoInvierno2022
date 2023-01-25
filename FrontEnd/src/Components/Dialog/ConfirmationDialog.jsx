@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export default function DeleteDialog({deleteClass, handleClose, open, currentRowId}) {
+export default function ConfirmationDialog({changeClaseRegistrada, handleClose, open, clase}) {
   return (
     <div>
       <Dialog
@@ -16,16 +16,17 @@ export default function DeleteDialog({deleteClass, handleClose, open, currentRow
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"¿Borrar esta clase?"}
+          ¿Inscribir esta clase?
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            La clase y todo lo relacionado a ella se va a eliminar por completo. No vas a poder acceder a estos datos de nuevo.
+            Estas seguro que quieres inscribir la clase <strong> {clase.clave} {clase.nombre_curso} {clase.nivel} </strong>, 
+            recuerda que hay inscripciones limitadas.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancelar</Button>
-          <Button onClick={deleteClass} autoFocus>
+          <Button onClick={() => changeClaseRegistrada(clase._id)} autoFocus>
             Confirmar
           </Button>
         </DialogActions>

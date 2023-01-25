@@ -9,7 +9,6 @@ import {
     Typography,
     Autocomplete,
 } from "@mui/material";
-import { data as information } from "../../../data/datosprueba";
 import { niveles } from "../../../data/numerosprueba";
 import { profes } from "../../../data/profesprueba";
 import { useState, useEffect } from "react";
@@ -20,9 +19,7 @@ import Actions from "./Actions";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import MenuItem from "@mui/material/MenuItem";
-import { minWidth, minHeight } from "@mui/system";
 import { periodosPrueba } from './../../../data/periodosprueba.js'
-import DeleteDialog from './DeleteDialog'
 import { InsertDriveFile } from "@mui/icons-material";
 
 
@@ -49,8 +46,39 @@ export default function ShowClass() {
     const abrirCerrarModalInsertar = () => {
         setModalInsertar(!modalInsertar);
     };
+    const resetClases = async () => {
+        await fetch("http://localhost:3000/v1/clases/", {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            }
+        }).then(response => response.json()).then(result => {
+            setData([]);
+            for (let i = 0; i < result.length; i++) {
+                let fechas = ""
+                result[i].lunes != "" ? fechas += "lunes, " : fechas += ""
+                result[i].martes != "" ? fechas += "martes, " : fechas += ""
+                result[i].miercoles != "" ? fechas += "miercoles, " : fechas += ""
+                result[i].jueves != "" ? fechas += "jueves, " : fechas += ""
+                result[i].viernes != "" ? fechas += "viernes, " : fechas += ""
+                result[i].sabado != "" ? fechas += "sabado, " : fechas += ""
+                console.log(fechas)
+                setData(data => [...data, {
+                    _id: i,
+                    clave: result[i].clave,
+                    nombre_curso: result[i].nombre_curso,
+                    nivel: result[i].nivel,
+                    matriculaMaestro: result[i].matriculaMaestro,
+                    edades: result[i].edad_minima + "-" + result[i].edad_maxima,
+                    cupo_maximo: result[i].cupo_maximo,
+                    modalidad: result[i].modalidad,
+                    fechas: fechas
+                }])
+            }
+        })
+    }
+    useEffect(() => { resetClases() }, [])
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-
     const handleClickOpen = () => {
         setOpenDeleteDialog(true);
     };
@@ -58,7 +86,6 @@ export default function ShowClass() {
     const handleClose = () => {
         setOpenDeleteDialog(false);
     };
-
 
 
     //Evento que dado un nuevos datos los agrega
@@ -94,9 +121,6 @@ export default function ShowClass() {
         }
     };
 
-    //Se encarga de guardar la nueva informacion
-    useEffect(() => {
-    }, []);
 
     //Actualiza las clases
     function createClasses(datas) {
@@ -225,6 +249,7 @@ export default function ShowClass() {
             clasesJson[i].jueves = iteratorArray[12]
             clasesJson[i].viernes = iteratorArray[13]
             clasesJson[i].sabado = iteratorArray[14]
+            clasesJson[i].matriculaMaestro = iteratorArray[17]
             clasesJson[i].cupo_actual = "0"
             // JSON.stringify(clasesJson[i])
 
@@ -555,13 +580,13 @@ export default function ShowClass() {
 
     const columns = useMemo(
         () => [
-            { field: "id", headerName: "Id", width: 134, hide: true },
             { field: "clave", headerName: "Clave", width: 134 },
             { field: "nombre_curso", headerName: "Curso", width: 170 },
             { field: "nivel", headerName: "Nivel", width: 231 },
             { field: "matriculaMaestro", headerName: "Profesor", width: 220, sortable: false },
-            { field: "horario", headerName: "Frecuencia", width: 165 },
             { field: "cupo_maximo", headerName: "Capacidad", width: 160 },
+            { field: 'edades', headerName: 'Edades', width: 160 },
+            { field: 'fechas', headerName: 'Fechas', width: 160 },
             {
                 field: "actions",
                 headerName: "Acciones",
@@ -686,7 +711,7 @@ export default function ShowClass() {
                     <DataGrid
                         columns={columns}
                         rows={data}
-                        getRowId={(row) => row.id}
+                        getRowId={(row) => row._id}
                         rowsPerPageOptions={[5, 10, 20]}
                         pageSize={pageSize}
                         onPageSizeChange={(newPageSize) => SetPageSize(newPageSize)}
@@ -708,8 +733,6 @@ export default function ShowClass() {
                     />
                 </Box>
 
-                {/* Creacion de modales */}
-                <DeleteDialog deleteClass={deleteClass} handleClose={handleClose} open={openDeleteDialog} />
                 {/* Creacion de modales */}
                 <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
                     {bodyInsertar}

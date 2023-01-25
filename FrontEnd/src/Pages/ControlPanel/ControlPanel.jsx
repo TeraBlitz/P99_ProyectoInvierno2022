@@ -3,6 +3,8 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid'
 import PanelCard from '../../Components/ControlPanel/PanelCard';
 import PanelInfo from '../../Components/ControlPanel/PanelInfo';
+import Periodos from './PagesCP/Periodos.jsx';
+
 
 // Possible function to get users, this goes in another file
 const fetchUsers = () => {
@@ -10,7 +12,7 @@ const fetchUsers = () => {
     //const userData = res.json();
     // Se reciben todos los usuarios este array se pasa como prop al componente de Alumnos
     const users = [];
-    return users; 
+    return users;
 };
 
 const fetchTeachers = () => {
@@ -18,7 +20,7 @@ const fetchTeachers = () => {
     //const userData = res.json();
     // Se reciben todos los usuarios este array se pasa como prop al componente de Alumnos
     const teachers = [];
-    return teachers; 
+    return teachers;
 };
 
 
@@ -28,28 +30,28 @@ const cards = [
         'title': 'Incripción',
         'body': 'Acceder a sistema de inscripciones. Crea, actualiza y elimina los cursos.',
         'color': '#366ac3',
-        'link':'Registro'
+        'link':'inscripcion'
     },
     {
         'id': '2',
         'title': 'Profesores',
         'body': 'Administrar los profesores y visualizar su información.',
         'color': '#5F8AD4',
-        'link':''
+        'link':'Profesores'
     },
     {
         'id': '3',
         'title': 'Alumnos',
         'body': 'Administrar los alumnos y visualizar su información.',
         'color': '#89ABE4',
-        'link':''
+        'link':'Alumnos'
     },
     {
         'id': '4',
         'title': 'Periodos',
         'body': 'Administrar el periodo escolar actual y proximos periodos.',
         'color': '#b2cbf5',
-        'link':''
+        'link':'Periodos'
     }
 ]
 
@@ -89,7 +91,10 @@ const ControlPanel = ({changeContent}) => {
         getTeachersInfo();
     }, []);
 
+
+
     return (
+        <div>
         <Box sx={{ ml: 1, p: 1 }} >
             <Box sx={{ fontFamily: 'default', fontSize: 'h3.fontSize', py: 2, display: 'flex', justifyContent: 'space-between' }}>
                 Panel de control
@@ -97,16 +102,19 @@ const ControlPanel = ({changeContent}) => {
             <Grid container spacing={2} sx={{my: 2}}>
                 {panelInfoCards.map(infoCard =>
                     <Grid item sm={12} md={6} key={infoCard.id}>
-                        <PanelInfo title={infoCard.title} data={infoCard.data} bgColor={infoCard.color} />
+                        <PanelInfo title={infoCard.title} data={infoCard.data} bgColor={infoCard.color}/>
                     </Grid>
                 )}
                 {cards.map(card =>
+
                     <Grid item sm={12} md={6} key={card.id} onClick={()=>changeContent(card.link)}>
                         <PanelCard title={card.title} body={card.body} bgColor={card.color} />
+
                     </Grid>
                 )}
             </Grid>
         </Box>
+        </div>
     )
 }
 

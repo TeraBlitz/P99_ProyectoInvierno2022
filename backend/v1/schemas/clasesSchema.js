@@ -37,6 +37,7 @@ const clasesSchema = {
         "sabado",
         "cupo_maximo",
         "cupo_actual"
+
     ],
     additionalProperties: true,
     errorMessage: {
