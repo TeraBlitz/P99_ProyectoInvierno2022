@@ -29,9 +29,9 @@ export default function ShowClass() {
     let profesores = []
     const [profesorList, setProfesorList] = useState([])
     const [currentProfesor, setCurrentProfesor] = useState({
-        nombre: '',
-        matricula: '',
-        apellidos: '',
+        nombreProfesor: '',
+        matriculaProfesor: '',
+        apellidoProfesor: '',
         nombreCompleto: '',
         correo: ''
     })
@@ -92,10 +92,11 @@ export default function ShowClass() {
             return e.json()
         }).then(e => {
             // setProfesorList([])
-            let newProfList = []
+            newProfList = []
             e.forEach(profesor => {
                 profesor.nombreCompleto = profesor.nombre + " " + profesor.apellidos
                 newProfList.push(profesor)
+                console.log(profesor)
             })
             setProfesorList(newProfList)
         })
@@ -189,7 +190,7 @@ export default function ShowClass() {
 
         }).then(() => {
             abrirCerrarModalInsertar();
-            // resetClases();
+            resetClases();
         })
     };
 
@@ -376,19 +377,20 @@ export default function ShowClass() {
     }
 
     const seleccionarConsola = (consola, caso) => {
+        const editClasses = (clase) => {
+            console.log("hello", profesorList)
+            setClaseActual(clase);
+            profesorList.forEach(e => {
+                console.log("start")
+                if (e.nombreCompleto == clase.nombreCompleto) {
+                    setCurrentProfesor(e)
+                }
+            })
+    
+            abrirCerrarModalEditar();
+        };
         if (caso === "Editar") {
-            (clase) => {
-                console.log("hello", profesorList)
-                setClaseActual(clase);
-                profesorList.forEach(e => {
-                    console.log("start")
-                    if (e.nombreCompleto == clase.nombreCompleto) {
-                        setCurrentProfesor(e)
-                    }
-                })
-        
-                abrirCerrarModalEditar();
-            };
+            editClasses(consola)
         } else if (caso === "Eliminar") {
             deleteClass(consola._id)
         } else {
@@ -588,6 +590,7 @@ export default function ShowClass() {
                         readOnly: true,
                     }}
                     value={currentProfesor["matricula"]}
+                    defaultValue={currentProfesor["matricula"]}
                 >
                 </TextField>
                 <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
@@ -595,6 +598,7 @@ export default function ShowClass() {
                         readOnly: true,
                     }}
                     value={currentProfesor["correo"]}
+                    defaultValue={currentProfesor["correo"]}
                     variant="filled"
                     label="correo"
                 >
