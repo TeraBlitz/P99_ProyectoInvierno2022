@@ -8,7 +8,8 @@ import axios from "axios";
 // Possible function to get users, this goes in another file
 
 
-
+let cursosReistrados = 0
+let profesInscritos = 0
 
 const fetchTeachers = () => {
     //const res = await fetch(`http://localhost:3000/teachers`);
@@ -83,9 +84,12 @@ const ControlPanel = ({changeContent}) => {
       const  getClase  = async () => {
         const res = await axios.get("http://127.0.0.1:3000/v1/clases");
         setDataClase(res.data);
+        // funciones para encontrar stats
         console.log('Fetch Clase', res.data)
         console.log('Cursos Registrados: ',contarClases(res.data))
-        let cursosReistrados = contarClases(res.data)
+         cursosReistrados = contarClases(res.data)
+        console.log('Profesores Inscritos', contarProfes(res.data))
+         profesInscritos = contarProfes(res.data)
       };
 
     useEffect(() => {
@@ -139,24 +143,44 @@ function contarClases(datos){
     });
     return(contadorClases)
 }
+//---------------------------Funcion para contar profesores actuales
+function contarProfes(datos){
+    let listaProfes = []
+    datos.forEach(element => {
+        if(element.clavePeriodo === peridooActual){
+
+            if(listaProfes.includes(element.matriculaMaestro)){
+
+            }else{
+                listaProfes.push(element.matriculaMaestro)
+            }
+    }
+
+    });
+    console.log(listaProfes)
+    return(listaProfes.length)
+}
     const panelInfoCards = [
         {
             'id': '1',
             'title': 'Estudiantes inscritos',
             'data': dataAlumno,
-            'color': '#0094DF'
+            'color': '#0094DF',
+            'num': 5
         },
         {
             'id': '2',
             'title': 'Profesores inscritos',
             'data': dataProfesor,
-            'color': '#00B8D6'
+            'color': '#00B8D6',
+            'num': profesInscritos?? 0
         },
         {
             'id': '3',
             'title': 'Cursos Registrados',
             'data': dataClase,
-            'color': '#366ac3'
+            'color': '#366ac3',
+            'num': cursosReistrados?? 0
         },
 
     ]
@@ -172,7 +196,7 @@ function contarClases(datos){
                 <Grid container spacing={2} >
                 {panelInfoCards.map(infoCard =>
                     <Grid item sm={12} md={4} key={infoCard.id}>
-                        <PanelInfo title={infoCard.title} data={infoCard.data} bgColor={infoCard.color}/>
+                        <PanelInfo title={infoCard.title} data={infoCard.data} bgColor={infoCard.color} num={infoCard.num}/>
                     </Grid>
 
                 )}
