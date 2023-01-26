@@ -28,6 +28,14 @@ export default function ShowClass() {
     const [modalInsertar, setModalInsertar] = useState(false);
     let profesores = []
     const [profesorList, setProfesorList] = useState([])
+    const [currentProfesor, setCurrentProfesor] = useState({
+        nombreProfesor: '',
+        matriculaProfesor: '',
+        apellidoProfesor: '',
+        nombreCompleto: '',
+        correo: ''
+    })
+
     const classAtributes = [
         { key: 'area', value: 'Area' },
         { key: 'clave', value: 'Clave' },
@@ -36,6 +44,8 @@ export default function ShowClass() {
         { key: 'edad_maxima', value: 'Edad Maxima' },
         { key: 'cupo_maximo', value: 'Cupo Maximo' },
         { key: 'cupo_actual', value: 'Cupo Actual' },
+    ]
+    const dayAtributes = [
         { key: 'lunes', value: 'Lunes' },
         { key: 'martes', value: 'Martes' },
         { key: 'miercoles', value: 'Miercoles' },
@@ -43,16 +53,15 @@ export default function ShowClass() {
         { key: 'viernes', value: 'Viernes' },
         { key: 'sabado', value: 'Sabado' },
     ]
-    let [nombreCursoOptions, setNombreCursoOptions] = useState([]);
-    let [nombreProfesoresOptions, setNombreProfesoresOptions] = useState([]);
-    let [clavePeriodoOptions, setClavePeriodoOptions] = useState([]);
-    let [modalidadOptions, setModalidadOptions] = useState([]);
     let niveloptions = ["desde cero", "con bases", "intermedio", "avanzado"]
     const classTemplate = {
         clave: '',
         nombre_curso: '',
         nivel: '',
-        matriculaMaestro: '',
+        matriculaProfesor: '',
+        nombreProfesor: '',
+        nombreCompleto: '',
+        apellidoProfesor: '',
         edad_minima: '',
         edad_maxima: '',
         cupo_maximo: '',
@@ -66,19 +75,28 @@ export default function ShowClass() {
         clavePeriodo: '',
         area: '',
         cupo_actual: '',
-        niveles:''
+        niveles: ''
 
     }
     const [nuevaClase, setNuevaClase] = useState(classTemplate)
     let edades = []
 
     const getOptions = async () => {
-        await fetch("http://localhost:3000/v1/profesores/").then(e => {
-            console.log(e.text())
 
-
+        await fetch("http://localhost:3000/v1/profesores/", {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            }
         }).then(e => {
-            console.log(e)
+            return e.json()
+        }).then(e => {
+            setProfesorList([])
+            e.forEach(profesor => {
+                profesor.nombreCompleto = profesor.nombre + " " + profesor.apellidos
+                setProfesorList(p => [...p, profesor])
+                console.log(profesor)
+            })
         })
     }
 
@@ -116,7 +134,7 @@ export default function ShowClass() {
                     clave: result[i].clave,
                     nombre_curso: result[i].nombre_curso,
                     nivel: result[i].nivel,
-                    matriculaMaestro: result[i].matriculaMaestro,
+                    matriculaProfesor: result[i].matriculaProfesor,
                     edades: edades,
                     edad_minima: result[i].edad_minima,
                     edad_maxima: result[i].edad_maxima,
@@ -132,21 +150,31 @@ export default function ShowClass() {
                     clavePeriodo: result[i].clavePeriodo,
                     area: result[i].area,
                     cupo_actual: result[i].cupo_actual,
-                    niveles: niveles
+                    niveles: niveles,
+                    nombreProfesor: result[i].nombreProfesor,
+                    apellidoProfesor: result[i].apellidoProfesor,
+                    nombreCompleto: result[i].nombreProfesor + " " + result[i].apellidoProfesor,
+
+
                 }])
-                if (!profesores.includes(result[i].matriculaMaestro)) {
-                    profesores.push(result[i].matriculaMaestro)
-                }
             }
-            setProfesorList(profesores)
         })
+        getOptions()
     }
-    useEffect(() => { resetClases(); getOptions() }, [])
+    useEffect(() => { resetClases() }, [])
 
     const handleClose = () => {
         setOpenDeleteDialog(false);
     };
 
+    const handleChangeProfesor = (p) => {
+        profesorList.forEach(e => {
+            console.log("change")
+            if (e.nombreCompleto == p.target.value) {
+                setCurrentProfesor(e)
+            }
+        })
+    }
 
     //Evento que dado un nuevos datos los agrega
     const handleClick = async (e) => {
@@ -174,12 +202,15 @@ export default function ShowClass() {
         clave: '',
         nombre_curso: '',
         nivel: '',
-        matriculaMaestro: '',
+        matriculaProfesor: '',
         edades: '',
         cupo_maximo: '',
         modalidad: '',
         fechas: '',
-        niveles:''
+        niveles: '',
+        nombreCompleto: '',
+        nombreProfesor: '',
+        apellidoProfesor: ''
     });
     //Function que abre o cierra el modal
     const abrirCerrarModalEditar = () => {
@@ -187,7 +218,15 @@ export default function ShowClass() {
     };
 
     const editClasses = (clase) => {
+        console.log("hello", profesorList)
         setClaseActual(clase);
+        profesorList.forEach(e => {
+            console.log("start")
+            if (e.nombreCompleto == clase.nombreCompleto) {
+                setCurrentProfesor(e)
+            }
+        })
+
         abrirCerrarModalEditar();
     };
 
@@ -278,15 +317,17 @@ export default function ShowClass() {
             clasesJson[i].jueves = iteratorArray[12]
             clasesJson[i].viernes = iteratorArray[13]
             clasesJson[i].sabado = iteratorArray[14]
-            clasesJson[i].matriculaMaestro = iteratorArray[17]
+            clasesJson[i].matriculaProfesor = iteratorArray[17]
             clasesJson[i].cupo_actual = "0"
+            clasesJson[i].nombreProfesor = iteratorArray[15].trim()
+            clasesJson[i].apellidoProfesor = iteratorArray[16].trim()
             // JSON.stringify(clasesJson[i])
 
             // agregar profesores
             if (!profesorHash[profesorFunc(iteratorArray[17])]) {
                 profesoresJson[j] = {}
-                profesoresJson[j].nombre = iteratorArray[15]
-                profesoresJson[j].apellidos = iteratorArray[16]
+                profesoresJson[j].nombre = iteratorArray[15].trim()
+                profesoresJson[j].apellidos = iteratorArray[16].trim()
                 profesoresJson[j].matricula = iteratorArray[17]
                 profesoresJson[j].correo = iteratorArray[18]
                 profesoresJson[j].fecha_de_nacimiento = ""
@@ -353,13 +394,13 @@ export default function ShowClass() {
         if (nuevaClase.niveles == "desde cero") {
             nuevaClase.nivel = "1";
         }
-        else if(nuevaClase.niveles == "con bases") {
+        else if (nuevaClase.niveles == "con bases") {
             nuevaClase.nivel = "2"
-        } 
-        else if(nuevaClase.niveles == "intermedio") {
+        }
+        else if (nuevaClase.niveles == "intermedio") {
             nuevaClase.nivel = "3"
         }
-        else if(nuevaClase.niveles == "avanzado"){
+        else if (nuevaClase.niveles == "avanzado") {
             nuevaClase.nivel = "4"
         }
         delete nuevaClase.niveles
@@ -481,6 +522,30 @@ export default function ShowClass() {
             </h3>
             {classAtributes.map(atribute => (
                 <TextField
+                    style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
+                    label={atribute.value}
+                    onChange={e => { handleChange(e) }}
+                    name={atribute.key}
+                    key={atribute.key}
+                    value={clase[atribute.key]}
+                    autoFocus
+                />
+            ))}
+            <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
+                label="Nivel"
+                value={clase["niveles"]}
+                name="niveles"
+                onChange={(e) => { handleChange(e) }}
+                select
+            >
+                {niveloptions.map(e => (
+                    <MenuItem value={e} key={e} >{e}</MenuItem>
+
+                ))}
+            </TextField>
+
+            {dayAtributes.map(atribute => (
+                <TextField
                     style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10 }}
                     label={atribute.value}
                     onChange={e => { handleChange(e) }}
@@ -490,30 +555,41 @@ export default function ShowClass() {
                     autoFocus
                 />
             ))}
-            <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10 }}
-                label="Nivel"
-                value={clase["niveles"]}
-                name="niveles"
-                onChange={(e) => { handleChange(e) }}
-                select>
-                {niveloptions.map(e => (
-                    <MenuItem value={e} key={e} >{e}</MenuItem>
-
-                ))}
-            </TextField>
-        <div style={{width:'100%' , borderTop:'1 px solid gray'}}>
-            <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10 }}
-                label="Profesor"
-                value={clase["matriculaMaestro"]}
-                name="matriculaMaestro"
-                onChange={(e) => { handleChange(e) }}
-                select>
-                {profesorList.map(e => (
-                    <MenuItem value={e} key={e} >{e}</MenuItem>
-
-                ))}
-            </TextField>
-        </div>
+            <div style={{ width: '100%', borderTop: '1px solid gray', paddingTop: '5px' }}>
+                <Typography sx={{ textAlign: 'center', marginTop: '10px' }}> datos del profesor</Typography>
+                <br />
+                <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '100%' }}
+                    label="Profesor"
+                    value={currentProfesor["nombreCompleto"]}
+                    name="nombreCompleto"
+                    onChange={(e) => { handleChangeProfesor(e) }}
+                    select
+                >
+                    {profesorList.map(e => (
+                        <MenuItem value={e.nombre + " " + e.apellidos} key={e._id} >{e.nombre + " " + e.apellidos}</MenuItem>
+                    ))}
+                </TextField>
+                <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
+                    variant="filled"
+                    label="matricula"
+                    InputProps={{
+                        readOnly: true,
+                    }}
+                    value={currentProfesor["matricula"]}
+                    defaultValue={currentProfesor["matricula"]}
+                >
+                </TextField>
+                <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
+                    InputProps={{
+                        readOnly: true,
+                    }}
+                    value={currentProfesor["correo"]}
+                    defaultValue={currentProfesor["correo"]}
+                    variant="filled"
+                    label="correo"
+                >
+                </TextField>
+            </div>
 
 
             <div align="center" style={{ width: '100%' }}>
@@ -535,7 +611,7 @@ export default function ShowClass() {
             { field: "clave", headerName: "Clave", width: 134 },
             { field: "nombre_curso", headerName: "Curso", width: 170 },
             { field: "niveles", headerName: "Nivel", width: 100 },
-            { field: "matriculaMaestro", headerName: "Profesor", width: 140, sortable: false },
+            { field: "nombreCompleto", headerName: "Profesor", width: 140, sortable: false },
             { field: "cupo_maximo", headerName: "Capacidad", width: 160 },
             { field: 'edades', headerName: 'Edades', width: 160 },
             { field: 'fechas', headerName: 'Fechas', width: 160 },
@@ -611,7 +687,7 @@ export default function ShowClass() {
                         onChange={(e) => {
                             setItems([
                                 {
-                                    columnField: "matriculaMaestro",
+                                    columnField: "matriculaProfesor",
                                     operatorValue: "contains",
                                     value: e.target.value,
                                 },
