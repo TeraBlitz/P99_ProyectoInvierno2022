@@ -15,6 +15,7 @@ import { getStudents } from '../../api/students'
 import { getClasses } from '../../api/classes'
 import { userContext } from './../../App.jsx'
 import { createClassStudent } from '../../api/classStudent'
+import { createWaitList, getWaitList } from '../../api/waitList'
 import ConfirmationDialog from '../../Components/Dialog/ConfirmationDialog'
 import ClaseModal from '../../Components/Clase/ClaseModal'
 
@@ -28,7 +29,8 @@ function RegistroClasesAlumnos({changeContent}) {
     const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
     const [openMoreInfo, setOpenMoreInfo] = useState(false);
     const [currentClase, setCurrentClase] = useState(); 
-    const [selectAlertOpen, setSelectAlertOpen] = useState(false)
+    const [selectAlertOpen, setSelectAlertOpen] = useState(false);
+    const [listaEspera, setListaEspera] = useState(null)
     
     const userValues = useContext(userContext)
 
@@ -194,20 +196,22 @@ function RegistroClasesAlumnos({changeContent}) {
      }, []);
 
     const handleListaEspera = (clase) =>{
-        console.log(clase)
         if (currentStudent == null) {
             setSelectAlertOpen(true);
             return
         }        
-        clase.status = 'ListaEspera'
-        // Enviar esta info a BD
-        const body = {
-            'idAlumno': currentStudent._id,
-            'idClase': clase._id,
-            'timeStamp': Date.now()
-        }
-        console.log(body);
-        handleCloseDialog();
+        getWaitList().then((data) => {
+                const lista = data.filter(lista => lista.idAlumno === currentStudent._id);
+        }).then((lista) => {
+            createWaitList(new URLSearchParams({
+                'idAlumno': currentStudent._id,
+                'idClase': clase._id,
+                'lugar_de_espera': (lista.length()+1).toString(),
+                'status': 'Espera'
+            }));
+            clase.status = 'ListaEspera'
+            handleCloseDialog();
+        })
     }
      
     const handleOpenDialog = (clase) => {
@@ -371,6 +375,7 @@ function RegistroClasesAlumnos({changeContent}) {
                         rows={clases} columns={columns} 
                         disableSelectionOnClick={true}
                         getRowId={(row) => row._id}
+                        getRowHeight={() => 'auto'}
                         filterModel={{
                             items: items
                         }}

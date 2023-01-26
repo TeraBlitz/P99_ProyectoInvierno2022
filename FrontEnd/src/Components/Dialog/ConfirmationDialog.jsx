@@ -37,7 +37,7 @@ export default function ConfirmationDialog({changeClaseRegistrada, handleClose, 
           `Estas seguro que quieres inscribir la clase ${clase.clave} ${clase.nombre_curso} ${clase.nivel}, 
           recuerda que hay inscripciones limitadas.`
           :
-          `Estas seguro que quieres entrar a la lista de espera de la clase ${<strong> {clase.clave} {clase.nombre_curso} {clase.nivel} </strong>}.`
+          `Estas seguro que quieres entrar a la lista de espera de la clase ${clase.clave} ${clase.nombre_curso} ${clase.nivel}.`
           }
           </DialogContentText>
         </DialogContent>
