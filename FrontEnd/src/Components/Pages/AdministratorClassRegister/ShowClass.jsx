@@ -91,12 +91,14 @@ export default function ShowClass() {
         }).then(e => {
             return e.json()
         }).then(e => {
-            setProfesorList([])
+            // setProfesorList([])
+            newProfList = []
             e.forEach(profesor => {
                 profesor.nombreCompleto = profesor.nombre + " " + profesor.apellidos
-                setProfesorList(p => [...p, profesor])
+                newProfList.push(profesor)
                 console.log(profesor)
             })
+            setProfesorList(newProfList)
         })
     }
 
