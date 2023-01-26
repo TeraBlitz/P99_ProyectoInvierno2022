@@ -240,39 +240,22 @@ function RegistroClasesAlumnos({changeContent}) {
             setError('block')
         } else {
             let periodo = []
-            let myClases = []
             findTerm(new URLSearchParams({ 'clave' : clase.clavePeriodo}))
             .then((data) => {
                 periodo = data
             })
             .then(() => {
-                getClassStudent().then((result) =>{
-                    myClases = result.data.filter(myclass => 
-                        myclass.idAlumno === currentStudent._id &&
-                        myclass.idPeriodo === periodo[0]._id &&
-                        myclass.idClase === clase._id 
-                        )
+                createClassStudent(new URLSearchParams({
+                    'idClase' : clase._id,
+                    'idAlumno' : currentStudent._id,
+                    'idPeriodo' : periodo[0]._id
+                })).then((data) => {
+                    //console.log(data);
+                    setClaseRegistrada([clase._id])
+                    clase.status = 'Inscrito'
+                    handleCloseDialog();
                 })
-                .then(() => {
-                    if (myClases.length > 0) {
-                        alert('Ya te inscribiste a esta clase')
-                        handleCloseDialog()
-                    }
-                    else{
-                        createClassStudent(new URLSearchParams({
-                            'idClase' : clase._id,
-                            'idAlumno' : currentStudent._id,
-                            'idPeriodo' : periodo[0]._id
-                        })).then((data) => {
-                            //console.log(data);
-                            setClaseRegistrada([clase._id])
-                            clase.status = 'Inscrito'
-                            handleCloseDialog();
-                        }) 
-                    }
-                }) 
             })
-
         }
     }
      

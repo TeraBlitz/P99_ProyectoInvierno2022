@@ -19,6 +19,8 @@ import CardContent from "@mui/material/CardContent";
 import MenuItem from "@mui/material/MenuItem";
 import { periodosPrueba } from './../../../data/periodosprueba.js'
 import { InsertDriveFile } from "@mui/icons-material";
+import WaitList from "./WaitList";
+import { getWaitList } from '../../../api/waitList'
 
 
 export default function ShowClass() {
@@ -483,6 +485,30 @@ export default function ShowClass() {
         </div>
     );
 
+    //-------------------------------Lista de Espera---------------------------
+
+    const [openWaitList, setOpenWaitList] = useState(false);
+    const [currentClase, setCurrentClase] = useState(null);
+    const [currentWaitList, setCurrentWaitList] = useState(null);
+
+
+    const getClassWaitList = (clase) => {
+        let waitList = [];   
+        getWaitList().then((data) => {
+            waitList = data.filter(lista => lista.idClase === clase._id);
+            setCurrentWaitList(waitList);
+            setCurrentClase(clase);
+            setOpenWaitList(true);
+        })
+    }
+ 
+    const handleClaseWaitList = () => {
+        setOpenWaitList(false);
+    };
+
+
+
+
     //---------------------------------------Show--------------
     const [pageSize, SetPageSize] = useState(5);
 
@@ -503,6 +529,15 @@ export default function ShowClass() {
                 width: 175,
                 renderCell: (params) => (
                     <Actions {...{ params, seleccionarConsola }} />
+                ),
+            },
+            {
+                field: "wait_list",
+                headerName: "Lista Espera",
+                type: "actions",
+                width: 150,
+                renderCell: (params) => (
+                    <Button size="small" onClick={() => getClassWaitList(params.row)}>Lista Espera</Button>
                 ),
             },
 
@@ -652,6 +687,16 @@ export default function ShowClass() {
 
                 <Modal open={modalEditar} onClose={() => abrirCerrarModalEditar()}>
                     {bodyEditar}
+                </Modal>
+
+                <Modal
+                open={openWaitList}
+                onClose={() => setOpenWaitList(!openWaitList)}
+                sx={{overflow: 'scroll'}}
+                >
+                    <>                
+                        <WaitList clase={currentClase} waitList={currentWaitList}/>
+                    </>
                 </Modal>
             </Box>
         </div>
