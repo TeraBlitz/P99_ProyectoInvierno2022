@@ -377,7 +377,18 @@ export default function ShowClass() {
 
     const seleccionarConsola = (consola, caso) => {
         if (caso === "Editar") {
-            editClasses(consola)
+            (clase) => {
+                console.log("hello", profesorList)
+                setClaseActual(clase);
+                profesorList.forEach(e => {
+                    console.log("start")
+                    if (e.nombreCompleto == clase.nombreCompleto) {
+                        setCurrentProfesor(e)
+                    }
+                })
+        
+                abrirCerrarModalEditar();
+            };
         } else if (caso === "Eliminar") {
             deleteClass(consola._id)
         } else {
