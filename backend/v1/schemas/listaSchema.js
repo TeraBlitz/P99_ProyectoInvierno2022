@@ -4,13 +4,13 @@ const listaSchema = {
         _id: {type: "string"},
         idAlumno: {type: "string"},
         idClase: {type: "string"},
-        time_stamp: {type: "date-time"},
+        time_stamp_: {type: "date-time"},
         status: {type: "string"}
     },
     required: [
         "idAlumno",
         "idClase",
-        "time_stamp",
+        "time_stamp_",
         "status"
     ],
     additionalProperties: true,

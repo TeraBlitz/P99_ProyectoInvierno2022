@@ -34,7 +34,7 @@ async function createLista(req, res) {
       {
         idAlumno: req.body.idAlumno,
         idClase: req.body.idClase,
-        time_stamp: req.body.time_stamp,
+        time_stamp_: req.body.time_stamp_,
         status: req.body.status,
       },
     ];
@@ -68,7 +68,7 @@ async function updateLista(req, res) {
       $set: {
         idAlumno: req.body.idAlumno,
         idClase: req.body.idClase,
-        time_stamp: req.body.time_stamp,
+        time_stamp_: req.body.time_stamp_,
         status: req.body.status,
       },
     };
