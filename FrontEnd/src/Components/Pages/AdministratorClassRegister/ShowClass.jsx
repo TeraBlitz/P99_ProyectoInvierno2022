@@ -26,8 +26,13 @@ export default function ShowClass() {
     //Estados de agregar
     const [data, setData] = useState([]);
     const [modalInsertar, setModalInsertar] = useState(false);
-    let profesores = []
-    const [profesorList, setProfesorList] = useState([])
+    const [profesorList, setProfesorList] = useState([{
+        nombreProfesor: '',
+        matriculaProfesor: '',
+        apellidoProfesor: '',
+        nombreCompleto: '',
+        correo: ''
+    }])
     const [currentProfesor, setCurrentProfesor] = useState({
         nombreProfesor: '',
         matriculaProfesor: '',
@@ -92,11 +97,10 @@ export default function ShowClass() {
             return e.json()
         }).then(e => {
             // setProfesorList([])
-            newProfList = []
+            let newProfList = []
             e.forEach(profesor => {
                 profesor.nombreCompleto = profesor.nombre + " " + profesor.apellidos
                 newProfList.push(profesor)
-                console.log(profesor)
             })
             setProfesorList(newProfList)
         })
@@ -154,8 +158,8 @@ export default function ShowClass() {
                     cupo_actual: result[i].cupo_actual,
                     niveles: niveles,
                     nombreProfesor: result[i].nombreProfesor,
-                    apellidoProfesor: result[i].apellidoProfesor,
-                    nombreCompleto: result[i].nombreProfesor + " " + result[i].apellidoProfesor,
+                    apellidosProfesor: result[i].apellidosProfesor,
+                    nombreCompleto: result[i].nombreProfesor + " " + result[i].apellidosProfesor,
 
 
                 }])
@@ -171,7 +175,6 @@ export default function ShowClass() {
 
     const handleChangeProfesor = (p) => {
         profesorList.forEach(e => {
-            console.log("change")
             if (e.nombreCompleto == p.target.value) {
                 setCurrentProfesor(e)
             }
@@ -181,6 +184,25 @@ export default function ShowClass() {
     //Evento que dado un nuevos datos los agrega
     const handleClick = async (e) => {
         e.preventDefault();
+        nuevaClase.nombreProfesor = currentProfesor.nombre
+        nuevaClase.apellidosProfesor = currentProfesor.apellidos
+        nuevaClase.matriculaProfesor = currentProfesor.matricula
+        delete nuevaClase.nombreCompleto
+
+        if (nuevaClase.niveles == "desde cero") {
+            nuevaClase.nivel = "1";
+        }
+        else if (nuevaClase.niveles == "con bases") {
+            nuevaClase.nivel = "2"
+        }
+        else if (nuevaClase.niveles == "intermedio") {
+            nuevaClase.nivel = "3"
+        }
+        else if (nuevaClase.niveles == "avanzado") {
+            nuevaClase.nivel = "4"
+        }
+        delete nuevaClase.niveles
+
         await fetch("http://localhost:3000/v1/clases/create", {
             method: "POST",
             headers: {
@@ -219,11 +241,9 @@ export default function ShowClass() {
         setModalEditar(!modalEditar);
     };
 
-    const editClasses = (clase) => {
-        console.log("hello", profesorList)
+    let editClasses = (clase) => {
         setClaseActual(clase);
         profesorList.forEach(e => {
-            console.log("start")
             if (e.nombreCompleto == clase.nombreCompleto) {
                 setCurrentProfesor(e)
             }
@@ -283,7 +303,7 @@ export default function ShowClass() {
 
     }
 
-    const sendCSV = async(csv) => {
+    const sendCSV = async (csv) => {
         const csvArray = csv.split("\n")
         csvArray.shift()
         let clasesJson = [];
@@ -291,7 +311,7 @@ export default function ShowClass() {
         let iterator;
         // hash table profesores ( para no mandar profesores repetidos)
         let profesorHash = [];
-        
+
         const profesorFunc = (i) => {
             i = i.slice(2)
             return Number(i)
@@ -322,7 +342,7 @@ export default function ShowClass() {
             clasesJson[i].matriculaProfesor = iteratorArray[17]
             clasesJson[i].cupo_actual = "0"
             clasesJson[i].nombreProfesor = iteratorArray[15].trim()
-            clasesJson[i].apellidoProfesor = iteratorArray[16].trim()
+            clasesJson[i].apellidosProfesor = iteratorArray[16].trim()
             // JSON.stringify(clasesJson[i])
 
             // agregar profesores
@@ -376,19 +396,7 @@ export default function ShowClass() {
         )
     }
 
-    const seleccionarConsola = (consola, caso) => {
-        const editClasses = (clase) => {
-            console.log("hello", profesorList)
-            setClaseActual(clase);
-            profesorList.forEach(e => {
-                console.log("start")
-                if (e.nombreCompleto == clase.nombreCompleto) {
-                    setCurrentProfesor(e)
-                }
-            })
-    
-            abrirCerrarModalEditar();
-        };
+    let seleccionarConsola = (consola, caso) => {
         if (caso === "Editar") {
             editClasses(consola)
         } else if (caso === "Eliminar") {
@@ -405,6 +413,12 @@ export default function ShowClass() {
     const updateClass = (nuevaClase) => {
         delete nuevaClase.fechas
         delete nuevaClase.edades
+
+        nuevaClase.nombreProfesor = currentProfesor.nombre
+        nuevaClase.matriculaProfesor = currentProfesor.matricula
+        nuevaClase.apellidosProfesor = currentProfesor.apellidos
+
+        delete nuevaClase.nombreCompleto
         if (nuevaClase.niveles == "desde cero") {
             nuevaClase.nivel = "1";
         }
@@ -431,6 +445,18 @@ export default function ShowClass() {
         }
         )
     };
+
+    const addClass = () => {
+        setCurrentProfesor({
+            nombre: '',
+            matricula: '',
+            apellido: '',
+            nombreCompleto: '',
+            correo: ''
+        })
+        abrirCerrarModalInsertar()
+
+    }
 
     //------------------------------------Eliminar-------------------------------------
     // Se agrego un componente de dialogo para confirmar la eliminacion de una clase
@@ -461,7 +487,7 @@ export default function ShowClass() {
             style={{
                 position: "absolute",
                 width: 520,
-                height: '90vh',
+                height: '95vh',
                 backgroundColor: "#fefefd",
                 top: "48%",
                 left: "50%",
@@ -494,6 +520,84 @@ export default function ShowClass() {
                     autoFocus
                 />
             ))}
+
+            <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
+                label="Modalidad"
+                value={nuevaClase["modalidad"]}
+                name="modalidad"
+                onChange={(e) => { handleChange2(e) }}
+                select
+            >
+                {["presencial","online"].map(e => (
+                    <MenuItem value={e} key={e} >{e}</MenuItem>
+
+                ))}
+            </TextField>
+            <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
+                label="Nivel"
+                value={nuevaClase["niveles"]}
+                name="niveles"
+                onChange={(e) => { handleChange2(e) }}
+                select
+            >
+                {niveloptions.map(e => (
+                    <MenuItem value={e} key={e} >{e}</MenuItem>
+
+                ))}
+            </TextField>
+
+            <div style={{ width: '100%', borderTop: '1px solid gray', paddingTop: '5px', display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <Typography sx={{ textAlign: 'center', marginTop: '10px', width: '100%' }}> Horarios</Typography>
+                {dayAtributes.map(atribute => (
+                    <TextField
+                        style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10 }}
+                        label={atribute.value}
+                        onChange={e => { handleChange2(e) }}
+                        name={atribute.key}
+                        key={atribute.key}
+                        value={nuevaClase[atribute.key]}
+                        autoFocus
+                    />
+                ))}
+            </div>
+
+
+
+            <div style={{ width: '100%', borderTop: '1px solid gray', paddingTop: '5px' }}>
+                <Typography sx={{ textAlign: 'center', marginTop: '10px' }}> datos del profesor</Typography>
+                <br />
+                <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '100%' }}
+                    label="Profesor"
+                    value={currentProfesor["nombreCompleto"]}
+                    name="nombreCompleto"
+                    onChange={(e) => { handleChangeProfesor(e) }}
+                    select
+                >
+                    {profesorList.map(e => (
+                        <MenuItem value={e.nombre + " " + e.apellidos} key={e._id} >{e.nombre + " " + e.apellidos}</MenuItem>
+                    ))}
+                </TextField>
+                <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
+                    variant="filled"
+                    label="matricula"
+                    InputProps={{
+                        readOnly: true,
+                    }}
+                    value={currentProfesor["matricula"]}
+                    defaultValue={currentProfesor["matricula"]}
+                >
+                </TextField>
+                <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
+                    InputProps={{
+                        readOnly: true,
+                    }}
+                    value={currentProfesor["correo"]}
+                    defaultValue={currentProfesor["correo"]}
+                    variant="filled"
+                    label="correo"
+                >
+                </TextField>
+            </div>
             <div align="center" style={{ width: '100%' }}>
                 <Button color="primary" onClick={handleClick}>
                     Insertar
@@ -513,7 +617,7 @@ export default function ShowClass() {
             style={{
                 position: "absolute",
                 width: 520,
-                height: '90vh',
+                height: '95vh',
                 backgroundColor: "#fefefd",
                 top: "48%",
                 left: "50%",
@@ -546,6 +650,18 @@ export default function ShowClass() {
                 />
             ))}
             <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
+                label="Modalidad"
+                value={clase["modalidad"]}
+                name="modalidad"
+                onChange={(e) => { handleChange(e) }}
+                select
+            >
+                {["presencial","online"].map(e => (
+                    <MenuItem value={e} key={e} >{e}</MenuItem>
+
+                ))}
+            </TextField>
+            <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
                 label="Nivel"
                 value={clase["niveles"]}
                 name="niveles"
@@ -558,17 +674,20 @@ export default function ShowClass() {
                 ))}
             </TextField>
 
-            {dayAtributes.map(atribute => (
-                <TextField
-                    style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10 }}
-                    label={atribute.value}
-                    onChange={e => { handleChange(e) }}
-                    name={atribute.key}
-                    key={atribute.key}
-                    value={clase[atribute.key]}
-                    autoFocus
-                />
-            ))}
+            <div style={{ width: '100%', borderTop: '1px solid gray', paddingTop: '5px', display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <Typography sx={{ textAlign: 'center', marginTop: '10px', width: '100%' }}> Horarios</Typography>
+                {dayAtributes.map(atribute => (
+                    <TextField
+                        style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10 }}
+                        label={atribute.value}
+                        onChange={e => { handleChange(e) }}
+                        name={atribute.key}
+                        key={atribute.key}
+                        value={clase[atribute.key]}
+                        autoFocus
+                    />
+                ))}
+            </div>
             <div style={{ width: '100%', borderTop: '1px solid gray', paddingTop: '5px' }}>
                 <Typography sx={{ textAlign: 'center', marginTop: '10px' }}> datos del profesor</Typography>
                 <br />
@@ -584,13 +703,13 @@ export default function ShowClass() {
                     ))}
                 </TextField>
                 <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
-                    variant="filled"
-                    label="matricula"
                     InputProps={{
                         readOnly: true,
                     }}
                     value={currentProfesor["matricula"]}
                     defaultValue={currentProfesor["matricula"]}
+                    variant="filled"
+                    label="matricula"
                 >
                 </TextField>
                 <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
@@ -642,7 +761,7 @@ export default function ShowClass() {
 
 
         ],
-        [data]
+        [data, profesorList]
     );
 
     //---------------------------------------Filter---------------------------
@@ -733,7 +852,7 @@ export default function ShowClass() {
                         <Button
                             variant="contained"
                             color="success"
-                            onClick={() => abrirCerrarModalInsertar()}
+                            onClick={() => addClass()}
                         >
                             {<AddCircleOutlineIcon />} Crear
                         </Button>
