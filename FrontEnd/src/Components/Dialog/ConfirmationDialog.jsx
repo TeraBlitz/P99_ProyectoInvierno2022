@@ -6,11 +6,11 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export default function ConfirmationDialog({changeClaseRegistrada, handleClose, open, clase, handleListaEspera}) {
+export default function ConfirmationDialog({handleClaseRegistrada, handleClose, open, clase, handleListaEspera}) {
 
   const handleClick = () =>{
     {Number(clase.cupo_actual) < Number(clase.cupo_maximo) ?
-        changeClaseRegistrada(clase)
+        handleClaseRegistrada(clase)
       :
         handleListaEspera(clase)
     }

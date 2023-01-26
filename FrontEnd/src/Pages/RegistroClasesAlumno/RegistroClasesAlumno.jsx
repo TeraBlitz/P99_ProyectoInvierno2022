@@ -35,6 +35,29 @@ function RegistroClasesAlumnos({changeContent}) {
     
     const userValues = useContext(userContext)
 
+    useEffect(() => {
+        const getUserStudents = () =>{
+             getStudents().then(
+                 (data) => {
+                     const students = data.filter(student => student.idUsuario === userValues._id);
+                     setStudents(students);
+                     //console.log(students)
+             });
+         }
+         getUserStudents();
+     }, []);
+
+     useEffect(() => {
+        const getStudentClasses = () =>{
+            getClasses().then(
+                (data) => {
+                    setClases(data);
+                });
+            }
+        getStudentClasses();
+        console.log(clases)
+     }, []);
+
     // Funcion para calcular edad 
     const calculate_age = (dateString) => {
         var birthday = +new Date(dateString);
@@ -139,33 +162,6 @@ function RegistroClasesAlumnos({changeContent}) {
         setOpenMoreInfo(!openMoreInfo);
     };
     
-    const changeClaseRegistrada = (clase) => {
-        if (currentStudent == null) {
-            setSelectAlertOpen(true);
-            return
-        }  
-        // Hacer validación de numero de clases disponibles por inscribir
-        if (claseRegistrada[0]) {
-            setError('block')
-        } else {
-            let periodo = []
-            findTerm(new URLSearchParams({ 'clave' : clase.clavePeriodo}))
-            .then((data) => {
-                periodo = data
-            }).then(() => {
-                createClassStudent(new URLSearchParams({
-                    'idClase' : clase._id,
-                    'idAlumno' : currentStudent._id,
-                    'idPeriodo' : periodo[0]._id
-                })).then((data) => {
-                    //console.log(data);
-                    setClaseRegistrada([clase._id])
-                    handleCloseDialog();
-                }) 
-            }) 
-        }
-    }
-
     const filterClasses = (student) => {
         console.log(student);
         const age = calculate_age(student.fecha_de_nacimiento);
@@ -178,29 +174,6 @@ function RegistroClasesAlumnos({changeContent}) {
         filterClasses(e.target.value);
     }
 
-    useEffect(() => {
-        const getUserStudents = () =>{
-             getStudents().then(
-                 (data) => {
-                     const students = data.filter(student => student.idUsuario === userValues._id);
-                     setStudents(students);
-                     //console.log(students)
-             });
-         }
-         getUserStudents();
-     }, []);
-
-     useEffect(() => {
-        const getStudentClasses = () =>{
-             getClasses().then(
-                 (data) => {
-                     setClases(data);
-                    });
-                }
-        getStudentClasses();
-        console.log(clases)
-     }, []);
-
     const handleListaEspera = (clase) =>{
         if (currentStudent == null) {
             setSelectAlertOpen(true);
@@ -208,7 +181,7 @@ function RegistroClasesAlumnos({changeContent}) {
         }     
         let lista = [];   
         getWaitList().then((data) => {
-                lista = data.filter(lista => lista.idAlumno === currentStudent._id);
+            lista = data.filter(lista => lista.idAlumno === currentStudent._id);
         }).then(() => {
             createWaitList(new URLSearchParams({
                 'idAlumno': currentStudent._id,
@@ -219,6 +192,53 @@ function RegistroClasesAlumnos({changeContent}) {
             clase.status = 'ListaEspera'
             handleCloseDialog();
         })
+    }
+
+    const handleClaseRegistrada = (clase) => {
+        if (currentStudent == null) {
+            setSelectAlertOpen(true);
+            return
+        }  
+        // Hacer validación de numero de clases disponibles por inscribir
+        if (claseRegistrada[0]) {
+            setError('block')
+        } else {
+            let periodo = []
+            let myClases = []
+            findTerm(new URLSearchParams({ 'clave' : clase.clavePeriodo}))
+            .then((data) => {
+                periodo = data
+            })
+            .then(() => {
+                getClassStudent().then((result) =>{
+                    console.log(result.data, currentStudent._id,"pikas")
+                    myClases = result.data.filter(myclass => 
+                        myclass.idAlumno === currentStudent._id &&
+                        myclass.idPeriodo === periodo[0]._id &&
+                        myclass.idClase === clase._id 
+                        )
+                })
+                .then(() => {
+                    console.log(myClases)
+                    if (myClases.length > 0) {
+                        alert('Ya te inscribiste a esta clase')
+                        handleCloseDialog()
+                    }
+                    else{
+                        createClassStudent(new URLSearchParams({
+                            'idClase' : clase._id,
+                            'idAlumno' : currentStudent._id,
+                            'idPeriodo' : periodo[0]._id
+                        })).then((data) => {
+                            //console.log(data);
+                            setClaseRegistrada([clase._id])
+                            handleCloseDialog();
+                        }) 
+                    }
+                }) 
+            })
+
+        }
     }
      
     const handleOpenDialog = (clase) => {
@@ -400,7 +420,7 @@ function RegistroClasesAlumnos({changeContent}) {
                     </>
                 </Modal>
             </Box>
-            <ConfirmationDialog clase={claseRegistrada} handleClose={handleCloseDialog} open={openConfirmationDialog} changeClaseRegistrada={changeClaseRegistrada} handleListaEspera={handleListaEspera}/> 
+            <ConfirmationDialog clase={claseRegistrada} handleClose={handleCloseDialog} open={openConfirmationDialog} handleClaseRegistrada={handleClaseRegistrada} handleListaEspera={handleListaEspera}/> 
             <Snackbar open={selectAlertOpen} autoHideDuration={8000} onClose={() => setSelectAlertOpen(false)}>
                 <Alert severity='info'>
                     Selecciona un alumno para inscribir clases o entrar a la lista de espera
