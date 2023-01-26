@@ -18,10 +18,11 @@ import CardContent from "@mui/material/CardContent";
 import axios from "axios";
 import { CSVLink } from "react-csv";
 
+let periodoReciente = 'Error en fetch'
 
 export default function Alumnos() {
 
-  let periodoReciente = "Verano"
+
 
   //Encargado de guardar la data
   const [data, setData] = useState([]);
@@ -38,9 +39,10 @@ export default function Alumnos() {
     const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
     setDataPeriodo(res.data);
 
-    periodoReciente = (compararFecha(res.data))
+     periodoReciente = (compararFecha(res.data))
     console.log("Periodo Reciente",periodoReciente)
   };
+
 
 
   useEffect(() => {
@@ -80,11 +82,19 @@ function compararFecha(data){
     }
 
     periodos.sort((a,b)=>b.fecha-a.fecha)
-    let clave = periodos[0].id
+    let clave = String(periodos[0].id)
     return(clave)
 
 }
 
+  function siExiste(prop){
+    if (typeof prop === 'undefined'){
+      return(prop)
+    }else{
+      return("")
+    }
+
+  }
 
   // ------------Editar---------------
   const [modalMas, setModalMas] = useState(false);
@@ -864,7 +874,7 @@ function compararFecha(data){
 
     <div>
 
-      {console.log('valor Default: ',periodoReciente)}
+
       <Box
         sx={{
           width: 1100,
