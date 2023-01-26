@@ -8,21 +8,15 @@ import axios from "axios";
 // Possible function to get users, this goes in another file
 
 
-
-
-const fetchTeachers = () => {
-    //const res = await fetch(`http://localhost:3000/teachers`);
-    //const userData = res.json();
-    // Se reciben todos los usuarios este array se pasa como prop al componente de Alumnos
-    const teachers = [];
-    return teachers;
-};
+let cursosRegistrados = 0
+let profesInscritos = 0
+let alumnosInscritos = 0
 
 
 const cards = [
     {
         'id': '1',
-        'title': 'Incripción',
+        'title': 'Inscripción',
         'body': 'Acceder a sistema de inscripciones. Crea, actualiza y elimina los cursos.',
         'color': '#366ac3',
         'link':'inscripcion'
@@ -50,7 +44,7 @@ const cards = [
     }
 ]
 
-let peridooActual = 'Error en fetch de periodo'
+let periodoActual = 'Error en fetch de periodo'
 
 
 const ControlPanel = ({changeContent}) => {
@@ -65,27 +59,21 @@ const ControlPanel = ({changeContent}) => {
       const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
       setData(res.data);
       console.log('Fetch Periodos', res.data)
-      peridooActual = compararFecha(res.data)
+      periodoActual = compararFecha(res.data)
     };
 
-    const  getAlumno  = async () => {
-        const res = await axios.get("http://127.0.0.1:3000/v1/alumnos");
-        setDataAlumno(res.data);
-        console.log('Fetch Alumnos', res.data)
-      };
-
-      const  getProfesor  = async () => {
-        const res = await axios.get("http://127.0.0.1:3000/v1/profesores");
-        setDataProfesor(res.data);
-        console.log('Fetch Profesores', res.data)
-      };
 
       const  getClase  = async () => {
         const res = await axios.get("http://127.0.0.1:3000/v1/clases");
         setDataClase(res.data);
+        // funciones para encontrar stats
         console.log('Fetch Clase', res.data)
         console.log('Cursos Registrados: ',contarClases(res.data))
-        let cursosReistrados = contarClases(res.data)
+         cursosRegistrados = contarClases(res.data)
+        console.log('Profesores Inscritos', contarProfes(res.data))
+         profesInscritos = contarProfes(res.data)
+        console.log('Alumnos Inscritos: ', contarAlumnos(res.data))
+         alumnosInscritos = contarAlumnos(res.data)
       };
 
     useEffect(() => {
@@ -130,33 +118,71 @@ function compararFecha(data){
 // -------------------Funcion para contar cursos en periodo actual
 
 function contarClases(datos){
+    console.log("Este es la data inicial",datos)
     let contadorClases = 0;
+    
     datos.forEach(element => {
-
-        if(element.clavePeriodo === peridooActual){
+        console.log("Periodo: ", element.clavePeriodo)
+        if(element.clavePeriodo === periodoActual){
             contadorClases = contadorClases +1
         }
     });
+    console.log("Este es la dat final",periodoActual)
+    //console.log("Clases",contadorClases)
     return(contadorClases)
+}
+//---------------------------Funcion para contar profesores actuales
+function contarProfes(datos){
+    let listaProfes = []
+    datos.forEach(element => {
+        if(element.clavePeriodo === periodoActual){
+
+            if(listaProfes.includes(element.matriculaMaestro)){
+
+            }else{
+                listaProfes.push(element.matriculaMaestro)
+            }
+    }
+
+    });
+    console.log(listaProfes)
+    return(listaProfes.length)
+}
+
+// -------------------- Function para contar alumnos
+
+function contarAlumnos(datos){
+    let alumnos = 0
+    datos.forEach(element => {
+        if(element.clavePeriodo === periodoActual){
+
+            alumnos = alumnos + Number(element.cupo_actual)
+    }
+
+    });
+    return(alumnos)
 }
     const panelInfoCards = [
         {
             'id': '1',
             'title': 'Estudiantes inscritos',
             'data': dataAlumno,
-            'color': '#0094DF'
+            'color': '#0094DF',
+            'num': alumnosInscritos ?? 0
         },
         {
             'id': '2',
             'title': 'Profesores inscritos',
             'data': dataProfesor,
-            'color': '#00B8D6'
+            'color': '#00B8D6',
+            'num': profesInscritos?? 0
         },
         {
             'id': '3',
             'title': 'Cursos Registrados',
             'data': dataClase,
-            'color': '#366ac3'
+            'color': '#366ac3',
+            'num': cursosRegistrados?? 0
         },
 
     ]
@@ -168,11 +194,11 @@ function contarClases(datos){
                 Panel de control
             </Box>
             <Box sx={{fontFamily: 'default', fontSize: 'h5.fontSize', py: 2, display: 'flex', justifyContent: 'space-between',textAlign:'right',float:'right', marginRight:0.5}}>
-                {peridooActual}</Box>
+                {periodoActual}</Box>
                 <Grid container spacing={2} >
                 {panelInfoCards.map(infoCard =>
                     <Grid item sm={12} md={4} key={infoCard.id}>
-                        <PanelInfo title={infoCard.title} data={infoCard.data} bgColor={infoCard.color}/>
+                        <PanelInfo title={infoCard.title} data={infoCard.data} bgColor={infoCard.color} num={infoCard.num}/>
                     </Grid>
 
                 )}

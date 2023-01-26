@@ -21,7 +21,7 @@ import CardContent from "@mui/material/CardContent";
 import MenuItem from "@mui/material/MenuItem";
 import { periodosPrueba } from './../../../data/periodosprueba.js'
 import { InsertDriveFile } from "@mui/icons-material";
-
+import axios from 'axios'
 
 export default function ShowClass() {
     //--------------------------------------------Agregar----------------

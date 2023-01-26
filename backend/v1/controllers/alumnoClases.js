@@ -83,9 +83,7 @@ async function updateAlumnoClases(req, res) {
         return res.status(500).json({
             msg: `ERROR: ${err}`
         });
-    } finally {
-        await client.close();
-    }
+    } 
 }
 // Test updateAlumnoClases
 // updateAlumnoClases().catch(console.dir);
