@@ -49,13 +49,7 @@ export default function Periodos() {
     boxShadow: 24,
     p: 4,
   };
-  const handleLoad = (event) => {
-    array = []
-    array2 = []
-    array3 = []
-    console.log("hola mundo")
-   
-  };
+
   //Datos
   const [data, setData] = useState([]);
   //----------------------Obtencion de datos de la base de datos
@@ -135,15 +129,7 @@ export default function Periodos() {
     setDataAlumnoClase(res.data);
   };
 
-   useEffect(() => {
-
-     getPeriodos();
-     getClase();
-
-     getAlumnoClase();
-   }, []);
-
-
+  
   // Variables para agregar tarjeta
   const [modalInsertar, setModalInsertar] = useState(false);
   const [clave, setClave] = useState("");
