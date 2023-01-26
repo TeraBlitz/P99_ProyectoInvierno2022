@@ -21,6 +21,7 @@ import { periodosPrueba } from './../../../data/periodosprueba.js'
 import { InsertDriveFile } from "@mui/icons-material";
 import WaitList from "./WaitList";
 import { getWaitList } from '../../../api/waitList'
+import { getStudents } from "../../../api/students";
 
 
 export default function ShowClass() {
@@ -493,12 +494,29 @@ export default function ShowClass() {
 
 
     const getClassWaitList = (clase) => {
-        let waitList = [];   
-        getWaitList().then((data) => {
-            waitList = data.filter(lista => lista.idClase === clase._id);
-            setCurrentWaitList(waitList);
-            setCurrentClase(clase);
-            setOpenWaitList(true);
+        let waitList = [];  
+        let students = [];
+        let result = [];
+        getStudents().then((data) => {
+            students = data; 
+        }).then(() => {
+            getWaitList().then((data) => {
+                waitList = data.filter(lista => lista.idClase === clase._id);
+                waitList.map((inWaitList) => {
+                    for (let i = 0; i < students.length; i++) {
+                        if (inWaitList.idAlumno === students[i]._id) {
+                            result.push({
+                                '_id': inWaitList._id,
+                                'studentName' : students[i].nombre + " " + students[i].apellido_paterno + " " + students[i].apellido_materno,
+                                'lugar_de_espera' : inWaitList.lugar_de_espera
+                            })
+                        }
+                    }
+                })
+                setCurrentWaitList(result);
+                setCurrentClase(clase);
+                setOpenWaitList(true);
+            })
         })
     }
  
