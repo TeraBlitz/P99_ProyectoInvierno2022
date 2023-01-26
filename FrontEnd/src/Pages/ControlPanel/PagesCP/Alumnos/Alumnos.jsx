@@ -17,20 +17,29 @@ import CardContent from "@mui/material/CardContent";
 import axios from "axios";
 import { CSVLink } from "react-csv";
 import Select from "react-select";
-
 export default function Alumnos() {
   //Encargado de guardar la data
   const [data, setData] = useState([]);
+  const [guardaData, setGuardaData] = useState([]);
   const [dataPeriodo, setDataPeriodo] = useState([]);
   const [dataAlumnoClase, setDataAlumnoClase] = useState([]);
   let array = []
   let array2 = []
   let array3 = []
+ 
+ 
   const getAlumnos = async () => {
     const res = await axios.get("http://127.0.0.1:3000/v1/alumnos");
     setData(res.data);
+    
   };
 
+  const getAlumnos2 = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/alumnos");
+    setGuardaData(res.data);
+    
+  };
+  
   const getPeriodos = async () => {
     const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
     setDataPeriodo(res.data);
@@ -45,6 +54,7 @@ export default function Alumnos() {
 
   useEffect(() => {
     getAlumnos();
+    getAlumnos2();
     getPeriodos();
     getAlumnoClase();
    
@@ -822,15 +832,17 @@ export default function Alumnos() {
   );
 
   const handleSelectChange = (event) => {
+    
     array = []
     array2 = []
     array3 = []
+    console.log(guardaData)
     //console.log(event);
     array2.push(dataAlumnoClase.filter(data => data.idPeriodo === event.value));
     console.log(array2[0])
     for (let i=0; i< array2.length;i++){
       for (let j=0; j< array2[i].length;j++){
-        array.push(data.filter(data => data._id === array2[i][j].idAlumno))  
+        array.push(guardaData.filter(data => data._id === array2[i][j].idAlumno))  
       }
     }
     console.log(array)

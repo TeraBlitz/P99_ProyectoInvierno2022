@@ -576,7 +576,7 @@ export default function Periodos() {
 
               <h5 className="leyendaFaltas">Alumnos inscritos: </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary" onLoad={handleLoad}>
-                {5}
+              {dataClase.length}
               </Typography>
 
               <h5 className="leyendaFaltas">Clases inscritas: </h5>
