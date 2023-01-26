@@ -9,8 +9,6 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 
-
-
 export default function Periodos() {
 
   useEffect(() => {
@@ -21,6 +19,11 @@ export default function Periodos() {
 
      console.log('Periodos: ',data)
    }, []);
+
+
+
+import { width } from "@mui/system";
+export default function Periodos() {
 
 
   //funciones para cambiar el display de fechas
@@ -57,6 +60,7 @@ export default function Periodos() {
   const  getPeriodos = async () => {
     const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
     setData(res.data);
+
     console.log('fetch datos',res.data)
   };
 
@@ -362,6 +366,7 @@ export default function Periodos() {
     }
   };
 
+
   return (
 
     <div className="container">
@@ -606,6 +611,7 @@ export default function Periodos() {
 
               <h5 className="leyendaFaltas">Profesores inscritos: </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
+
                 {encontrarProfes(item.clave)}
               </Typography>
 
@@ -613,10 +619,12 @@ export default function Periodos() {
 
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
                 {encontrarAlumnos(item.clave)}
+
               </Typography>
 
               <h5 className="leyendaFaltas">Clases inscritas: </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
+
                 {encontrarClases(item.clave)}
               </Typography>
 

@@ -6,7 +6,7 @@ import { Alert, Button, Link } from '@mui/material'
 import { AlertTitle } from '@mui/material'
 import { Card, CardContent, Typography, TextField, MenuItem } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import Modal from '@mui/material/Modal'
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
@@ -14,6 +14,7 @@ import { getStudents } from '../../api/students'
 import { getClasses } from '../../api/classes'
 import { userContext } from './../../App.jsx'
 import ConfirmationDialog from '../../Components/Dialog/ConfirmationDialog'
+import ClaseModal from '../../Components/Clase/ClaseModal'
 
 function RegistroClasesAlumnos({changeContent}) {
     const [items, setItems] = useState([]);
@@ -23,35 +24,94 @@ function RegistroClasesAlumnos({changeContent}) {
     const [clases, setClases] = useState(null);
     const [claseRegistrada, setClaseRegistrada] = useState([]); // esto se obtendria de la base de datos
     const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+    const [openMoreInfo, setOpenMoreInfo] = useState(false);
+    const [currentClase, setCurrentClase] = useState(); 
     
     const userValues = useContext(userContext)
 
+    // Funcion para calcular edad 
+    const calculate_age = (dateString) => {
+        var birthday = +new Date(dateString);
+        // The magic number: 31557600000 is 24 * 3600 * 365.25 * 1000, which is the length of a year
+        const magic_number = 31557600000;
+        return ~~((Date.now() - birthday) / (magic_number));
+    }
+
+    const nivelDict = {
+        '1' : 'Desde cero',
+        '2' : 'Con bases',
+        '3' : 'Intermedio',
+        '4' : 'Avanzado'
+    }
+
+    const getNivel = (params) => {
+        return  nivelDict[params.row.nivel]
+    }
+
+    const getHorario = (params) => {
+        return `${params.row.lunes ? `Lun: ${params.row.lunes}` : ''}
+                ${params.row.martes ? `Mar: ${params.row.martes}` : ''}
+                ${params.row.miercoles ? `Mierc: ${params.row.miercoles}` : ''}
+                ${params.row.jueves ? `Juev: ${params.row.jueves}` : ''}
+                ${params.row.viernes ? `Vier: ${params.row.viernes}` : ''}
+                ${params.row.sabado ? `Sab: ${params.row.sabado}` : ''}`
+    }
+
+    const getCupoActual = (params) => {
+        return `${Number(params.row.cupo_maximo) - Number(params.row.cupo_actual)}`
+    }
+
     const columns = [
-        { field: 'clave', headerName: 'Clave', width: 110 },
-        {
-            field: 'nombre_curso',
-            headerName: 'Curso',
-            width: 190,
-            editable: false,
-        },
         {
             field: 'clavePeriodo',
             headerName: 'Periodo',
-            width: 180,
+            width: 110,
             editable: false,
 
         },
+        { 
+            field: 'clave',
+            headerName: 'Clave',
+            width: 100 
+        },
         {
-            field: 'cupo_maximo',
-            headerName: 'Cupo Maximo',
-            width: 180,
-            editable: 'false'
+            field: 'nombre_curso',
+            headerName: 'Curso',
+            width: 120,
+            editable: false,
         },
         {
             field: 'nivel',
             headerName: 'Nivel',
-            width: 180,
+            width: 100,
+            editable: false,
+            valueGetter: getNivel,
+        },
+        {
+            field: 'area',
+            headerName: 'Area',
+            width: 110,
             editable: false
+        },
+        {
+            field: 'modalidad',
+            headerName: 'Modalidad',
+            width: 110,
+            editable: false
+        },
+        {
+            field: 'horario',
+            headerName: 'Horario',
+            width: 150,
+            editable: false,
+            valueGetter: getHorario,
+        },
+        {
+            field: 'cupo_disponible',
+            headerName: 'Lugares disponibles',
+            width: 120,
+            editable: 'false',
+            valueGetter: getCupoActual,
         },
         {
             field: "actions",
@@ -65,6 +125,11 @@ function RegistroClasesAlumnos({changeContent}) {
         }
 
     ];
+
+    const handleMoreInfo = (clase) => {
+        setCurrentClase(clase);
+        setOpenMoreInfo(!openMoreInfo);
+    };
     
     const changeClaseRegistrada = (classId) => {
         if (claseRegistrada[0]) {
@@ -75,8 +140,16 @@ function RegistroClasesAlumnos({changeContent}) {
         }
     }
 
+    const filterClasses = (student) => {
+        console.log(student);
+        const age = calculate_age(student.fecha_de_nacimiento);
+        const filteredClasses = clases.filter(clase => Number(clase.edad_minima) < age && age < Number(clase.edad_maxima))
+        setClases(filteredClasses);
+    }
+
     const handleChange = (e) => {
         setCurrentStudent(e.target.value);
+        filterClasses(e.target.value);
     }
 
     useEffect(() => {
@@ -179,7 +252,7 @@ function RegistroClasesAlumnos({changeContent}) {
                 {
                     clases.length !== 0 ?    
                         clases.map(e => (
-                            <Clase changeClaseRegistrada={changeClaseRegistrada} key={e._id} title={e.nombre_curso} periodo={e.clavePeriodo} cupo={e.cupo_actual} cupoMax={e.cupo_maximo} rango_edades={e.rango_edades} />
+                            <Clase changeClaseRegistrada={changeClaseRegistrada} handleMoreInfo={handleMoreInfo} key={e._id} clase={e} />
                         ))
                     :
                         <Box sx={{ height: '100vh', display: 'flex',
@@ -248,7 +321,7 @@ function RegistroClasesAlumnos({changeContent}) {
                     </CardContent>
                 </Card>
                 <Box sx={{ width: { lg: '60%', sm: '90%' }, height: { lg: '95%', sm: '50%' }, maxHeight: '100vh', minWidth: '548px' }}>
-                    <DataGrid rows={clases} columns={columns} disableSelectionOnClick={true} getRowId={(row) => row._id}
+                    <DataGrid rows={clases} columns={columns} disableSelectionOnClick={true} getRowId={(row) => row._id} getRowHeight={() => 'auto'}
                         filterModel={{
                             items: items
                         }
@@ -258,7 +331,15 @@ function RegistroClasesAlumnos({changeContent}) {
                 </Box>
             </Box>
             <ConfirmationDialog clase={claseRegistrada} handleClose={handleCloseDialog} open={openConfirmationDialog} changeClaseRegistrada={changeClaseRegistrada}/>
-
+            <Modal
+                open={openMoreInfo}
+                onClose={() => setOpenMoreInfo(!openMoreInfo)}
+                sx={{overflowY: 'scroll'}}
+            >
+                <>                
+                    <ClaseModal clase={currentClase} />
+                </>
+            </Modal>
         </>
     )
 }
