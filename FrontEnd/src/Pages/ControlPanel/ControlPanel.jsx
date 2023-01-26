@@ -50,7 +50,7 @@ const cards = [
     }
 ]
 
-
+let peridooActual = 'Error en fetch de periodo'
 
 
 const ControlPanel = ({changeContent}) => {
@@ -64,32 +64,81 @@ const ControlPanel = ({changeContent}) => {
     const  getPeriodos = async () => {
       const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
       setData(res.data);
+      console.log('Fetch Periodos', res.data)
+      peridooActual = compararFecha(res.data)
     };
 
     const  getAlumno  = async () => {
         const res = await axios.get("http://127.0.0.1:3000/v1/alumnos");
         setDataAlumno(res.data);
-        return dataAlumno
+        console.log('Fetch Alumnos', res.data)
       };
 
       const  getProfesor  = async () => {
         const res = await axios.get("http://127.0.0.1:3000/v1/profesores");
         setDataProfesor(res.data);
+        console.log('Fetch Profesores', res.data)
       };
 
       const  getClase  = async () => {
         const res = await axios.get("http://127.0.0.1:3000/v1/clases");
         setDataClase(res.data);
+        console.log('Fetch Clase', res.data)
+        console.log('Cursos Registrados: ',contarClases(res.data))
+        let cursosReistrados = contarClases(res.data)
       };
 
     useEffect(() => {
-        getAlumno();
-        getProfesor ();
+        //getAlumno();
+        //getProfesor ();
         getClase();
         getPeriodos();
-        
+
     }, []);
 
+     //----------------------------------Funcion para ver periodo mas reciente
+
+  function traducirDate(raw){
+
+    const date = raw.split("T",2);
+    return(date[0])
+
+}
+
+function compararFecha(data){
+    let periodos=[]
+    for (const element of data){
+        let fecha = traducirDate(element.fecha_inicio);
+        let separado = fecha.split('-',3);
+        let valorA = Number(separado[0])
+        let valorM = Number(separado[1])/100
+        let valorD = Number(separado[2])/10000
+        let valorT = valorA+valorM+valorD
+        var obj ={
+            id: element.clave,
+            fecha:valorT
+        }
+        periodos.push(obj)
+    }
+
+    periodos.sort((a,b)=>b.fecha-a.fecha)
+    let clave = String(periodos[0].id)
+    return(clave)
+
+}
+
+// -------------------Funcion para contar cursos en periodo actual
+
+function contarClases(datos){
+    let contadorClases = 0;
+    datos.forEach(element => {
+
+        if(element.clavePeriodo === peridooActual){
+            contadorClases = contadorClases +1
+        }
+    });
+    return(contadorClases)
+}
     const panelInfoCards = [
         {
             'id': '1',
@@ -109,7 +158,7 @@ const ControlPanel = ({changeContent}) => {
             'data': dataClase,
             'color': '#366ac3'
         },
-    
+
     ]
 
     return (
@@ -119,7 +168,7 @@ const ControlPanel = ({changeContent}) => {
                 Panel de control
             </Box>
             <Box sx={{fontFamily: 'default', fontSize: 'h5.fontSize', py: 2, display: 'flex', justifyContent: 'space-between',textAlign:'right',float:'right', marginRight:0.5}}>
-                Periodo 2022</Box>
+                {peridooActual}</Box>
                 <Grid container spacing={2} >
                 {panelInfoCards.map(infoCard =>
                     <Grid item sm={12} md={4} key={infoCard.id}>

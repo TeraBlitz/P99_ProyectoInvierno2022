@@ -16,11 +16,20 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import axios from "axios";
 import { CSVLink } from "react-csv";
+
 import Select from "react-select";
+
 export default function Alumnos() {
+
+
+
   //Encargado de guardar la data
   const [data, setData] = useState([]);
   const [guardaData, setGuardaData] = useState([]);
+
+
+
+
   const [dataPeriodo, setDataPeriodo] = useState([]);
   const [dataAlumnoClase, setDataAlumnoClase] = useState([]);
   let array = []
@@ -43,7 +52,7 @@ export default function Alumnos() {
   const getPeriodos = async () => {
     const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
     setDataPeriodo(res.data);
-    
+
   };
 
   const getAlumnoClase = async () => {
@@ -52,14 +61,26 @@ export default function Alumnos() {
   };
 
 
+
   useEffect(() => {
+    console.log("Empieza UseEfect")
     getAlumnos();
     getAlumnos2();
     getPeriodos();
     getAlumnoClase();
-   
-   
   }, []);
+
+  const [periodo, setPeriodo] = useState("");
+
+  //const [periodoReciente, setPeriodoReciente] = useState("")
+  //----------------------------------Funcion para ver periodo mas reciente
+
+  function traducirDate(raw){
+
+    const date = raw.split("T",2);
+    return(date[0])
+
+}
 
   // ------------Editar---------------
   const [modalMas, setModalMas] = useState(false);
@@ -859,9 +880,14 @@ export default function Alumnos() {
   };
 
   //---------------------------------------Filter---------------------------
+
   const [items, setItems] = useState([]);
+
   return (
+
     <div>
+
+
       <Box
         sx={{
           width: 1100,
@@ -918,6 +944,7 @@ export default function Alumnos() {
           />
        
       </Box>
+
 
       <Card
         sx={{
