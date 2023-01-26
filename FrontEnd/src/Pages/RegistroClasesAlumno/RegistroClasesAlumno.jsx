@@ -14,8 +14,9 @@ import Select from '@mui/material/Select';
 import { getStudents } from '../../api/students'
 import { getClasses } from '../../api/classes'
 import { userContext } from './../../App.jsx'
-import { createClassStudent } from '../../api/classStudent'
+import { createClassStudent, getClassStudent } from '../../api/classStudent'
 import { createWaitList, getWaitList } from '../../api/waitList'
+import { findTerm } from '../../api/term'
 import ConfirmationDialog from '../../Components/Dialog/ConfirmationDialog'
 import ClaseModal from '../../Components/Clase/ClaseModal'
 
@@ -143,20 +144,23 @@ function RegistroClasesAlumnos({changeContent}) {
             setSelectAlertOpen(true);
             return
         }  
- 
+        // Hacer validación de numero de clases disponibles por inscribir
         if (claseRegistrada[0]) {
             setError('block')
         } else {
-            createClassStudent(new URLSearchParams({
-                'idClase' : clase._id,
-                'idAlumno' : currentStudent._id,
-                'idPeriodo' : clase.p
-
-            })).then((data) => {
-                //console.log(data);
+            findTerm().then((data) => {
+                const periodo = data
+            }).then(() => {
+                createClassStudent(new URLSearchParams({
+                    'idClase' : clase._id,
+                    'idAlumno' : currentStudent._id,
+                    'idPeriodo' : periodo._id
+                })).then((data) => {
+                    //console.log(data);
+                }) 
+                setClaseRegistrada([clase._id])
+                handleCloseDialog();
             }) 
-            setClaseRegistrada([classId])
-            handleCloseDialog();
         }
     }
 
@@ -290,7 +294,7 @@ function RegistroClasesAlumnos({changeContent}) {
                 {
                     clases.length !== 0 ?    
                         clases.map(e => (
-                            <Clase changeClaseRegistrada={changeClaseRegistrada} handleMoreInfo={handleMoreInfo} key={e._id} clase={e} />
+                            <Clase handleOpenDialog={handleOpenDialog} handleMoreInfo={handleMoreInfo} key={e._id} clase={e} />
                         ))
                     :
                         <Box sx={{ height: '100vh', display: 'flex',

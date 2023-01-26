@@ -5,7 +5,7 @@ import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
 
 
-function Clase({changeClaseRegistrada, handleMoreInfo, clase}) {
+function Clase({handleOpenDialog, handleMoreInfo, clase}) {
 
     const nivelDict = {
         '1' : 'Desde cero',
@@ -32,7 +32,7 @@ function Clase({changeClaseRegistrada, handleMoreInfo, clase}) {
             </CardContent>
             <CardActions sx={{backgroundColor: 'e8f0fe'}}>
                 <Button size='small' onClick={() => handleMoreInfo(clase)} sx={{ width: '50%', borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>Detalle</Button>
-                <Button size='small' onClick={() => changeClaseRegistrada(clase.nombre_curso)} sx={{ width: '50%', borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>{ Number(clase.cupo_actual) / Number(clase.cupo_maximo) >= 1 ? "Lista de Espera" : "Registrarse"}</Button>
+                <Button size='small' onClick={() => handleOpenDialog(clase)} sx={{ width: '50%', borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>{ Number(clase.cupo_actual) / Number(clase.cupo_maximo) >= 1 ? "Lista de Espera" : "Registrarse"}</Button>
             </CardActions>
         </Card>
     )
