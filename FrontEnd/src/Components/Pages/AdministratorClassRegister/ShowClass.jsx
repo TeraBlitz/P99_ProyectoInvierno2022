@@ -19,9 +19,23 @@ import CardContent from "@mui/material/CardContent";
 import MenuItem from "@mui/material/MenuItem";
 import { periodosPrueba } from './../../../data/periodosprueba.js'
 import { InsertDriveFile } from "@mui/icons-material";
+import Select from "react-select";
 
 
 export default function ShowClass() {
+
+    // Selector de periodos
+
+    const [dataPeriodo, setDataPeriodo] = useState([]);
+
+    const getPeriodos = async () => {
+        const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
+        setDataPeriodo(res.data);
+
+      };
+
+
+
     //--------------------------------------------Agregar----------------
     //Estados de agregar
     const [data, setData] = useState([]);
@@ -768,6 +782,28 @@ export default function ShowClass() {
     const [items, setItems] = useState([]);
     return (
         <div>
+            <Box
+                sx={{
+                width: 250,
+                position: "absolute",
+                textAlign: "left",
+                marginLeft: "1350px",
+                marginTop: "50px",
+                bgcolor: "grey.200",
+                borderRadius: "8px",
+                height: 90,
+                }}
+            >
+
+            <Select
+                options={dataPeriodo.map((sup) => ({
+                label: sup.clave,
+                value: sup._id,
+                }))}
+                //onChange={handleSelectChange}
+            />
+
+      </Box>
             <Card
                 sx={{
                     maxWidth: 255,
@@ -868,6 +904,7 @@ export default function ShowClass() {
 
                     </div>
                 </Typography>
+
                 <Box sx={{ height: '80vh', width: '70vw' }}>
 
                     <DataGrid
