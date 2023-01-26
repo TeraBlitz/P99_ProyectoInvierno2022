@@ -151,8 +151,14 @@ function RegistroClasesAlumnos({changeContent}) {
             width: 115,
             renderCell: (params) => (
                 Number(params.row.cupo_actual) < Number(params.row.cupo_maximo) ?
-                <Button size='small' onClick={() => handleOpenDialog(params.row)} variant="outlined">Inscribir</Button>  :
-                <Button size='small' onClick={() => handleOpenDialog(params.row)} variant="outlined">Lista Espera</Button> 
+                <Button size='small' onClick={() => handleOpenDialog(params.row)} variant="outlined"
+                    disabled={params.row.status === "Inscrito" ? true : false}>
+                    Inscribir
+                </Button>  :
+                <Button size='small' onClick={() => handleOpenDialog(params.row)} variant="outlined"
+                    disabled={params.row.status === "ListaEspera" ? true : false}>
+                    Lista Espera
+                </Button> 
             ),
 
         }
@@ -168,14 +174,18 @@ function RegistroClasesAlumnos({changeContent}) {
         const age = calculate_age(student.fecha_de_nacimiento);
         let waitList = [];   
         let myClasses = [];
+        const filter = clases.filter(clase => Number(clase.edad_minima) < age && age < Number(clase.edad_maxima));
+        filter.map((aClass) => {
+            aClass.status = '';
+        })
         getWaitList().then((data) => {
             waitList = data.filter(lista => lista.idAlumno === student._id);
         })
         .then(() => {
             waitList.map((inWaitList) =>{
-                for (let i = 0; i < filteredClasses.length; i++) {
-                    if (inWaitList.idClase === filteredClasses[i]._id) {
-                        filteredClasses[i].status = 'ListaEspera'
+                for (let i = 0; i < filter.length; i++) {
+                    if (inWaitList.idClase === filter[i]._id) {
+                        filter[i].status = 'ListaEspera'
                     }
                 }
             })
@@ -185,14 +195,13 @@ function RegistroClasesAlumnos({changeContent}) {
         })
         .then(() => {
             myClasses.map((myClass) => {
-                for (let i = 0; i < filteredClasses.length; i++) {
-                    if (myClass.idClase === filteredClasses[i]._id) {
-                        filteredClasses[i].status = 'Inscrito';
+                for (let i = 0; i < filter.length; i++) {
+                    if (myClass.idClase === filter[i]._id) {
+                        filter[i].status = 'Inscrito';
                     }
                 }
             })
-            filteredClasses = clases.filter(clase => Number(clase.edad_minima) < age && age < Number(clase.edad_maxima))
-            setFilteredClasses(filteredClasses);
+            setFilteredClasses(filter);
         })
     }
 
