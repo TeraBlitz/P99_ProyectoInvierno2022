@@ -13,16 +13,12 @@ async function getAllAlumnoClases(req, res) {
 
         const result = await collection.find().toArray();
 
-        res.json({
-            msg: 'Consulta realizada con exito.',
-            data: result
-        });
+        res.send(result);
     } catch (err) {
         return res.status(500).json({
             msg: `ERROR: ${err}`
         });
-    } finally {
-        await client.close();
+
     }
 }
 // Test getAllAlumnoClases
@@ -87,9 +83,7 @@ async function updateAlumnoClases(req, res) {
         return res.status(500).json({
             msg: `ERROR: ${err}`
         });
-    } finally {
-        await client.close();
-    }
+    } 
 }
 // Test updateAlumnoClases
 // updateAlumnoClases().catch(console.dir);
@@ -135,4 +129,4 @@ module.exports = {
     createAlumnoClases,
     updateAlumnoClases,
     deleteAlumnoClases,
-};
+}

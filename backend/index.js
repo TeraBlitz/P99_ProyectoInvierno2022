@@ -17,7 +17,10 @@ const asistencia = require('./v1/routes/asistencias')
 const alumno = require('./v1/routes/alumnos')
 const lista = require('./v1/routes/listas')
 const profesor = require('./v1/routes/profesores')
+
 const alumnoClase = require('./v1/routes/alumnoClases')
+
+
 
 // Testeo de la Conexion
 connection().catch(console.error);

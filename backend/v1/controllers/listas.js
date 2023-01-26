@@ -15,9 +15,7 @@ async function getAllLista(req, res) {
     res.send(result);
   } catch (err) {
     res.send(`ERROR: ${err}`);
-  } finally {
-    await client.close();
-  }
+  } 
 }
 // Test getAllLista
 // getAllLista().catch(console.dir);

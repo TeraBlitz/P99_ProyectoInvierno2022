@@ -15,9 +15,7 @@ async function getAllClase(req, res) {
     res.send(result);
   } catch (err) {
     res.send(`ERROR: ${err}`);
-  } finally {
-    await client.close();
-  }
+  } 
 }
 // Test getAllClase
 // getAllClase().catch(console.dir);

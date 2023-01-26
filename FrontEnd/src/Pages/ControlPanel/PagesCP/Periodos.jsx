@@ -8,8 +8,23 @@ import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
+
+export default function Periodos() {
+
+  useEffect(() => {
+    console.log('empieza use efect')
+
+     getPeriodos();
+     getClase();
+
+     console.log('Periodos: ',data)
+   }, []);
+
+
+
 import { width } from "@mui/system";
 export default function Periodos() {
+
 
   //funciones para cambiar el display de fechas
   function traducirDate(raw){
@@ -45,15 +60,8 @@ export default function Periodos() {
   const  getPeriodos = async () => {
     const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
     setData(res.data);
-  };
 
-//Profesores
-
-  const [dataProfesor, setDataProfesor] = useState([]);
-  
-  const  getProfesor  = async () => {
-    const res = await axios.get("http://127.0.0.1:3000/v1/profesores");
-    setDataProfesor(res.data);
+    console.log('fetch datos',res.data)
   };
 
   //Clases
@@ -65,23 +73,67 @@ export default function Periodos() {
     setDataClase(res.data);
   };
 
-   //Alumnos
+  // funciones para sacar asociar datos a periodos
 
-   const [dataAlumno, setDataAlumno] = useState([]);
 
-   const  getAlumno  = async () => {
-    const res = await axios.get("http://127.0.0.1:3000/v1/alumnos");
-    setDataAlumno(res.data);
+
+  function encontrarProfes(clave){
+    let listaProfes = []
+    dataClase.forEach(element =>{
+
+
+      if (element.clavePeriodo === clave){
+
+        if(listaProfes.includes(element.matriculaMaestro)){
+
+        }else{
+            listaProfes.push(element.matriculaMaestro)
+        }
+
+      }
+
+  });
+    return(listaProfes.length)
+  }
+
+  function encontrarAlumnos(clave){
+    let alumnosInscritos = 0
+    dataClase.forEach(element =>{
+
+
+      if (element.clavePeriodo === clave){
+
+        alumnosInscritos = alumnosInscritos + Number(element.cupo_actual)
+      }
+
+
+    });
+    return(alumnosInscritos)
+  }
+
+  function encontrarClases(clave){
+    let clasesInscritas = 0
+    dataClase.forEach(element =>{
+      if (element.clavePeriodo === clave){
+
+        clasesInscritas = clasesInscritas +1
+      }
+
+
+    });
+
+    return(clasesInscritas)
+  }
+
+
+  const [dataAlumnoClase, setDataAlumnoClase] = useState([]);
+
+  const getAlumnoClase = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/alumnoClases");
+    setDataAlumnoClase(res.data);
   };
 
-   useEffect(() => {
-    console.log('empieza use efect')
-     getAlumno();
-     getPeriodos();
-     getClase();
-     getProfesor();
-   }, []);
-
+  
   // Variables para agregar tarjeta
   const [modalInsertar, setModalInsertar] = useState(false);
   const [clave, setClave] = useState("");
@@ -146,6 +198,7 @@ export default function Periodos() {
     } catch (error) {
       console.log(error);
     }
+    console.log('Datos Posteados: ',data)
   };
 
   const [modalEditar, setModalEditar] = useState(false);
@@ -312,6 +365,7 @@ export default function Periodos() {
       console.log(error);
     }
   };
+
 
   console.log('data: ',data)
   return (
@@ -481,6 +535,7 @@ export default function Periodos() {
 
       <div className="card-grid">
         {Array.isArray(data) ? data.map((item) => (
+
           <Card key={item._id} sx={{ minWidth: 275, bgcolor: "grey.200" }}>
             <CardContent>
               <Typography variant="h5" component="div">
@@ -557,17 +612,21 @@ export default function Periodos() {
 
               <h5 className="leyendaFaltas">Profesores inscritos: </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {dataProfesor.length}
+
+                {encontrarProfes(item.clave)}
               </Typography>
 
               <h5 className="leyendaFaltas">Alumnos inscritos: </h5>
+
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {dataAlumno.length}
+                {encontrarAlumnos(item.clave)}
+
               </Typography>
 
               <h5 className="leyendaFaltas">Clases inscritas: </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {dataClase.length}
+
+                {encontrarClases(item.clave)}
               </Typography>
 
             </CardContent>
@@ -813,7 +872,7 @@ export default function Periodos() {
                     </Button>
                     <Button
                       variant="contained"
-                      onClick={() => abrirCerrarModalInsertar()}
+                      onClick={() => abrirCerrarModalEditar()}
                       color="error"
                     >
                       Cancelar
