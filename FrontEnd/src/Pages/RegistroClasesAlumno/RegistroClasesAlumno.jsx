@@ -31,7 +31,8 @@ function RegistroClasesAlumnos({changeContent}) {
     const [openMoreInfo, setOpenMoreInfo] = useState(false);
     const [currentClase, setCurrentClase] = useState(); 
     const [selectAlertOpen, setSelectAlertOpen] = useState(false);
-    const [listaEspera, setListaEspera] = useState(null)
+    const [nameFilter, setNameFilter] = useState('');
+    const [filteredClasses, setFilteredClasses] = useState(null);
     
     const userValues = useContext(userContext)
 
@@ -52,6 +53,7 @@ function RegistroClasesAlumnos({changeContent}) {
             getClasses().then(
                 (data) => {
                     setClases(data);
+                    setFilteredClasses(data);
                 });
             }
         getStudentClasses();
@@ -166,24 +168,31 @@ function RegistroClasesAlumnos({changeContent}) {
         const age = calculate_age(student.fecha_de_nacimiento);
         let waitList = [];   
         let myClasses = [];
-        let filteredClasses = clases
         getWaitList().then((data) => {
             waitList = data.filter(lista => lista.idAlumno === student._id);
-        }).then(() => {
-            getClassStudent().then((data) => {
-                myClasses = data.data.filter(clase =>  clase.idAlumno === student._id);
-            }).then(() => {
-                myClasses.map((myClass) => {
-                    for (let i = 0; i < filteredClasses.length; i++) {
-                        console.log(myClasses)
-                        if (myClass.idClase === filteredClasses[i]._id) {
-                            filteredClasses[i].status = 'Inscrito';
-                        }
+        })
+        .then(() => {
+            waitList.map((inWaitList) =>{
+                for (let i = 0; i < filteredClasses.length; i++) {
+                    if (inWaitList.idClase === filteredClasses[i]._id) {
+                        filteredClasses[i].status = 'ListaEspera'
                     }
-                })
-                filteredClasses = clases.filter(clase => Number(clase.edad_minima) < age && age < Number(clase.edad_maxima))
-                setClases(filteredClasses);
+                }
             })
+        })
+        getClassStudent().then((data) => {
+            myClasses = data.data.filter(clase =>  clase.idAlumno === student._id);
+        })
+        .then(() => {
+            myClasses.map((myClass) => {
+                for (let i = 0; i < filteredClasses.length; i++) {
+                    if (myClass.idClase === filteredClasses[i]._id) {
+                        filteredClasses[i].status = 'Inscrito';
+                    }
+                }
+            })
+            filteredClasses = clases.filter(clase => Number(clase.edad_minima) < age && age < Number(clase.edad_maxima))
+            setFilteredClasses(filteredClasses);
         })
     }
 
@@ -248,6 +257,7 @@ function RegistroClasesAlumnos({changeContent}) {
                         })).then((data) => {
                             //console.log(data);
                             setClaseRegistrada([clase._id])
+                            clase.status = 'Inscrito'
                             handleCloseDialog();
                         }) 
                     }
@@ -331,8 +341,8 @@ function RegistroClasesAlumnos({changeContent}) {
             </Box>
             <Box sx={{ textAlign: 'center', width: '100%', paddingX: '20px', height: '100%', paddingBottom: '10px', overflowY: 'scroll', display: { xs: 'block', sm: 'none' } }}>
                 {
-                    clases.length !== 0 ?    
-                        clases.map(e => (
+                    filteredClasses.length !== 0 ?    
+                    filteredClasses.map(e => (
                             <Clase handleOpenDialog={handleOpenDialog} handleMoreInfo={handleMoreInfo} key={e._id} clase={e} />
                         ))
                     :
@@ -415,7 +425,7 @@ function RegistroClasesAlumnos({changeContent}) {
                     }}
                 >
                     <DataGrid 
-                        rows={clases} columns={columns} 
+                        rows={filteredClasses} columns={columns} 
                         disableSelectionOnClick={true}
                         getRowId={(row) => row._id}
                         getRowHeight={() => 'auto'}
