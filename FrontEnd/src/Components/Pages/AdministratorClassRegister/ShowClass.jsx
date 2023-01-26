@@ -508,11 +508,14 @@ export default function ShowClass() {
                             result.push({
                                 '_id': inWaitList._id,
                                 'studentName' : students[i].nombre + " " + students[i].apellido_paterno + " " + students[i].apellido_materno,
-                                'lugar_de_espera' : inWaitList.lugar_de_espera
+                                'time_stamp' : inWaitList.time_stamp
                             })
                         }
                     }
                 })
+                result.sort((a, b) => {
+                    return a > b ? 1 : a < b ? -1 : 0;
+                });
                 setCurrentWaitList(result);
                 setCurrentClase(clase);
                 setOpenWaitList(true);
@@ -520,12 +523,6 @@ export default function ShowClass() {
         })
     }
  
-    const handleClaseWaitList = () => {
-        setOpenWaitList(false);
-    };
-
-
-
 
     //---------------------------------------Show--------------
     const [pageSize, SetPageSize] = useState(5);
@@ -710,7 +707,9 @@ export default function ShowClass() {
                 <Modal
                 open={openWaitList}
                 onClose={() => setOpenWaitList(!openWaitList)}
-                sx={{overflow: 'scroll'}}
+                sx={{ height: '100vh', display: 'flex',
+                alignContent: 'center', justifyContent: 'center',
+                flexWrap: 'wrap', overflowY: 'scroll'}}
                 >
                     <>                
                         <WaitList clase={currentClase} waitList={currentWaitList}/>

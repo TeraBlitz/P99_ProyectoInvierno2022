@@ -223,7 +223,7 @@ function RegistroClasesAlumnos({changeContent}) {
             createWaitList(new URLSearchParams({
                 'idAlumno': currentStudent._id,
                 'idClase': clase._id,
-                'lugar_de_espera': (lista.length + 1).toString(),
+                'time_stamp':  new Date().toISOString(),
                 'status': 'Espera'
             }));
             clase.status = 'ListaEspera'

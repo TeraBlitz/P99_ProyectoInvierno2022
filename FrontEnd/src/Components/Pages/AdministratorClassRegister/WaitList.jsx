@@ -7,7 +7,8 @@ const WaitList = ({clase, waitList}) => {
     <Box  
       sx={{'& .MuiTypography-root': { my: 2 }, display: 'flex', 
       alignItems: 'center',  flexWrap: 'wrap', backgroundColor: 'white', 
-      borderRadius: 3, m: 2, p: 2, flexDirection: 'column'}}
+      borderRadius: 3, m: 2, p: 2, flexDirection: 'column', textAlign:'center',
+      width: '50%'}}
     >
         <Typography variant='h5'>{clase.clave}. {clase.nombre_curso}</Typography>
         {
@@ -15,12 +16,17 @@ const WaitList = ({clase, waitList}) => {
           <Typography variant='h6'>Lista de espera vacia</Typography>
           :
           <Box>
-            <Typography variant='h6'>Nombre Completo | Lugar de espera </Typography>
-            {
-            waitList.map((lista) => 
-              <Typography key={lista._id}>{lista.studentName} {lista.lugar_de_espera}</Typography>
-            )
-            }
+            <Typography variant='h6'>Alumnos</Typography>
+            <Typography variant='body2' color='grey'>Ordenados en orden de registro</Typography>
+            <ol>
+              {
+              waitList.map((lista) => 
+                <li>
+                  <Typography key={lista._id}>{lista.studentName}</Typography>
+                </li>
+              )
+              }
+            </ol>
           </Box>
 
         }
