@@ -19,6 +19,7 @@ import { createWaitList, getWaitList } from '../../api/waitList'
 import { findTerm } from '../../api/term'
 import ConfirmationDialog from '../../Components/Dialog/ConfirmationDialog'
 import ClaseModal from '../../Components/Clase/ClaseModal'
+import MiRegistro from '../../Components/Registro/MiRegistro'
 
 function RegistroClasesAlumnos({changeContent}) {
     const [items, setItems] = useState([]);
@@ -331,7 +332,7 @@ function RegistroClasesAlumnos({changeContent}) {
                     </Button>
                 </Alert >
             </Box>
-            <Box sx={{ textAlign: 'center', width: '100%', paddingX: '20px', height: '100%', paddingBottom: '10px', overflowY: 'scroll', display: { xs: 'block', sm: 'none' } }}>
+            <Box sx={{ textAlign: 'center', width: '100%', paddingX: '20px', height: '100vh', paddingBottom: '10px', overflowY: 'scroll', display: { xs: 'block', sm: 'none' } }}>
                 {
                     filteredClasses.length !== 0 ?    
                     filteredClasses.map(e => (
@@ -346,63 +347,67 @@ function RegistroClasesAlumnos({changeContent}) {
                         </Box>
                 }
             </Box >
-            <Box sx={{ width: '100%', visibility: { xs: 'hidden', sm: 'visible' }, display: 'flex', height: '100%', justifyContent: 'space-around', alignItems: 'center', flexWrap: 'wrap' }}>
-                <Card
-                    sx={{
-                        textAlign: "left",
-                        marginLeft: "5px",
-                        border: "2px solid  rgb(165, 165, 180)",
-                        borderRadius: "8px",
-                        width: { lg: '30%', sm: '40%' },
-                        
-                        minHeight: '293px',
-                        minWidth: '340px',
-                        overflowY: 'scroll'
-                    }}
-                >
-                    <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <Typography
-                            gutterBottom
-                            variant="h5"
-                            component="div"
-                            sx={{ textAlign: "center", fontFamily: 'arial' }}
-                        >
-                            Busqueda
-                        </Typography>
-                        <TextField
-                            style={{ paddingBottom: "15px", fontFamily: 'arial', width: '25ch' }}
-                            label="Curso"
-                            onChange={e => { setItems([{ columnField: 'nombre_curso', operatorValue: 'contains', value: e.target.value }]) }}></TextField>
-                        <TextField
-                            style={{ paddingBottom: "15px", width: "25ch", fontFamily: 'arial' }}
-                            label="Nivel"
-                            id="filled-select-currency"
-                            onChange={e => { setItems([{ columnField: 'nivel', operatorValue: 'contains', value: e.target.value }]) }}
-                            select
-                        >
-                            {["Principiante", "Intermedio", "Avanzado"].map(e => (
-                                <MenuItem value={e} key={e}>
+            <Box sx={{ width: '100%', display: {xs: 'none', sm: 'flex'}, height: '100vh', justifyContent: 'space-around', alignItems: 'center', flexWrap: 'wrap' }}>
+                <Box sx={{ flexDirection: 'column' }}>
+                    <Card
+                        sx={{
+                            textAlign: "left",
+                            ml: "1",
+                            my: 2,
+                            border: "2px solid  rgb(165, 165, 180)",
+                            borderRadius: "8px",
+                            width: { lg: '30%', sm: '40%' },
+                            
+                            minHeight: '293px',
+                            minWidth: '340px',
+                            overflowY: 'scroll'
+                        }}
+                    >
+                        <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <Typography
+                                gutterBottom
+                                variant="h5"
+                                component="div"
+                                sx={{ textAlign: "center", fontFamily: 'arial' }}
+                            >
+                                Busqueda
+                            </Typography>
+                            <TextField
+                                style={{ paddingBottom: "15px", fontFamily: 'arial', width: '25ch' }}
+                                label="Curso"
+                                onChange={e => { setItems([{ columnField: 'nombre_curso', operatorValue: 'contains', value: e.target.value }]) }}></TextField>
+                            <TextField
+                                style={{ paddingBottom: "15px", width: "25ch", fontFamily: 'arial' }}
+                                label="Nivel"
+                                id="filled-select-currency"
+                                onChange={e => { setItems([{ columnField: 'nivel', operatorValue: 'contains', value: e.target.value }]) }}
+                                select
+                            >
+                                {["Principiante", "Intermedio", "Avanzado"].map(e => (
+                                    <MenuItem value={e} key={e}>
 
-                                    {e}
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                        <TextField
-                            style={{ paddingBottom: "15px", width: "25ch", fontFamily: 'arial' }}
-                            label="Periodo"
-                            id="filled-select-currency"
-                            onChange={e => { setItems([{ columnField: 'clavePeriodo', operatorValue: 'contains', value: e.target.value }]) }}
-                        >
-                        </TextField>
-                        <TextField
-                            style={{ paddingBottom: "15px", width: "25ch", fontFamily: 'arial' }}
-                            label="Cupo Maximo"
-                            id="filled-select-currency"
-                            onChange={e => { setItems([{ columnField: 'cupo_maximo', operatorValue: 'contains', value: e.target.value }]) }}
-                        >
-                        </TextField>
-                    </CardContent>
-                </Card>
+                                        {e}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                            <TextField
+                                style={{ paddingBottom: "15px", width: "25ch", fontFamily: 'arial' }}
+                                label="Periodo"
+                                id="filled-select-currency"
+                                onChange={e => { setItems([{ columnField: 'clavePeriodo', operatorValue: 'contains', value: e.target.value }]) }}
+                            >
+                            </TextField>
+                            <TextField
+                                style={{ paddingBottom: "15px", width: "25ch", fontFamily: 'arial' }}
+                                label="Cupo Maximo"
+                                id="filled-select-currency"
+                                onChange={e => { setItems([{ columnField: 'cupo_maximo', operatorValue: 'contains', value: e.target.value }]) }}
+                            >
+                            </TextField>
+                        </CardContent>
+                    </Card>
+                    <MiRegistro />
+                </Box>
                 <Box
                     sx={{
                         width: { lg: '60%', sm: '90%' },
