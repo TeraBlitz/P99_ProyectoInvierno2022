@@ -163,10 +163,28 @@ function RegistroClasesAlumnos({changeContent}) {
     };
     
     const filterClasses = (student) => {
-        console.log(student);
         const age = calculate_age(student.fecha_de_nacimiento);
-        const filteredClasses = clases.filter(clase => Number(clase.edad_minima) < age && age < Number(clase.edad_maxima))
-        setClases(filteredClasses);
+        let waitList = [];   
+        let myClasses = [];
+        let filteredClasses = clases
+        getWaitList().then((data) => {
+            waitList = data.filter(lista => lista.idAlumno === student._id);
+        }).then(() => {
+            getClassStudent().then((data) => {
+                myClasses = data.data.filter(clase =>  clase.idAlumno === student._id);
+            }).then(() => {
+                myClasses.map((myClass) => {
+                    for (let i = 0; i < filteredClasses.length; i++) {
+                        console.log(myClasses)
+                        if (myClass.idClase === filteredClasses[i]._id) {
+                            filteredClasses[i].status = 'Inscrito';
+                        }
+                    }
+                })
+                filteredClasses = clases.filter(clase => Number(clase.edad_minima) < age && age < Number(clase.edad_maxima))
+                setClases(filteredClasses);
+            })
+        })
     }
 
     const handleChange = (e) => {
@@ -211,7 +229,6 @@ function RegistroClasesAlumnos({changeContent}) {
             })
             .then(() => {
                 getClassStudent().then((result) =>{
-                    console.log(result.data, currentStudent._id,"pikas")
                     myClases = result.data.filter(myclass => 
                         myclass.idAlumno === currentStudent._id &&
                         myclass.idPeriodo === periodo[0]._id &&
@@ -219,7 +236,6 @@ function RegistroClasesAlumnos({changeContent}) {
                         )
                 })
                 .then(() => {
-                    console.log(myClases)
                     if (myClases.length > 0) {
                         alert('Ya te inscribiste a esta clase')
                         handleCloseDialog()
@@ -394,7 +410,7 @@ function RegistroClasesAlumnos({changeContent}) {
                         bgcolor: 'lightyellow'
                         },
                         '& .theme--Inscrito': {
-                        bgcolor: 'green'
+                        bgcolor: 'lightgreen'
                         }
                     }}
                 >
