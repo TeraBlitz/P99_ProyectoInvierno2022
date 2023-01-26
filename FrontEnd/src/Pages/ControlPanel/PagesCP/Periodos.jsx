@@ -10,6 +10,8 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 export default function Periodos() {
 
+  let array =[]
+  let array2 = []
   //funciones para cambiar el display de fechas
   function traducirDate(raw){
 
@@ -36,7 +38,13 @@ export default function Periodos() {
     boxShadow: 24,
     p: 4,
   };
-
+  const handleLoad = (event) => {
+    array = []
+    array2 = []
+    array3 = []
+    console.log("hola mundo")
+   
+  };
   //Datos
   const [data, setData] = useState([]);
   //----------------------Obtencion de datos de la base de datos
@@ -73,12 +81,19 @@ export default function Periodos() {
     setDataAlumno(res.data);
   };
 
+  const [dataAlumnoClase, setDataAlumnoClase] = useState([]);
+
+  const getAlumnoClase = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/alumnoClases");
+    setDataAlumnoClase(res.data);
+  };
+
    useEffect(() => {
-    console.log('empieza use efect')
      getAlumno();
      getPeriodos();
      getClase();
      getProfesor();
+     getAlumnoClase();
    }, []);
 
   // Variables para agregar tarjeta
@@ -312,7 +327,7 @@ export default function Periodos() {
     }
   };
 
-    console.log('data: ',data)
+ 
   return (
 
     <div className="container">
@@ -560,8 +575,8 @@ export default function Periodos() {
               </Typography>
 
               <h5 className="leyendaFaltas">Alumnos inscritos: </h5>
-              <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {dataAlumno.length}
+              <Typography sx={{ mb: 1.5 }} color="text.secondary" onLoad={handleLoad}>
+                {5}
               </Typography>
 
               <h5 className="leyendaFaltas">Clases inscritas: </h5>

@@ -845,7 +845,7 @@ export default function Alumnos() {
     }
    
   };
-  console.log(data)
+
   //---------------------------------------Filter---------------------------
   const [items, setItems] = useState([]);
   return (
