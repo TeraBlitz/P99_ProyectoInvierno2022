@@ -9,14 +9,16 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 
+
+
 export default function Periodos() {
 
   useEffect(() => {
     console.log('empieza use efect')
-     getAlumno();
+
      getPeriodos();
      getClase();
-     getProfesor();
+
      console.log('Periodos: ',data)
    }, []);
 
@@ -57,15 +59,6 @@ export default function Periodos() {
     console.log('fetch datos',res.data)
   };
 
-//Profesores
-
-  const [dataProfesor, setDataProfesor] = useState([]);
-
-  const  getProfesor  = async () => {
-    const res = await axios.get("http://127.0.0.1:3000/v1/profesores");
-    setDataProfesor(res.data);
-  };
-
   //Clases
 
   const [dataClase, setDataClase] = useState([]);
@@ -75,14 +68,57 @@ export default function Periodos() {
     setDataClase(res.data);
   };
 
-   //Alumnos
+  // funciones para sacar asociar datos a periodos
 
-   const [dataAlumno, setDataAlumno] = useState([]);
 
-   const  getAlumno  = async () => {
-    const res = await axios.get("http://127.0.0.1:3000/v1/alumnos");
-    setDataAlumno(res.data);
-  };
+
+  function encontrarProfes(clave){
+    let listaProfes = []
+    dataClase.forEach(element =>{
+
+
+      if (element.clavePeriodo === clave){
+
+        if(listaProfes.includes(element.matriculaMaestro)){
+
+        }else{
+            listaProfes.push(element.matriculaMaestro)
+        }
+
+      }
+
+  });
+    return(listaProfes.length)
+  }
+
+  function encontrarAlumnos(clave){
+    let alumnosInscritos = 0
+    dataClase.forEach(element =>{
+
+
+      if (element.clavePeriodo === clave){
+
+        alumnosInscritos = alumnosInscritos + Number(element.cupo_actual)
+      }
+
+
+    });
+    return(alumnosInscritos)
+  }
+
+  function encontrarClases(clave){
+    let clasesInscritas = 0
+    dataClase.forEach(element =>{
+      if (element.clavePeriodo === clave){
+
+        clasesInscritas = clasesInscritas +1
+      }
+
+
+    });
+
+    return(clasesInscritas)
+  }
 
 
 
@@ -486,6 +522,7 @@ export default function Periodos() {
 
       <div className="card-grid">
         {Array.isArray(data) ? data.map((item) => (
+
           <Card key={item._id} sx={{ minWidth: 275, bgcolor: "grey.200" }}>
             <CardContent>
               <Typography variant="h5" component="div">
@@ -560,19 +597,22 @@ export default function Periodos() {
                 {item.idiomas_max_por_alumno}
               </Typography>
 
+
+
+
               <h5 className="leyendaFaltas">Profesores inscritos: </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {dataProfesor.length}
+                {encontrarProfes(item.clave)}
               </Typography>
 
               <h5 className="leyendaFaltas">Alumnos inscritos: </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {dataAlumno.length}
+                {encontrarAlumnos(item.clave)}
               </Typography>
 
               <h5 className="leyendaFaltas">Clases inscritas: </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {dataClase.length}
+                {encontrarClases(item.clave)}
               </Typography>
 
             </CardContent>
