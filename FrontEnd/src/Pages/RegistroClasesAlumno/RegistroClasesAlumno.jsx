@@ -148,18 +148,20 @@ function RegistroClasesAlumnos({changeContent}) {
         if (claseRegistrada[0]) {
             setError('block')
         } else {
-            findTerm().then((data) => {
-                const periodo = data
+            let periodo = []
+            findTerm(new URLSearchParams({ 'clave' : clase.clavePeriodo}))
+            .then((data) => {
+                periodo = data
             }).then(() => {
                 createClassStudent(new URLSearchParams({
                     'idClase' : clase._id,
                     'idAlumno' : currentStudent._id,
-                    'idPeriodo' : periodo._id
+                    'idPeriodo' : periodo[0]._id
                 })).then((data) => {
                     //console.log(data);
+                    setClaseRegistrada([clase._id])
+                    handleCloseDialog();
                 }) 
-                setClaseRegistrada([clase._id])
-                handleCloseDialog();
             }) 
         }
     }
@@ -203,14 +205,15 @@ function RegistroClasesAlumnos({changeContent}) {
         if (currentStudent == null) {
             setSelectAlertOpen(true);
             return
-        }        
+        }     
+        let lista = [];   
         getWaitList().then((data) => {
-                const lista = data.filter(lista => lista.idAlumno === currentStudent._id);
-        }).then((lista) => {
+                lista = data.filter(lista => lista.idAlumno === currentStudent._id);
+        }).then(() => {
             createWaitList(new URLSearchParams({
                 'idAlumno': currentStudent._id,
                 'idClase': clase._id,
-                'lugar_de_espera': (lista.length()+1).toString(),
+                'lugar_de_espera': (lista.length + 1).toString(),
                 'status': 'Espera'
             }));
             clase.status = 'ListaEspera'
