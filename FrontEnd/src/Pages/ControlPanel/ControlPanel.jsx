@@ -10,6 +10,7 @@ import axios from "axios";
 
 let cursosReistrados = 0
 let profesInscritos = 0
+let alumnosInscritos = 0
 
 const fetchTeachers = () => {
     //const res = await fetch(`http://localhost:3000/teachers`);
@@ -69,17 +70,6 @@ const ControlPanel = ({changeContent}) => {
       peridooActual = compararFecha(res.data)
     };
 
-    const  getAlumno  = async () => {
-        const res = await axios.get("http://127.0.0.1:3000/v1/alumnos");
-        setDataAlumno(res.data);
-        console.log('Fetch Alumnos', res.data)
-      };
-
-      const  getProfesor  = async () => {
-        const res = await axios.get("http://127.0.0.1:3000/v1/profesores");
-        setDataProfesor(res.data);
-        console.log('Fetch Profesores', res.data)
-      };
 
       const  getClase  = async () => {
         const res = await axios.get("http://127.0.0.1:3000/v1/clases");
@@ -90,6 +80,8 @@ const ControlPanel = ({changeContent}) => {
          cursosReistrados = contarClases(res.data)
         console.log('Profesores Inscritos', contarProfes(res.data))
          profesInscritos = contarProfes(res.data)
+        console.log('Alumnos Inscritos: ', contarAlumnos(res.data))
+         alumnosInscritos = contarAlumnos(res.data)
       };
 
     useEffect(() => {
@@ -160,13 +152,27 @@ function contarProfes(datos){
     console.log(listaProfes)
     return(listaProfes.length)
 }
+
+// -------------------- Function para contar alumnos
+
+function contarAlumnos(datos){
+    let alumnos = 0
+    datos.forEach(element => {
+        if(element.clavePeriodo === peridooActual){
+
+            alumnos = alumnos + Number(element.cupo_actual)
+    }
+
+    });
+    return(alumnos)
+}
     const panelInfoCards = [
         {
             'id': '1',
             'title': 'Estudiantes inscritos',
             'data': dataAlumno,
             'color': '#0094DF',
-            'num': 5
+            'num': alumnosInscritos ?? 0
         },
         {
             'id': '2',
