@@ -6,7 +6,6 @@ import {
   TextField,
   Box,
   Typography,
-  MenuItem,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { grey } from "@mui/material/colors";
@@ -21,11 +20,12 @@ import Select from "react-select";
 
 export default function Alumnos() {
   //Encargado de guardar la data
-  let IdAlumnos = []
   const [data, setData] = useState([]);
   const [dataPeriodo, setDataPeriodo] = useState([]);
   const [dataAlumnoClase, setDataAlumnoClase] = useState([]);
-
+  let array = []
+  let array2 = []
+  let array3 = []
   const getAlumnos = async () => {
     const res = await axios.get("http://127.0.0.1:3000/v1/alumnos");
     setData(res.data);
@@ -34,6 +34,7 @@ export default function Alumnos() {
   const getPeriodos = async () => {
     const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
     setDataPeriodo(res.data);
+    
   };
 
   const getAlumnoClase = async () => {
@@ -41,10 +42,13 @@ export default function Alumnos() {
     setDataAlumnoClase(res.data);
   };
 
+
   useEffect(() => {
     getAlumnos();
     getPeriodos();
     getAlumnoClase();
+   
+   
   }, []);
 
   // ------------Editar---------------
@@ -818,12 +822,30 @@ export default function Alumnos() {
   );
 
   const handleSelectChange = (event) => {
-    console.log(event);
-    
-    IdAlumnos = dataAlumnoClase.filter((data) => data.data.idPeriodos === event.value)
-    console.log(IdAlumnos)
+    array = []
+    array2 = []
+    array3 = []
+    //console.log(event);
+    array2.push(dataAlumnoClase.filter(data => data.idPeriodo === event.value));
+    console.log(array2[0])
+    for (let i=0; i< array2.length;i++){
+      for (let j=0; j< array2[i].length;j++){
+        array.push(data.filter(data => data._id === array2[i][j].idAlumno))  
+      }
+    }
+    console.log(array)
+    for (let i=0; i< array.length;i++){
+      array3.push(array[i][0])  
+    }
+    console.log(array3)
+    if( array3.length > 0){
+      setData(array3)
+    }else{
+      getAlumnos()
+    }
+   
   };
-
+  console.log(data)
   //---------------------------------------Filter---------------------------
   const [items, setItems] = useState([]);
   return (
@@ -938,7 +960,8 @@ export default function Alumnos() {
       >
         <DataGrid
           columns={columns}
-          rows={data}
+          rows={data} 
+          
           getRowId={(row) => row._id}
           rowsPerPageOptions={[5, 10]}
           pageSize={pageSize}
