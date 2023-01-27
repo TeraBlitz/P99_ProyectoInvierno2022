@@ -1,6 +1,12 @@
 //Importancioon de datos
 import React from "react";
-import { Button, Modal, TextField, Box, Typography } from "@mui/material";
+import {
+  Button,
+  Modal,
+  TextField,
+  Box,
+  Typography,
+} from "@mui/material";
 import { useState, useEffect } from "react";
 import { grey } from "@mui/material/colors";
 import { DataGrid, gridClasses } from "@mui/x-data-grid";
@@ -11,20 +17,66 @@ import CardContent from "@mui/material/CardContent";
 import axios from "axios";
 import { CSVLink } from "react-csv";
 
+import Select from "react-select";
+
 export default function Alumnos() {
+
+
+
   //Encargado de guardar la data
   const [data, setData] = useState([]);
-
-  const getAlumnos = () => {
-    axios
-      .get("http://127.0.0.1:3000/v1/alumnos")
-      .then((res) => setData(res.data))
-      .catch((err) => console.log(err));
+  const [guardaData, setGuardaData] = useState([]);
+  const [dataPeriodo, setDataPeriodo] = useState([]);
+  const [dataAlumnoClase, setDataAlumnoClase] = useState([]);
+  let array = []
+  let array2 = []
+  let array3 = []
+ 
+ 
+  const getAlumnos = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/alumnos");
+    setData(res.data);
+    
   };
 
+  const getAlumnos2 = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/alumnos");
+    setGuardaData(res.data);
+    
+  };
+  
+  const getPeriodos = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
+    setDataPeriodo(res.data);
+
+  };
+
+  const getAlumnoClase = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/alumnoClases");
+    setDataAlumnoClase(res.data);
+  };
+
+
+
   useEffect(() => {
+    console.log("Empieza UseEfect")
     getAlumnos();
+    getAlumnos2();
+    getPeriodos();
+    getAlumnoClase();
   }, []);
+
+  const [periodo, setPeriodo] = useState("");
+
+  //const [periodoReciente, setPeriodoReciente] = useState("")
+  //----------------------------------Funcion para ver periodo mas reciente
+
+  function traducirDate(raw){
+
+    const date = raw.split("T",2);
+    return(date[0])
+
+}
 
   // ------------Editar---------------
   const [modalMas, setModalMas] = useState(false);
@@ -220,7 +272,7 @@ export default function Alumnos() {
           Apellido paterno:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.apellido_paterno}
+          {consolaSeleccionada.apellido_paterno}
         </p>
       </Box>
 
@@ -244,7 +296,7 @@ export default function Alumnos() {
           Apellido materno:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.apellido_materno}
+          {consolaSeleccionada.apellido_materno}
         </p>
       </Box>
 
@@ -268,7 +320,7 @@ export default function Alumnos() {
           Fecha de Nacimiento:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.fecha_de_nacimiento}
+          {consolaSeleccionada.fecha_de_nacimiento}
         </p>
       </Box>
 
@@ -292,7 +344,7 @@ export default function Alumnos() {
           Telefono Estudiante:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.num_telefono}
+          {consolaSeleccionada.num_telefono}
         </p>
       </Box>
 
@@ -316,7 +368,7 @@ export default function Alumnos() {
           Nombre del Tutor:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.tutor_nombre}
+          {consolaSeleccionada.tutor_nombre}
         </p>
       </Box>
 
@@ -340,7 +392,7 @@ export default function Alumnos() {
           Apellido paterno del Tutor:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.tutor_apellido_paterno}
+          {consolaSeleccionada.tutor_apellido_paterno}
         </p>
       </Box>
 
@@ -364,7 +416,7 @@ export default function Alumnos() {
           Apellido materno del Tutor:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.tutor_apellido_materno}
+          {consolaSeleccionada.tutor_apellido_materno}
         </p>
       </Box>
 
@@ -388,7 +440,7 @@ export default function Alumnos() {
           Correo del Tutor:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.tutor_correo}
+          {consolaSeleccionada.tutor_correo}
         </p>
       </Box>
 
@@ -412,7 +464,7 @@ export default function Alumnos() {
           Telefono del Tutor:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.tutor_num_telefono}
+          {consolaSeleccionada.tutor_num_telefono}
         </p>
       </Box>
 
@@ -436,7 +488,7 @@ export default function Alumnos() {
           Pais:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.pais}
+          {consolaSeleccionada.pais}
         </p>
       </Box>
 
@@ -460,7 +512,7 @@ export default function Alumnos() {
           Estado:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.estado}
+          {consolaSeleccionada.estado}
         </p>
       </Box>
 
@@ -484,7 +536,7 @@ export default function Alumnos() {
           Ciudad:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.ciudad}
+          {consolaSeleccionada.ciudad}
         </p>
       </Box>
 
@@ -508,7 +560,7 @@ export default function Alumnos() {
           Colonia:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.colonia}
+          {consolaSeleccionada.colonia}
         </p>
       </Box>
 
@@ -532,7 +584,7 @@ export default function Alumnos() {
           Codigo Postal:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.codigo_postal}
+          {consolaSeleccionada.codigo_postal}
         </p>
       </Box>
 
@@ -556,7 +608,7 @@ export default function Alumnos() {
           Escolaridad:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.escolaridad}
+          {consolaSeleccionada.escolaridad}
         </p>
       </Box>
 
@@ -577,13 +629,12 @@ export default function Alumnos() {
             fontWeight: "bold",
           }}
         >
-         Ultima Escuela:
+          Ultima Escuela:
         </p>
         <p style={{ align: "justify", fontFamily: "arial", fontSize: 20 }}>
-        {consolaSeleccionada.ultima_escuela}
+          {consolaSeleccionada.ultima_escuela}
         </p>
       </Box>
-
     </div>
   );
 
@@ -797,10 +848,42 @@ export default function Alumnos() {
     [data]
   );
 
+  const handleSelectChange = (event) => {
+    
+    array = []
+    array2 = []
+    array3 = []
+    console.log(guardaData)
+    //console.log(event);
+    array2.push(dataAlumnoClase.filter(data => data.idPeriodo === event.value));
+    console.log(array2[0])
+    for (let i=0; i< array2.length;i++){
+      for (let j=0; j< array2[i].length;j++){
+        array.push(guardaData.filter(data => data._id === array2[i][j].idAlumno))  
+      }
+    }
+    console.log(array)
+    for (let i=0; i< array.length;i++){
+      array3.push(array[i][0])  
+    }
+    console.log(array3)
+    if( array3.length > 0){
+      setData(array3)
+    }else{
+      getAlumnos()
+    }
+   
+  };
+
   //---------------------------------------Filter---------------------------
+
   const [items, setItems] = useState([]);
+
   return (
+
     <div>
+
+
       <Box
         sx={{
           width: 1100,
@@ -828,19 +911,44 @@ export default function Alumnos() {
           <Button
             color="primary"
             variant="contained"
-            sx={{ marginLeft: "950px", marginTop: "-120px" }}
+            sx={{ marginLeft: "680px", marginTop: "-120px" }}
           >
             Exportar a CSV
           </Button>
         </CSVLink>
       </Box>
+
+      <Box
+        sx={{
+          width: 250,
+          position: "absolute",
+          textAlign: "left",
+          marginLeft: "910px",
+          marginTop: "30px",
+          bgcolor: "grey.200",
+          borderRadius: "8px",
+          height: 90,
+        }}
+      >
+       
+          <Select
+            options={dataPeriodo.map((sup) => ({
+              label: sup.clave,
+              value: sup._id,
+            }))}
+            onChange={handleSelectChange}
+          />
+       
+      </Box>
+
+
       <Card
         sx={{
           width: 1100,
           position: "absolute",
           textAlign: "left",
           marginLeft: "65px",
-          marginTop: "120px",
+          marginTop: "150px",
           bgcolor: "grey.200",
           borderRadius: "8px",
         }}
@@ -882,14 +990,13 @@ export default function Alumnos() {
           height: "450px",
           position: "absolute",
           marginLeft: "50px",
-          marginTop: "300px",
+          marginTop: "320px",
         }}
       >
-
-
         <DataGrid
           columns={columns}
-          rows={data}
+          rows={data} 
+          
           getRowId={(row) => row._id}
           rowsPerPageOptions={[5, 10]}
           pageSize={pageSize}
