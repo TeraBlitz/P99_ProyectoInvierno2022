@@ -1,15 +1,9 @@
 const { response } = require('express')
-
-const { clientCon } = require('../connection.js')
+const { clientConnect } = require('../connection.js')
 const { mongodbInf } = require('../config.js')
 const bcryptjs = require('bcryptjs')
 const { generateJWT } = require('../helpers/generar-jwt')
-
-
 const COLLECTION_NAME = "users"
-
-// Crear un nuevo MongoClient
-const client = clientCon;
 
 async function login(req, res = response) {
 
@@ -17,8 +11,7 @@ async function login(req, res = response) {
 
     try{
         // Conexion a DB y coleccion.
-        await client.connect();
-        const database = client.db(mongodbInf.database);
+        const database = clientConnect.db(mongodbInf.database);
         const collection = database.collection(COLLECTION_NAME);
 
         // Verificar si existe el correo.
@@ -70,8 +63,6 @@ async function login(req, res = response) {
         return res.status(500).json({
             msg: 'Ha ocurrido un error inesperado, hablo con el administrador.'
         })
-    }finally{
-
     }
 }
 
