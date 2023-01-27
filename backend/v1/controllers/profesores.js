@@ -32,9 +32,9 @@ async function createProfesor(req, res) {
     const doc = [
       {
         nombre: req.body.nombre,
-        apellidos: req.body.apellido_paterno,
-        matricula: req.body.apellido_materno,
-        correo: req.body.matricula,
+        apellidos: req.body.apellidos,
+        matricula: req.body.matricula,
+        correo: req.body.correo,
         fecha_de_nacimiento: req.body.fecha_de_nacimiento,
         num_telefono: req.body.num_telefono,
         num_cursos_impartidos: req.body.num_cursos_impartidos,
@@ -70,9 +70,9 @@ async function updateProfesor(req, res) {
     const doc = {
       $set: {
         nombre: req.body.nombre,
-        apellidos: req.body.apellido_paterno,
-        matricula: req.body.apellido_materno,
-        correo: req.body.matricula,
+        apellidos: req.body.apellidos,
+        matricula: req.body.matricula,
+        correo: req.body.correo,
         fecha_de_nacimiento: req.body.fecha_de_nacimiento,
         num_telefono: req.body.num_telefono,
         num_cursos_impartidos: req.body.num_cursos_impartidos,

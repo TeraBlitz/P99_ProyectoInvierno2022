@@ -4,7 +4,7 @@ const listaSchema = {
         _id: {type: "string"},
         idAlumno: {type: "string"},
         idClase: {type: "string"},
-        time_stamp_: {type: "date-time"},
+        time_stamp_: {type: "string", format:"date-time"},
         status: {type: "string"}
     },
     required: [
