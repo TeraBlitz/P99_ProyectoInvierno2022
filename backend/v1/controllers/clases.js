@@ -19,88 +19,96 @@ async function getAllClase(req, res) {
 
 // Create
 async function createClase(req, res) {
-    try {
-        const database = clientConnect.db(mongodbInf.database);
-        const collection = database.collection(COLLECTION_NAME);
 
-        // Crear un Doc
-        const doc = [
-            {
-                clave: req.body.clave,
-                area: req.body.area,
-                modalidad: req.body.modalidad,
-                nombre_curso: req.body.nombre_curso,
-                nivel: req.body.nivel,
-                nombreProfesor: req.body.nombreProfesor,
-                apellidosProfesor: req.body.apellidosProfesor,
-                matriculaMaestro: req.body.matriculaMaestro,
-                clavePeriodo: req.body.clavePeriodo,
-                edad_minima: req.body.edad_minima,
-                edad_maxima: req.body.edad_maxima,
-                lunes: req.body.lunes,
-                martes: req.body.martes,
-                miercoles: req.body.miercoles,
-                jueves: req.body.jueves,
-                viernes: req.body.viernes,
-                sabado: req.body.sabado,
-                cupo_maximo: req.body.cupo_maximo,
-                cupo_actual: req.body.cupo_actual,
-            },
-        ];
+  try {
+    await client.connect();
+    const database = client.db(mongodbInf.database);
+    const collection = database.collection("clases");
 
-        const result = await collection.insertMany(doc);
-        for (i = 0; i < result.insertedCount; i++)
-        res.send(
-            `Un documento fue insertado con el ID: ${result.insertedIds[i]}`
-        );
-    } catch (err) {
-        res.send(`ERROR: ${err}`);
-    }
+    // Crear un Doc
+    const doc = [
+      {
+        clave: req.body.clave,
+        area: req.body.area,
+        modalidad: req.body.modalidad,
+        nombre_curso: req.body.nombre_curso,
+        nivel: req.body.nivel,
+        nombreProfesor: req.body.nombreProfesor,
+        apellidosProfesor: req.body.apellidosProfesor,
+        matriculaProfesor: req.body.matriculaProfesor,
+        clavePeriodo: req.body.clavePeriodo,
+        edad_minima: req.body.edad_minima,
+        edad_maxima: req.body.edad_maxima,
+        lunes: req.body.lunes,
+        martes: req.body.martes,
+        miercoles: req.body.miercoles,
+        jueves: req.body.jueves,
+        viernes: req.body.viernes,
+        sabado: req.body.sabado,
+        cupo_maximo: req.body.cupo_maximo,
+        cupo_actual: req.body.cupo_actual,
+      },
+    ];
+
+    const result = await collection.insertMany(doc);
+    for (i = 0; i < result.insertedCount; i++)
+      res.send(
+        `Un documento fue insertado con el ID: ${result.insertedIds[i]}`
+      );
+  } catch (err) {
+    res.send(`ERROR: ${err}`);
+  } finally {
+    await client.close();
+  }
+
 }
 // Test createClase
 // createClase().catch(console.dir);
 
 // Update
 async function updateClase(req, res) {
-    try {
-        const database = clientConnect.db(mongodbInf.database);
-        const collection = database.collection(COLLECTION_NAME);
 
-        // Crear el documento actualizado
-        const idDoc = {
-        _id: new mongodb.ObjectId(req.body._id),
-        };
-        const doc = {
-        $set: {
-            clave: req.body.clave,
-            area: req.body.area,
-            modalidad: req.body.modalidad,
-            nombre_curso: req.body.nombre_curso,
-            nivel: req.body.nivel,
-            nombreProfesor: req.body.nombreProfesor,
-            apellidosProfesor: req.body.apellidosProfesor,
-            matriculaMaestro: req.body.matriculaMaestro,
-            clavePeriodo: req.body.clavePeriodo,
-            edad_minima: req.body.edad_minima,
-            edad_maxima: req.body.edad_maxima,
-            lunes: req.body.lunes,
-            martes: req.body.martes,
-            miercoles: req.body.miercoles,
-            jueves: req.body.jueves,
-            viernes: req.body.viernes,
-            sabado: req.body.sabado,
-            cupo_maximo: req.body.cupo_maximo,
-            cupo_actual: req.body.cupo_actual,
-        },
-        };
+  try {
+    await client.connect();
+    const database = client.db(mongodbInf.database);
+    const collection = database.collection("clases");
 
-        const result = await collection.findOneAndUpdate(idDoc, doc);
-        res.send(
-            `Documento con _id: ${result.value._id} actualizado con exito. Status: ${result.ok}.`
-        );
-    } catch (err) {
-        res.send(`updateClase ERROR: ${err}`);
-    }
+    // Crear el documento actualizado
+    const idDoc = {
+      _id: new mongodb.ObjectId(req.body._id),
+    };
+    const doc = {
+      $set: {
+        clave: req.body.clave,
+        area: req.body.area,
+        modalidad: req.body.modalidad,
+        nombre_curso: req.body.nombre_curso,
+        nivel: req.body.nivel,
+        nombreProfesor: req.body.nombreProfesor,
+        apellidosProfesor: req.body.apellidosProfesor,
+        matriculaProfesor: req.body.matriculaProfesor,
+        clavePeriodo: req.body.clavePeriodo,
+        edad_minima: req.body.edad_minima,
+        edad_maxima: req.body.edad_maxima,
+        lunes: req.body.lunes,
+        martes: req.body.martes,
+        miercoles: req.body.miercoles,
+        jueves: req.body.jueves,
+        viernes: req.body.viernes,
+        sabado: req.body.sabado,
+        cupo_maximo: req.body.cupo_maximo,
+        cupo_actual: req.body.cupo_actual,
+      },
+    };
+
+    const result = await collection.findOneAndUpdate(idDoc, doc);
+    res.send(
+      `Documento con _id: ${result.value._id} actualizado con exito. Status: ${result.ok}.`
+    );
+  } catch (err) {
+    res.send(`updateClase ERROR: ${err}`);
+  } 
+
 }
 // Test updateClase
 // updateClase().catch(console.dir);
