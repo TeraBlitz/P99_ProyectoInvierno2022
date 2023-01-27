@@ -998,11 +998,11 @@ export default function ShowClass() {
           width: 250,
           position: "absolute",
           textAlign: "left",
-          marginLeft: "970px",
-          marginTop: "50px",
-          bgcolor: "grey.200",
+          marginLeft: "910px",
+          marginTop: "30px",
+          fontFamily:'arial',
           borderRadius: "8px",
-          height: 90,
+
         }}
       >
         <Select

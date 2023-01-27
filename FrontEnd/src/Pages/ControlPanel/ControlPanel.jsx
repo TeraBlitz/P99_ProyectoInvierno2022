@@ -190,12 +190,12 @@ function contarAlumnos(datos){
     return (
         <div>
         <Box sx={{ ml: 1, p: 0 }} >
-            <Box sx={{ fontFamily: 'default', fontSize: 'h3.fontSize', py: 2, display: 'flex', justifyContent: 'space-between',marginBottom:0,marginTop:0.5}}>
+            <Box sx={{ fontFamily: 'default', fontSize: 'h3.fontSize', py: 2, display: 'flex', justifyContent: 'space-between',marginBottom:0,marginTop:0}}>
                 Panel de control
             </Box>
             <Box sx={{fontFamily: 'default', fontSize: 'h5.fontSize', py: 2, display: 'flex', justifyContent: 'space-between',textAlign:'right',float:'right', marginRight:0.5}}>
                 {periodoActual}</Box>
-                <Grid container spacing={2} >
+                <Grid container spacing={1.5} >
                 {panelInfoCards.map(infoCard =>
                     <Grid item sm={12} md={4} key={infoCard.id}>
                         <PanelInfo title={infoCard.title} data={infoCard.data} bgColor={infoCard.color} num={infoCard.num}/>
