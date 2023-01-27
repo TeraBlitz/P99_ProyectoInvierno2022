@@ -42,6 +42,7 @@ const Profile = () =>{
     const [openEditModal, setOpenEditModal] = useState(false);
     const [currentStudent, setCurrentStudent] = useState(studentInfo)
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [infoOpen, setInfoOpen] = useState(false); 
 
     const handleOpenDialog = () => {
       setOpenDeleteDialog(true);
@@ -140,6 +141,7 @@ const Profile = () =>{
         }
         setSuccessOpen(false);
         setErrorOpen(false);
+        setInfoOpen(false);
     };
 
     if (!userInfo || !students) {
@@ -248,6 +250,11 @@ const Profile = () =>{
             </Snackbar>
             <Snackbar open={errorOpen} autoHideDuration={4000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+                    {alertMessage}
+                </Alert>
+            </Snackbar>
+            <Snackbar open={infoOpen} autoHideDuration={4000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="info" sx={{ width: '100%' }}>
                     {alertMessage}
                 </Alert>
             </Snackbar>

@@ -34,7 +34,7 @@ const nivel_escolaridad = [
     'Doctorado'
 ]
 
-const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStudents, setSuccessOpen, setErrorOpen, setAlertMessage}) =>{
+const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStudents, setSuccessOpen, setErrorOpen, setAlertMessage, setInfoOpen}) =>{
 
     studentInfo['idUser'] = userID;
     const [studentData, setStudentInfo] = useState(studentInfo)
@@ -52,6 +52,16 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
         setNewStudentInfo(studentData);
         console.log(studentData);
         setAddStudent(!addStudent);
+        if (studentData.num_telefono.length < 10 || studentData.num_telefono_tutor.length < 10) {
+            setAlertMessage('Los numeros telefonicos deben tener al menos 10 digitos')
+            setInfoOpen(true);
+            return
+        }
+        if (studentData.codigo_postal.length < 5 ) {
+            setAlertMessage('El codigo postal contiene 5 digitos')
+            setInfoOpen(true);
+            return
+        }
         createStudent(new URLSearchParams(studentData)).then((data) => {
             //console.log(data);
         })
@@ -117,7 +127,7 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
                 <TextField name="nombre" label="Nombre(s)" value={studentData.nombre || ''} onChange={handleChange}  helperText=" " required/>
                 <TextField name="apellido_paterno" label="Primer Apellido" value={studentData.apellido_paterno || ''} onChange={handleChange} helperText=" " required/>       
                 <TextField name="apellido_materno" label="Segundo Apellido" value={studentData.apellido_materno || ''} onChange={handleChange}  helperText=" " required/>       
-                <TextField name="num_telefono" label="Núm. Telefonico" value={studentData.num_telefono || ''} onChange={handleChange} helperText=" " required/>    
+                <TextField name="num_telefono" label="Núm. Telefonico" value={studentData.num_telefono || ''} onChange={handleChange} helperText=" LADA + 10 Digitos" required/>    
                 <FormControl sx={{ m: 1, width: '35ch' }} required>
                     <InputLabel>Nacionalidad</InputLabel>
                     <Select
@@ -177,7 +187,7 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
                     renderInput={(params) => <TextField {...params} name='estado' label="Estado" helperText=" " required/>}
                 />
                 <TextField name="ciudad" label="Ciudad" value={studentData.ciudad || ''} onChange={handleChange}  helperText=" "required/>        
-                <TextField name="codigo_postal" label="Codigo Postal" type="number" value={studentData.codigo_postal || ''}  onChange={handleChange}  helperText=" "/>
+                <TextField name="codigo_postal" label="Codigo Postal" type="number" value={studentData.codigo_postal || ''}  onChange={handleChange}  helperText=" " required/>
                 <TextField name="colonia" label="Colonia" value={studentData.colonia || ''} onChange={handleChange}  helperText=" " required/>
                 <ParentInfo studentData={studentData} handleChange={handleChange} underage={calculate_age(studentData.fecha_de_nacimiento) < 18}/> 
                 <Box sx={{width: '100%' }}></Box>
