@@ -129,7 +129,7 @@ export default function ShowClass() {
   let edades = [];
 
   const getOptions = async () => {
-    await fetch("https://p99test.fly.dev/v1/profesores/", {
+    await fetch("https://p99test.fly.dev/v1/profesores", {
       method: "GET",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -154,7 +154,7 @@ export default function ShowClass() {
     setModalInsertar(!modalInsertar);
   };
   const resetClases = async () => {
-    await fetch("https://p99test.fly.dev/v1/clases/", {
+    await fetch("https://p99test.fly.dev/v1/clases", {
       method: "GET",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -162,6 +162,7 @@ export default function ShowClass() {
     })
       .then((response) => response.json())
       .then((result) => {
+        console.log(result)
         setData([]);
         for (let i = 0; i < result.length; i++) {
           let fechas = "";
@@ -528,6 +529,7 @@ export default function ShowClass() {
         display: "flex",
         justifyContent: "center",
         flexWrap: "wrap",
+        overflowY: 'scroll'
       }}
     >
       <h3
@@ -730,6 +732,7 @@ export default function ShowClass() {
         display: "flex",
         justifyContent: "center",
         flexWrap: "wrap",
+        overflowY: 'scroll'
       }}
     >
       <h3
