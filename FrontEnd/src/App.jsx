@@ -29,7 +29,8 @@ function App() {
     const [content, setContent] = useState('content')
     const [isSignedIn, setIsSignedIn] = useState(false)
     const [user, setUser] = useState({})
-    const [loginError, setLoginError]= useState('none');
+    const [loginError, setLoginError] = useState('none');
+    const [hasAccount, sethasAccount] = useState(true);
 
     const handleUser = (params) => {
         setUser(params)
@@ -41,26 +42,45 @@ function App() {
     const changeContent = (newContent) => {
         setContent(newContent)
     }
+    const changeHasAccount = () => {
+        sethasAccount(!hasAccount)
+    }
     const PagesToRender = {
-        RegistroClasesAlumnos: <RegistroClasesAlumno changeContent={changeContent}/>,
+        RegistroClasesAlumnos: <RegistroClasesAlumno changeContent={changeContent} />,
 
         MisClasesProfesor: <MisClasesProfesor />,
 
         Profile: <Profile />,
 
-        ControlPanel: <ControlPanel changeContent={changeContent}/>,
+        ControlPanel: <ControlPanel changeContent={changeContent} />,
 
         MisClases: <MisClases />,
 
         inscripcion: <ShowClass />,
 
-        Periodos: <Periodos/>,
+        Periodos: <Periodos />,
 
-        Alumnos: <Alumnos/>,
+        Alumnos: <Alumnos />,
 
-        Profesores: <Profesores/>
+        Profesores: <Profesores />,
+
 
     }
+
+    const createUser = async (user) =>{
+        user.status = "10"
+        user.rol = "estudiante"
+        console.log(user)
+
+        await fetch("https://p99test.fly.dev/v1/users/create" , {
+                method: 'POST',
+                redirect: 'follow',
+                body: new URLSearchParams(user)
+            }
+        ).then(e=>{
+            console.log(e)
+            changeHasAccount()
+        })    }
 
 
     const handleSignIn = (e) => {
@@ -73,18 +93,18 @@ function App() {
                 method: 'POST',
                 body: new URLSearchParams(
                     {
-                        correo:user.correo,
-                        password:user.contraseña
+                        correo: user.correo,
+                        password: user.contraseña
                     }
                 )
             })
             .then(response => response.json())
             .then(result => {
-                if(result.msg=="Login OK"){
+                if (result.msg == "Login OK") {
                     handleUser(result.data_user)
                     setIsSignedIn(true)
                 }
-                else{
+                else {
                     setLoginError('block')
                 }
             })
@@ -92,28 +112,30 @@ function App() {
             .catch(error => console.log('error', error));
     }
 
-    return !isSignedIn ?
-        <SignIn handleSignIn={handleSignIn} handleUser={handleUser}  loginError={loginError} />
-        :
-        <userContext.Provider value={user}>
-            <Box id="main" sx={{ display: 'flex' }}>
-                <Sidebar open={open} changeDrawerState={changeDrawerState} changeContent={changeContent} handleSignOut={handleSignIn} />
-                <Box sx={{
-                    width: '100%',
-                    position: 'relative',
-                    height: 'auto',
-                    overflow: 'scroll'
-                }}>
-                    <IconButton sx={{ bgcolor: 'primary.light', height: 'fit-content', borderRadius: 1, display: { xs: 'block', sm: 'none' }, position: 'fixed', zIndex: 1000, top: '3px', left: '3px' }} onClick={() => setOpen(!open)}>
+    return !isSignedIn && hasAccount ?
+        <SignIn handleSignIn={handleSignIn} handleUser={handleUser} loginError={loginError} changeHasAccount = {changeHasAccount} /> || <SignUp></SignUp>
+        : !isSignedIn && !hasAccount ?
+            <SignUp  createUser={createUser}/>
+            :
+            <userContext.Provider value={user}>
+                <Box id="main" sx={{ display: 'flex' }}>
+                    <Sidebar open={open} changeDrawerState={changeDrawerState} changeContent={changeContent} handleSignOut={handleSignIn} />
+                    <Box sx={{
+                        width: '100%',
+                        position: 'relative',
+                        height: 'auto',
+                        overflow: 'scroll'
+                    }}>
+                        <IconButton sx={{ bgcolor: 'primary.light', height: 'fit-content', borderRadius: 1, display: { xs: 'block', sm: 'none' }, position: 'fixed', zIndex: 1000, top: '3px', left: '3px' }} onClick={() => setOpen(!open)}>
 
-                        <MenuIcon />
-                    </IconButton>
-                    <div style={{ width: 'calc(100vw-240px)', height: '100vh' }}>
-                        {PagesToRender[content]}
-                    </div>
+                            <MenuIcon />
+                        </IconButton>
+                        <div style={{ width: 'calc(100vw-240px)', height: '100vh' }}>
+                            {PagesToRender[content]}
+                        </div>
+                    </Box>
                 </Box>
-            </Box>
-        </userContext.Provider>
+            </userContext.Provider>
 
 }
 export default App
