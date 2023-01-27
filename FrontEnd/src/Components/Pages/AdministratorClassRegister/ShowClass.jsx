@@ -2,12 +2,12 @@
 import React from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import {
-  Button,
-  Modal,
-  TextField,
-  Box,
-  Typography,
-  Autocomplete,
+    Button,
+    Modal,
+    TextField,
+    Box,
+    Typography,
+    Autocomplete,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { grey } from "@mui/material/colors";
@@ -17,49 +17,95 @@ import Actions from "./Actions";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import MenuItem from "@mui/material/MenuItem";
-import axios from "axios";
+import { periodosPrueba } from './../../../data/periodosprueba.js'
 import { InsertDriveFile } from "@mui/icons-material";
-import Select from "react-select";
-import WaitList from "./WaitList";
-import { getWaitList } from '../../../api/waitList'
-import { getStudents } from "../../../api/students";
+
 
 export default function ShowClass() {
-  let array = [];
-  let array2 = [];
-  // Selector de periodos
+    //--------------------------------------------Agregar----------------
+    //Estados de agregar
+    const [data, setData] = useState([]);
+    const [modalInsertar, setModalInsertar] = useState(false);
+    const [profesorList, setProfesorList] = useState([{
+        nombreProfesor: '',
+        matriculaProfesor: '',
+        apellidoProfesor: '',
+        nombreCompleto: '',
+        correo: ''
+    }])
+    const [currentProfesor, setCurrentProfesor] = useState({
+        nombreProfesor: '',
+        matriculaProfesor: '',
+        apellidoProfesor: '',
+        nombreCompleto: '',
+        correo: ''
+    })
 
-  const [dataPeriodo, setDataPeriodo] = useState([]);
+    const classAtributes = [
+        { key: 'area', value: 'Area' },
+        { key: 'clave', value: 'Clave' },
+        { key: 'nombre_curso', value: 'Curso' },
+        { key: 'edad_minima', value: 'Edad Minima' },
+        { key: 'edad_maxima', value: 'Edad Maxima' },
+        { key: 'cupo_maximo', value: 'Cupo Maximo' },
+        { key: 'cupo_actual', value: 'Cupo Actual' },
+    ]
+    const dayAtributes = [
+        { key: 'lunes', value: 'Lunes' },
+        { key: 'martes', value: 'Martes' },
+        { key: 'miercoles', value: 'Miercoles' },
+        { key: 'jueves', value: 'Jueves' },
+        { key: 'viernes', value: 'Viernes' },
+        { key: 'sabado', value: 'Sabado' },
+    ]
+    let niveloptions = ["desde cero", "con bases", "intermedio", "avanzado"]
+    const classTemplate = {
+        clave: '',
+        nombre_curso: '',
+        nivel: '',
+        matriculaProfesor: '',
+        nombreProfesor: '',
+        nombreCompleto: '',
+        apellidoProfesor: '',
+        edad_minima: '',
+        edad_maxima: '',
+        cupo_maximo: '',
+        modalidad: '',
+        lunes: '',
+        martes: '',
+        miercoles: '',
+        jueves: '',
+        viernes: '',
+        sabado: '',
+        clavePeriodo: '',
+        area: '',
+        cupo_actual: '',
+        niveles: ''
 
-  const getPeriodos = async () => {
-    const res = await axios.get("https://p99test.fly.dev/v1/periodos");
-    setDataPeriodo(res.data);
-  };
-
-  const [claseResp, setClaseResp] = useState([]);
-
-  const getClaseResp = async () => {
-    const res = await axios.get("https://p99test.fly.dev/v1/clases");
-    setClaseResp(res.data);
-  };
-
-  const handleSelectChange = (event) => {
-    array = [];
-    array2 = [];
-    console.log("Respaldo------ ", claseResp);
-    array2.push(data.filter((data) => data.clavePeriodo === event.label));
-    console.log(array2);
-    for (let i = 0; i < array2.length; i++) {
-      for (let j = 0; j < array2[i].length; j++) {
-        array.push(array2[i][j]);
-      }
     }
-    console.log(array);
-    if (array.length > 0) {
-      setData(array);
-    } else {
-      resetClases();
+    const [nuevaClase, setNuevaClase] = useState(classTemplate)
+    let edades = []
+
+    const getOptions = async () => {
+
+        await fetch("http://localhost:3000/v1/profesores/", {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            }
+        }).then(e => {
+            return e.json()
+        }).then(e => {
+            // setProfesorList([])
+            let newProfList = []
+            e.forEach(profesor => {
+                profesor.nombreCompleto = profesor.nombre + " " + profesor.apellidos
+                newProfList.push(profesor)
+            })
+            setProfesorList(newProfList)
+        })
     }
+
   };
 
   //--------------------------------------------Agregar----------------
@@ -214,261 +260,268 @@ export default function ShowClass() {
                 result[i].nombreProfesor + " " + result[i].apellidosProfesor,
             },
           ]);
+
         }
-      });
-    getOptions();
-  };
-  useEffect(() => {
-    resetClases(), getClaseResp();
-  }, []);
+        else if (nuevaClase.niveles == "avanzado") {
+            nuevaClase.nivel = "4"
+        }
+        delete nuevaClase.niveles
 
-  const handleClose = () => {
-    setOpenDeleteDialog(false);
-  };
+        await fetch("http://localhost:3000/v1/clases/create", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams(nuevaClase),
 
-  const handleChangeProfesor = (p) => {
-    profesorList.forEach((e) => {
-      if (e.nombreCompleto == p.target.value) {
-        setCurrentProfesor(e);
-      }
+        }).then(() => {
+            abrirCerrarModalInsertar();
+            resetClases();
+        })
+    };
+
+
+
+    //-------------------------------Editar----------------------------------
+    // Estados para editar
+    const [modalEditar, setModalEditar] = useState(false);
+    const [claseActual, setClaseActual] = useState({
+        _id: '',
+        clave: '',
+        nombre_curso: '',
+        nivel: '',
+        matriculaProfesor: '',
+        edades: '',
+        cupo_maximo: '',
+        modalidad: '',
+        fechas: '',
+        niveles: '',
+        nombreCompleto: '',
+        nombreProfesor: '',
+        apellidoProfesor: ''
     });
-  };
+    //Function que abre o cierra el modal
+    const abrirCerrarModalEditar = () => {
+        setModalEditar(!modalEditar);
+    };
 
-  //Evento que dado un nuevos datos los agrega
-  const handleClick = async (e) => {
-    e.preventDefault();
-    nuevaClase.nombreProfesor = currentProfesor.nombre;
-    nuevaClase.apellidosProfesor = currentProfesor.apellidos;
-    nuevaClase.matriculaProfesor = currentProfesor.matricula;
-    delete nuevaClase.nombreCompleto;
+    let editClasses = (clase) => {
+        setClaseActual(clase);
+        profesorList.forEach(e => {
+            if (e.nombreCompleto == clase.nombreCompleto) {
+                setCurrentProfesor(e)
+            }
+        })
 
-    if (nuevaClase.niveles == "desde cero") {
-      nuevaClase.nivel = "1";
-    } else if (nuevaClase.niveles == "con bases") {
-      nuevaClase.nivel = "2";
-    } else if (nuevaClase.niveles == "intermedio") {
-      nuevaClase.nivel = "3";
-    } else if (nuevaClase.niveles == "avanzado") {
-      nuevaClase.nivel = "4";
+        abrirCerrarModalEditar();
+    };
+
+    //Funcion que guarda informacion del modal
+    useEffect(() => {
+        setClase(claseActual);
+    }, [claseActual]);
+
+    //Estado que guarda el array modificado
+    const [clase, setClase] = useState(claseActual);
+
+
+    //Funcion que modifica los daors
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setClase({ ...clase, [name]: value });
+    };
+
+    const handleChange2 = (e) => {
+        console.log(e.target);
+        const { name, value } = e.target;
+        setNuevaClase({ ...nuevaClase, [name]: value });
+    };
+    const importFile = () => {
+        var input = document.createElement('input'); // input that selects the file
+        input.type = 'file';
+
+        input.click(); // click the input to select the file
+
+        // what to do when it gatters the file
+        input.onchange = e => {
+            let target = e.target;
+            if (!target.files) {
+                return
+            }
+            let file;
+            file = target.files[0];
+
+            let reader = new FileReader(); // file reader
+            reader.readAsText(file) // read the file gatered
+            // when it is called
+            reader.onload = e => {
+                if (file.name.includes(".csv")) { // check if the file is markdown or txt
+                    let result = e.target?.result?.toString();
+                    result !== undefined ? sendCSV(result) : alert("error");
+                }
+                else {
+                    alert("error: el archivo necesita ser tipo markdown o txt")
+                }
+            }
+        }
+
     }
-    delete nuevaClase.niveles;
 
-    await fetch("https://p99test.fly.dev/v1/clases/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams(nuevaClase),
-    }).then(() => {
-      abrirCerrarModalInsertar();
-      resetClases();
-    });
-  };
+    const sendCSV = async (csv) => {
+        const csvArray = csv.split("\n")
+        csvArray.shift()
+        let clasesJson = [];
+        let profesoresJson = [];
+        let iterator;
+        // hash table profesores ( para no mandar profesores repetidos)
+        let profesorHash = [];
 
-  //-------------------------------Editar----------------------------------
-  // Estados para editar
-  const [modalEditar, setModalEditar] = useState(false);
-  const [claseActual, setClaseActual] = useState({
-    _id: "",
-    clave: "",
-    nombre_curso: "",
-    nivel: "",
-    matriculaProfesor: "",
-    edades: "",
-    cupo_maximo: "",
-    modalidad: "",
-    fechas: "",
-    niveles: "",
-    nombreCompleto: "",
-    nombreProfesor: "",
-    apellidoProfesor: "",
-  });
-  //Function que abre o cierra el modal
-  const abrirCerrarModalEditar = () => {
-    setModalEditar(!modalEditar);
-  };
+        const profesorFunc = (i) => {
+            i = i.slice(2)
+            return Number(i)
 
-  let editClasses = (clase) => {
-    setClaseActual(clase);
-    profesorList.forEach((e) => {
-      if (e.nombreCompleto == clase.nombreCompleto) {
-        setCurrentProfesor(e);
-      }
-    });
+        }
 
-    abrirCerrarModalEditar();
-  };
+        let j = 0;
+        for (let i = 0; i < csvArray.length; i++) {
+            iterator = csvArray[i];
+            let iteratorArray = iterator.split(',')
+            // agregar clases
+            clasesJson[i] = {};
+            clasesJson[i].clave = iteratorArray[0]
+            clasesJson[i].nombre_curso = iteratorArray[1]
+            clasesJson[i].nivel = iteratorArray[2]
+            clasesJson[i].area = iteratorArray[3]
+            clasesJson[i].modalidad = iteratorArray[4]
+            clasesJson[i].clavePeriodo = iteratorArray[5]
+            clasesJson[i].cupo_maximo = iteratorArray[6]
+            clasesJson[i].edad_minima = iteratorArray[7]
+            clasesJson[i].edad_maxima = iteratorArray[8]
+            clasesJson[i].lunes = iteratorArray[9]
+            clasesJson[i].martes = iteratorArray[10]
+            clasesJson[i].miercoles = iteratorArray[11]
+            clasesJson[i].jueves = iteratorArray[12]
+            clasesJson[i].viernes = iteratorArray[13]
+            clasesJson[i].sabado = iteratorArray[14]
+            clasesJson[i].matriculaProfesor = iteratorArray[17]
+            clasesJson[i].cupo_actual = "0"
+            clasesJson[i].nombreProfesor = iteratorArray[15].trim()
+            clasesJson[i].apellidosProfesor = iteratorArray[16].trim()
+            // JSON.stringify(clasesJson[i])
 
-  //Funcion que guarda informacion del modal
-  useEffect(() => {
-    setClase(claseActual);
-    getPeriodos();
-  }, [claseActual]);
+            // agregar profesores
+            if (!profesorHash[profesorFunc(iteratorArray[17])]) {
+                profesoresJson[j] = {}
+                profesoresJson[j].nombre = iteratorArray[15].trim()
+                profesoresJson[j].apellidos = iteratorArray[16].trim()
+                profesoresJson[j].matricula = iteratorArray[17]
+                profesoresJson[j].correo = iteratorArray[18]
+                profesoresJson[j].fecha_de_nacimiento = ""
+                profesoresJson[j].num_telefono = ""
+                profesoresJson[j].num_cursos_impartidos = "0"
+                profesoresJson[j].idUser = ""
 
-  //Estado que guarda el array modificado
-  const [clase, setClase] = useState(claseActual);
+                profesorHash[profesorFunc(iteratorArray[17])] = true
+                j++
+            }
+        }
 
-  //Funcion que modifica los daors
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setClase({ ...clase, [name]: value });
-  };
+        // clasesJson & profesoresJson
 
-  const handleChange2 = (e) => {
-    console.log(e.target);
-    const { name, value } = e.target;
-    setNuevaClase({ ...nuevaClase, [name]: value });
-  };
-  const importFile = () => {
-    var input = document.createElement("input"); // input that selects the file
-    input.type = "file";
+        //console.log(clasesJson)
+        await fetch("http://localhost:3000/v1/csv/subirClases",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                    clasesJson: JSON.stringify(clasesJson)
+                }),
+            }
+        )
+            .then(response => response.json())
+            .then(() => {
+                resetClases()
+            })
+            .catch(error => console.log('Error(ShowClass): ', error));
 
-    input.click(); // click the input to select the file
+        //console.log(profesoresJson)
+        await fetch("http://localhost:3000/v1/csv/subirProfesores",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                    profesoresJson: JSON.stringify(profesoresJson)
+                }),
+            }
+        )
+    }
 
-    // what to do when it gatters the file
-    input.onchange = (e) => {
-      let target = e.target;
-      if (!target.files) {
-        return;
-      }
-      let file;
-      file = target.files[0];
-
-      let reader = new FileReader(); // file reader
-      reader.readAsText(file); // read the file gatered
-      // when it is called
-      reader.onload = (e) => {
-        if (file.name.includes(".csv")) {
-          // check if the file is markdown or txt
-          let result = e.target?.result?.toString();
-          result !== undefined ? sendCSV(result) : alert("error");
+    let seleccionarConsola = (consola, caso) => {
+        if (caso === "Editar") {
+            editClasses(consola)
+        } else if (caso === "Eliminar") {
+            deleteClass(consola._id)
         } else {
-          alert("error: el archivo necesita ser tipo markdown o txt");
         }
-      };
-    };
-  };
-
-  const sendCSV = async (csv) => {
-    const csvArray = csv.split("\n");
-    csvArray.shift();
-    let clasesJson = [];
-    let profesoresJson = [];
-    let iterator;
-    // hash table profesores ( para no mandar profesores repetidos)
-    let profesorHash = [];
-
-    const profesorFunc = (i) => {
-      i = i.slice(2);
-      return Number(i);
     };
 
-    let j = 0;
-    for (let i = 0; i < csvArray.length; i++) {
-      iterator = csvArray[i];
-      let iteratorArray = iterator.split(",");
-      // agregar clases
-      clasesJson[i] = {};
-      clasesJson[i].clave = iteratorArray[0];
-      clasesJson[i].nombre_curso = iteratorArray[1];
-      clasesJson[i].nivel = iteratorArray[2];
-      clasesJson[i].area = iteratorArray[3];
-      clasesJson[i].modalidad = iteratorArray[4];
-      clasesJson[i].clavePeriodo = iteratorArray[5];
-      clasesJson[i].cupo_maximo = iteratorArray[6];
-      clasesJson[i].edad_minima = iteratorArray[7];
-      clasesJson[i].edad_maxima = iteratorArray[8];
-      clasesJson[i].lunes = iteratorArray[9];
-      clasesJson[i].martes = iteratorArray[10];
-      clasesJson[i].miercoles = iteratorArray[11];
-      clasesJson[i].jueves = iteratorArray[12];
-      clasesJson[i].viernes = iteratorArray[13];
-      clasesJson[i].sabado = iteratorArray[14];
-      clasesJson[i].matriculaProfesor = iteratorArray[17];
-      clasesJson[i].cupo_actual = "0";
-      clasesJson[i].nombreProfesor = iteratorArray[15].trim();
-      clasesJson[i].apellidosProfesor = iteratorArray[16].trim();
-      // JSON.stringify(clasesJson[i])
+    //Funciones que actualiza los datos con las modificacioness
+    const handleClick2 = (e) => {
+        e.preventDefault();
+        updateClass(clase);
+    };
+    const updateClass = (nuevaClase) => {
+        delete nuevaClase.fechas
+        delete nuevaClase.edades
 
-      // agregar profesores
-      if (!profesorHash[profesorFunc(iteratorArray[17])]) {
-        profesoresJson[j] = {};
-        profesoresJson[j].nombre = iteratorArray[15].trim();
-        profesoresJson[j].apellidos = iteratorArray[16].trim();
-        profesoresJson[j].matricula = iteratorArray[17];
-        profesoresJson[j].correo = iteratorArray[18];
-        profesoresJson[j].fecha_de_nacimiento = "";
-        profesoresJson[j].num_telefono = "";
-        profesoresJson[j].num_cursos_impartidos = "0";
-        profesoresJson[j].idUser = "";
+        nuevaClase.nombreProfesor = currentProfesor.nombre
+        nuevaClase.matriculaProfesor = currentProfesor.matricula
+        nuevaClase.apellidosProfesor = currentProfesor.apellidos
 
-        profesorHash[profesorFunc(iteratorArray[17])] = true;
-        j++;
-      }
+        delete nuevaClase.nombreCompleto
+        if (nuevaClase.niveles == "desde cero") {
+            nuevaClase.nivel = "1";
+        }
+        else if (nuevaClase.niveles == "con bases") {
+            nuevaClase.nivel = "2"
+        }
+        else if (nuevaClase.niveles == "intermedio") {
+            nuevaClase.nivel = "3"
+        }
+        else if (nuevaClase.niveles == "avanzado") {
+            nuevaClase.nivel = "4"
+        }
+        delete nuevaClase.niveles
+        fetch("http://localhost:3000/v1/clases/update", {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams(nuevaClase)
+
+        }).then(e => {
+            abrirCerrarModalEditar();
+            resetClases();
+        }
+        )
+    };
+
+    const addClass = () => {
+        setCurrentProfesor({
+            nombre: '',
+            matricula: '',
+            apellido: '',
+            nombreCompleto: '',
+            correo: ''
+        })
+        abrirCerrarModalInsertar()
+
     }
 
-    // clasesJson & profesoresJson
-
-    //console.log(clasesJson)
-    await fetch("https://p99test.fly.dev/v1/csv/subirClases", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
-        clasesJson: JSON.stringify(clasesJson),
-      }),
-    })
-      .then((response) => response.json())
-      .then(() => {
-        resetClases();
-      })
-      .catch((error) => console.log("Error(ShowClass): ", error));
-
-    //console.log(profesoresJson)
-    await fetch("https://p99test.fly.dev/v1/csv/subirProfesores", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
-        profesoresJson: JSON.stringify(profesoresJson),
-      }),
-    });
-  };
-
-  let seleccionarConsola = (consola, caso) => {
-    if (caso === "Editar") {
-      editClasses(consola);
-    } else if (caso === "Eliminar") {
-      deleteClass(consola._id);
-    } else {
-    }
-  };
-
-  //Funciones que actualiza los datos con las modificacioness
-  const handleClick2 = (e) => {
-    e.preventDefault();
-    updateClass(clase);
-  };
-  const updateClass = (nuevaClase) => {
-    delete nuevaClase.fechas;
-    delete nuevaClase.edades;
-
-    nuevaClase.nombreProfesor = currentProfesor.nombre;
-    nuevaClase.matriculaProfesor = currentProfesor.matricula;
-    nuevaClase.apellidosProfesor = currentProfesor.apellidos;
-
-    delete nuevaClase.nombreCompleto;
-    if (nuevaClase.niveles == "desde cero") {
-      nuevaClase.nivel = "1";
-    } else if (nuevaClase.niveles == "con bases") {
-      nuevaClase.nivel = "2";
-    } else if (nuevaClase.niveles == "intermedio") {
-      nuevaClase.nivel = "3";
-    } else if (nuevaClase.niveles == "avanzado") {
-      nuevaClase.nivel = "4";
-    }
     delete nuevaClase.niveles;
     fetch("https://p99test.fly.dev/v1/clases/update", {
       method: "PUT",
@@ -930,28 +983,11 @@ export default function ShowClass() {
         let result = [];
         getStudents().then((data) => {
             students = data;
+
         }).then(() => {
-            getWaitList().then((data) => {
-                waitList = data.filter(lista => lista.idClase === clase._id);
-                waitList.map((inWaitList) => {
-                    for (let i = 0; i < students.length; i++) {
-                        if (inWaitList.idAlumno === students[i]._id) {
-                            result.push({
-                                '_id': inWaitList._id,
-                                'studentName' : students[i].nombre + " " + students[i].apellido_paterno + " " + students[i].apellido_materno,
-                                'time_stamp' : inWaitList.time_stamp
-                            })
-                        }
-                    }
-                })
-                result.sort((a, b) => {
-                    return a > b ? 1 : a < b ? -1 : 0;
-                });
-                setCurrentWaitList(result);
-                setCurrentClase(clase);
-                setOpenWaitList(true);
-            })
+            resetClases()
         })
+        handleClose();
     }
 
   //---------------------------------------Show--------------
@@ -1074,44 +1110,162 @@ export default function ShowClass() {
                 },
               ]);
             }}
-          ></TextField>
-        </CardContent>
-      </Card>
-
-      <Box
-        sx={{
-          width: "740px",
-          padding: "15px",
-          height: "450px",
-          position: "absolute",
-          marginLeft: "265px",
-        }}
-      >
-        <Typography
-          variant="h3"
-          component="h3"
-          sx={{ textAlign: "left", mt: 3, mb: 3, fontFamily: "arial" }}
         >
-          Clases
-          <div
+            <h3
+                style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial", width: '100%' }}
+                align="center"
+            >
+                Crear una nueva clase
+            </h3>
+
+            {classAtributes.map(atribute => (
+                <TextField
+                    style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10 }}
+                    label={atribute.value}
+                    onChange={e => { handleChange2(e) }}
+                    name={atribute.key}
+                    key={atribute.key}
+                    value={nuevaClase[atribute.key]}
+                    autoFocus
+                />
+            ))}
+
+            <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
+                label="Modalidad"
+                value={nuevaClase["modalidad"]}
+                name="modalidad"
+                onChange={(e) => { handleChange2(e) }}
+                select
+            >
+                {["presencial","online"].map(e => (
+                    <MenuItem value={e} key={e} >{e}</MenuItem>
+
+                ))}
+            </TextField>
+            <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
+                label="Nivel"
+                value={nuevaClase["niveles"]}
+                name="niveles"
+                onChange={(e) => { handleChange2(e) }}
+                select
+            >
+                {niveloptions.map(e => (
+                    <MenuItem value={e} key={e} >{e}</MenuItem>
+
+                ))}
+            </TextField>
+
+            <div style={{ width: '100%', borderTop: '1px solid gray', paddingTop: '5px', display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <Typography sx={{ textAlign: 'center', marginTop: '10px', width: '100%' }}> Horarios</Typography>
+                {dayAtributes.map(atribute => (
+                    <TextField
+                        style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10 }}
+                        label={atribute.value}
+                        onChange={e => { handleChange2(e) }}
+                        name={atribute.key}
+                        key={atribute.key}
+                        value={nuevaClase[atribute.key]}
+                        autoFocus
+                    />
+                ))}
+            </div>
+
+
+
+            <div style={{ width: '100%', borderTop: '1px solid gray', paddingTop: '5px' }}>
+                <Typography sx={{ textAlign: 'center', marginTop: '10px' }}> datos del profesor</Typography>
+                <br />
+                <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '100%' }}
+                    label="Profesor"
+                    value={currentProfesor["nombreCompleto"]}
+                    name="nombreCompleto"
+                    onChange={(e) => { handleChangeProfesor(e) }}
+                    select
+                >
+                    {profesorList.map(e => (
+                        <MenuItem value={e.nombre + " " + e.apellidos} key={e._id} >{e.nombre + " " + e.apellidos}</MenuItem>
+                    ))}
+                </TextField>
+                <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
+                    variant="filled"
+                    label="matricula"
+                    InputProps={{
+                        readOnly: true,
+                    }}
+                    value={currentProfesor["matricula"]}
+                    defaultValue={currentProfesor["matricula"]}
+                >
+                </TextField>
+                <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
+                    InputProps={{
+                        readOnly: true,
+                    }}
+                    value={currentProfesor["correo"]}
+                    defaultValue={currentProfesor["correo"]}
+                    variant="filled"
+                    label="correo"
+                >
+                </TextField>
+            </div>
+            <div align="center" style={{ width: '100%' }}>
+                <Button color="primary" onClick={handleClick}>
+                    Insertar
+                </Button>
+                <Button onClick={() => abrirCerrarModalInsertar()} color="error">
+                    Cancelar
+                </Button>
+            </div>
+        </div>
+
+
+
+    );
+    // -----------------------------Modal para editar---------------------------
+    const bodyEditar = (
+        <div
             style={{
-              display: "flex",
-              width: "50%",
-              justifyContent: "space-evenly",
+                position: "absolute",
+                width: 520,
+                height: '95vh',
+                backgroundColor: "#fefefd",
+                top: "48%",
+                left: "50%",
+                transform: "translate(-48%, -50%)",
+                border: "4px solid  rgb(165, 165, 180)",
+                margin: "auto",
+                borderRadius: "10px",
+                padding: "20px",
+                display: 'flex',
+                justifyContent: 'center',
+                flexWrap: 'wrap',
             }}
-          >
-            <Button
-              variant="contained"
-              color="success"
-              onClick={() => addClass()}
+        >
+
+            <h3
+                style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial", width: '100%' }}
+                align="center"
             >
-              {<AddCircleOutlineIcon />} Crear
-            </Button>
-            <Button
-              variant="contained"
-              color="info"
-              onClick={() => importFile()}
+                Actualizar una clase
+            </h3>
+            {classAtributes.map(atribute => (
+                <TextField
+                    style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
+                    label={atribute.value}
+                    onChange={e => { handleChange(e) }}
+                    name={atribute.key}
+                    key={atribute.key}
+                    value={clase[atribute.key]}
+                    autoFocus
+                />
+            ))}
+            <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
+                label="Modalidad"
+                value={clase["modalidad"]}
+                name="modalidad"
+                onChange={(e) => { handleChange(e) }}
+                select
             >
+
               <InsertDriveFile /> Importar CSV
             </Button>
           </div>
@@ -1169,3 +1323,4 @@ export default function ShowClass() {
     </div>
   );
 }
+
