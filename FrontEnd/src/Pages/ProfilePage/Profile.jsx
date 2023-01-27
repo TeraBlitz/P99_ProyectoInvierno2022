@@ -67,7 +67,7 @@ const Profile = () =>{
 
     useEffect(() => {
         const getUserStudents = () =>{
-            fetch(`https://p99test.fly.dev.dev/v1/alumnos/find`,
+            fetch(`https://p99test.fly.dev/v1/alumnos/find`,
             {
                 method: 'POST',
                 redirect: 'follow',

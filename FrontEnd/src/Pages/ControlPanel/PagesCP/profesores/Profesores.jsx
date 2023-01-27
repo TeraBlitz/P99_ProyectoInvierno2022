@@ -29,22 +29,22 @@ export default function Profesores() {
   const [dataClase, setDataClase] = useState([]);
 
   const  getProfesores  = async () => {
-    const res = await axios.get("https://p99test.fly.dev.dev/v1/profesores");
+    const res = await axios.get("https://p99test.fly.dev/v1/profesores");
     setData(res.data);
   };
 
   const  getClases= async () => {
-    const res = await axios.get("https://p99test.fly.dev.dev/v1/clases");
+    const res = await axios.get("https://p99test.fly.dev/v1/clases");
     setDataClase(res.data);
   };
   
   const  getProfesores2  = async () => {
-    const res = await axios.get("https://p99test.fly.dev.dev/v1/profesores");
+    const res = await axios.get("https://p99test.fly.dev/v1/profesores");
     setGuardaData(res.data);
   };
 
   const  getPeriodos = async () => {
-    const res = await axios.get("https://p99test.fly.dev.dev/v1/periodos");
+    const res = await axios.get("https://p99test.fly.dev/v1/periodos");
     setDataPeriodo(res.data);
   };
 
@@ -97,7 +97,7 @@ export default function Profesores() {
   const postCrea = async (e) => {
     e.preventDefault();
     try {
-      await fetch("https://p99test.fly.dev.dev/v1/profesores/create", {
+      await fetch("https://p99test.fly.dev/v1/profesores/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -238,7 +238,7 @@ export default function Profesores() {
   const postEditar = async (e) => {
     e.preventDefault();
     try {
-      await fetch("https://p99test.fly.dev.dev/v1/profesores/update", {
+      await fetch("https://p99test.fly.dev/v1/profesores/update", {
         method: "Put",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -358,7 +358,7 @@ export default function Profesores() {
 
 const postDelete = async (e) => {
   try {
-    await fetch("https://p99test.fly.dev.dev/v1/profesores/delete", {
+    await fetch("https://p99test.fly.dev/v1/profesores/delete", {
       method: "Delete",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",

@@ -192,7 +192,7 @@ function RegistroClasesAlumnos({changeContent}) {
             })
         })
         getClassStudent().then((data) => {
-            myClasses = data.data.filter(clase =>  clase.idAlumno === student._id);
+            myClasses = data.filter(clase =>  clase.idAlumno === student._id);
         })
         .then(() => {
             myClasses.map((myClass) => {
