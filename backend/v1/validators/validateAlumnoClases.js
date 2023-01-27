@@ -5,11 +5,11 @@ const localize_es = require('ajv-i18n/localize/es')
 addFormats(ajv)
 require("ajv-errors")(ajv)
 // Schema
-const {listaSchema} = require('../schemas/listaSchema')
+const { alumnoClaseSchema } = require('../schemas/alumnoClaseSchema')
 
-const validate = ajv.compile(listaSchema)
+const validate = ajv.compile(alumnoClaseSchema)
 
-async function validateLista(req, res, next){
+async function validateAlumnoClase(req, res, next){
 	const isValid = validate(req.body)
 
 	if(!isValid){
@@ -23,4 +23,4 @@ async function validateLista(req, res, next){
 
 }
 
-module.exports = {validateLista}
+module.exports = {validateAlumnoClase}

@@ -95,9 +95,7 @@ async function createUser(req, res) {
         );
     } catch (err) {
         res.send(`ERROR: ${err}`);
-    } finally {
-        await client.close();
-    }
+    } 
 }
 // Test createUser
 // createUser().catch(console.dir);

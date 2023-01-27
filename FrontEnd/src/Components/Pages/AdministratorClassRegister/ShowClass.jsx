@@ -23,6 +23,7 @@ import WaitList from "./WaitList";
 import { getWaitList } from '../../../api/waitList'
 import { getStudents } from "../../../api/students";
 
+import axios from 'axios'
 
 export default function ShowClass() {
     //--------------------------------------------Agregar----------------
@@ -34,6 +35,7 @@ export default function ShowClass() {
     //Estados de agregar
     const [data, setData] = useState([]);
     const [modalInsertar, setModalInsertar] = useState(false);
+
     let profesores = []
     const [profesorList, setProfesorList] = useState([])
     const classAtributes = [
@@ -140,7 +142,9 @@ export default function ShowClass() {
             setEdadesList(edades)
         })
     }
+
     useEffect(() => { resetClases() }, [])
+
 
     const handleClose = () => {
         setOpenDeleteDialog(false);
@@ -244,7 +248,7 @@ export default function ShowClass() {
 
     }
 
-    const sendCSV = async (csv) => {
+    const sendCSV = async(csv) => {
         const csvArray = csv.split("\n")
         csvArray.shift()
         let clasesJson = [];
@@ -252,12 +256,13 @@ export default function ShowClass() {
         let iterator;
         // hash table profesores ( para no mandar profesores repetidos)
         let profesorHash = [];
+        
         const profesorFunc = (i) => {
             i = i.slice(2)
             return Number(i)
 
         }
-        profesorFunc('a01198211')
+
         let j = 0;
         for (let i = 0; i < csvArray.length; i++) {
             iterator = csvArray[i];
@@ -300,6 +305,8 @@ export default function ShowClass() {
             }
         }
 
+        // clasesJson & profesoresJson
+
         //console.log(clasesJson)
         await fetch("http://localhost:3000/v1/csv/subirClases",
             {
@@ -318,6 +325,7 @@ export default function ShowClass() {
             })
             .catch(error => console.log('Error(ShowClass): ', error));
 
+
         await fetch("http://localhost:3000/v1/csv/subirProfesores",
             {
                 method: "POST",
@@ -325,7 +333,7 @@ export default function ShowClass() {
                     "Content-Type": "application/x-www-form-urlencoded",
                 },
                 body: new URLSearchParams({
-                    clasesJson: JSON.stringify(profesoresJson)
+                    profesoresJson: JSON.stringify(profesoresJson)
                 }),
             }
         )
@@ -413,6 +421,7 @@ export default function ShowClass() {
                 Crear una nueva clase
             </h3>
 
+
             {classAtributes.map(atribute => (
                 <TextField
                     style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10 }}
@@ -425,6 +434,7 @@ export default function ShowClass() {
                 />
             ))}
             <div align="center" style={{width:'100%'}}>
+
                 <Button color="primary" onClick={handleClick}>
                     Insertar
                 </Button>
@@ -626,6 +636,39 @@ export default function ShowClass() {
                     ></TextField>
                 </CardContent>
             </Card>
+
+            <Card sx={{
+          width: 250,
+          position: "absolute",
+          textAlign: "left",
+        
+          marginTop: "470px",
+          bgcolor: "grey.200",
+          borderRadius: "8px",
+        }}>
+        <CardContent>
+          <TextField
+            style={{
+              paddingBottom: "15px",
+              width: "24ch",
+              fontFamily: "arial",
+            }}
+            label="Periodo"
+            onChange={(e) => setPeriodo2(e.target.value)}
+            value={periodo2}
+            select
+            id="filled-select-currency"
+          >
+            {dataPeriodo.map((e) => {
+                return (
+                  <MenuItem key={e._id} value={e.clave}>
+                    {e.clave}
+                  </MenuItem>
+                );
+            })}
+          </TextField>
+        </CardContent>
+      </Card>
 
 
             <Box

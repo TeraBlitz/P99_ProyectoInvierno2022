@@ -86,9 +86,7 @@ async function updateProfesor(req, res) {
     );
   } catch (err) {
     res.send(`updateProfesor ERROR: ${err}`);
-  } finally {
-    await client.close();
-  }
+  } 
 }
 // Test updateProfesor
 // updateProfesor().catch(console.dir);
