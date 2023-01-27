@@ -10,10 +10,7 @@ async function getAllAlumnoClases(req, res) {
 
         const result = await collection.find().toArray();
 
-        res.json({
-            msg: 'Consulta realizada con exito.',
-            data: result
-        });
+        res.send(result);
     } catch (err) {
         return res.status(500).json({
             msg: `ERROR: ${err}`

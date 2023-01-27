@@ -854,7 +854,8 @@ export default function Alumnos() {
     array2 = []
     array3 = []
     console.log(guardaData)
-    console.log(event);
+    console.log(event.value);
+
     array2.push(dataAlumnoClase.filter(data => data.idPeriodo === event.value));
     console.log(array2[0])
     for (let i=0; i< array2.length;i++){
