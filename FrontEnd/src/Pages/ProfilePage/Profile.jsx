@@ -19,7 +19,7 @@ import { userContext } from './../../App.jsx'
 
 const studentInfo = {
     'nombre': '', 'apellido_paterno': '', 'apellido_materno': '',
-    'num_telefono': '', 'curp': '', 'fecha_de_nacimiento':'',
+    'num_telefono': '', 'fecha_de_nacimiento':'',
     'escolaridad': '', 'ultima_escuela':'','estado':'', 'ciudad':'', 'colonia': '',
     'codigo_postal':'', 'pais': '', 'tutor_nombre': '', 'tutor_apellido_paterno': '',
     'tutor_apellido_materno': '', 'tutor_correo': '', 'tutor_num_telefono': ''
@@ -42,6 +42,7 @@ const Profile = () =>{
     const [openEditModal, setOpenEditModal] = useState(false);
     const [currentStudent, setCurrentStudent] = useState(studentInfo)
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [infoOpen, setInfoOpen] = useState(false); 
 
     const handleOpenDialog = () => {
       setOpenDeleteDialog(true);
@@ -140,6 +141,7 @@ const Profile = () =>{
         }
         setSuccessOpen(false);
         setErrorOpen(false);
+        setInfoOpen(false);
     };
 
     if (!userInfo || !students) {
@@ -218,6 +220,7 @@ const Profile = () =>{
                         setSuccessOpen={setSuccessOpen}
                         setErrorOpen={setErrorOpen}
                         setAlertMessage={setAlertMessage}
+                        setInfoOpen={setInfoOpen}
                     />
                 </>
             </Modal>
@@ -237,6 +240,7 @@ const Profile = () =>{
                         setSuccessOpen={setSuccessOpen}
                         setErrorOpen={setErrorOpen}
                         setAlertMessage={setAlertMessage}
+                        setInfoOpen={setInfoOpen}
                     />
                 </>
             </Modal>
@@ -248,6 +252,11 @@ const Profile = () =>{
             </Snackbar>
             <Snackbar open={errorOpen} autoHideDuration={4000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+                    {alertMessage}
+                </Alert>
+            </Snackbar>
+            <Snackbar open={infoOpen} autoHideDuration={4000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="info" sx={{ width: '100%' }}>
                     {alertMessage}
                 </Alert>
             </Snackbar>
