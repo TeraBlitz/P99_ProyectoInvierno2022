@@ -17,6 +17,7 @@ import Actions from "./Actions";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import MenuItem from "@mui/material/MenuItem";
+import axios from "axios";
 
 import { InsertDriveFile } from "@mui/icons-material";
 import Select from "react-select";
@@ -32,6 +33,33 @@ export default function ShowClass() {
         const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
         setDataPeriodo(res.data);
 
+      };
+
+    const[claseResp, setClaseResp]= useState([]);
+
+    const  getClaseResp  = async () => {
+        const res = await axios.get("http://127.0.0.1:3000/v1/clases");
+        setClaseResp(res.data);
+
+    };
+
+      const handleSelectChange = (event) => {
+        console.log('Respaldo------ ', claseResp)
+        setData(claseResp)
+        console.log('Datos Restaurados',data)
+        //console.log(event.label)
+
+        let array=[]
+        claseResp.forEach(element =>{
+            if (element.clavePeriodo === event.label){
+                array.push(element)
+            }
+
+        })
+
+        setData(array)
+        console.log('Datos Clases despues filtro',data)
+        console.log("-----------------ACABA FUNCION------------------")
       };
 
     //--------------------------------------------Agregar----------------
@@ -180,7 +208,7 @@ export default function ShowClass() {
         })
         getOptions()
     }
-    useEffect(() => { resetClases() }, [])
+    useEffect(() => { resetClases(),getClaseResp() }, [])
 
     const handleClose = () => {
         setOpenDeleteDialog(false);
@@ -268,6 +296,7 @@ export default function ShowClass() {
     //Funcion que guarda informacion del modal
     useEffect(() => {
         setClase(claseActual);
+        getPeriodos();
     }, [claseActual]);
 
     //Estado que guarda el array modificado
@@ -799,7 +828,7 @@ export default function ShowClass() {
                 label: sup.clave,
                 value: sup._id,
                 }))}
-                //onChange={handleSelectChange}
+                onChange={handleSelectChange}
             />
 
       </Box>
