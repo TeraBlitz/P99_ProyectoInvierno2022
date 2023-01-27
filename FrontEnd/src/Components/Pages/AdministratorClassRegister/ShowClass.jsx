@@ -129,7 +129,7 @@ export default function ShowClass() {
   let edades = [];
 
   const getOptions = async () => {
-    await fetch("https://p99test.fly.dev/v1/profesores/", {
+    await fetch("https://p99test.fly.dev/v1/profesores", {
       method: "GET",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -154,7 +154,7 @@ export default function ShowClass() {
     setModalInsertar(!modalInsertar);
   };
   const resetClases = async () => {
-    await fetch("https://p99test.fly.dev/v1/clases/", {
+    await fetch("https://p99test.fly.dev/v1/clases", {
       method: "GET",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -162,6 +162,7 @@ export default function ShowClass() {
     })
       .then((response) => response.json())
       .then((result) => {
+        console.log(result)
         setData([]);
         for (let i = 0; i < result.length; i++) {
           let fechas = "";
@@ -528,6 +529,7 @@ export default function ShowClass() {
         display: "flex",
         justifyContent: "center",
         flexWrap: "wrap",
+        overflowY: 'scroll'
       }}
     >
       <h3
@@ -730,6 +732,7 @@ export default function ShowClass() {
         display: "flex",
         justifyContent: "center",
         flexWrap: "wrap",
+        overflowY: 'scroll'
       }}
     >
       <h3
@@ -913,7 +916,7 @@ export default function ShowClass() {
       </div>
     </div>
   );
-   
+
     //-------------------------------Lista de Espera---------------------------
 
     const [openWaitList, setOpenWaitList] = useState(false);
@@ -922,11 +925,11 @@ export default function ShowClass() {
 
 
     const getClassWaitList = (clase) => {
-        let waitList = [];  
+        let waitList = [];
         let students = [];
         let result = [];
         getStudents().then((data) => {
-            students = data; 
+            students = data;
         }).then(() => {
             getWaitList().then((data) => {
                 waitList = data.filter(lista => lista.idClase === clase._id);
@@ -956,8 +959,8 @@ export default function ShowClass() {
 
   const columns = useMemo(
     () => [
-      { field: "clave", headerName: "Clave", width: 134 },
-      { field: "nombre_curso", headerName: "Curso", width: 170 },
+      { field: "clave", headerName: "Clave", width: 70 },
+      { field: "nombre_curso", headerName: "Curso", width: 120 },
       { field: "niveles", headerName: "Nivel", width: 100 },
       {
         field: "nombreCompleto",
@@ -998,11 +1001,11 @@ export default function ShowClass() {
           width: 250,
           position: "absolute",
           textAlign: "left",
-          marginLeft: "1350px",
-          marginTop: "50px",
-          bgcolor: "grey.200",
+          marginLeft: "910px",
+          marginTop: "30px",
+          fontFamily:'arial',
           borderRadius: "8px",
-          height: 90,
+
         }}
       >
         <Select
@@ -1114,7 +1117,7 @@ export default function ShowClass() {
           </div>
         </Typography>
 
-        <Box sx={{ height: "80vh", width: "70vw" }}>
+        <Box sx={{ height: "75vh", width: "64vw" }}>
           <DataGrid
             columns={columns}
             rows={data}
@@ -1158,7 +1161,7 @@ export default function ShowClass() {
           alignContent: 'center', justifyContent: 'center',
           flexWrap: 'wrap', overflowY: 'scroll'}}
           >
-              <>                
+              <>
                   <WaitList clase={currentClase} waitList={currentWaitList}/>
               </>
           </Modal>
