@@ -49,10 +49,11 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
     const handleSubmit = (e) => {
         // Enviar esta informacion a bd
         e.preventDefault();
+        studentData.escolaridad = userEducation;
+        studentData.estado = userState; 
         setNewStudentInfo(studentData);
         console.log(studentData);
-        setAddStudent(!addStudent);
-        if (studentData.num_telefono.length < 10 || studentData.num_telefono_tutor.length < 10) {
+        if (studentData.num_telefono.length < 10 || studentData.tutor_num_telefono.length < 10) {
             setAlertMessage('Los numeros telefonicos deben tener al menos 10 digitos')
             setInfoOpen(true);
             return
@@ -62,6 +63,7 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
             setInfoOpen(true);
             return
         }
+        setAddStudent(!addStudent);
         createStudent(new URLSearchParams(studentData)).then((data) => {
             //console.log(data);
         })
@@ -158,15 +160,13 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
                 <TextField name='fecha_de_nacimiento' label="Fecha de nacimiento" type='date' InputLabelProps={{ shrink: true }} value={studentData.fecha_de_nacimiento || ''} onChange={handleChange}  helperText=" " required/>        
                 <Autocomplete
                     value={userEducation || ''}
+                    name='escolaridad'
                     onChange={(e, newValue) => {
                         setUserEducation(newValue);
-                        studentInfo['escolaridad'] = newValue;
-
                     }}
                     inputValue={userEducationInput}
                     onInputChange={(event, newInputValue) => {
                         setUserEducationInput(newInputValue);
-                        studentInfo['escolaridad'] = newInputValue;
                     }}
                     options={nivel_escolaridad}
                     renderInput={(params) => <TextField {...params} name='escolaridad' label="Escolaridad" helperText="Escolaridad o equivalente" required/>}
@@ -174,20 +174,19 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
                 <TextField name="ultima_escuela" label="Ultima Escuela" value={studentData.ultima_escuela || ''} onChange={handleChange} helperText=" " required/>        
                 <Autocomplete
                     value={userState || ''}
+                    name='estado'
                     onChange={(e, newValue) => {
                         setUserState(newValue);
-                        studentInfo['estado'] = newValue;
                     }}
                     inputValue={userStateInput}
                     onInputChange={(event, newInputValue) => {
                         setUserStateInput(newInputValue);
-                        studentInfo['estado'] = newInputValue;
                     }}
                     options={estados}
                     renderInput={(params) => <TextField {...params} name='estado' label="Estado" helperText=" " required/>}
                 />
                 <TextField name="ciudad" label="Ciudad" value={studentData.ciudad || ''} onChange={handleChange}  helperText=" "required/>        
-                <TextField name="codigo_postal" label="Codigo Postal" type="number" value={studentData.codigo_postal || ''}  onChange={handleChange}  helperText=" " required/>
+                <TextField name="codigo_postal" label="Codigo Postal" type="number" value={studentData.codigo_postal || ''}  onChange={handleChange}  helperText="5 Digitos" required/>
                 <TextField name="colonia" label="Colonia" value={studentData.colonia || ''} onChange={handleChange}  helperText=" " required/>
                 <ParentInfo studentData={studentData} handleChange={handleChange} underage={calculate_age(studentData.fecha_de_nacimiento) < 18}/> 
                 <Box sx={{width: '100%' }}></Box>

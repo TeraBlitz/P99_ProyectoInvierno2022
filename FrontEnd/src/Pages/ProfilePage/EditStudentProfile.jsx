@@ -36,22 +36,34 @@ const nivel_escolaridad = [
 
 const EditStudentProfile = ({
     openEditModal, setOpenEditModal, studentInfo, isEditing, setIsEditing,
-    setStudents, setSuccessOpen, setErrorOpen, setAlertMessage}) =>{
+    setStudents, setSuccessOpen, setErrorOpen, setAlertMessage, setInfoOpen}) =>{
 
     const [studentData, setStudentInfo] = useState(studentInfo)
     const [newStudentInfo, setNewStudentInfo] = useState(studentInfo);
     const [userStateInput, setUserStateInput] = useState(studentInfo.estado);
-    const [userState, setUserState] = useState(studentInfo.estado);
+    const [userState, setUserState] = useState(estados[estados.indexOf(studentInfo.estado)]);
     const [userEducationInput, setUserEducationInput] = useState(studentInfo.escolaridad);
-    const [userEducation, setUserEducation] = useState(studentInfo.escolaridad);
+    const [userEducation, setUserEducation] = useState(nivel_escolaridad[nivel_escolaridad.indexOf(studentInfo.escolaridad)]);
 
     const handleChange = e => setStudentInfo(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
 
     const handleSubmit = (e) => {
         // Enviar esta informacion a bd
         e.preventDefault();
+        studentData.escolaridad = userEducation;
+        studentData.estado = userState; 
         setNewStudentInfo(studentData);
         //console.log(studentData);
+        if (studentData.num_telefono.length < 10 || studentData.tutor_num_telefono.length < 10) {
+            setAlertMessage('Los numeros telefonicos deben tener al menos 10 digitos')
+            setInfoOpen(true);
+            return
+        }
+        if (studentData.codigo_postal.length < 5 ) {
+            setAlertMessage('El codigo postal contiene 5 digitos')
+            setInfoOpen(true);
+            return
+        }
         setOpenEditModal(!openEditModal)
         setIsEditing(!isEditing);
         updateStudent(new URLSearchParams(studentData)).then((data) => {
@@ -133,7 +145,7 @@ const EditStudentProfile = ({
                 </FormControl>
                 {
                     studentData.pais === "Mexico" ?
-                    <TextField name="curp" label="CURP" value={studentData.curp || ''} InputProps={{readOnly: !isEditing}} onChange={handleChange} required
+                    <TextField name="curp" label="CURP" value={studentData.curp ? studentData.curp :  ''} InputProps={{readOnly: !isEditing}} onChange={handleChange} required
                         helperText={
                             <Link href="https://www.gob.mx/curp/" underline="hover" target="_blank">
                                     &#9432; Obten tu CURP
@@ -147,13 +159,10 @@ const EditStudentProfile = ({
                     value={userEducation || ''}
                     onChange={(e, newValue) => {
                         setUserEducation(newValue)
-                        studentInfo['escolaridad'] = newValue;
-
                     }}
                     inputValue={userEducationInput}
                     onInputChange={(event, newInputValue) => {
                         setUserEducationInput(newInputValue);
-                        studentInfo['escolaridad'] = newInputValue;
                     }}
                     options={nivel_escolaridad}
                     renderInput={(params) => <TextField {...params} name='escolaridad' label="Escolaridad" InputProps={{readOnly: !isEditing}} helperText="Escolaridad o equivalente" required/>}
@@ -165,7 +174,6 @@ const EditStudentProfile = ({
                     inputValue={userStateInput}
                     onInputChange={(event, newInputValue) => {
                         setUserStateInput(newInputValue);
-                        studentInfo['estado'] = newInputValue;
                     }}
                     options={estados}
                     renderInput={(params) => <TextField {...params} InputProps={{readOnly: !isEditing}} name='estado' label="Estado" helperText=" " required/>}
