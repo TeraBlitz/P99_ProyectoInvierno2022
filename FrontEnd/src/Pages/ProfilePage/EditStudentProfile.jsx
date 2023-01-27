@@ -69,7 +69,7 @@ const EditStudentProfile = ({
             }
             getStudents().then(
                 (data) => {
-                    const students = data.filter(student => student.idUsuario === studentInfo.idUsuario);
+                    const students = data.filter(student => student.idUser === studentInfo.idUser);
                     setStudents(students);
             });
         });

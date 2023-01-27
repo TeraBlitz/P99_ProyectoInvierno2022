@@ -41,7 +41,7 @@ function RegistroClasesAlumnos({changeContent}) {
         const getUserStudents = () =>{
              getStudents().then(
                  (data) => {
-                     const students = data.filter(student => student.idUsuario === userValues._id);
+                     const students = data.filter(student => student.idUser === userValues._id);
                      setStudents(students);
                      //console.log(students)
              });
