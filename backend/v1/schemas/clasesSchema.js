@@ -1,7 +1,7 @@
 const clasesSchema = {
     type: "object",
     properties: {
-         clave: {type: "string"},
+        clave: {type: "string"},
         area: {type: "string"},
         modalidad: {type: "string"},
         nombre_curso: {type: "string"},

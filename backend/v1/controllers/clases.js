@@ -37,7 +37,7 @@ async function createClase(req, res) {
         nivel: req.body.nivel,
         nombreProfesor: req.body.nombreProfesor,
         apellidosProfesor: req.body.apellidosProfesor,
-        matriculaMaestro: req.body.matriculaMaestro,
+        matriculaProfesor: req.body.matriculaProfesor,
         clavePeriodo: req.body.clavePeriodo,
         edad_minima: req.body.edad_minima,
         edad_maxima: req.body.edad_maxima,
@@ -86,7 +86,7 @@ async function updateClase(req, res) {
         nivel: req.body.nivel,
         nombreProfesor: req.body.nombreProfesor,
         apellidosProfesor: req.body.apellidosProfesor,
-        matriculaMaestro: req.body.matriculaMaestro,
+        matriculaProfesor: req.body.matriculaProfesor,
         clavePeriodo: req.body.clavePeriodo,
         edad_minima: req.body.edad_minima,
         edad_maxima: req.body.edad_maxima,
@@ -107,9 +107,7 @@ async function updateClase(req, res) {
     );
   } catch (err) {
     res.send(`updateClase ERROR: ${err}`);
-  } finally {
-    await client.close();
-  }
+  } 
 }
 // Test updateClase
 // updateClase().catch(console.dir);
