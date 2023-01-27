@@ -1,24 +1,23 @@
-const { clientCon } = require("../connection.js");
+const { clientConnect } = require("../connection.js");
 const { mongodbInf } = require("../config.js");
 const mongodb = require("mongodb");
-
-// Crear un nuevo MongoClient
-const client = clientCon;
+const COLLECTION_NAME = "alumnoClases"
 
 async function getAllAlumnoClases(req, res) {
     try {
-        await client.connect();
-        const database = client.db(mongodbInf.database);
-        const collection = database.collection("alumnoClases");
+        const database = clientConnect.db(mongodbInf.database);
+        const collection = database.collection(COLLECTION_NAME);
 
         const result = await collection.find().toArray();
 
-        res.send(result);
+        res.json({
+            msg: 'Consulta realizada con exito.',
+            data: result
+        });
     } catch (err) {
         return res.status(500).json({
             msg: `ERROR: ${err}`
         });
-
     }
 }
 // Test getAllAlumnoClases
@@ -27,17 +26,16 @@ async function getAllAlumnoClases(req, res) {
 // Create
 async function createAlumnoClases(req, res) {
     try {
-        await client.connect();
-        const database = client.db(mongodbInf.database);
-        const collection = database.collection("alumnoClases");
+        const database = clientConnect.db(mongodbInf.database);
+        const collection = database.collection(COLLECTION_NAME);
 
         // Crear un Doc
         const doc = [
-        {
-            idAlumno: new mongodb.ObjectId(req.body.idAlumno),
-            idClase: new mongodb.ObjectId(req.body.idClase),
-            idPeriodo: new mongodb.ObjectId(req.body.idPeriodo),
-        },
+            {
+                idAlumno: new mongodb.ObjectId(req.body.idAlumno),
+                idClase: new mongodb.ObjectId(req.body.idClase),
+                idPeriodo: new mongodb.ObjectId(req.body.idPeriodo),
+            },
         ];
 
         const result = await collection.insertMany(doc);
@@ -49,8 +47,6 @@ async function createAlumnoClases(req, res) {
         return res.status(500).json({
             msg: `ERROR: ${err}`
         });
-    } finally {
-        await client.close();
     }
 }
 // Test createAlumnoClases
@@ -59,20 +55,19 @@ async function createAlumnoClases(req, res) {
 // Update
 async function updateAlumnoClases(req, res) {
     try {
-        await client.connect();
-        const database = client.db(mongodbInf.database);
-        const collection = database.collection("alumnoClases");
+        const database = clientConnect.db(mongodbInf.database);
+        const collection = database.collection(COLLECTION_NAME);
 
         // Crear el documento actualizado
         const idDoc = {
-        _id: new mongodb.ObjectId(req.body._id),
+            _id: new mongodb.ObjectId(req.body._id),
         };
         const doc = {
-        $set: {
-            idAlumno: new mongodb.ObjectId(req.body.idAlumno),
-            idClase: new mongodb.ObjectId(req.body.idClase),
-            idPeriodo: new mongodb.ObjectId(req.body.idPeriodo),
-        },
+            $set: {
+                idAlumno: new mongodb.ObjectId(req.body.idAlumno),
+                idClase: new mongodb.ObjectId(req.body.idClase),
+                idPeriodo: new mongodb.ObjectId(req.body.idPeriodo),
+            },
         };
 
         const result = await collection.findOneAndUpdate(idDoc, doc);
@@ -83,7 +78,7 @@ async function updateAlumnoClases(req, res) {
         return res.status(500).json({
             msg: `ERROR: ${err}`
         });
-    } 
+    }
 }
 // Test updateAlumnoClases
 // updateAlumnoClases().catch(console.dir);
@@ -91,9 +86,8 @@ async function updateAlumnoClases(req, res) {
 // Delete
 async function deleteAlumnoClases(req, res) {
     try {
-        await client.connect();
-        const database = client.db(mongodbInf.database);
-        const collection = database.collection("alumnoClases");
+        const database = clientConnect.db(mongodbInf.database);
+        const collection = database.collection(COLLECTION_NAME);
 
         // ID documento a eliminar
         const idDoc = {
@@ -116,8 +110,6 @@ async function deleteAlumnoClases(req, res) {
         return res.status(500).json({
             msg: `ERROR: ${err}`
         });
-    } finally {
-        await client.close();
     }
 }
 // Test deleteAlumnoClases
@@ -129,4 +121,4 @@ module.exports = {
     createAlumnoClases,
     updateAlumnoClases,
     deleteAlumnoClases,
-}
+};

@@ -7,6 +7,10 @@ const uri = `mongodb://${mongodbInf.host}:${mongodbInf.port}/${mongodbInf.databa
 // Crear un nuevo MongoClient
 const clientCon = new MongoClient(uri);
 
+// Variable de Conexion Global.
+const clientConnect = new MongoClient(uri);
+clientConnect.connect()
+
 // Funcion principal de la conexion.
 async function connection() {
     try {
@@ -39,4 +43,8 @@ async function checkTest_db(client){
     })
 }
 
-module.exports = {connection, clientCon}
+module.exports = {
+    connection, 
+    clientCon,
+    clientConnect
+}

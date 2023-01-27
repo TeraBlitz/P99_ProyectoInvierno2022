@@ -1,25 +1,18 @@
-const {clientCon} = require('../connection.js')
+const { clientConnect } = require('../connection.js')
 const { mongodbInf } = require('../config.js')
 const mongodb = require("mongodb")
 const bcryptjs = require('bcryptjs')
-
 const COLLECTION_NAME = "users"
-
-// Crear un nuevo MongoClient
-const client = clientCon;
 
 async function getAllUser(req, res) {
     try {
-        await client.connect();
-        const database = client.db(mongodbInf.database);
+        const database = clientConnect.db(mongodbInf.database);
         const collection = database.collection(COLLECTION_NAME);
 
         const result = await collection.find().toArray();
         res.send(result);
     } catch (err) {
         res.send(`ERROR: ${err}`);
-    } finally {
-        await client.close();
     }
 }
 // Test getAllUser
@@ -27,8 +20,7 @@ async function getAllUser(req, res) {
 
 async function findUser(req, res) {
     try {
-        await client.connect();
-        const database = client.db(mongodbInf.database);
+        const database = clientConnect.db(mongodbInf.database);
         const collection = database.collection(COLLECTION_NAME);
 
         // Detectar la key y crear la query
@@ -59,8 +51,6 @@ async function findUser(req, res) {
         
     } catch (err) {
         res.send(`ERROR: ${err}`);
-    } finally {
-        await client.close();
     }
 }
 // Test getAllUser
@@ -69,8 +59,7 @@ async function findUser(req, res) {
 // Create
 async function createUser(req, res) {
     try {
-        await client.connect();
-        const database = client.db(mongodbInf.database);
+        const database = clientConnect.db(mongodbInf.database);
         const collection = database.collection(COLLECTION_NAME);
 
         // Encriptar password
@@ -95,7 +84,7 @@ async function createUser(req, res) {
         );
     } catch (err) {
         res.send(`ERROR: ${err}`);
-    } 
+    }
 }
 // Test createUser
 // createUser().catch(console.dir);
@@ -103,8 +92,7 @@ async function createUser(req, res) {
 // Update
 async function updateUser(req, res) {
     try {
-        await client.connect();
-        const database = client.db(mongodbInf.database);
+        const database = clientConnect.db(mongodbInf.database);
         const collection = database.collection(COLLECTION_NAME);
 
         // Crear el documento actualizado
@@ -127,8 +115,6 @@ async function updateUser(req, res) {
         );
     } catch (err) {
         res.send(`updateUser ERROR: ${err}`);
-    } finally {
-        await client.close();
     }
 }
 // Test updateUser
@@ -137,8 +123,7 @@ async function updateUser(req, res) {
 // Delete
 async function deleteUser(req, res) {
     try {
-        await client.connect();
-        const database = client.db(mongodbInf.database);
+        const database = clientConnect.db(mongodbInf.database);
         const collection = database.collection(COLLECTION_NAME);
 
         // ID documento a eliminar
@@ -156,8 +141,6 @@ async function deleteUser(req, res) {
         }
     } catch (err) {
         console.log(`ERROR: ${err}`);
-    } finally {
-        await client.close();
     }
 }
 // Test deleteUser

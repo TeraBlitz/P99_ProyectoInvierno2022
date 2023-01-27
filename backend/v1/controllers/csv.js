@@ -1,9 +1,60 @@
-const { clientCon } = require("../connection.js");
+const { clientConnect } = require("../connection.js");
 const { mongodbInf } = require("../config.js");
 const mongodb = require("mongodb");
 
-// Crear un nuevo MongoClient
-const client = clientCon;
+async function subirAlumnos(req, res) {
+    try {
+        const database = clientConnect.db(mongodbInf.database);
+        const collection = database.collection("alumnos");
+
+        // Crear el arreglo de Docs
+        const data = JSON.parse(req.body.alumnosJson)
+
+        let docs = []
+        for (let i = 0; i < data.length; i++) {
+            docs[i] = {}
+            docs[i].curp = data[i].curp
+            docs[i].clave_unica_identificacion = data[i].clave_unica_identificacion
+            docs[i].nombre = data[i].nombre
+            docs[i].apellido_paterno = data[i].apellido_paterno
+            docs[i].apellido_materno = data[i].apellido_materno
+            docs[i].fecha_de_nacimiento = data[i].fecha_de_nacimiento
+            docs[i].tutor_nombre = data[i].tutor_nombre
+            docs[i].tutor_apellido_paterno = data[i].tutor_apellido_paterno
+            docs[i].tutor_apellido_materno = data[i].tutor_apellido_materno
+            docs[i].tutor_correo = data[i].tutor_correo
+            docs[i].tutor_num_telefono = data[i].tutor_num_telefono
+            docs[i].num_telefono = data[i].num_telefono
+            docs[i].pais = data[i].pais
+            docs[i].estado = data[i].estado
+            docs[i].ciudad = data[i].ciudad
+            docs[i].colonia = data[i].colonia
+            docs[i].codigo_postal = data[i].codigo_postal
+            docs[i].escolaridad = data[i].escolaridad
+            docs[i].ultima_escuela = data[i].ultima_escuela
+            docs[i].idUser = data[i].idUser
+        }
+    
+        const result = await collection.insertMany(docs);
+
+        // Estructuracion del mensaje de respuesta.
+        let msg = []
+        for (i = 0; i < result.insertedCount; i++){
+            msg[i] = {}
+            msg[i].msg = `Un documento fue insertado con el ID: ${result.insertedIds[i]}`
+        }
+
+        res.json({
+            "msg": msg
+        })
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({
+            "msg": `Ha ocurrido un error.`,
+            "error": `${err}`,
+        });
+    }
+}
 
 
 
@@ -29,8 +80,7 @@ module.exports = {
 
 async function subirClases(req, res) {
     try {
-        await client.connect();
-        const database = client.db(mongodbInf.database);
+        const database = clientConnect.db(mongodbInf.database);
         const collection = database.collection("clases");
 
         // Crear el arreglo de Docs
@@ -76,15 +126,12 @@ async function subirClases(req, res) {
             "msg": `Ha ocurrido un error.`,
             "error": `${err}`,
         });
-    } finally {
-        await client.close();
     }
 }
 
 async function subirProfesores(req, res) {
     try {
-        await client.connect();
-        const database = client.db(mongodbInf.database);
+        const database = clientConnect.db(mongodbInf.database);
         const collection = database.collection("profesores");
   
         // Crear el arreglo de Docs
@@ -122,12 +169,61 @@ async function subirProfesores(req, res) {
             "msg": `Ha ocurrido un error.`,
             "error": `${err}`,
         });
-    } finally {
-        await client.close();
     }
-  }
+}
+
+async function subirPeriodos(req, res) {
+    try {
+        const database = clientConnect.db(mongodbInf.database);
+        const collection = database.collection("periodos");
+
+        // Crear el arreglo de Docs
+        const data = JSON.parse(req.body.periodosJson)
+
+        let docs = []
+        for (let i = 0; i < data.length; i++) {
+            docs[i] = {}
+            docs[i].clave = data[i].clave
+            docs[i].status = data[i].status
+            docs[i].fecha_inicio = data[i].fecha_inicio
+            docs[i].fecha_fin = data[i].fecha_fin
+            docs[i].fecha_inicio_insc_talleres = data[i].fecha_inicio_insc_talleres
+            docs[i].fecha_fin_insc_talleres = data[i].fecha_fin_insc_talleres
+            docs[i].fecha_inicio_insc_idiomas = data[i].fecha_inicio_insc_idiomas
+            docs[i].fecha_fin_insc_idiomas = data[i].fecha_fin_insc_idiomas
+            docs[i].fecha_inicio_insc_asesorias = data[i].fecha_inicio_insc_asesorias
+            docs[i].fecha_fin_insc_asesorias = data[i].fecha_fin_insc_asesorias
+            docs[i].cursos_max_por_alumno = data[i].cursos_max_por_alumno
+            docs[i].idiomas_max_por_alumno = data[i].idiomas_max_por_alumno
+            docs[i].cursos_inscritos = data[i].cursos_inscritos
+            docs[i].alumnos_inscritos = data[i].alumnos_inscritos
+            docs[i].profesores_inscritos = data[i].profesores_inscritos
+        }
+    
+        const result = await collection.insertMany(docs);
+
+        // Estructuracion del mensaje de respuesta.
+        let msg = []
+        for (i = 0; i < result.insertedCount; i++){
+            msg[i] = {}
+            msg[i].msg = `Un documento fue insertado con el ID: ${result.insertedIds[i]}`
+        }
+
+        res.json({
+            "msg": msg
+        })
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({
+            "msg": `Ha ocurrido un error.`,
+            "error": `${err}`,
+        });
+    }
+}
 
 module.exports = {
+    subirAlumnos,
     subirClases,
     subirProfesores,
+    subirPeriodos
 };
