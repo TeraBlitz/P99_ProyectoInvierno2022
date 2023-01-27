@@ -94,7 +94,9 @@ async function subirClases(req, res) {
             docs[i].modalidad = req.body.clasesJson[i].modalidad
             docs[i].nombre_curso = req.body.clasesJson[i].nombre_curso
             docs[i].nivel = req.body.clasesJson[i].nivel
-            docs[i].matriculaMaestro = req.body.clasesJson[i].matriculaMaestro
+            docs[i].matriculaProfesor = req.body.clasesJson[i].matriculaProfesor
+            docs[i].nombreProfesor = req.body.clasesJson[i].nombreProfesor
+            docs[i].apellidosProfesor = req.body.clasesJson[i].apellidosProfesor
             docs[i].clavePeriodo = req.body.clasesJson[i].clavePeriodo
             docs[i].edad_minima = req.body.clasesJson[i].edad_minima
             docs[i].edad_maxima = req.body.clasesJson[i].edad_maxima
