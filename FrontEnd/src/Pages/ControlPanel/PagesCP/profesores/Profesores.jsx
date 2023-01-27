@@ -534,7 +534,7 @@ const bodyEliminar = (
 
       <Box
         sx={{
-          width: "1100px",
+          width: "1000px",
           padding: "15px",
           height: "150px",
           position: "absolute",
