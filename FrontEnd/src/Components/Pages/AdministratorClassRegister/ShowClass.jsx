@@ -106,97 +106,161 @@ export default function ShowClass() {
         })
     }
 
+  };
 
-    //Funcion click para abrir el modal
-    const abrirCerrarModalInsertar = () => {
-        setModalInsertar(!modalInsertar);
-    };
-    const resetClases = async () => {
-        await fetch("http://localhost:3000/v1/clases/", {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            }
-        }).then(response => response.json()).then(result => {
-            setData([]);
-            for (let i = 0; i < result.length; i++) {
-                let fechas = ""
-                let edades = ""
-                let niveles = ""
-                result[i].lunes != "" ? fechas += "lunes, " : fechas += ""
-                result[i].martes != "" ? fechas += "martes, " : fechas += ""
-                result[i].miercoles != "" ? fechas += "miercoles, " : fechas += ""
-                result[i].jueves != "" ? fechas += "jueves, " : fechas += ""
-                result[i].viernes != "" ? fechas += "viernes, " : fechas += ""
-                result[i].sabado != "" ? fechas += "sabado, " : fechas += ""
-                result[i].edad_maxima == "" ? edades = result[i].edad_minima + " en Adelante" : edades = result[i].edad_minima + "-" + result[i].edad_maxima
-                result[i].nivel == "1" ? niveles = "desde cero" : ""
-                result[i].nivel == "2" ? niveles = "con bases" : ""
-                result[i].nivel == "3" ? niveles = "intermedio" : ""
-                result[i].nivel == "4" ? niveles = "avanzado" : ""
+  //--------------------------------------------Agregar----------------
+  //Estados de agregar
+  const [data, setData] = useState([]);
+  const [guardaData, setGuardaData] = useState([]);
+  const [modalInsertar, setModalInsertar] = useState(false);
+  const [profesorList, setProfesorList] = useState([
+    {
+      nombreProfesor: "",
+      matriculaProfesor: "",
+      apellidoProfesor: "",
+      nombreCompleto: "",
+      correo: "",
+    },
+  ]);
+  const [currentProfesor, setCurrentProfesor] = useState({
+    nombreProfesor: "",
+    matriculaProfesor: "",
+    apellidoProfesor: "",
+    nombreCompleto: "",
+    correo: "",
+  });
 
-                setData(data => [...data, {
-                    _id: result[i]._id,
-                    clave: result[i].clave,
-                    nombre_curso: result[i].nombre_curso,
-                    nivel: result[i].nivel,
-                    matriculaProfesor: result[i].matriculaProfesor,
-                    edades: edades,
-                    edad_minima: result[i].edad_minima,
-                    edad_maxima: result[i].edad_maxima,
-                    cupo_maximo: result[i].cupo_maximo,
-                    modalidad: result[i].modalidad,
-                    fechas: fechas,
-                    lunes: result[i].lunes,
-                    martes: result[i].martes,
-                    miercoles: result[i].miercoles,
-                    jueves: result[i].jueves,
-                    viernes: result[i].viernes,
-                    sabado: result[i].sabado,
-                    clavePeriodo: result[i].clavePeriodo,
-                    area: result[i].area,
-                    cupo_actual: result[i].cupo_actual,
-                    niveles: niveles,
-                    nombreProfesor: result[i].nombreProfesor,
-                    apellidosProfesor: result[i].apellidosProfesor,
-                    nombreCompleto: result[i].nombreProfesor + " " + result[i].apellidosProfesor,
+  const classAtributes = [
+    { key: "area", value: "Area" },
+    { key: "clave", value: "Clave" },
+    { key: "nombre_curso", value: "Curso" },
+    { key: "edad_minima", value: "Edad Minima" },
+    { key: "edad_maxima", value: "Edad Maxima" },
+    { key: "cupo_maximo", value: "Cupo Maximo" },
+    { key: "cupo_actual", value: "Cupo Actual" },
+  ];
+  const dayAtributes = [
+    { key: "lunes", value: "Lunes" },
+    { key: "martes", value: "Martes" },
+    { key: "miercoles", value: "Miercoles" },
+    { key: "jueves", value: "Jueves" },
+    { key: "viernes", value: "Viernes" },
+    { key: "sabado", value: "Sabado" },
+  ];
+  let niveloptions = ["desde cero", "con bases", "intermedio", "avanzado"];
+  const classTemplate = {
+    clave: "",
+    nombre_curso: "",
+    nivel: "",
+    matriculaProfesor: "",
+    nombreProfesor: "",
+    nombreCompleto: "",
+    apellidoProfesor: "",
+    edad_minima: "",
+    edad_maxima: "",
+    cupo_maximo: "",
+    modalidad: "",
+    lunes: "",
+    martes: "",
+    miercoles: "",
+    jueves: "",
+    viernes: "",
+    sabado: "",
+    clavePeriodo: "",
+    area: "",
+    cupo_actual: "",
+    niveles: "",
+  };
+  const [nuevaClase, setNuevaClase] = useState(classTemplate);
+  let edades = [];
 
+  const getOptions = async () => {
+    await fetch("https://p99test.fly.dev/v1/profesores", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    })
+      .then((e) => {
+        return e.json();
+      })
+      .then((e) => {
+        // setProfesorList([])
+        let newProfList = [];
+        e.forEach((profesor) => {
+          profesor.nombreCompleto = profesor.nombre + " " + profesor.apellidos;
+          newProfList.push(profesor);
+        });
+        setProfesorList(newProfList);
+      });
+  };
 
-                }])
-            }
-        })
-        getOptions()
-    }
-    useEffect(() => { resetClases() }, [])
+  //Funcion click para abrir el modal
+  const abrirCerrarModalInsertar = () => {
+    setModalInsertar(!modalInsertar);
+  };
+  const resetClases = async () => {
+    await fetch("https://p99test.fly.dev/v1/clases", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result)
+        setData([]);
+        for (let i = 0; i < result.length; i++) {
+          let fechas = "";
+          let edades = "";
+          let niveles = "";
+          result[i].lunes != "" ? (fechas += "lunes, ") : (fechas += "");
+          result[i].martes != "" ? (fechas += "martes, ") : (fechas += "");
+          result[i].miercoles != ""
+            ? (fechas += "miercoles, ")
+            : (fechas += "");
+          result[i].jueves != "" ? (fechas += "jueves, ") : (fechas += "");
+          result[i].viernes != "" ? (fechas += "viernes, ") : (fechas += "");
+          result[i].sabado != "" ? (fechas += "sabado, ") : (fechas += "");
+          result[i].edad_maxima == ""
+            ? (edades = result[i].edad_minima + " en Adelante")
+            : (edades = result[i].edad_minima + "-" + result[i].edad_maxima);
+          result[i].nivel == "1" ? (niveles = "desde cero") : "";
+          result[i].nivel == "2" ? (niveles = "con bases") : "";
+          result[i].nivel == "3" ? (niveles = "intermedio") : "";
+          result[i].nivel == "4" ? (niveles = "avanzado") : "";
 
-    const handleClose = () => {
-        setOpenDeleteDialog(false);
-    };
+          setData((data) => [
+            ...data,
+            {
+              _id: result[i]._id,
+              clave: result[i].clave,
+              nombre_curso: result[i].nombre_curso,
+              nivel: result[i].nivel,
+              matriculaProfesor: result[i].matriculaProfesor,
+              edades: edades,
+              edad_minima: result[i].edad_minima,
+              edad_maxima: result[i].edad_maxima,
+              cupo_maximo: result[i].cupo_maximo,
+              modalidad: result[i].modalidad,
+              fechas: fechas,
+              lunes: result[i].lunes,
+              martes: result[i].martes,
+              miercoles: result[i].miercoles,
+              jueves: result[i].jueves,
+              viernes: result[i].viernes,
+              sabado: result[i].sabado,
+              clavePeriodo: result[i].clavePeriodo,
+              area: result[i].area,
+              cupo_actual: result[i].cupo_actual,
+              niveles: niveles,
+              nombreProfesor: result[i].nombreProfesor,
+              apellidosProfesor: result[i].apellidosProfesor,
+              nombreCompleto:
+                result[i].nombreProfesor + " " + result[i].apellidosProfesor,
+            },
+          ]);
 
-    const handleChangeProfesor = (p) => {
-        profesorList.forEach(e => {
-            if (e.nombreCompleto == p.target.value) {
-                setCurrentProfesor(e)
-            }
-        })
-    }
-
-    //Evento que dado un nuevos datos los agrega
-    const handleClick = async (e) => {
-        e.preventDefault();
-        nuevaClase.nombreProfesor = currentProfesor.nombre
-        nuevaClase.apellidosProfesor = currentProfesor.apellidos
-        nuevaClase.matriculaProfesor = currentProfesor.matricula
-        delete nuevaClase.nombreCompleto
-
-        if (nuevaClase.niveles == "desde cero") {
-            nuevaClase.nivel = "1";
-        }
-        else if (nuevaClase.niveles == "con bases") {
-            nuevaClase.nivel = "2"
-        }
-        else if (nuevaClase.niveles == "intermedio") {
-            nuevaClase.nivel = "3"
         }
         else if (nuevaClase.niveles == "avanzado") {
             nuevaClase.nivel = "4"
@@ -458,21 +522,467 @@ export default function ShowClass() {
 
     }
 
-    //------------------------------------Eliminar-------------------------------------
-    // Se agrego un componente de dialogo para confirmar la eliminacion de una clase
+    delete nuevaClase.niveles;
+    fetch("https://p99test.fly.dev/v1/clases/update", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams(nuevaClase),
+    }).then((e) => {
+      abrirCerrarModalEditar();
+      resetClases();
+    });
+  };
+
+  const addClass = () => {
+    setCurrentProfesor({
+      nombre: "",
+      matricula: "",
+      apellido: "",
+      nombreCompleto: "",
+      correo: "",
+    });
+    abrirCerrarModalInsertar();
+  };
+
+  //------------------------------------Eliminar-------------------------------------
+  // Se agrego un componente de dialogo para confirmar la eliminacion de una clase
+
+  async function deleteClass(id) {
+    await fetch("https://p99test.fly.dev/v1/clases/delete", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        _id: id,
+      }),
+    }).then(() => {
+      resetClases();
+    });
+    handleClose();
+  }
+
+  //-------------------------------Datos de ventanas modales---------------
+  const bodyInsertar = (
+    <div
+      style={{
+        position: "absolute",
+        width: 520,
+        height: "95vh",
+        backgroundColor: "#fefefd",
+        top: "48%",
+        left: "50%",
+        transform: "translate(-48%, -50%)",
+        border: "4px solid  rgb(165, 165, 180)",
+        margin: "auto",
+        borderRadius: "10px",
+        padding: "20px",
+        display: "flex",
+        justifyContent: "center",
+        flexWrap: "wrap",
+        overflowY: 'scroll'
+      }}
+    >
+      <h3
+        style={{
+          paddingBottom: "15px",
+          marginTop: "5px",
+          fontFamily: "arial",
+          width: "100%",
+        }}
+        align="center"
+      >
+        Crear una nueva clase
+      </h3>
+
+      {classAtributes.map((atribute) => (
+        <TextField
+          style={{
+            paddingBottom: "15px",
+            fontFamily: "arial",
+            marginRight: 10,
+          }}
+          label={atribute.value}
+          onChange={(e) => {
+            handleChange2(e);
+          }}
+          name={atribute.key}
+          key={atribute.key}
+          value={nuevaClase[atribute.key]}
+          autoFocus
+        />
+      ))}
+
+      <TextField
+        style={{
+          paddingBottom: "15px",
+          fontFamily: "arial",
+          marginRight: 10,
+          width: "40%",
+        }}
+        label="Modalidad"
+        value={nuevaClase["modalidad"]}
+        name="modalidad"
+        onChange={(e) => {
+          handleChange2(e);
+        }}
+        select
+      >
+        {["presencial", "online"].map((e) => (
+          <MenuItem value={e} key={e}>
+            {e}
+          </MenuItem>
+        ))}
+      </TextField>
+      <TextField
+        style={{
+          paddingBottom: "15px",
+          fontFamily: "arial",
+          marginRight: 10,
+          width: "40%",
+        }}
+        label="Nivel"
+        value={nuevaClase["niveles"]}
+        name="niveles"
+        onChange={(e) => {
+          handleChange2(e);
+        }}
+        select
+      >
+        {niveloptions.map((e) => (
+          <MenuItem value={e} key={e}>
+            {e}
+          </MenuItem>
+        ))}
+      </TextField>
+
+      <div
+        style={{
+          width: "100%",
+          borderTop: "1px solid gray",
+          paddingTop: "5px",
+          display: "flex",
+          justifyContent: "center",
+          flexWrap: "wrap",
+        }}
+      >
+        <Typography
+          sx={{ textAlign: "center", marginTop: "10px", width: "100%" }}
+        >
+          {" "}
+          Horarios
+        </Typography>
+        {dayAtributes.map((atribute) => (
+          <TextField
+            style={{
+              paddingBottom: "15px",
+              fontFamily: "arial",
+              marginRight: 10,
+            }}
+            label={atribute.value}
+            onChange={(e) => {
+              handleChange2(e);
+            }}
+            name={atribute.key}
+            key={atribute.key}
+            value={nuevaClase[atribute.key]}
+            autoFocus
+          />
+        ))}
+      </div>
+
+      <div
+        style={{
+          width: "100%",
+          borderTop: "1px solid gray",
+          paddingTop: "5px",
+        }}
+      >
+        <Typography sx={{ textAlign: "center", marginTop: "10px" }}>
+          {" "}
+          datos del profesor
+        </Typography>
+        <br />
+        <TextField
+          style={{
+            paddingBottom: "15px",
+            fontFamily: "arial",
+            marginRight: 10,
+            width: "100%",
+          }}
+          label="Profesor"
+          value={currentProfesor["nombreCompleto"]}
+          name="nombreCompleto"
+          onChange={(e) => {
+            handleChangeProfesor(e);
+          }}
+          select
+        >
+          {profesorList.map((e) => (
+            <MenuItem value={e.nombre + " " + e.apellidos} key={e._id}>
+              {e.nombre + " " + e.apellidos}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          style={{
+            paddingBottom: "15px",
+            fontFamily: "arial",
+            marginRight: 10,
+            width: "40%",
+          }}
+          variant="filled"
+          label="matricula"
+          InputProps={{
+            readOnly: true,
+          }}
+          value={currentProfesor["matricula"]}
+          defaultValue={currentProfesor["matricula"]}
+        ></TextField>
+        <TextField
+          style={{
+            paddingBottom: "15px",
+            fontFamily: "arial",
+            marginRight: 10,
+            width: "40%",
+          }}
+          InputProps={{
+            readOnly: true,
+          }}
+          value={currentProfesor["correo"]}
+          defaultValue={currentProfesor["correo"]}
+          variant="filled"
+          label="correo"
+        ></TextField>
+      </div>
+      <div align="center" style={{ width: "100%" }}>
+        <Button color="primary" onClick={handleClick}>
+          Insertar
+        </Button>
+        <Button onClick={() => abrirCerrarModalInsertar()} color="error">
+          Cancelar
+        </Button>
+      </div>
+    </div>
+  );
+  // -----------------------------Modal para editar---------------------------
+  const bodyEditar = (
+    <div
+      style={{
+        position: "absolute",
+        width: 520,
+        height: "95vh",
+        backgroundColor: "#fefefd",
+        top: "48%",
+        left: "50%",
+        transform: "translate(-48%, -50%)",
+        border: "4px solid  rgb(165, 165, 180)",
+        margin: "auto",
+        borderRadius: "10px",
+        padding: "20px",
+        display: "flex",
+        justifyContent: "center",
+        flexWrap: "wrap",
+        overflowY: 'scroll'
+      }}
+    >
+      <h3
+        style={{
+          paddingBottom: "15px",
+          marginTop: "5px",
+          fontFamily: "arial",
+          width: "100%",
+        }}
+        align="center"
+      >
+        Actualizar una clase
+      </h3>
+      {classAtributes.map((atribute) => (
+        <TextField
+          style={{
+            paddingBottom: "15px",
+            fontFamily: "arial",
+            marginRight: 10,
+            width: "40%",
+          }}
+          label={atribute.value}
+          onChange={(e) => {
+            handleChange(e);
+          }}
+          name={atribute.key}
+          key={atribute.key}
+          value={clase[atribute.key]}
+          autoFocus
+        />
+      ))}
+      <TextField
+        style={{
+          paddingBottom: "15px",
+          fontFamily: "arial",
+          marginRight: 10,
+          width: "40%",
+        }}
+        label="Modalidad"
+        value={clase["modalidad"]}
+        name="modalidad"
+        onChange={(e) => {
+          handleChange(e);
+        }}
+        select
+      >
+        {["presencial", "online"].map((e) => (
+          <MenuItem value={e} key={e}>
+            {e}
+          </MenuItem>
+        ))}
+      </TextField>
+      <TextField
+        style={{
+          paddingBottom: "15px",
+          fontFamily: "arial",
+          marginRight: 10,
+          width: "40%",
+        }}
+        label="Nivel"
+        value={clase["niveles"]}
+        name="niveles"
+        onChange={(e) => {
+          handleChange(e);
+        }}
+        select
+      >
+        {niveloptions.map((e) => (
+          <MenuItem value={e} key={e}>
+            {e}
+          </MenuItem>
+        ))}
+      </TextField>
+
+      <div
+        style={{
+          width: "100%",
+          borderTop: "1px solid gray",
+          paddingTop: "5px",
+          display: "flex",
+          justifyContent: "center",
+          flexWrap: "wrap",
+        }}
+      >
+        <Typography
+          sx={{ textAlign: "center", marginTop: "10px", width: "100%" }}
+        >
+          {" "}
+          Horarios
+        </Typography>
+        {dayAtributes.map((atribute) => (
+          <TextField
+            style={{
+              paddingBottom: "15px",
+              fontFamily: "arial",
+              marginRight: 10,
+            }}
+            label={atribute.value}
+            onChange={(e) => {
+              handleChange(e);
+            }}
+            name={atribute.key}
+            key={atribute.key}
+            value={clase[atribute.key]}
+            autoFocus
+          />
+        ))}
+      </div>
+      <div
+        style={{
+          width: "100%",
+          borderTop: "1px solid gray",
+          paddingTop: "5px",
+        }}
+      >
+        <Typography sx={{ textAlign: "center", marginTop: "10px" }}>
+          {" "}
+          datos del profesor
+        </Typography>
+        <br />
+        <TextField
+          style={{
+            paddingBottom: "15px",
+            fontFamily: "arial",
+            marginRight: 10,
+            width: "100%",
+          }}
+          label="Profesor"
+          value={currentProfesor["nombreCompleto"]}
+          name="nombreCompleto"
+          onChange={(e) => {
+            handleChangeProfesor(e);
+          }}
+          select
+        >
+          {profesorList.map((e) => (
+            <MenuItem value={e.nombre + " " + e.apellidos} key={e._id}>
+              {e.nombre + " " + e.apellidos}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          style={{
+            paddingBottom: "15px",
+            fontFamily: "arial",
+            marginRight: 10,
+            width: "40%",
+          }}
+          InputProps={{
+            readOnly: true,
+          }}
+          value={currentProfesor["matricula"]}
+          defaultValue={currentProfesor["matricula"]}
+          variant="filled"
+          label="matricula"
+        ></TextField>
+        <TextField
+          style={{
+            paddingBottom: "15px",
+            fontFamily: "arial",
+            marginRight: 10,
+            width: "40%",
+          }}
+          InputProps={{
+            readOnly: true,
+          }}
+          value={currentProfesor["correo"]}
+          defaultValue={currentProfesor["correo"]}
+          variant="filled"
+          label="correo"
+        ></TextField>
+      </div>
+
+      <div align="center" style={{ width: "100%" }}>
+        <Button color="primary" onClick={handleClick2}>
+          Editar
+        </Button>
+        <Button onClick={() => abrirCerrarModalEditar()} color="error">
+          Cancelar
+        </Button>
+      </div>
+    </div>
+  );
+
+    //-------------------------------Lista de Espera---------------------------
+
+    const [openWaitList, setOpenWaitList] = useState(false);
+    const [currentClase, setCurrentClase] = useState(null);
+    const [currentWaitList, setCurrentWaitList] = useState(null);
 
 
-    async function deleteClass(id) {
-        await fetch("http://localhost:3000/v1/clases/delete", {
-            method: 'DELETE',
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: new URLSearchParams(
-                {
-                    _id: id,
-                }
-            )
+    const getClassWaitList = (clase) => {
+        let waitList = [];
+        let students = [];
+        let result = [];
+        getStudents().then((data) => {
+            students = data;
 
         }).then(() => {
             resetClases()
@@ -480,26 +990,125 @@ export default function ShowClass() {
         handleClose();
     }
 
+  //---------------------------------------Show--------------
+  const [pageSize, SetPageSize] = useState(5);
 
-    //-------------------------------Datos de ventanas modales---------------
-    const bodyInsertar = (
-        <div
-            style={{
-                position: "absolute",
-                width: 520,
-                height: '95vh',
-                backgroundColor: "#fefefd",
-                top: "48%",
-                left: "50%",
-                transform: "translate(-48%, -50%)",
-                border: "4px solid  rgb(165, 165, 180)",
-                margin: "auto",
-                borderRadius: "10px",
-                padding: "20px",
-                display: 'flex',
-                justifyContent: 'center',
-                flexWrap: 'wrap',
+  const columns = useMemo(
+    () => [
+      { field: "clave", headerName: "Clave", width: 70 },
+      { field: "nombre_curso", headerName: "Curso", width: 120 },
+      { field: "niveles", headerName: "Nivel", width: 100 },
+      {
+        field: "nombreCompleto",
+        headerName: "Profesor",
+        width: 140,
+        sortable: false,
+      },
+      { field: "cupo_maximo", headerName: "Capacidad", width: 160 },
+      { field: "edades", headerName: "Edades", width: 160 },
+      { field: "fechas", headerName: "Fechas", width: 160 },
+      { field: "modalidad", headerName: "modalidad", width: 111 },
+      {
+        field: "actions",
+        headerName: "Acciones",
+        type: "actions",
+        width: 175,
+        renderCell: (params) => <Actions {...{ params, seleccionarConsola }} />,
+      },
+      {
+          field: "wait_list",
+          headerName: "Lista Espera",
+          type: "actions",
+          width: 150,
+          renderCell: (params) => (
+              <Button size="small" onClick={() => getClassWaitList(params.row)}>Lista Espera</Button>
+          ),
+      },
+    ],
+    [data, profesorList]
+  );
 
+  //---------------------------------------Filter---------------------------
+  const [items, setItems] = useState([]);
+  return (
+    <div>
+      <Box
+        sx={{
+          width: 250,
+          position: "absolute",
+          textAlign: "left",
+          marginLeft: "910px",
+          marginTop: "30px",
+          fontFamily:'arial',
+          borderRadius: "8px",
+
+        }}
+      >
+        <Select
+          options={dataPeriodo.map((sup) => ({
+            label: sup.clave,
+            value: sup._id,
+          }))}
+          onChange={handleSelectChange}
+        />
+      </Box>
+      <Card
+        sx={{
+          maxWidth: 255,
+          position: "absolute",
+          textAlign: "left",
+          marginLeft: "5px",
+          marginTop: "120px",
+          border: "2px solid  rgb(165, 165, 180)",
+          borderRadius: "8px",
+        }}
+      >
+        <CardContent>
+          <Typography
+            gutterBottom
+            variant="h5"
+            component="div"
+            sx={{ textAlign: "center", fontFamily: "arial" }}
+          >
+            Filtros
+          </Typography>
+          <TextField
+            style={{ paddingBottom: "15px", fontFamily: "arial" }}
+            label="Curso"
+            onChange={(e) => {
+              setItems([
+                {
+                  columnField: "nombre_curso",
+                  operatorValue: "contains",
+                  value: e.target.value,
+                },
+              ]);
+            }}
+          ></TextField>
+          <TextField
+            style={{ paddingBottom: "15px", fontFamily: "arial" }}
+            label="Nivel"
+            onChange={(e) => {
+              setItems([
+                {
+                  columnField: "nivel",
+                  operatorValue: "contains",
+                  value: e.target.value,
+                },
+              ]);
+            }}
+          ></TextField>
+          <TextField
+            style={{ paddingBottom: "15px", fontFamily: "arial" }}
+            label="Profesor"
+            onChange={(e) => {
+              setItems([
+                {
+                  columnField: "matriculaProfesor",
+                  operatorValue: "contains",
+                  value: e.target.value,
+                },
+              ]);
             }}
         >
             <h3
@@ -656,257 +1265,62 @@ export default function ShowClass() {
                 onChange={(e) => { handleChange(e) }}
                 select
             >
-                {["presencial","online"].map(e => (
-                    <MenuItem value={e} key={e} >{e}</MenuItem>
 
-                ))}
-            </TextField>
-            <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
-                label="Nivel"
-                value={clase["niveles"]}
-                name="niveles"
-                onChange={(e) => { handleChange(e) }}
-                select
-            >
-                {niveloptions.map(e => (
-                    <MenuItem value={e} key={e} >{e}</MenuItem>
+              <InsertDriveFile /> Importar CSV
+            </Button>
+          </div>
+        </Typography>
 
-                ))}
-            </TextField>
+        <Box sx={{ height: "75vh", width: "64vw" }}>
+          <DataGrid
+            columns={columns}
+            rows={data}
+            getRowId={(row) => row._id}
+            rowsPerPageOptions={[5, 10, 20]}
+            pageSize={pageSize}
+            onPageSizeChange={(newPageSize) => SetPageSize(newPageSize)}
+            getRowSpacing={(params) => ({
+              top: params.isFirstVisible ? 0 : 5,
+              bottom: params.isLastVisible ? 0 : 5,
+            })}
+            sx={{
+              [`& .${gridClasses.row}`]: {
+                bgcolor: (theme) =>
+                  theme.palette.mode === "light" ? grey[200] : grey[900],
+                fontFamily: "arial",
+              },
+            }}
+            disableSelectionOnClick={true}
+            filterModel={{
+              items: items,
+            }}
+          />
+        </Box>
 
-            <div style={{ width: '100%', borderTop: '1px solid gray', paddingTop: '5px', display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
-                <Typography sx={{ textAlign: 'center', marginTop: '10px', width: '100%' }}> Horarios</Typography>
-                {dayAtributes.map(atribute => (
-                    <TextField
-                        style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10 }}
-                        label={atribute.value}
-                        onChange={e => { handleChange(e) }}
-                        name={atribute.key}
-                        key={atribute.key}
-                        value={clase[atribute.key]}
-                        autoFocus
-                    />
-                ))}
-            </div>
-            <div style={{ width: '100%', borderTop: '1px solid gray', paddingTop: '5px' }}>
-                <Typography sx={{ textAlign: 'center', marginTop: '10px' }}> datos del profesor</Typography>
-                <br />
-                <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '100%' }}
-                    label="Profesor"
-                    value={currentProfesor["nombreCompleto"]}
-                    name="nombreCompleto"
-                    onChange={(e) => { handleChangeProfesor(e) }}
-                    select
-                >
-                    {profesorList.map(e => (
-                        <MenuItem value={e.nombre + " " + e.apellidos} key={e._id} >{e.nombre + " " + e.apellidos}</MenuItem>
-                    ))}
-                </TextField>
-                <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
-                    InputProps={{
-                        readOnly: true,
-                    }}
-                    value={currentProfesor["matricula"]}
-                    defaultValue={currentProfesor["matricula"]}
-                    variant="filled"
-                    label="matricula"
-                >
-                </TextField>
-                <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
-                    InputProps={{
-                        readOnly: true,
-                    }}
-                    value={currentProfesor["correo"]}
-                    defaultValue={currentProfesor["correo"]}
-                    variant="filled"
-                    label="correo"
-                >
-                </TextField>
-            </div>
+        {/* Creacion de modales */}
+        <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
+          {bodyInsertar}
+        </Modal>
+        <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
+          {bodyInsertar}
+        </Modal>
 
-
-            <div align="center" style={{ width: '100%' }}>
-                <Button color="primary" onClick={handleClick2}>
-                    Editar
-                </Button>
-                <Button onClick={() => abrirCerrarModalEditar()} color="error">
-                    Cancelar
-                </Button>
-            </div>
-        </div>
-    );
-
-    //---------------------------------------Show--------------
-    const [pageSize, SetPageSize] = useState(5);
-
-    const columns = useMemo(
-        () => [
-            { field: "clave", headerName: "Clave", width: 134 },
-            { field: "nombre_curso", headerName: "Curso", width: 170 },
-            { field: "niveles", headerName: "Nivel", width: 100 },
-            { field: "nombreCompleto", headerName: "Profesor", width: 140, sortable: false },
-            { field: "cupo_maximo", headerName: "Capacidad", width: 160 },
-            { field: 'edades', headerName: 'Edades', width: 160 },
-            { field: 'fechas', headerName: 'Fechas', width: 160 },
-            { field: 'modalidad', headerName: 'modalidad', width: 111 },
-            {
-                field: "actions",
-                headerName: "Acciones",
-                type: "actions",
-                width: 175,
-                renderCell: (params) => (
-                    <Actions {...{ params, seleccionarConsola }} />
-                ),
-            },
-
-
-        ],
-        [data, profesorList]
-    );
-
-    //---------------------------------------Filter---------------------------
-    const [items, setItems] = useState([]);
-    return (
-        <div>
-            <Card
-                sx={{
-                    maxWidth: 255,
-                    position: "absolute",
-                    textAlign: "left",
-                    marginLeft: "5px",
-                    marginTop: "120px",
-                    border: "2px solid  rgb(165, 165, 180)",
-                    borderRadius: "8px",
-                }}
-            >
-                <CardContent>
-                    <Typography
-                        gutterBottom
-                        variant="h5"
-                        component="div"
-                        sx={{ textAlign: "center", fontFamily: "arial" }}
-                    >
-                        Filtros
-                    </Typography>
-                    <TextField
-                        style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                        label="Curso"
-                        onChange={(e) => {
-                            setItems([
-                                {
-                                    columnField: "nombre_curso",
-                                    operatorValue: "contains",
-                                    value: e.target.value,
-                                },
-                            ]);
-                        }}
-                    ></TextField>
-                    <TextField
-                        style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                        label="Nivel"
-                        onChange={(e) => {
-                            setItems([
-                                {
-                                    columnField: "nivel",
-                                    operatorValue: "contains",
-                                    value: e.target.value,
-                                },
-                            ]);
-                        }}
-                    ></TextField>
-                    <TextField
-                        style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                        label="Profesor"
-                        onChange={(e) => {
-                            setItems([
-                                {
-                                    columnField: "matriculaProfesor",
-                                    operatorValue: "contains",
-                                    value: e.target.value,
-                                },
-                            ]);
-                        }}
-                    ></TextField>
-                </CardContent>
-            </Card>
-
-
-            <Box
-
-                sx={{
-                    width: '740px',
-                    padding: "15px",
-                    height: '450px',
-                    position: "absolute",
-                    marginLeft: "265px",
-                }}
-            >
-                <Typography
-                    variant="h3"
-                    component="h3"
-                    sx={{ textAlign: "left", mt: 3, mb: 3, fontFamily: "arial" }}
-                >
-                    Clases
-                    <div style={{ display: 'flex', width: '50%', justifyContent: 'space-evenly' }}>
-
-                        <Button
-                            variant="contained"
-                            color="success"
-                            onClick={() => addClass()}
-                        >
-                            {<AddCircleOutlineIcon />} Crear
-                        </Button>
-                        <Button
-
-                            variant="contained"
-                            color="info"
-                            onClick={() => importFile()}
-                        >
-                            <InsertDriveFile /> Importar CSV
-
-                        </Button>
-
-                    </div>
-                </Typography>
-                <Box sx={{ height: '80vh', width: '70vw' }}>
-
-                    <DataGrid
-                        columns={columns}
-                        rows={data}
-                        getRowId={(row) => row._id}
-                        rowsPerPageOptions={[5, 10, 20]}
-                        pageSize={pageSize}
-                        onPageSizeChange={(newPageSize) => SetPageSize(newPageSize)}
-                        getRowSpacing={(params) => ({
-                            top: params.isFirstVisible ? 0 : 5,
-                            bottom: params.isLastVisible ? 0 : 5,
-                        })}
-                        sx={{
-                            [`& .${gridClasses.row}`]: {
-                                bgcolor: (theme) =>
-                                    theme.palette.mode === "light" ? grey[200] : grey[900],
-                                fontFamily: "arial",
-                            },
-                        }}
-                        disableSelectionOnClick={true}
-                        filterModel={{
-                            items: items,
-                        }}
-                    />
-                </Box>
-
-                {/* Creacion de modales */}
-                <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
-                    {bodyInsertar}
-                </Modal>
-                <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
-                    {bodyInsertar}
-                </Modal>
-
-                <Modal open={modalEditar} onClose={() => abrirCerrarModalEditar()}>
-                    {bodyEditar}
-                </Modal>
-            </Box>
-        </div>
-    );
+        <Modal open={modalEditar} onClose={() => abrirCerrarModalEditar()}>
+          {bodyEditar}
+        </Modal>
+        <Modal
+          open={openWaitList}
+          onClose={() => setOpenWaitList(!openWaitList)}
+          sx={{ height: '100vh', display: 'flex',
+          alignContent: 'center', justifyContent: 'center',
+          flexWrap: 'wrap', overflowY: 'scroll'}}
+          >
+              <>
+                  <WaitList clase={currentClase} waitList={currentWaitList}/>
+              </>
+          </Modal>
+      </Box>
+    </div>
+  );
 }
+

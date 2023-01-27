@@ -926,9 +926,9 @@ export default function Alumnos() {
           textAlign: "left",
           marginLeft: "910px",
           marginTop: "30px",
-          bgcolor: "grey.200",
+          fontFamily:'arial',
           borderRadius: "8px",
-          height: 90,
+
         }}
       >
 
