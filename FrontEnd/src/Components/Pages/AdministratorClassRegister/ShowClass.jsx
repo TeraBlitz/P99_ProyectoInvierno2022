@@ -17,7 +17,7 @@ import Actions from "./Actions";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import MenuItem from "@mui/material/MenuItem";
-import { periodosPrueba } from './../../../data/periodosprueba.js'
+
 import { InsertDriveFile } from "@mui/icons-material";
 import Select from "react-select";
 
@@ -34,11 +34,10 @@ export default function ShowClass() {
 
       };
 
-
-
     //--------------------------------------------Agregar----------------
     //Estados de agregar
     const [data, setData] = useState([]);
+    const [guardaData, setGuardaData] = useState([]);
     const [modalInsertar, setModalInsertar] = useState(false);
     const [profesorList, setProfesorList] = useState([{
         nombreProfesor: '',
