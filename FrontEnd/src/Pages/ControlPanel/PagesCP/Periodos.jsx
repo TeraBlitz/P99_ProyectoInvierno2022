@@ -22,8 +22,7 @@ export default function Periodos() {
 
 
 
-import { width } from "@mui/system";
-export default function Periodos() {
+
 
 
   //funciones para cambiar el display de fechas
@@ -133,7 +132,7 @@ export default function Periodos() {
     setDataAlumnoClase(res.data);
   };
 
-  
+
   // Variables para agregar tarjeta
   const [modalInsertar, setModalInsertar] = useState(false);
   const [clave, setClave] = useState("");
@@ -367,6 +366,7 @@ export default function Periodos() {
   };
 
 
+  console.log('data: ',data)
   return (
 
     <div className="container">

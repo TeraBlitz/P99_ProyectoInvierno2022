@@ -17,47 +17,69 @@ import Actions from "./Actions";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import MenuItem from "@mui/material/MenuItem";
-import { periodosPrueba } from './../../../data/periodosprueba.js'
+
 import { InsertDriveFile } from "@mui/icons-material";
-import axios from 'axios'
+import Select from "react-select";
+
 
 export default function ShowClass() {
+
+    // Selector de periodos
+
+    const [dataPeriodo, setDataPeriodo] = useState([]);
+
+    const getPeriodos = async () => {
+        const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
+        setDataPeriodo(res.data);
+
+      };
+
     //--------------------------------------------Agregar----------------
-    //Agregar numeros
-    const [number, setNumber] = useState(5);
-    function add() {
-        setNumber((prevNumber) => prevNumber + 1);
-    }
     //Estados de agregar
     const [data, setData] = useState([]);
+    const [guardaData, setGuardaData] = useState([]);
     const [modalInsertar, setModalInsertar] = useState(false);
+    const [profesorList, setProfesorList] = useState([{
+        nombreProfesor: '',
+        matriculaProfesor: '',
+        apellidoProfesor: '',
+        nombreCompleto: '',
+        correo: ''
+    }])
+    const [currentProfesor, setCurrentProfesor] = useState({
+        nombreProfesor: '',
+        matriculaProfesor: '',
+        apellidoProfesor: '',
+        nombreCompleto: '',
+        correo: ''
+    })
 
-    let profesores = []
-    const [profesorList, setProfesorList] = useState([])
     const classAtributes = [
+        { key: 'area', value: 'Area' },
         { key: 'clave', value: 'Clave' },
         { key: 'nombre_curso', value: 'Curso' },
-        { key: 'nivel', value: 'Nivel' },
-        { key: 'matriculaMaestro', value: 'Matricula Maestro' },
         { key: 'edad_minima', value: 'Edad Minima' },
         { key: 'edad_maxima', value: 'Edad Maxima' },
         { key: 'cupo_maximo', value: 'Cupo Maximo' },
         { key: 'cupo_actual', value: 'Cupo Actual' },
-        { key: 'modalidad', value: 'Modalidad' },
+    ]
+    const dayAtributes = [
         { key: 'lunes', value: 'Lunes' },
         { key: 'martes', value: 'Martes' },
         { key: 'miercoles', value: 'Miercoles' },
         { key: 'jueves', value: 'Jueves' },
         { key: 'viernes', value: 'Viernes' },
         { key: 'sabado', value: 'Sabado' },
-        { key: 'clavePeriodo', value: 'Clave Periodo' },
-        { key: 'area', value: 'Area' },
     ]
+    let niveloptions = ["desde cero", "con bases", "intermedio", "avanzado"]
     const classTemplate = {
         clave: '',
         nombre_curso: '',
         nivel: '',
-        matriculaMaestro: '',
+        matriculaProfesor: '',
+        nombreProfesor: '',
+        nombreCompleto: '',
+        apellidoProfesor: '',
         edad_minima: '',
         edad_maxima: '',
         cupo_maximo: '',
@@ -71,10 +93,32 @@ export default function ShowClass() {
         clavePeriodo: '',
         area: '',
         cupo_actual: '',
+        niveles: ''
 
     }
     const [nuevaClase, setNuevaClase] = useState(classTemplate)
     let edades = []
+
+    const getOptions = async () => {
+
+        await fetch("http://localhost:3000/v1/profesores/", {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            }
+        }).then(e => {
+            return e.json()
+        }).then(e => {
+            // setProfesorList([])
+            let newProfList = []
+            e.forEach(profesor => {
+                profesor.nombreCompleto = profesor.nombre + " " + profesor.apellidos
+                newProfList.push(profesor)
+            })
+            setProfesorList(newProfList)
+        })
+    }
+
 
     //Funcion click para abrir el modal
     const abrirCerrarModalInsertar = () => {
@@ -91,25 +135,25 @@ export default function ShowClass() {
             for (let i = 0; i < result.length; i++) {
                 let fechas = ""
                 let edades = ""
-                let niveles=""
+                let niveles = ""
                 result[i].lunes != "" ? fechas += "lunes, " : fechas += ""
                 result[i].martes != "" ? fechas += "martes, " : fechas += ""
                 result[i].miercoles != "" ? fechas += "miercoles, " : fechas += ""
                 result[i].jueves != "" ? fechas += "jueves, " : fechas += ""
                 result[i].viernes != "" ? fechas += "viernes, " : fechas += ""
                 result[i].sabado != "" ? fechas += "sabado, " : fechas += ""
-                result[i].edad_maxima ==""?edades =result[i].edad_minima + " en Adelante":edades = result[i].edad_minima + "-"+result[i].edad_maxima
-                result[i].nivel == "1"?niveles="desde cero":""
-                result[i].nivel == "2"?niveles="con bases":""
-                result[i].nivel == "3"?niveles="intermedio":""
-                result[i].nivel == "4"?niveles="avanzado":""
+                result[i].edad_maxima == "" ? edades = result[i].edad_minima + " en Adelante" : edades = result[i].edad_minima + "-" + result[i].edad_maxima
+                result[i].nivel == "1" ? niveles = "desde cero" : ""
+                result[i].nivel == "2" ? niveles = "con bases" : ""
+                result[i].nivel == "3" ? niveles = "intermedio" : ""
+                result[i].nivel == "4" ? niveles = "avanzado" : ""
 
                 setData(data => [...data, {
                     _id: result[i]._id,
                     clave: result[i].clave,
                     nombre_curso: result[i].nombre_curso,
                     nivel: result[i].nivel,
-                    matriculaMaestro: result[i].matriculaMaestro,
+                    matriculaProfesor: result[i].matriculaProfesor,
                     edades: edades,
                     edad_minima: result[i].edad_minima,
                     edad_maxima: result[i].edad_maxima,
@@ -125,48 +169,67 @@ export default function ShowClass() {
                     clavePeriodo: result[i].clavePeriodo,
                     area: result[i].area,
                     cupo_actual: result[i].cupo_actual,
-                    niveles:niveles
+                    niveles: niveles,
+                    nombreProfesor: result[i].nombreProfesor,
+                    apellidosProfesor: result[i].apellidosProfesor,
+                    nombreCompleto: result[i].nombreProfesor + " " + result[i].apellidosProfesor,
+
+
                 }])
-                if (!profesores.includes(result[i].matriculaMaestro)) {
-                    profesores.push(result[i].matriculaMaestro)
-                }
-                else {
-                    console.log("profeRepetido")
-                }
             }
-            setProfesorList(profesores)
-            setEdadesList(edades)
         })
+        getOptions()
     }
-
     useEffect(() => { resetClases() }, [])
-
 
     const handleClose = () => {
         setOpenDeleteDialog(false);
     };
 
+    const handleChangeProfesor = (p) => {
+        profesorList.forEach(e => {
+            if (e.nombreCompleto == p.target.value) {
+                setCurrentProfesor(e)
+            }
+        })
+    }
 
     //Evento que dado un nuevos datos los agrega
     const handleClick = async (e) => {
         e.preventDefault();
-        await fetch("http://localhost:3000/v1/clases/create", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
-                body: new URLSearchParams(nuevaClase),
+        nuevaClase.nombreProfesor = currentProfesor.nombre
+        nuevaClase.apellidosProfesor = currentProfesor.apellidos
+        nuevaClase.matriculaProfesor = currentProfesor.matricula
+        delete nuevaClase.nombreCompleto
 
-        }).then(()=>{
+        if (nuevaClase.niveles == "desde cero") {
+            nuevaClase.nivel = "1";
+        }
+        else if (nuevaClase.niveles == "con bases") {
+            nuevaClase.nivel = "2"
+        }
+        else if (nuevaClase.niveles == "intermedio") {
+            nuevaClase.nivel = "3"
+        }
+        else if (nuevaClase.niveles == "avanzado") {
+            nuevaClase.nivel = "4"
+        }
+        delete nuevaClase.niveles
+
+        await fetch("http://localhost:3000/v1/clases/create", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams(nuevaClase),
+
+        }).then(() => {
             abrirCerrarModalInsertar();
             resetClases();
         })
     };
 
 
-    //Actualiza las clases
-    function createClasses(datas) {
-    }
 
     //-------------------------------Editar----------------------------------
     // Estados para editar
@@ -176,19 +239,29 @@ export default function ShowClass() {
         clave: '',
         nombre_curso: '',
         nivel: '',
-        matriculaMaestro: '',
+        matriculaProfesor: '',
         edades: '',
         cupo_maximo: '',
         modalidad: '',
-        fechas: ''
+        fechas: '',
+        niveles: '',
+        nombreCompleto: '',
+        nombreProfesor: '',
+        apellidoProfesor: ''
     });
     //Function que abre o cierra el modal
     const abrirCerrarModalEditar = () => {
         setModalEditar(!modalEditar);
     };
 
-    const editClasses = (id, clase) => {
+    let editClasses = (clase) => {
         setClaseActual(clase);
+        profesorList.forEach(e => {
+            if (e.nombreCompleto == clase.nombreCompleto) {
+                setCurrentProfesor(e)
+            }
+        })
+
         abrirCerrarModalEditar();
     };
 
@@ -203,7 +276,6 @@ export default function ShowClass() {
 
     //Funcion que modifica los daors
     const handleChange = (e) => {
-        console.log(e.target);
         const { name, value } = e.target;
         setClase({ ...clase, [name]: value });
     };
@@ -244,7 +316,7 @@ export default function ShowClass() {
 
     }
 
-    const sendCSV = async(csv) => {
+    const sendCSV = async (csv) => {
         const csvArray = csv.split("\n")
         csvArray.shift()
         let clasesJson = [];
@@ -252,7 +324,7 @@ export default function ShowClass() {
         let iterator;
         // hash table profesores ( para no mandar profesores repetidos)
         let profesorHash = [];
-        
+
         const profesorFunc = (i) => {
             i = i.slice(2)
             return Number(i)
@@ -280,15 +352,17 @@ export default function ShowClass() {
             clasesJson[i].jueves = iteratorArray[12]
             clasesJson[i].viernes = iteratorArray[13]
             clasesJson[i].sabado = iteratorArray[14]
-            clasesJson[i].matriculaMaestro = iteratorArray[17]
+            clasesJson[i].matriculaProfesor = iteratorArray[17]
             clasesJson[i].cupo_actual = "0"
+            clasesJson[i].nombreProfesor = iteratorArray[15].trim()
+            clasesJson[i].apellidosProfesor = iteratorArray[16].trim()
             // JSON.stringify(clasesJson[i])
 
             // agregar profesores
             if (!profesorHash[profesorFunc(iteratorArray[17])]) {
                 profesoresJson[j] = {}
-                profesoresJson[j].nombre = iteratorArray[15]
-                profesoresJson[j].apellidos = iteratorArray[16]
+                profesoresJson[j].nombre = iteratorArray[15].trim()
+                profesoresJson[j].apellidos = iteratorArray[16].trim()
                 profesoresJson[j].matricula = iteratorArray[17]
                 profesoresJson[j].correo = iteratorArray[18]
                 profesoresJson[j].fecha_de_nacimiento = ""
@@ -316,12 +390,12 @@ export default function ShowClass() {
             }
         )
             .then(response => response.json())
-            .then(result => {
+            .then(() => {
                 resetClases()
             })
             .catch(error => console.log('Error(ShowClass): ', error));
 
-
+        //console.log(profesoresJson)
         await fetch("http://localhost:3000/v1/csv/subirProfesores",
             {
                 method: "POST",
@@ -335,9 +409,9 @@ export default function ShowClass() {
         )
     }
 
-    const seleccionarConsola = (consola, caso) => {
+    let seleccionarConsola = (consola, caso) => {
         if (caso === "Editar") {
-            editClasses(consola._id, consola)
+            editClasses(consola)
         } else if (caso === "Eliminar") {
             deleteClass(consola._id)
         } else {
@@ -352,6 +426,25 @@ export default function ShowClass() {
     const updateClass = (nuevaClase) => {
         delete nuevaClase.fechas
         delete nuevaClase.edades
+
+        nuevaClase.nombreProfesor = currentProfesor.nombre
+        nuevaClase.matriculaProfesor = currentProfesor.matricula
+        nuevaClase.apellidosProfesor = currentProfesor.apellidos
+
+        delete nuevaClase.nombreCompleto
+        if (nuevaClase.niveles == "desde cero") {
+            nuevaClase.nivel = "1";
+        }
+        else if (nuevaClase.niveles == "con bases") {
+            nuevaClase.nivel = "2"
+        }
+        else if (nuevaClase.niveles == "intermedio") {
+            nuevaClase.nivel = "3"
+        }
+        else if (nuevaClase.niveles == "avanzado") {
+            nuevaClase.nivel = "4"
+        }
+        delete nuevaClase.niveles
         fetch("http://localhost:3000/v1/clases/update", {
             method: 'PUT',
             headers: {
@@ -365,6 +458,18 @@ export default function ShowClass() {
         }
         )
     };
+
+    const addClass = () => {
+        setCurrentProfesor({
+            nombre: '',
+            matricula: '',
+            apellido: '',
+            nombreCompleto: '',
+            correo: ''
+        })
+        abrirCerrarModalInsertar()
+
+    }
 
     //------------------------------------Eliminar-------------------------------------
     // Se agrego un componente de dialogo para confirmar la eliminacion de una clase
@@ -395,7 +500,7 @@ export default function ShowClass() {
             style={{
                 position: "absolute",
                 width: 520,
-                height: '90vh',
+                height: '95vh',
                 backgroundColor: "#fefefd",
                 top: "48%",
                 left: "50%",
@@ -411,26 +516,102 @@ export default function ShowClass() {
             }}
         >
             <h3
-                style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial", width:'100%' }}
+                style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial", width: '100%' }}
                 align="center"
             >
                 Crear una nueva clase
             </h3>
 
-
             {classAtributes.map(atribute => (
                 <TextField
                     style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10 }}
                     label={atribute.value}
-                    onChange={e => {handleChange2(e)}}
+                    onChange={e => { handleChange2(e) }}
                     name={atribute.key}
                     key={atribute.key}
                     value={nuevaClase[atribute.key]}
                     autoFocus
                 />
             ))}
-            <div align="center" style={{width:'100%'}}>
 
+            <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
+                label="Modalidad"
+                value={nuevaClase["modalidad"]}
+                name="modalidad"
+                onChange={(e) => { handleChange2(e) }}
+                select
+            >
+                {["presencial","online"].map(e => (
+                    <MenuItem value={e} key={e} >{e}</MenuItem>
+
+                ))}
+            </TextField>
+            <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
+                label="Nivel"
+                value={nuevaClase["niveles"]}
+                name="niveles"
+                onChange={(e) => { handleChange2(e) }}
+                select
+            >
+                {niveloptions.map(e => (
+                    <MenuItem value={e} key={e} >{e}</MenuItem>
+
+                ))}
+            </TextField>
+
+            <div style={{ width: '100%', borderTop: '1px solid gray', paddingTop: '5px', display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <Typography sx={{ textAlign: 'center', marginTop: '10px', width: '100%' }}> Horarios</Typography>
+                {dayAtributes.map(atribute => (
+                    <TextField
+                        style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10 }}
+                        label={atribute.value}
+                        onChange={e => { handleChange2(e) }}
+                        name={atribute.key}
+                        key={atribute.key}
+                        value={nuevaClase[atribute.key]}
+                        autoFocus
+                    />
+                ))}
+            </div>
+
+
+
+            <div style={{ width: '100%', borderTop: '1px solid gray', paddingTop: '5px' }}>
+                <Typography sx={{ textAlign: 'center', marginTop: '10px' }}> datos del profesor</Typography>
+                <br />
+                <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '100%' }}
+                    label="Profesor"
+                    value={currentProfesor["nombreCompleto"]}
+                    name="nombreCompleto"
+                    onChange={(e) => { handleChangeProfesor(e) }}
+                    select
+                >
+                    {profesorList.map(e => (
+                        <MenuItem value={e.nombre + " " + e.apellidos} key={e._id} >{e.nombre + " " + e.apellidos}</MenuItem>
+                    ))}
+                </TextField>
+                <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
+                    variant="filled"
+                    label="matricula"
+                    InputProps={{
+                        readOnly: true,
+                    }}
+                    value={currentProfesor["matricula"]}
+                    defaultValue={currentProfesor["matricula"]}
+                >
+                </TextField>
+                <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
+                    InputProps={{
+                        readOnly: true,
+                    }}
+                    value={currentProfesor["correo"]}
+                    defaultValue={currentProfesor["correo"]}
+                    variant="filled"
+                    label="correo"
+                >
+                </TextField>
+            </div>
+            <div align="center" style={{ width: '100%' }}>
                 <Button color="primary" onClick={handleClick}>
                     Insertar
                 </Button>
@@ -449,7 +630,7 @@ export default function ShowClass() {
             style={{
                 position: "absolute",
                 width: 520,
-                height: '90vh',
+                height: '95vh',
                 backgroundColor: "#fefefd",
                 top: "48%",
                 left: "50%",
@@ -465,23 +646,99 @@ export default function ShowClass() {
         >
 
             <h3
-                style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" , width:'100%'}}
+                style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial", width: '100%' }}
                 align="center"
             >
                 Actualizar una clase
             </h3>
             {classAtributes.map(atribute => (
                 <TextField
-                    style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10 }}
+                    style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
                     label={atribute.value}
-                    onChange={e => {handleChange(e)}}
+                    onChange={e => { handleChange(e) }}
                     name={atribute.key}
                     key={atribute.key}
                     value={clase[atribute.key]}
                     autoFocus
                 />
             ))}
-            <div align="center" style={{width:'100%'}}>
+            <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
+                label="Modalidad"
+                value={clase["modalidad"]}
+                name="modalidad"
+                onChange={(e) => { handleChange(e) }}
+                select
+            >
+                {["presencial","online"].map(e => (
+                    <MenuItem value={e} key={e} >{e}</MenuItem>
+
+                ))}
+            </TextField>
+            <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
+                label="Nivel"
+                value={clase["niveles"]}
+                name="niveles"
+                onChange={(e) => { handleChange(e) }}
+                select
+            >
+                {niveloptions.map(e => (
+                    <MenuItem value={e} key={e} >{e}</MenuItem>
+
+                ))}
+            </TextField>
+
+            <div style={{ width: '100%', borderTop: '1px solid gray', paddingTop: '5px', display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <Typography sx={{ textAlign: 'center', marginTop: '10px', width: '100%' }}> Horarios</Typography>
+                {dayAtributes.map(atribute => (
+                    <TextField
+                        style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10 }}
+                        label={atribute.value}
+                        onChange={e => { handleChange(e) }}
+                        name={atribute.key}
+                        key={atribute.key}
+                        value={clase[atribute.key]}
+                        autoFocus
+                    />
+                ))}
+            </div>
+            <div style={{ width: '100%', borderTop: '1px solid gray', paddingTop: '5px' }}>
+                <Typography sx={{ textAlign: 'center', marginTop: '10px' }}> datos del profesor</Typography>
+                <br />
+                <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '100%' }}
+                    label="Profesor"
+                    value={currentProfesor["nombreCompleto"]}
+                    name="nombreCompleto"
+                    onChange={(e) => { handleChangeProfesor(e) }}
+                    select
+                >
+                    {profesorList.map(e => (
+                        <MenuItem value={e.nombre + " " + e.apellidos} key={e._id} >{e.nombre + " " + e.apellidos}</MenuItem>
+                    ))}
+                </TextField>
+                <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
+                    InputProps={{
+                        readOnly: true,
+                    }}
+                    value={currentProfesor["matricula"]}
+                    defaultValue={currentProfesor["matricula"]}
+                    variant="filled"
+                    label="matricula"
+                >
+                </TextField>
+                <TextField style={{ paddingBottom: "15px", fontFamily: "arial", marginRight: 10, width: '40%' }}
+                    InputProps={{
+                        readOnly: true,
+                    }}
+                    value={currentProfesor["correo"]}
+                    defaultValue={currentProfesor["correo"]}
+                    variant="filled"
+                    label="correo"
+                >
+                </TextField>
+            </div>
+
+
+            <div align="center" style={{ width: '100%' }}>
                 <Button color="primary" onClick={handleClick2}>
                     Editar
                 </Button>
@@ -500,7 +757,7 @@ export default function ShowClass() {
             { field: "clave", headerName: "Clave", width: 134 },
             { field: "nombre_curso", headerName: "Curso", width: 170 },
             { field: "niveles", headerName: "Nivel", width: 100 },
-            { field: "matriculaMaestro", headerName: "Profesor", width: 140, sortable: false },
+            { field: "nombreCompleto", headerName: "Profesor", width: 140, sortable: false },
             { field: "cupo_maximo", headerName: "Capacidad", width: 160 },
             { field: 'edades', headerName: 'Edades', width: 160 },
             { field: 'fechas', headerName: 'Fechas', width: 160 },
@@ -517,13 +774,35 @@ export default function ShowClass() {
 
 
         ],
-        [data]
+        [data, profesorList]
     );
 
     //---------------------------------------Filter---------------------------
     const [items, setItems] = useState([]);
     return (
         <div>
+            <Box
+                sx={{
+                width: 250,
+                position: "absolute",
+                textAlign: "left",
+                marginLeft: "1350px",
+                marginTop: "50px",
+                bgcolor: "grey.200",
+                borderRadius: "8px",
+                height: 90,
+                }}
+            >
+
+            <Select
+                options={dataPeriodo.map((sup) => ({
+                label: sup.clave,
+                value: sup._id,
+                }))}
+                //onChange={handleSelectChange}
+            />
+
+      </Box>
             <Card
                 sx={{
                     maxWidth: 255,
@@ -576,7 +855,7 @@ export default function ShowClass() {
                         onChange={(e) => {
                             setItems([
                                 {
-                                    columnField: "matriculaMaestro",
+                                    columnField: "matriculaProfesor",
                                     operatorValue: "contains",
                                     value: e.target.value,
                                 },
@@ -585,39 +864,6 @@ export default function ShowClass() {
                     ></TextField>
                 </CardContent>
             </Card>
-
-            <Card sx={{
-          width: 250,
-          position: "absolute",
-          textAlign: "left",
-        
-          marginTop: "470px",
-          bgcolor: "grey.200",
-          borderRadius: "8px",
-        }}>
-        <CardContent>
-          <TextField
-            style={{
-              paddingBottom: "15px",
-              width: "24ch",
-              fontFamily: "arial",
-            }}
-            label="Periodo"
-            onChange={(e) => setPeriodo2(e.target.value)}
-            value={periodo2}
-            select
-            id="filled-select-currency"
-          >
-            {dataPeriodo.map((e) => {
-                return (
-                  <MenuItem key={e._id} value={e.clave}>
-                    {e.clave}
-                  </MenuItem>
-                );
-            })}
-          </TextField>
-        </CardContent>
-      </Card>
 
 
             <Box
@@ -641,7 +887,7 @@ export default function ShowClass() {
                         <Button
                             variant="contained"
                             color="success"
-                            onClick={() => abrirCerrarModalInsertar()}
+                            onClick={() => addClass()}
                         >
                             {<AddCircleOutlineIcon />} Crear
                         </Button>
@@ -657,6 +903,7 @@ export default function ShowClass() {
 
                     </div>
                 </Typography>
+
                 <Box sx={{ height: '80vh', width: '70vw' }}>
 
                     <DataGrid
