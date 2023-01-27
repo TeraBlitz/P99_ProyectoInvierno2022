@@ -1,12 +1,23 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import './MisClases.css'
-import data from './DataClases'
 import TarjetaMisC from './TarjetaMisC'
-
+import {getClassStudent} from  './../../api/classStudent.js'
 import { Button } from "@mui/material";
+import { userContext } from "../../App";
 
 
 export default function MisClasesEstudiante(){
+    const data = [];
+    const userValues = useContext(userContext)
+
+    useEffect(()=>{
+        getClassStudent().then(clase=>{
+            data = clase.filter(c=> c.idAlumno===userValues.id)
+        })
+    
+
+
+    }, [])
 
     const cardData = data.map(item =>{
 
