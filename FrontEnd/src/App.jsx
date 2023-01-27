@@ -68,10 +68,9 @@ function App() {
         // Mandar y validad esta informacion
 
 
-        fetch(`http://127.0.0.1:3000/v1/auth/login`,
+        fetch(`https://p99test.fly.dev/v1/auth/login`,
             {
                 method: 'POST',
-                redirect: 'follow',
                 body: new URLSearchParams(
                     {
                         correo:user.correo,
