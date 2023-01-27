@@ -52,6 +52,7 @@ const EditStudentProfile = ({
         e.preventDefault();
         studentData.escolaridad = userEducation;
         studentData.estado = userState; 
+        studentData.curp === null ? delete studentData.curp : studentData.curp; 
         setNewStudentInfo(studentData);
         //console.log(studentData);
         if (studentData.num_telefono.length < 10 || studentData.tutor_num_telefono.length < 10) {
