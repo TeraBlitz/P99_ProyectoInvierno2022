@@ -3,7 +3,7 @@ const { mongodbInf } = require('./config.js')
 
 // Connection URI.
 // mongodb://localhost:27017
-const uri = `mongodb://${mongodbInf.host}:${mongodbInf.port}/${mongodbInf.database}`
+const uri = `mongodb+srv://p99admin:[jajaxsxsxs]@p99test.qowivyb.mongodb.net/?retryWrites=true&w=majority`
 // Crear un nuevo MongoClient
 const clientCon = new MongoClient(uri);
 

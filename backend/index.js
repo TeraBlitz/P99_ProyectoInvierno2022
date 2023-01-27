@@ -1,9 +1,10 @@
 const cors = require('cors')
 const express = require('express')
+const path = require("path")
 const { connection } = require('./v1/connection.js')
 const bodyParser = require('body-parser')
 const app = express()
-const port = 3000
+const port = 8080
 
 // Rutas Autentificaciones
 const auth = require('./v1/routes/auth')
@@ -19,7 +20,6 @@ const lista = require('./v1/routes/listas')
 const profesor = require('./v1/routes/profesores')
 
 const alumnoClase = require('./v1/routes/alumnoClases')
-
 
 
 // Testeo de la Conexion
@@ -51,6 +51,12 @@ app.use('/v1/alumnos', alumno)
 app.use('/v1/listas', lista)
 app.use('/v1/profesores', profesor)
 app.use('/v1/alumnoClases', alumnoClase)
+
+app.use(express.static(path.join(__dirname, "build")));
+
+app.get("/*", (req, res) => {
+    res.status(200).sendFile(path.join(__dirname, "build", "index.html"));
+});
 
 
 app.listen(port, ()=>{
