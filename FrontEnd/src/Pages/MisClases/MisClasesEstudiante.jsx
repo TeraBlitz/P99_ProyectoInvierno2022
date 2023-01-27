@@ -7,7 +7,7 @@ import { userContext } from "../../App";
 
 
 export default function MisClasesEstudiante(){
-    const data = [];
+    let data = [];
     const userValues = useContext(userContext)
 
     useEffect(()=>{
