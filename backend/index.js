@@ -49,6 +49,7 @@ app.use('/v1/listas', lista)
 app.use('/v1/profesores', profesor)
 app.use('/v1/alumnoClases', alumnoClase)
 
+
 app.listen(port, ()=>{
     console.log(`Aplicacion corriendo | Puerto:${port}`)
 })
