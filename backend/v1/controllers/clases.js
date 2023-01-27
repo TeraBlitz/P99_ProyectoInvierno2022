@@ -158,11 +158,11 @@ async function findClase(req, res) {
         value = req.body.nivel;
         id = req.body._id;
         query = { nivel: value };
-        } else if (req.body.idMaestro) {
-        key = "idMaestro";
-        value = req.body.idMaestro;
-        id = req.body.idMaestro;
-        query = { idMaestro: value };
+        } else if (req.body.matriculaProfesor) {
+        key = "matriculaProfesor";
+        value = req.body.matriculaProfesor;
+        id = req.body._id;
+        query = { matriculaProfesor: value };
         } else if (req.body.frecuencia_semanal) {
         key = "frecuencia_semanal";
         value = req.body.frecuencia_semanal;
