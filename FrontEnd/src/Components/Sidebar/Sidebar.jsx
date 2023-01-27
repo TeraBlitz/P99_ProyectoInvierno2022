@@ -25,12 +25,6 @@ function Sidebar(props) {
             rol: 'estudiante'
         },
         {
-            key: 3,
-            title: 'Registro clases de Administrador',
-            content: 'Registro',
-            rol: 'admin'
-        },
-        {
             key: 4,
             title: 'Mis Clases (Profesor)',
             content: 'MisClasesProfesor',

@@ -56,6 +56,28 @@ async function subirAlumnos(req, res) {
     }
 }
 
+
+
+async function subirClasesYMaestros(req, res) {
+  try {
+    await client.connect();
+    const database = client.db(mongodbInf.database);
+    const collection = database.collection("periodos");
+
+    const result = await collection.find().toArray();
+    // console.log(JSON.stringify(result))
+    res.send(JSON.stringify(result));
+  } catch (err) {
+    res.send(`ERROR: ${err}`);
+  } finally {
+    await client.close();
+  }
+}
+
+module.exports = {
+    subirClasesYMaestros,
+}
+
 async function subirClases(req, res) {
     try {
         const database = clientConnect.db(mongodbInf.database);

@@ -7,6 +7,7 @@ import {
   TextField,
   Box,
   Typography,
+  MenuItem
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { grey } from "@mui/material/colors";
@@ -17,20 +18,44 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import axios from "axios";
 import {CSVLink} from 'react-csv'
-
+import Select from "react-select";
 
 export default function Profesores() {
   //------------------------------------Obtener info----------------
+  let array = []
+  let array2 = []
+  let array3 = []
+  let array4 = []
   const [data, setData] = useState([]);
-  const getProfesores = () => {
-    axios
-      .get("http://127.0.0.1:3000/v1/profesores")
-      .then((res) => setData(res.data))
-      .catch((err) => console.log(err));
+  const [guardaData, setGuardaData] = useState([]);
+  const [dataPeriodo, setDataPeriodo] = useState([]);
+  const [dataClase, setDataClase] = useState([]);
+
+  const  getProfesores  = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/profesores");
+    setData(res.data);
+  };
+
+  const  getClases= async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/clases");
+    setDataClase(res.data);
+  };
+  
+  const  getProfesores2  = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/profesores");
+    setGuardaData(res.data);
+  };
+
+  const  getPeriodos = async () => {
+    const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
+    setDataPeriodo(res.data);
   };
 
   useEffect(() => {
     getProfesores();
+    getProfesores2();
+    getPeriodos();
+    getClases();
   }, []);
 
   //----------------------Estados para el cud
@@ -399,6 +424,35 @@ const bodyEliminar = (
     [data]
   );
 
+  const handleSelectChange = (event) => {
+    
+    array = []
+    array2 = []
+    array3 = []
+    console.log(guardaData)
+    console.log(event);
+    console.log(dataClase)
+    //array2.push(dataClase.filter(data => data.clavePeriodo === event.value));
+    //console.log(array2[0])
+    // for (let i=0; i< array2.length;i++){
+    //   for (let j=0; j< array2[i].length;j++){
+    //     array.push(guardaData.filter(data => data._id === array2[i][j].idAlumno))  
+    //   }
+    // }
+    // console.log(array)
+    // for (let i=0; i< array.length;i++){
+    //   array3.push(array[i][0])  
+    // }
+    // console.log(array3)
+    // if( array3.length > 0){
+    //   setData(array3)
+    // }else{
+    //   getAlumnos()
+    // }
+   
+  };
+
+
   //---------------------------------------Filter---------------------------
   const [items, setItems] = useState([]);
   return (
@@ -409,7 +463,7 @@ const bodyEliminar = (
           position: "absolute",
           textAlign: "left",
           marginLeft: "65px",
-          marginTop: "120px",
+          marginTop: "150px",
           bgcolor: "grey.200",
           borderRadius: "8px",
         }}
@@ -441,11 +495,35 @@ const bodyEliminar = (
 
       <Box
         sx={{
+          width: 250,
+          position: "absolute",
+          textAlign: "left",
+          marginLeft: "910px",
+          marginTop: "30px",
+          bgcolor: "grey.200",
+          borderRadius: "8px",
+          height: 90,
+        }}
+      >
+       
+          <Select
+            options={dataPeriodo.map((sup) => ({
+              label: sup.clave,
+              value: sup._id,
+            }))}
+            onChange={handleSelectChange}
+          />
+       
+      </Box>
+
+      <Box
+        sx={{
           width: "1000px",
           padding: "15px",
           height: "150px",
           position: "absolute",
           marginLeft: "50px",
+          marginTop: '15px'
         }}
       >
         <Typography
@@ -454,8 +532,9 @@ const bodyEliminar = (
           sx={{ textAlign: "left", mt: 3, mb: 3, fontFamily: "arial" }}
         >
           Profesores
+
           <Button
-            sx={{ marginLeft: "535px" }}
+            sx={{ marginLeft: "270px" }}
             variant="contained"
             color="success"
             onClick={() => abrirCerrarModalInsertar()}
@@ -463,6 +542,7 @@ const bodyEliminar = (
             {<AddCircleOutlineIcon />} Agregar Profesor
           </Button>
         </Typography>
+
 
         </Box>
 
