@@ -37,7 +37,7 @@ async function createClase(req, res) {
         nivel: req.body.nivel,
         nombreProfesor: req.body.nombreProfesor,
         apellidosProfesor: req.body.apellidosProfesor,
-        matriculaMaestro: req.body.matriculaMaestro,
+        matriculaProfesor: req.body.matriculaProfesor,
         clavePeriodo: req.body.clavePeriodo,
         edad_minima: req.body.edad_minima,
         edad_maxima: req.body.edad_maxima,
@@ -86,7 +86,7 @@ async function updateClase(req, res) {
         nivel: req.body.nivel,
         nombreProfesor: req.body.nombreProfesor,
         apellidosProfesor: req.body.apellidosProfesor,
-        matriculaMaestro: req.body.matriculaMaestro,
+        matriculaProfesor: req.body.matriculaProfesor,
         clavePeriodo: req.body.clavePeriodo,
         edad_minima: req.body.edad_minima,
         edad_maxima: req.body.edad_maxima,
@@ -162,11 +162,11 @@ async function findClase(req, res) {
       value = req.body.nivel;
       id = req.body._id;
       query = { nivel: value };
-    } else if (req.body.idMaestro) {
-      key = "idMaestro";
-      value = req.body.idMaestro;
-      id = req.body.idMaestro;
-      query = { idMaestro: value };
+    } else if (req.body.matriculaProfesor) {
+      key = "matriculaProfesor";
+      value = req.body.matriculaProfesor;
+      id = req.body.matriculaProfesor;
+      query = { matriculaProfesor: value };
     } else if (req.body.frecuencia_semanal) {
       key = "frecuencia_semanal";
       value = req.body.frecuencia_semanal;
