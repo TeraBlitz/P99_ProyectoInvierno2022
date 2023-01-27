@@ -976,6 +976,15 @@ export default function ShowClass() {
         width: 175,
         renderCell: (params) => <Actions {...{ params, seleccionarConsola }} />,
       },
+      {
+          field: "wait_list",
+          headerName: "Lista Espera",
+          type: "actions",
+          width: 150,
+          renderCell: (params) => (
+              <Button size="small" onClick={() => getClassWaitList(params.row)}>Lista Espera</Button>
+          ),
+      },
     ],
     [data, profesorList]
   );
