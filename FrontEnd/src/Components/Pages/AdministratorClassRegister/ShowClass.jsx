@@ -17,18 +17,13 @@ import Actions from "./Actions";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import MenuItem from "@mui/material/MenuItem";
-
 import { InsertDriveFile } from "@mui/icons-material";
-<<<<<<< HEAD
 import WaitList from "./WaitList";
 import { getWaitList } from '../../../api/waitList'
 import { getStudents } from "../../../api/students";
-
 import axios from 'axios'
-=======
 import Select from "react-select";
 
->>>>>>> main
 
 export default function ShowClass() {
 
