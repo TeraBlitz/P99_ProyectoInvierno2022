@@ -32,14 +32,14 @@ export default function ShowClass() {
   const [dataPeriodo, setDataPeriodo] = useState([]);
 
   const getPeriodos = async () => {
-    const res = await axios.get("https://p99test.fly.dev.dev/v1/periodos");
+    const res = await axios.get("https://p99test.fly.dev/v1/periodos");
     setDataPeriodo(res.data);
   };
 
   const [claseResp, setClaseResp] = useState([]);
 
   const getClaseResp = async () => {
-    const res = await axios.get("https://p99test.fly.dev.dev/v1/clases");
+    const res = await axios.get("https://p99test.fly.dev/v1/clases");
     setClaseResp(res.data);
   };
 

@@ -34,25 +34,25 @@ export default function Alumnos() {
 
 
   const getAlumnos = async () => {
-    const res = await axios.get("https://p99test.fly.dev.dev/v1/alumnos");
+    const res = await axios.get("https://p99test.fly.dev/v1/alumnos");
     setData(res.data);
 
   };
 
   const getAlumnos2 = async () => {
-    const res = await axios.get("https://p99test.fly.dev.dev/v1/alumnos");
+    const res = await axios.get("https://p99test.fly.dev/v1/alumnos");
     setGuardaData(res.data);
 
   };
 
   const getPeriodos = async () => {
-    const res = await axios.get("https://p99test.fly.dev.dev/v1/periodos");
+    const res = await axios.get("https://p99test.fly.dev/v1/periodos");
     setDataPeriodo(res.data);
 
   };
 
   const getAlumnoClase = async () => {
-    const res = await axios.get("https://p99test.fly.dev.dev/v1/alumnoClases");
+    const res = await axios.get("https://p99test.fly.dev/v1/alumnoClases");
     setDataAlumnoClase(res.data);
   };
 
@@ -143,7 +143,7 @@ export default function Alumnos() {
   const postEditar = async (e) => {
     e.preventDefault();
     try {
-      await fetch("https://p99test.fly.dev.dev/v1/alumnos/update", {
+      await fetch("https://p99test.fly.dev/v1/alumnos/update", {
         method: "Put",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -182,7 +182,7 @@ export default function Alumnos() {
   // Procedimiento para eliminar
   const postDelete = async (e) => {
     try {
-      await fetch("https://p99test.fly.dev.dev/v1/alumnos/delete", {
+      await fetch("https://p99test.fly.dev/v1/alumnos/delete", {
         method: "Delete",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
