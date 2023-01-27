@@ -37,7 +37,7 @@ export default function Profesores() {
     const res = await axios.get("https://p99test.fly.dev/v1/clases");
     setDataClase(res.data);
   };
-  
+
   const  getProfesores2  = async () => {
     const res = await axios.get("https://p99test.fly.dev/v1/profesores");
     setGuardaData(res.data);
@@ -443,7 +443,7 @@ const bodyEliminar = (
   );
 
   const handleSelectChange = (event) => {
-    
+
     array = []
     array2 = []
     array3 = []
@@ -453,12 +453,12 @@ const bodyEliminar = (
     console.log(array2[0])
     for (let i=0; i< array2.length;i++){
       for (let j=0; j< array2[i].length;j++){
-        array.push(guardaData.filter(data => data.matricula === array2[i][j].matriculaProfesor))  
+        array.push(guardaData.filter(data => data.matricula === array2[i][j].matriculaProfesor))
       }
     }
     console.log(array)
     for (let i=0; i< array.length;i++){
-      array3.push(array[i][0])  
+      array3.push(array[i][0])
     }
     console.log(array3)
     if( array3.length > 0){
@@ -466,7 +466,7 @@ const bodyEliminar = (
     }else{
       getProfesores()
     }
-   
+
   };
 
 
@@ -521,15 +521,18 @@ const bodyEliminar = (
           height: 90,
         }}
       >
-       
+
           <Select
+          sx={{
+            fontFamily: 'default',
+          }}
             options={dataPeriodo.map((sup) => ({
               label: sup.clave,
               value: sup._id,
             }))}
             onChange={handleSelectChange}
           />
-       
+
       </Box>
 
       <Box

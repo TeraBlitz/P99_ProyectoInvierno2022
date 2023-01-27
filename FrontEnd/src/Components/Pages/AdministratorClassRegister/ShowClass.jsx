@@ -913,7 +913,7 @@ export default function ShowClass() {
       </div>
     </div>
   );
-   
+
     //-------------------------------Lista de Espera---------------------------
 
     const [openWaitList, setOpenWaitList] = useState(false);
@@ -922,11 +922,11 @@ export default function ShowClass() {
 
 
     const getClassWaitList = (clase) => {
-        let waitList = [];  
+        let waitList = [];
         let students = [];
         let result = [];
         getStudents().then((data) => {
-            students = data; 
+            students = data;
         }).then(() => {
             getWaitList().then((data) => {
                 waitList = data.filter(lista => lista.idClase === clase._id);
@@ -956,8 +956,8 @@ export default function ShowClass() {
 
   const columns = useMemo(
     () => [
-      { field: "clave", headerName: "Clave", width: 134 },
-      { field: "nombre_curso", headerName: "Curso", width: 170 },
+      { field: "clave", headerName: "Clave", width: 70 },
+      { field: "nombre_curso", headerName: "Curso", width: 120 },
       { field: "niveles", headerName: "Nivel", width: 100 },
       {
         field: "nombreCompleto",
@@ -998,7 +998,7 @@ export default function ShowClass() {
           width: 250,
           position: "absolute",
           textAlign: "left",
-          marginLeft: "1350px",
+          marginLeft: "970px",
           marginTop: "50px",
           bgcolor: "grey.200",
           borderRadius: "8px",
@@ -1114,7 +1114,7 @@ export default function ShowClass() {
           </div>
         </Typography>
 
-        <Box sx={{ height: "80vh", width: "70vw" }}>
+        <Box sx={{ height: "75vh", width: "64vw" }}>
           <DataGrid
             columns={columns}
             rows={data}
@@ -1158,7 +1158,7 @@ export default function ShowClass() {
           alignContent: 'center', justifyContent: 'center',
           flexWrap: 'wrap', overflowY: 'scroll'}}
           >
-              <>                
+              <>
                   <WaitList clase={currentClase} waitList={currentWaitList}/>
               </>
           </Modal>
