@@ -67,12 +67,12 @@ const ControlPanel = ({changeContent}) => {
         const res = await axios.get("http://127.0.0.1:3000/v1/clases");
         setDataClase(res.data);
         // funciones para encontrar stats
-        console.log('Fetch Clase', res.data)
-        console.log('Cursos Registrados: ',contarClases(res.data))
+        //console.log('Fetch Clase', res.data)
+        //console.log('Cursos Registrados: ',contarClases(res.data))
          cursosRegistrados = contarClases(res.data)
-        console.log('Profesores Inscritos', contarProfes(res.data))
+        //console.log('Profesores Inscritos', contarProfes(res.data))
          profesInscritos = contarProfes(res.data)
-        console.log('Alumnos Inscritos: ', contarAlumnos(res.data))
+        //console.log('Alumnos Inscritos: ', contarAlumnos(res.data))
          alumnosInscritos = contarAlumnos(res.data)
       };
 

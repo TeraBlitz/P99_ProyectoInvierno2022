@@ -26,10 +26,6 @@ export default function Alumnos() {
   //Encargado de guardar la data
   const [data, setData] = useState([]);
   const [guardaData, setGuardaData] = useState([]);
-
-
-
-
   const [dataPeriodo, setDataPeriodo] = useState([]);
   const [dataAlumnoClase, setDataAlumnoClase] = useState([]);
   let array = []
