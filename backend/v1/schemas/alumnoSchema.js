@@ -2,6 +2,7 @@
 const alumnoSchema = {
   type: "object",
   properties: {
+    _id: { type: "string" },
     curp: { type: "string",minLength:18, maxLength:18,  pattern:"[a-z|A-Z]{4}[0-9]{6}[H|M|m|h][A-Z|a-z]{5}[a-z|A-Z|0-9][0-9]"},
     clave_unica_identificacion: { type: "string"}, // Extranjeros
     nombre: { type: "string" },

@@ -6,8 +6,7 @@ import {
   Modal,
   TextField,
   Box,
-  Typography,
-  MenuItem
+  Typography
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { grey } from "@mui/material/colors";
@@ -17,7 +16,6 @@ import Actions from "./ActProfes";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import axios from "axios";
-import {CSVLink} from 'react-csv'
 import Select from "react-select";
 
 export default function Profesores() {
@@ -25,7 +23,6 @@ export default function Profesores() {
   let array = []
   let array2 = []
   let array3 = []
-  let array4 = []
   const [data, setData] = useState([]);
   const [guardaData, setGuardaData] = useState([]);
   const [dataPeriodo, setDataPeriodo] = useState([]);
@@ -61,8 +58,9 @@ export default function Profesores() {
   //----------------------Estados para el cud
   const [modalInsertar, setModalInsertar] = useState(false);
   const [nombre, setNombre] = useState("");
-  const [apellido_paterno, setApellido_paterno] = useState("");
-  const [apellido_materno, setApellido_materno] = useState("");
+  const [apellidos, setApellidos] = useState("");
+  const [matricula, setMatricula] = useState("");
+  const [correo, setCorreo] = useState("");
   const [fecha_de_nacimiento, setFecha_de_nacimiento] = useState("");
   const [num_telefono, setNum_telefono] = useState("");
   const [num_cursos_impartidos, setNum_cursos_impartidos] = useState("");
@@ -72,8 +70,9 @@ export default function Profesores() {
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
     _id: "",
     nombre: "",
-    apellido_paterno: "",
-    apellido_materno: "",
+    apellidos: "",
+    matricula: "",
+    correo: "",
     fecha_de_nacimiento: "",
     num_telefono: "",
     num_cursos_impartidos: "",
@@ -105,8 +104,9 @@ export default function Profesores() {
         },
         body: new URLSearchParams({
           nombre: nombre,
-          apellido_paterno: apellido_paterno,
-          apellido_materno: apellido_materno,
+          apellidos: apellidos,
+          matricula: matricula,
+          correo: correo,
           fecha_de_nacimiento: fecha_de_nacimiento,
           num_telefono: num_telefono,
           num_cursos_impartidos: num_cursos_impartidos,
@@ -116,8 +116,9 @@ export default function Profesores() {
       abrirCerrarModalInsertar();
       getProfesores();
       setNombre("");
-      setApellido_paterno("");
-      setApellido_materno("");
+      setApellidos("");
+      setMatricula("");
+      setCorreo("");
       setFecha_de_nacimiento("");
       setNum_telefono("");
       setNum_cursos_impartidos("");
@@ -133,7 +134,7 @@ export default function Profesores() {
       style={{
         position: "absolute",
         width: 260,
-        height: 560,
+        height: 620,
         backgroundColor: "#fefefd",
         top: "48%",
         left: "50%",
@@ -160,16 +161,23 @@ export default function Profesores() {
       <br />
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
-        label="Apellido paterno"
-        onChange={(e) => setApellido_paterno(e.target.value)}
-        value={apellido_paterno}
+        label="Apellidos"
+        onChange={(e) => setApellidos(e.target.value)}
+        value={apellidos}
       />
       <br />
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
-        label="Apellido materno"
-        onChange={(e) => setApellido_materno(e.target.value)}
-        value={apellido_materno}
+        label="Matricula"
+        onChange={(e) => setMatricula(e.target.value)}
+        value={matricula}
+      />
+      <br />
+      <TextField
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
+        label="Correo"
+        onChange={(e) => setCorreo(e.target.value)}
+        value={correo}
       />
       <br />
       <TextField
@@ -238,8 +246,9 @@ export default function Profesores() {
         body: new URLSearchParams({
           _id: consolaSeleccionada._id,
           nombre: consolaSeleccionada.nombre,
-          apellido_paterno: consolaSeleccionada.apellido_paterno,
-          apellido_materno: consolaSeleccionada.apellido_materno,
+          apellidos: consolaSeleccionada.apellidos,
+          matricula: consolaSeleccionada.matricula,
+          correo: consolaSeleccionada.correo,
           fecha_de_nacimiento: consolaSeleccionada.fecha_de_nacimiento,
           num_telefono: consolaSeleccionada.num_telefono,
           num_cursos_impartidos: consolaSeleccionada.num_cursos_impartidos,
@@ -260,7 +269,7 @@ export default function Profesores() {
         style={{
           position: "absolute",
           width: 260,
-          height: 580,
+          height: 620,
           backgroundColor: "#fefefd",
           top: "48%",
           left: "50%",
@@ -288,18 +297,26 @@ export default function Profesores() {
       <br />
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
-        label="Apellido paterno"
+        label="Apellidos"
         onChange={handleChange}
-        value={consolaSeleccionada && consolaSeleccionada.apellido_paterno}
-        name="apellido_paterno"
+        value={consolaSeleccionada && consolaSeleccionada.apellidos}
+        name="apellidos"
       />
       <br />
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
-        label="Apellido materno"
+        label="Matricula"
         onChange={handleChange}
-        value={consolaSeleccionada && consolaSeleccionada.apellido_materno}
-        name="apellido_materno"
+        value={consolaSeleccionada && consolaSeleccionada.matricula}
+        name="matricula"
+      />
+      <br />
+      <TextField
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
+        label="Correo"
+        onChange={handleChange}
+        value={consolaSeleccionada && consolaSeleccionada.correo}
+        name="correo"
       />
       <br />
       <TextField
@@ -402,8 +419,9 @@ const bodyEliminar = (
     () => [
       { field: "_id", headerName: "Id", width: 54, hide: true },
       { field: "nombre", headerName: "Nombre", width: 120 },
-      { field: "apellido_paterno", headerName: "Apellido Paterno", width: 180 },
-      { field: "apellido_materno", headerName: "Apellido Materno", width: 180 },
+      { field: "apellidos", headerName: "Apellidos", width: 180 },
+      { field: "matricula", headerName: "Matricula", width: 180 },
+      { field: "correo", headerName: "Correo", width: 180 },
       { field: "num_telefono", headerName: "Telefono", width: 120 },
       { field: "fecha_de_nacimiento", headerName: "Nacimiento", width: 100 },
       {
@@ -431,24 +449,23 @@ const bodyEliminar = (
     array3 = []
     console.log(guardaData)
     console.log(event);
-    console.log(dataClase)
-    //array2.push(dataClase.filter(data => data.clavePeriodo === event.value));
-    //console.log(array2[0])
-    // for (let i=0; i< array2.length;i++){
-    //   for (let j=0; j< array2[i].length;j++){
-    //     array.push(guardaData.filter(data => data._id === array2[i][j].idAlumno))  
-    //   }
-    // }
-    // console.log(array)
-    // for (let i=0; i< array.length;i++){
-    //   array3.push(array[i][0])  
-    // }
-    // console.log(array3)
-    // if( array3.length > 0){
-    //   setData(array3)
-    // }else{
-    //   getAlumnos()
-    // }
+    array2.push(dataClase.filter(data => data.clavePeriodo === event.label));
+    console.log(array2[0])
+    for (let i=0; i< array2.length;i++){
+      for (let j=0; j< array2[i].length;j++){
+        array.push(guardaData.filter(data => data.matricula === array2[i][j].matriculaProfesor))  
+      }
+    }
+    console.log(array)
+    for (let i=0; i< array.length;i++){
+      array3.push(array[i][0])  
+    }
+    console.log(array3)
+    if( array3.length > 0){
+      setData(array3)
+    }else{
+      getProfesores()
+    }
    
   };
 
@@ -492,7 +509,6 @@ const bodyEliminar = (
           ></TextField>
         </CardContent>
       </Card>
-
       <Box
         sx={{
           width: 250,
@@ -518,7 +534,7 @@ const bodyEliminar = (
 
       <Box
         sx={{
-          width: "1000px",
+          width: "1100px",
           padding: "15px",
           height: "150px",
           position: "absolute",
@@ -548,7 +564,7 @@ const bodyEliminar = (
 
         <Box
         sx={{
-          width: "1000px",
+          width: "1150px",
           padding: "15px",
           height: "450px",
           position: "absolute",

@@ -31,20 +31,20 @@ export default function Alumnos() {
   let array = []
   let array2 = []
   let array3 = []
- 
- 
+
+
   const getAlumnos = async () => {
     const res = await axios.get("http://127.0.0.1:3000/v1/alumnos");
     setData(res.data);
-    
+
   };
 
   const getAlumnos2 = async () => {
     const res = await axios.get("http://127.0.0.1:3000/v1/alumnos");
     setGuardaData(res.data);
-    
+
   };
-  
+
   const getPeriodos = async () => {
     const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
     setDataPeriodo(res.data);
@@ -849,22 +849,22 @@ export default function Alumnos() {
   );
 
   const handleSelectChange = (event) => {
-    
+
     array = []
     array2 = []
     array3 = []
     console.log(guardaData)
-    //console.log(event);
+    console.log(event);
     array2.push(dataAlumnoClase.filter(data => data.idPeriodo === event.value));
     console.log(array2[0])
     for (let i=0; i< array2.length;i++){
       for (let j=0; j< array2[i].length;j++){
-        array.push(guardaData.filter(data => data._id === array2[i][j].idAlumno))  
+        array.push(guardaData.filter(data => data._id === array2[i][j].idAlumno))
       }
     }
     console.log(array)
     for (let i=0; i< array.length;i++){
-      array3.push(array[i][0])  
+      array3.push(array[i][0])
     }
     console.log(array3)
     if( array3.length > 0){
@@ -872,7 +872,7 @@ export default function Alumnos() {
     }else{
       getAlumnos()
     }
-   
+
   };
 
   //---------------------------------------Filter---------------------------
@@ -930,7 +930,7 @@ export default function Alumnos() {
           height: 90,
         }}
       >
-       
+
           <Select
             options={dataPeriodo.map((sup) => ({
               label: sup.clave,
@@ -938,7 +938,7 @@ export default function Alumnos() {
             }))}
             onChange={handleSelectChange}
           />
-       
+
       </Box>
 
 
@@ -995,8 +995,8 @@ export default function Alumnos() {
       >
         <DataGrid
           columns={columns}
-          rows={data} 
-          
+          rows={data}
+
           getRowId={(row) => row._id}
           rowsPerPageOptions={[5, 10]}
           pageSize={pageSize}
