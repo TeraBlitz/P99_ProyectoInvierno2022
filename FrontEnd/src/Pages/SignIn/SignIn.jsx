@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
-const SignIn = ({isSignedIn, handleSignIn  , handleUser , loginError}) => {
+const SignIn = ({isSignedIn, handleSignIn  , handleUser , loginError , changeHasAccount}) => {
     const [checked, setChecked] = useState([true, false]);
     
     const handleChange = (e) => {
@@ -67,7 +67,7 @@ const SignIn = ({isSignedIn, handleSignIn  , handleUser , loginError}) => {
                 <Box>
                     <Typography variant="body1" sx={{color: '#E6F4F1'}}>
                     ¿No tienes una cuenta? 
-                    <Link sx={{pl: 1, color: '#0099DF'}} underline="hover">Registrate!</Link>
+                    <Link sx={{pl: 1, color: '#0099DF'}} underline="hover" onClick={()=> changeHasAccount()  }>Registrate!</Link>
                     </Typography>
                 </Box>
             </Box>

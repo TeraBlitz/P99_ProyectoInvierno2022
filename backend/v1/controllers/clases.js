@@ -1,27 +1,25 @@
-const { clientCon } = require("../connection.js");
+const { clientConnect } = require("../connection.js");
 const { mongodbInf } = require("../config.js");
 const mongodb = require("mongodb");
-
-// Crear un nuevo MongoClient
-const client = clientCon;
+const COLLECTION_NAME = "clases"
 
 async function getAllClase(req, res) {
-  try {
-    await client.connect();
-    const database = client.db(mongodbInf.database);
-    const collection = database.collection("clases");
+    try {
+        const database = clientConnect.db(mongodbInf.database);
+        const collection = database.collection(COLLECTION_NAME);
 
-    const result = await collection.find().toArray();
-    res.send(result);
-  } catch (err) {
-    res.send(`ERROR: ${err}`);
-  } 
+        const result = await collection.find().toArray();
+        res.send(result);
+    } catch (err) {
+        res.send(`ERROR: ${err}`);
+    }
 }
 // Test getAllClase
 // getAllClase().catch(console.dir);
 
 // Create
 async function createClase(req, res) {
+
   try {
     await client.connect();
     const database = client.db(mongodbInf.database);
@@ -62,12 +60,14 @@ async function createClase(req, res) {
   } finally {
     await client.close();
   }
+
 }
 // Test createClase
 // createClase().catch(console.dir);
 
 // Update
 async function updateClase(req, res) {
+
   try {
     await client.connect();
     const database = client.db(mongodbInf.database);
@@ -107,38 +107,34 @@ async function updateClase(req, res) {
     );
   } catch (err) {
     res.send(`updateClase ERROR: ${err}`);
-  } finally {
-    await client.close();
-  }
+  } 
+
 }
 // Test updateClase
 // updateClase().catch(console.dir);
 
 // Delete
 async function deleteClase(req, res) {
-  try {
-    await client.connect();
-    const database = client.db(mongodbInf.database);
-    const collection = database.collection("clases");
+    try {
+        const database = clientConnect.db(mongodbInf.database);
+        const collection = database.collection(COLLECTION_NAME);
 
-    // ID documento a eliminar
-    const idDoc = {
-      _id: new mongodb.ObjectId(req.body._id),
-    };
+        // ID documento a eliminar
+        const idDoc = {
+        _id: new mongodb.ObjectId(req.body._id),
+        };
 
-    const result = await collection.deleteMany(idDoc);
-    // console.log(JSON.stringify(result))
+        const result = await collection.deleteMany(idDoc);
+        // console.log(JSON.stringify(result))
 
-    if (result.deletedCount === 1) {
-      res.send(`Documento con _id: ${idDoc._id} eliminado con exito.`);
-    } else {
-      res.send("Ningun documento encontrado. 0 Documentos eliminados.");
+        if (result.deletedCount === 1) {
+        res.send(`Documento con _id: ${idDoc._id} eliminado con exito.`);
+        } else {
+        res.send("Ningun documento encontrado. 0 Documentos eliminados.");
+        }
+    } catch (err) {
+        console.log(`ERROR: ${err}`);
     }
-  } catch (err) {
-    console.log(`ERROR: ${err}`);
-  } finally {
-    await client.close();
-  }
 }
 // Test deleteClase
 // deleteClase().catch(console.dir);
@@ -146,62 +142,60 @@ async function deleteClase(req, res) {
 
 // Metodo find
 async function findClase(req, res) {
-  try {
-    await client.connect();
-    const database = client.db(mongodbInf.database);
-    const collection = database.collection("clases");
-    let query = "";
-    let key = "";
-    let value = "";
-    if (req.body.nombre_curso) {
-      key = " nombre_curso";
-      value = req.body.nombre_curso;
-      query = { nombre_curso: value };
-    } else if (req.body.nivel) {
-      key = "nivel";
-      value = req.body.nivel;
-      id = req.body._id;
-      query = { nivel: value };
-    } else if (req.body.matriculaProfesor) {
-      key = "matriculaProfesor";
-      value = req.body.matriculaProfesor;
-      id = req.body.matriculaProfesor;
-      query = { matriculaProfesor: value };
-    } else if (req.body.frecuencia_semanal) {
-      key = "frecuencia_semanal";
-      value = req.body.frecuencia_semanal;
-      id = req.body._id;
-      query = { frecuencia_semanal: value };
-    } else if (req.body.cupo_maximo) {
-      key = "cupo_maximo";
-      value = req.body.cupo_maximo;
-      id = req.body._id;
-      query = { cupo_maximo: value };
-    } else if (req.body.cupo_actual) {
-      key = "cupo_actual";
-      value = req.body.cupo_actual;
-      id = req.body._id;
-      query = { cupo_actual: value };
-    } else {
-      throw "parametros invalidos";
+    try {
+        const database = clientConnect.db(mongodbInf.database);
+        const collection = database.collection(COLLECTION_NAME);
+
+        let query = "";
+        let key = "";
+        let value = "";
+        if (req.body.nombre_curso) {
+        key = " nombre_curso";
+        value = req.body.nombre_curso;
+        query = { nombre_curso: value };
+        } else if (req.body.nivel) {
+        key = "nivel";
+        value = req.body.nivel;
+        id = req.body._id;
+        query = { nivel: value };
+        } else if (req.body.idMaestro) {
+        key = "idMaestro";
+        value = req.body.idMaestro;
+        id = req.body.idMaestro;
+        query = { idMaestro: value };
+        } else if (req.body.frecuencia_semanal) {
+        key = "frecuencia_semanal";
+        value = req.body.frecuencia_semanal;
+        id = req.body._id;
+        query = { frecuencia_semanal: value };
+        } else if (req.body.cupo_maximo) {
+        key = "cupo_maximo";
+        value = req.body.cupo_maximo;
+        id = req.body._id;
+        query = { cupo_maximo: value };
+        } else if (req.body.cupo_actual) {
+        key = "cupo_actual";
+        value = req.body.cupo_actual;
+        id = req.body._id;
+        query = { cupo_actual: value };
+        } else {
+        throw "parametros invalidos";
+        }
+        const result = await collection.find(query).toArray();
+        if (result == "") {
+        res.send(`Ninguna clase encontrada con ${key} : ${value}`);
+        } else {
+        res.send(result);
+        }
+    } catch (err) {
+        console.log(`ERROR: ${err}`);
     }
-    const result = await collection.find(query).toArray();
-    if (result == "") {
-      res.send(`Ninguna clase encontrada con ${key} : ${value}`);
-    } else {
-      res.send(result);
-    }
-  } catch (err) {
-    console.log(`ERROR: ${err}`);
-  } finally {
-    await client.close();
-  }
 }
 
 module.exports = {
-  getAllClase,
-  createClase,
-  updateClase,
-  deleteClase,
-  findClase,
+    getAllClase,
+    createClase,
+    updateClase,
+    deleteClase,
+    findClase,
 };

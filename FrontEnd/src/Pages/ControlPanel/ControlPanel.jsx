@@ -56,7 +56,7 @@ const ControlPanel = ({changeContent}) => {
     //----------------------Obtencion de datos de la base de datos
 
     const  getPeriodos = async () => {
-      const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
+      const res = await axios.get("https://p99test.fly.dev/v1/periodos");
       setData(res.data);
       console.log('Fetch Periodos', res.data)
       periodoActual = compararFecha(res.data)
@@ -64,7 +64,7 @@ const ControlPanel = ({changeContent}) => {
 
 
       const  getClase  = async () => {
-        const res = await axios.get("http://127.0.0.1:3000/v1/clases");
+        const res = await axios.get("https://p99test.fly.dev/v1/clases");
         setDataClase(res.data);
         // funciones para encontrar stats
         //console.log('Fetch Clase', res.data)
@@ -127,7 +127,7 @@ function contarClases(datos){
             contadorClases = contadorClases +1
         }
     });
-    console.log("Este es la dat final",periodoActual)
+    
     //console.log("Clases",contadorClases)
     return(contadorClases)
 }
@@ -137,10 +137,10 @@ function contarProfes(datos){
     datos.forEach(element => {
         if(element.clavePeriodo === periodoActual){
 
-            if(listaProfes.includes(element.matriculaMaestro)){
+            if(listaProfes.includes(element.matriculaProfesor)){
 
             }else{
-                listaProfes.push(element.matriculaMaestro)
+                listaProfes.push(element.matriculaProfesor)
             }
     }
 

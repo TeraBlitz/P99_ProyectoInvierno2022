@@ -57,7 +57,7 @@ export default function Periodos() {
   //----------------------Obtencion de datos de la base de datos
 
   const  getPeriodos = async () => {
-    const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
+    const res = await axios.get("https://p99test.fly.dev/v1/periodos");
     setData(res.data);
 
     console.log('fetch datos',res.data)
@@ -68,7 +68,7 @@ export default function Periodos() {
   const [dataClase, setDataClase] = useState([]);
 
   const  getClase  = async () => {
-    const res = await axios.get("http://127.0.0.1:3000/v1/clases");
+    const res = await axios.get("https://p99test.fly.dev/v1/clases");
     setDataClase(res.data);
   };
 
@@ -128,7 +128,7 @@ export default function Periodos() {
   const [dataAlumnoClase, setDataAlumnoClase] = useState([]);
 
   const getAlumnoClase = async () => {
-    const res = await axios.get("http://127.0.0.1:3000/v1/alumnoClases");
+    const res = await axios.get("https://p99test.fly.dev/v1/alumnoClases");
     setDataAlumnoClase(res.data);
   };
 
@@ -160,7 +160,7 @@ export default function Periodos() {
   const postCrea = async (e) => {
     e.preventDefault();
     try {
-      await fetch("http://127.0.0.1:3000/v1/periodos/create", {
+      await fetch("https://p99test.fly.dev/v1/periodos/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -239,7 +239,7 @@ export default function Periodos() {
   // Procedimiento para eliminar
   const postDelete = async (e) => {
     try {
-      await fetch("http://127.0.0.1:3000/v1/periodos/delete", {
+      await fetch("https://p99test.fly.dev/v1/periodos/delete", {
         method: "Delete",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -337,7 +337,7 @@ export default function Periodos() {
   const postEditar = async (e) => {
     e.preventDefault();
     try {
-      await fetch("http://127.0.0.1:3000/v1/periodos/update", {
+      await fetch("https://p99test.fly.dev/v1/periodos/update", {
         method: "Put",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",

@@ -15,9 +15,9 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import SignUpInput from '../../Components/SignUp/SignUpInput';
 
 const userData = {
-    'usuario': '',
+    'user_name': '',
     'correo': '',
-    'contraseña': ''
+    'password': ''
 };
 
 const SignUp = ({createUser}) => {
@@ -36,8 +36,7 @@ const SignUp = ({createUser}) => {
         // Enviar esta informacion a bd
         e.preventDefault();
         // Pasar esta función para añadir al usuario
-        createUser({userInfo}); 
-        console.log(userInfo);
+        createUser(userInfo); 
     };
     
     return (
@@ -50,7 +49,7 @@ const SignUp = ({createUser}) => {
                     <Typography component='h1' variant="h4" sx={{color: '#E6F4F1', mb: 1, fontWeight: '400', textAlign: 'center', width: '100%'}}>
                         Crea una cuenta
                     </Typography>
-                        <SignUpInput name={'usuario'} label={'Usuario'} value={userInfo.usuario} handleChange={handleChange}/>
+                        <SignUpInput name={'user_name'} label={'Usuario'} value={userInfo.user_name} handleChange={handleChange}/>
                         <SignUpInput name={'correo'} label={'Correo'} value={userInfo.correo} handleChange={handleChange} type={'email'}/>
                         <FormControl
                             required 
@@ -58,7 +57,7 @@ const SignUp = ({createUser}) => {
                             >
                             <InputLabel htmlFor="input-contraseña" sx={{color: '#E6F4F1'}}>Contraseña</InputLabel>
                             <OutlinedInput
-                                name={'contraseña'}
+                                name={'password'}
                                 id="input-contraseña"
                                 type={showPassword ? 'text' : 'password'}
                                 endAdornment={

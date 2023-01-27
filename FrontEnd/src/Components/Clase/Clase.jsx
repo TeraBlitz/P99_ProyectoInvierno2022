@@ -3,9 +3,10 @@ import React from 'react'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
+import Divider from '@mui/material/Divider';
 
 
-function Clase({changeClaseRegistrada, handleMoreInfo, clase}) {
+function Clase({handleOpenDialog, handleMoreInfo, clase}) {
 
     const nivelDict = {
         '1' : 'Desde cero',
@@ -19,6 +20,18 @@ function Clase({changeClaseRegistrada, handleMoreInfo, clase}) {
             <CardContent>
                 <Typography variant="h6">{clase.clave}. {clase.nombre_curso}</Typography>
                 <br />
+                {
+                    clase.status === "Inscrito" ? 
+                        <Typography variant='body2'><i>Ya estas inscrito</i></Typography>
+                    :
+                        null
+                }
+                {
+                    clase.status === "ListaEspera" ? 
+                        <Typography variant='body2'><i>Estas en lista de espera</i></Typography>
+                    :
+                        null
+                }
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column'}}>
                     <Typography variant='body1'><strong>Periodo:</strong>  {clase.clavePeriodo}</Typography>
                     <Typography variant='body1'><strong>Modalidad:</strong> {clase.modalidad}</Typography>
@@ -31,8 +44,22 @@ function Clase({changeClaseRegistrada, handleMoreInfo, clase}) {
                 </Box>
             </CardContent>
             <CardActions sx={{backgroundColor: 'e8f0fe'}}>
-                <Button size='small' onClick={() => handleMoreInfo(clase)} sx={{ width: '50%', borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>Detalle</Button>
-                <Button size='small' onClick={() => changeClaseRegistrada(clase.nombre_curso)} sx={{ width: '50%', borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>{ Number(clase.cupo_actual) / Number(clase.cupo_maximo) >= 1 ? "Lista de Espera" : "Registrarse"}</Button>
+                <Button size='small' onClick={() => handleMoreInfo(clase)}
+                    sx={{ width: '50%'}}
+                >
+                    Detalle
+                </Button>
+                { Number(clase.cupo_actual) < Number(clase.cupo_maximo) ?
+                <Button size='small' onClick={() => handleOpenDialog(clase)} 
+                    sx={{ width: '50%'}}
+                    disabled={clase.status === "Inscrito" ? true : false}>
+                    Inscribir
+                </Button>  :
+                <Button size='small' onClick={() => handleOpenDialog(clase)} 
+                    sx={{ width: '50%'}}
+                    disabled={clase.status === "ListaEspera" ? true : false}>
+                    Lista Espera
+                </Button> }
             </CardActions>
         </Card>
     )
