@@ -44,7 +44,7 @@ const cards = [
     }
 ]
 
-let periodoActual = 'Error en fetch de periodo'
+let periodoActual = 'No se encontraron Periodos'
 
 
 const ControlPanel = ({changeContent}) => {
@@ -120,14 +120,14 @@ function compararFecha(data){
 function contarClases(datos){
     console.log("Este es la data inicial",datos)
     let contadorClases = 0;
-    
+
     datos.forEach(element => {
         console.log("Periodo: ", element.clavePeriodo)
         if(element.clavePeriodo === periodoActual){
             contadorClases = contadorClases +1
         }
     });
-    
+
     //console.log("Clases",contadorClases)
     return(contadorClases)
 }
@@ -189,8 +189,8 @@ function contarAlumnos(datos){
 
     return (
         <div>
-        <Box sx={{ ml: 1, p: 1 }} >
-            <Box sx={{ fontFamily: 'default', fontSize: 'h3.fontSize', py: 2, display: 'flex', justifyContent: 'space-between',marginBottom:0,marginTop:2}}>
+        <Box sx={{ ml: 1, p: 0 }} >
+            <Box sx={{ fontFamily: 'default', fontSize: 'h3.fontSize', py: 2, display: 'flex', justifyContent: 'space-between',marginBottom:0,marginTop:0.5}}>
                 Panel de control
             </Box>
             <Box sx={{fontFamily: 'default', fontSize: 'h5.fontSize', py: 2, display: 'flex', justifyContent: 'space-between',textAlign:'right',float:'right', marginRight:0.5}}>
