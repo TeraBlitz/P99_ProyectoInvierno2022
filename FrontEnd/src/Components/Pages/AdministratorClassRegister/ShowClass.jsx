@@ -18,9 +18,11 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import MenuItem from "@mui/material/MenuItem";
 import axios from "axios";
-
 import { InsertDriveFile } from "@mui/icons-material";
 import Select from "react-select";
+import WaitList from "./WaitList";
+import { getWaitList } from '../../../api/waitList'
+import { getStudents } from "../../../api/students";
 
 export default function ShowClass() {
   let array = [];
@@ -911,6 +913,43 @@ export default function ShowClass() {
       </div>
     </div>
   );
+   
+    //-------------------------------Lista de Espera---------------------------
+
+    const [openWaitList, setOpenWaitList] = useState(false);
+    const [currentClase, setCurrentClase] = useState(null);
+    const [currentWaitList, setCurrentWaitList] = useState(null);
+
+
+    const getClassWaitList = (clase) => {
+        let waitList = [];  
+        let students = [];
+        let result = [];
+        getStudents().then((data) => {
+            students = data; 
+        }).then(() => {
+            getWaitList().then((data) => {
+                waitList = data.filter(lista => lista.idClase === clase._id);
+                waitList.map((inWaitList) => {
+                    for (let i = 0; i < students.length; i++) {
+                        if (inWaitList.idAlumno === students[i]._id) {
+                            result.push({
+                                '_id': inWaitList._id,
+                                'studentName' : students[i].nombre + " " + students[i].apellido_paterno + " " + students[i].apellido_materno,
+                                'time_stamp' : inWaitList.time_stamp
+                            })
+                        }
+                    }
+                })
+                result.sort((a, b) => {
+                    return a > b ? 1 : a < b ? -1 : 0;
+                });
+                setCurrentWaitList(result);
+                setCurrentClase(clase);
+                setOpenWaitList(true);
+            })
+        })
+    }
 
   //---------------------------------------Show--------------
   const [pageSize, SetPageSize] = useState(5);
@@ -936,6 +975,15 @@ export default function ShowClass() {
         type: "actions",
         width: 175,
         renderCell: (params) => <Actions {...{ params, seleccionarConsola }} />,
+      },
+      {
+          field: "wait_list",
+          headerName: "Lista Espera",
+          type: "actions",
+          width: 150,
+          renderCell: (params) => (
+              <Button size="small" onClick={() => getClassWaitList(params.row)}>Lista Espera</Button>
+          ),
       },
     ],
     [data, profesorList]
@@ -1103,6 +1151,17 @@ export default function ShowClass() {
         <Modal open={modalEditar} onClose={() => abrirCerrarModalEditar()}>
           {bodyEditar}
         </Modal>
+        <Modal
+          open={openWaitList}
+          onClose={() => setOpenWaitList(!openWaitList)}
+          sx={{ height: '100vh', display: 'flex',
+          alignContent: 'center', justifyContent: 'center',
+          flexWrap: 'wrap', overflowY: 'scroll'}}
+          >
+              <>                
+                  <WaitList clase={currentClase} waitList={currentWaitList}/>
+              </>
+          </Modal>
       </Box>
     </div>
   );

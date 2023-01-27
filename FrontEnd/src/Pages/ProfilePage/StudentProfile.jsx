@@ -36,7 +36,7 @@ const nivel_escolaridad = [
 
 const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStudents, setSuccessOpen, setErrorOpen, setAlertMessage}) =>{
 
-    studentInfo['idUsuario'] = userID;
+    studentInfo['idUser'] = userID;
     const [studentData, setStudentInfo] = useState(studentInfo)
     const [newStudentInfo, setNewStudentInfo] = useState(studentInfo);
     const [userStateInput, setUserStateInput] = useState('');
@@ -67,7 +67,7 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
             }
             getStudents().then(
                 (data) => {
-                    const students = data.filter(student => student.idUsuario === userID);
+                    const students = data.filter(student => student.idUser === userID);
                     setStudents(students);
             });
         });
@@ -149,7 +149,7 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
                 <Autocomplete
                     value={userEducation || ''}
                     onChange={(e, newValue) => {
-                        setUserEducation(newValue)
+                        setUserEducation(newValue);
                         studentInfo['escolaridad'] = newValue;
 
                     }}
@@ -164,7 +164,10 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
                 <TextField name="ultima_escuela" label="Ultima Escuela" value={studentData.ultima_escuela || ''} onChange={handleChange} helperText=" " required/>        
                 <Autocomplete
                     value={userState || ''}
-                    onChange={(e, newValue) => {setUserState(newValue)}}
+                    onChange={(e, newValue) => {
+                        setUserState(newValue);
+                        studentInfo['estado'] = newValue;
+                    }}
                     inputValue={userStateInput}
                     onInputChange={(event, newInputValue) => {
                         setUserStateInput(newInputValue);

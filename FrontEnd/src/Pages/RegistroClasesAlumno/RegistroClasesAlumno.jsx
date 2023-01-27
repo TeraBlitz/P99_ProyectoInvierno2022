@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import Clase from '../../Components/Clase/Clase'
 import CircularProgress from '@mui/material/CircularProgress'
 import { Alert, Button, Link } from '@mui/material'
+import Snackbar from '@mui/material/Snackbar'
 import { AlertTitle } from '@mui/material'
 import { Card, CardContent, Typography, TextField, MenuItem } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
@@ -13,8 +14,12 @@ import Select from '@mui/material/Select';
 import { getStudents } from '../../api/students'
 import { getClasses } from '../../api/classes'
 import { userContext } from './../../App.jsx'
+import { createClassStudent, getClassStudent } from '../../api/classStudent'
+import { createWaitList, getWaitList } from '../../api/waitList'
+import { findTerm } from '../../api/term'
 import ConfirmationDialog from '../../Components/Dialog/ConfirmationDialog'
 import ClaseModal from '../../Components/Clase/ClaseModal'
+import MiRegistro from '../../Components/Registro/MiRegistro'
 
 function RegistroClasesAlumnos({changeContent}) {
     const [items, setItems] = useState([]);
@@ -26,10 +31,35 @@ function RegistroClasesAlumnos({changeContent}) {
     const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
     const [openMoreInfo, setOpenMoreInfo] = useState(false);
     const [currentClase, setCurrentClase] = useState(); 
+    const [selectAlertOpen, setSelectAlertOpen] = useState(false);
     const [nameFilter, setNameFilter] = useState('');
     const [filteredClasses, setFilteredClasses] = useState(null);
     
     const userValues = useContext(userContext)
+
+    useEffect(() => {
+        const getUserStudents = () =>{
+             getStudents().then(
+                 (data) => {
+                     const students = data.filter(student => student.idUser === userValues._id);
+                     setStudents(students);
+                     //console.log(students)
+             });
+         }
+         getUserStudents();
+     }, []);
+
+     useEffect(() => {
+        const getStudentClasses = () =>{
+            getClasses().then(
+                (data) => {
+                    setClases(data);
+                    setFilteredClasses(data);
+                });
+            }
+        getStudentClasses();
+        console.log(clases)
+     }, []);
 
     // Funcion para calcular edad 
     const calculate_age = (dateString) => {
@@ -121,7 +151,15 @@ function RegistroClasesAlumnos({changeContent}) {
             type: "actions",
             width: 115,
             renderCell: (params) => (
-                <Button onClick={() => handleOpenDialog(params.row)} variant="contained">Inscribir</Button>
+                Number(params.row.cupo_actual) < Number(params.row.cupo_maximo) ?
+                <Button size='small' onClick={() => handleOpenDialog(params.row)} variant="outlined"
+                    disabled={params.row.status === "Inscrito" ? true : false}>
+                    Inscribir
+                </Button>  :
+                <Button size='small' onClick={() => handleOpenDialog(params.row)} variant="outlined"
+                    disabled={params.row.status === "ListaEspera" ? true : false}>
+                    Lista Espera
+                </Button> 
             ),
 
         }
@@ -133,20 +171,39 @@ function RegistroClasesAlumnos({changeContent}) {
         setOpenMoreInfo(!openMoreInfo);
     };
     
-    const changeClaseRegistrada = (classId) => {
-        if (claseRegistrada[0]) {
-            setError('block')
-        } else {
-            setClaseRegistrada([classId])
-            handleCloseDialog();
-        }
-    }
-
     const filterClasses = (student) => {
-        console.log(student);
         const age = calculate_age(student.fecha_de_nacimiento);
-        const filter = clases.filter(clase => Number(clase.edad_minima) < age && age < Number(clase.edad_maxima))
-        setFilteredClasses(filter);
+        let waitList = [];   
+        let myClasses = [];
+        const filter = clases.filter(clase => Number(clase.edad_minima) < age && age < Number(clase.edad_maxima));
+        filter.map((aClass) => {
+            aClass.status = '';
+        })
+        getWaitList().then((data) => {
+            waitList = data.filter(lista => lista.idAlumno === student._id);
+        })
+        .then(() => {
+            waitList.map((inWaitList) =>{
+                for (let i = 0; i < filter.length; i++) {
+                    if (inWaitList.idClase === filter[i]._id) {
+                        filter[i].status = 'ListaEspera'
+                    }
+                }
+            })
+        })
+        getClassStudent().then((data) => {
+            myClasses = data.data.filter(clase =>  clase.idAlumno === student._id);
+        })
+        .then(() => {
+            myClasses.map((myClass) => {
+                for (let i = 0; i < filter.length; i++) {
+                    if (myClass.idClase === filter[i]._id) {
+                        filter[i].status = 'Inscrito';
+                    }
+                }
+            })
+            setFilteredClasses(filter);
+        })
     }
 
     const handleChange = (e) => {
@@ -159,30 +216,54 @@ function RegistroClasesAlumnos({changeContent}) {
         filterClasses(e.target.value);
     }
 
-    useEffect(() => {
-        const getUserStudents = () =>{
-             getStudents().then(
-                 (data) => {
-                     const students = data.filter(student => student.idUsuario === userValues._id);
-                     setStudents(students);
-                     //console.log(students)
-             });
-         }
-         getUserStudents();
-     }, []);
+    const handleListaEspera = (clase) =>{
+        if (currentStudent == null) {
+            setSelectAlertOpen(true);
+            return
+        }     
+        let lista = [];   
+        getWaitList().then((data) => {
+            lista = data.filter(lista => lista.idAlumno === currentStudent._id);
+        }).then(() => {
+            createWaitList(new URLSearchParams({
+                'idAlumno': currentStudent._id,
+                'idClase': clase._id,
+                'time_stamp':  new Date().toISOString(),
+                'status': 'Espera'
+            }));
+            clase.status = 'ListaEspera'
+            handleCloseDialog();
+        })
+    }
 
-     useEffect(() => {
-        const getStudentClasses = () =>{
-             getClasses().then(
-                 (data) => {
-                    setClases(data);
-                    setFilteredClasses(data);
-             });
-         }
-         getStudentClasses();
-         console.log(clases)
-     }, []);
-
+    const handleClaseRegistrada = (clase) => {
+        if (currentStudent == null) {
+            setSelectAlertOpen(true);
+            return
+        }  
+        // Hacer validación de numero de clases disponibles por inscribir
+        if (claseRegistrada[0]) {
+            setError('block')
+        } else {
+            let periodo = []
+            findTerm(new URLSearchParams({ 'clave' : clase.clavePeriodo}))
+            .then((data) => {
+                periodo = data
+            })
+            .then(() => {
+                createClassStudent(new URLSearchParams({
+                    'idClase' : clase._id,
+                    'idAlumno' : currentStudent._id,
+                    'idPeriodo' : periodo[0]._id
+                })).then((data) => {
+                    //console.log(data);
+                    setClaseRegistrada([clase._id])
+                    clase.status = 'Inscrito'
+                    handleCloseDialog();
+                })
+            })
+        }
+    }
      
     const handleOpenDialog = (clase) => {
         setClaseRegistrada(clase);
@@ -264,12 +345,12 @@ function RegistroClasesAlumnos({changeContent}) {
                     </Button>
                 </Alert >
             </Box>
-            <Box sx={{ textAlign: 'center', width: '100%', paddingX: '20px', height: '100%', paddingBottom: '10px', overflowY: 'scroll', display: { xs: 'block', sm: 'none' } }}>
+            <Box sx={{ textAlign: 'center', width: '100%', paddingX: '20px', height: '100vh', paddingBottom: '10px', overflowY: 'scroll', display: { xs: 'block', sm: 'none' } }}>
                 <TextField label='Nombre' value={nameFilter || ''} onChange={handleNameFilter} helperText="Busca tu clase" fullWidth/>
                 {
                     filteredClasses.length !== 0 ?    
-                        filteredClasses.map(e => (
-                            <Clase changeClaseRegistrada={changeClaseRegistrada} handleMoreInfo={handleMoreInfo} key={e._id} clase={e} />
+                    filteredClasses.map(e => (
+                            <Clase handleOpenDialog={handleOpenDialog} handleMoreInfo={handleMoreInfo} key={e._id} clase={e} />
                         ))
                     :
                         <Box sx={{ height: '100vh', display: 'flex',
@@ -280,20 +361,22 @@ function RegistroClasesAlumnos({changeContent}) {
                         </Box>
                 }
             </Box >
-            <Box sx={{ width: '100%', visibility: { xs: 'hidden', sm: 'visible' }, display: 'flex', height: '100%', justifyContent: 'space-around', alignItems: 'center', flexWrap: 'wrap' }}>
-                <Card
-                    sx={{
-                        textAlign: "left",
-                        marginLeft: "5px",
-                        border: "2px solid  rgb(165, 165, 180)",
-                        borderRadius: "8px",
-                        width: { lg: '30%', sm: '40%' },
-                        height: '40%',
-                        minHeight: '293px',
-                        minWidth: '340px',
-                        overflowY: 'scroll'
-                    }}
-                >
+            <Box sx={{ width: '100%', display: {xs: 'none', sm: 'flex'}, height: '100vh', justifyContent: 'space-around', alignItems: 'center', flexWrap: 'wrap' }}>
+                <Box sx={{ flexDirection: 'column' }}>
+                    <Card
+                        sx={{
+                            textAlign: "left",
+                            ml: "1",
+                            my: 2,
+                            border: "2px solid  rgb(165, 165, 180)",
+                            borderRadius: "8px",
+                            width: { lg: '30%', sm: '40%' },
+                            
+                            minHeight: '293px',
+                            minWidth: '340px',
+                            overflowY: 'scroll'
+                        }}
+                    >
                     <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <Typography
                             gutterBottom
@@ -335,27 +418,50 @@ function RegistroClasesAlumnos({changeContent}) {
                         >
                         </TextField>
                     </CardContent>
-                </Card>
-                <Box sx={{ width: { lg: '60%', sm: '90%' }, height: { lg: '95%', sm: '50%' }, maxHeight: '100vh', minWidth: '548px' }}>
-                    <DataGrid rows={filteredClasses} columns={columns} disableSelectionOnClick={true} getRowId={(row) => row._id} getRowHeight={() => 'auto'}
+                    </Card>
+                    <MiRegistro />
+                </Box>
+                <Box
+                    sx={{
+                        width: { lg: '60%', sm: '90%' },
+                        height: { lg: '95%', sm: '50%' },
+                        maxHeight: '100vh', minWidth: '548px',
+                        '& .theme--ListaEspera': {
+                        bgcolor: 'lightyellow'
+                        },
+                        '& .theme--Inscrito': {
+                        bgcolor: 'lightgreen'
+                        }
+                    }}
+                >
+                    <DataGrid 
+                        rows={filteredClasses} columns={columns} 
+                        disableSelectionOnClick={true}
+                        getRowId={(row) => row._id}
+                        getRowHeight={() => 'auto'}
                         filterModel={{
                             items: items
-                        }
-                        }
+                        }}
+                        getRowClassName={(params) => `theme--${params.row.status}`}
 
                     />
-                </Box>
+                </Box>          
+                <Modal
+                    open={openMoreInfo}
+                    onClose={() => setOpenMoreInfo(!openMoreInfo)}
+                    sx={{overflowY: 'scroll'}}
+                >
+                    <>                
+                        <ClaseModal clase={currentClase} />
+                    </>
+                </Modal>
             </Box>
-            <ConfirmationDialog clase={claseRegistrada} handleClose={handleCloseDialog} open={openConfirmationDialog} changeClaseRegistrada={changeClaseRegistrada}/>
-            <Modal
-                open={openMoreInfo}
-                onClose={() => setOpenMoreInfo(!openMoreInfo)}
-                sx={{overflowY: 'scroll'}}
-            >
-                <>                
-                    <ClaseModal clase={currentClase} />
-                </>
-            </Modal>
+            <ConfirmationDialog clase={claseRegistrada} handleClose={handleCloseDialog} open={openConfirmationDialog} handleClaseRegistrada={handleClaseRegistrada} handleListaEspera={handleListaEspera}/> 
+            <Snackbar open={selectAlertOpen} autoHideDuration={8000} onClose={() => setSelectAlertOpen(false)}>
+                <Alert severity='info'>
+                    Selecciona un alumno para inscribir clases o entrar a la lista de espera
+                </Alert>
+            </Snackbar>
         </>
     )
 }

@@ -73,7 +73,7 @@ const Profile = () =>{
                 redirect: 'follow',
                 body: new URLSearchParams(
                     {
-                        idUsuario : userValues._id
+                        idUser : userValues._id
                     }
                 )
             })
@@ -92,7 +92,7 @@ const Profile = () =>{
        const getUserStudents = () =>{
             getStudents().then(
                 (data) => {
-                    const students = data.filter(student => student.idUsuario === userValues._id);
+                    const students = data.filter(student => student.idUser === userValues._id);
                     setStudents(students);
                     //console.log(students)
             });
@@ -123,7 +123,7 @@ const Profile = () =>{
             }
         })
         .finally(() => {
-            findStudents(new URLSearchParams({'idUsuario': userValues._id})).then(
+            findStudents(new URLSearchParams({'idUser': userValues._id})).then(
                 (data) => {
                     console.log(data);
                     setStudents(data);
