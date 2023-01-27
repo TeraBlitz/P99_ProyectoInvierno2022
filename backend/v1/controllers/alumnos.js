@@ -142,10 +142,10 @@ async function findAlumno(req, res) {
         let key = "";
         let value = "";
 
-        if (req.body.idUsuario) {
-        key = "idUsuario";
-        value = req.body.idUsuario;
-        query = { idUsuario: value };
+        if (req.body.idUser) {
+        key = "idUser";
+        value = req.body.idUser;
+        query = { idUser: value };
         } else if (req.body.curp) {
         key = "curp";
         value = req.body.curp;
