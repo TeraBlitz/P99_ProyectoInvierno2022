@@ -45,7 +45,7 @@ const ClaseModal = ({clase}) => {
                                 <TableCell align="center">{clase.martes ? clase.martes : '-'}</TableCell>
                             </TableRow>
                             <TableRow sx={{ '&:last-child td': { border: 0 } }}>
-                                <TableCell align="center"><strong>Miercoles</strong></TableCell>
+                                <TableCell align="center"><strong>Miércoles</strong></TableCell>
                                 <TableCell align="center">{clase.miercoles ? clase.miercoles : '-'}</TableCell>
                             </TableRow>
                             <TableRow sx={{ '&:last-child td': { border: 0 } }}>
@@ -57,7 +57,7 @@ const ClaseModal = ({clase}) => {
                                 <TableCell align="center">{clase.viernes ? clase.viernes : '-'}</TableCell>
                             </TableRow>
                             <TableRow sx={{ '&:last-child td': { border: 0 } }}>
-                                <TableCell align="center"><strong>Sabado</strong></TableCell>
+                                <TableCell align="center"><strong>Sábado</strong></TableCell>
                                 <TableCell align="center">{clase.sabado ? clase.sabado : '-'}</TableCell>
                             </TableRow>
                     </TableBody>

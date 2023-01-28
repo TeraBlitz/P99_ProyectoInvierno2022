@@ -109,9 +109,9 @@ const MisClasesEstudiante = () => {
     }
     return(
         <div>
-			<Box sx={{m: 2}}>
-				<Typography variant="h3">Mis clases</Typography>
-                <FormControl fullWidth>
+			<Box sx={{m: 2, overflow: 'hidden'}}>
+				<Typography variant="h3" sx={{ mb: 2 }}>Mis clases</Typography>
+                <FormControl fullWidth sx={{ mb: 2 }}>
                     <InputLabel>Estudiantes</InputLabel>
                     <Select
                         value={currentStudent || ''}
@@ -131,38 +131,36 @@ const MisClasesEstudiante = () => {
                         ))}
                     </Select>
                 </FormControl>
-				<div className="caja-tarjetas">
-					<div className="card-container">
-						{
-							clases === null ? 
-							<Box sx={{ display: 'flex',
-							alignContent: 'center', justifyContent: 'center', flexWrap: 'wrap'}}>
+				<div className="card-container">
+					{
+						clases === null ? 
+						<Box sx={{ display: 'flex',
+						alignContent: 'center', justifyContent: 'center', flexWrap: 'wrap'}}>
+							<Typography variant='h3' component='div' textAlign='center'>
+								Selecciona un estudiante para ver tus clases.
+							</Typography>
+						</Box>
+						:
+						clases.map(item => {	
+							return(
+								<TarjetaMisC
+									key={item._id}
+									clase={item}
+								/>
+							)
+						})
+					}
+					{
+						clases !== null && clases.length === 0 ? 
+						<Box sx={{ display: 'flex',
+								alignContent: 'center', justifyContent: 'center', flexWrap: 'wrap'}}>
 								<Typography variant='h3' component='div' textAlign='center'>
-									Selecciona un estudiante para ver tus clases.
+									No tienes clases inscritas.
 								</Typography>
-							</Box>
-							:
-							clases.map(item => {	
-								return(
-									<TarjetaMisC
-										key={item._id}
-										clase={item}
-									/>
-								)
-							})
-						}
-						{
-							clases !== null && clases.length === 0 ? 
-							<Box sx={{ display: 'flex',
-									alignContent: 'center', justifyContent: 'center', flexWrap: 'wrap'}}>
-									<Typography variant='h3' component='div' textAlign='center'>
-										No hay tienes clases inscritas.
-									</Typography>
-							</Box>
-							: 
-							null
-						}
-					</div>
+						</Box>
+						: 
+						null
+					}
 				</div>
             </Box>
         </div>

@@ -1,13 +1,16 @@
 import React, {useState} from "react";
-import datos from "./DataAlumnos"
-
-
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import FacebookIcon from '@mui/icons-material/Facebook';
 import Typography from '@mui/material/Typography';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Modal from '@mui/material/Modal';
 
 
@@ -73,35 +76,66 @@ export default function TarjetaMisC({ clase }){
                 </Typography>
                 <Typography variant="body2">
 					<strong>Horario:</strong>
-					<br/>
-                	{getHorario(clase)}
                 </Typography>
+				<TableContainer component={Paper} sx={{my: 1}}>
+					<Table  size="small">
+						<TableBody>
+								<TableRow sx={{ '&:last-child td': { border: 0 } }}>
+									<TableCell align="center"><strong>Lunes</strong></TableCell>
+									<TableCell align="center">{clase.lunes ? clase.lunes : '-'}</TableCell>
+								</TableRow>
+								<TableRow sx={{ '&:last-child td': { border: 0 } }}>
+									<TableCell align="center"><strong>Martes</strong> </TableCell>
+									<TableCell align="center">{clase.martes ? clase.martes : '-'}</TableCell>
+								</TableRow>
+								<TableRow sx={{ '&:last-child td': { border: 0 } }}>
+									<TableCell align="center"><strong>Miércoles</strong></TableCell>
+									<TableCell align="center">{clase.miercoles ? clase.miercoles : '-'}</TableCell>
+								</TableRow>
+								<TableRow sx={{ '&:last-child td': { border: 0 } }}>
+									<TableCell align="center"><strong>Jueves</strong></TableCell>
+									<TableCell align="center">{clase.jueves ? clase.jueves : '-'}</TableCell>
+								</TableRow>
+								<TableRow sx={{ '&:last-child td': { border: 0 } }}>
+									<TableCell align="center"><strong>Viernes</strong></TableCell>
+									<TableCell align="center">{clase.viernes ? clase.viernes : '-'}</TableCell>
+								</TableRow>
+								<TableRow sx={{ '&:last-child td': { border: 0 } }}>
+									<TableCell align="center"><strong>Sábado</strong></TableCell>
+									<TableCell align="center">{clase.sabado ? clase.sabado : '-'}</TableCell>
+								</TableRow>
+						</TableBody>
+					</Table>
+            	</TableContainer>
             </CardContent>
           <CardActions>
-            <Button size="small" onClick={handleOpen}>Mas Información</Button>
+            <Button size="small" onClick={handleOpen}>Más Información</Button>
               {/* Empieza el modal parent*/ }
                 <Modal
                     open={open}
                     onClose={handleClose}
+					sx={{display: 'flex',
+					alignContent: 'center', justifyContent: 'center'}}
                 >
-                    <Card sx={style}>
-                        <Typography variant="h5" component="div">
+                    <Card sx={{m: 1, p: 2, height: '250px'}}>
+                        <Typography variant="h5" component="div" gutterBottom>
                             Informacion Adicional
                         </Typography>
-                        <div className="spacer"></div>
-
                         <h5 className="leyendaFaltas">Maestro: </h5>
                         <Typography sx={{ mb: 1.5 }} color="text.secondary">
                             {clase.nombreProfesor} {clase.apellidosProfesor}
-                          </Typography>
-
-                          <h5 className="leyendaFaltas">Contacto: </h5>
-                          <Typography sx={{ mb: 1.5 }} color="text.secondary">
-								<Button variant="contained" className="btnContacto"
-										href="https://es-la.facebook.com/" target='_blank' > 
-									Contactanos
-								</Button>
-                          </Typography>
+						</Typography>
+                        <h5 className="leyendaFaltas">Modalidad: </h5>
+                        <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                            {clase.modalidad.charAt(0).toUpperCase() + clase.modalidad.slice(1)}
+						</Typography>
+						<h5 className="leyendaFaltas">Contacto: </h5>
+						<Typography sx={{ mb: 1.5 }} color="text.secondary">
+							<Button variant="contained" startIcon={<FacebookIcon />} sx={{mt: 1}}
+									href="https://es-la.facebook.com/" target='_blank'> 
+								Contactanos
+							</Button>
+						</Typography>
 
                     </Card>
                 </Modal>
