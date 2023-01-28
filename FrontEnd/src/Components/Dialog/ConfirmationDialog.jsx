@@ -6,14 +6,53 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export default function ConfirmationDialog({handleClaseRegistrada, handleClose, open, clase, handleListaEspera}) {
+export default function ConfirmationDialog({
+	handleClaseRegistrada, handleCancelarClaseRegistrada,
+	handleSalirListaEspera, handleClose, open, clase, handleListaEspera, action
+	}) {
 
   const handleClick = () =>{
-    {Number(clase.cupo_actual) < Number(clase.cupo_maximo) ?
-        handleClaseRegistrada(clase)
-      :
-        handleListaEspera(clase)
-    }
+	switch (action) {
+		case 'ListaEspera':
+			handleListaEspera(clase)
+			break;
+		case 'Registrar':
+			handleClaseRegistrada(clase)
+			break;
+		case 'CancelarInscripcion':
+			handleCancelarClaseRegistrada(clase);
+			break; 
+		case 'SalirLista':
+			handleSalirListaEspera(clase);
+			break; 
+	}
+  }
+
+  const dialogContent = (clase) => {
+	switch (action) {
+		case 'ListaEspera':
+			return `Estas seguro que quieres entrar a la lista de espera de la clase ${clase.clave} ${clase.nombre_curso} ${clase.nivel}.`
+		case 'Registrar':
+			return `Estas seguro que quieres inscribir la clase ${clase.clave} ${clase.nombre_curso} ${clase.nivel}, 
+			recuerda que hay inscripciones limitadas.`
+		case 'CancelarInscripcion':
+			return `Estas seguro que quieres cancelar tu inscripción de la clase ${clase.clave} ${clase.nombre_curso} ${clase.nivel}.`
+		case 'SalirLista':
+			return `Estas seguro que quieres salir de la lista de espera de la clase ${clase.clave} ${clase.nombre_curso} ${clase.nivel}.`
+	}
+  }
+
+  const dialogTitle = () => {
+	switch (action) {
+		case 'ListaEspera':
+			return '¿Entrar a lista de espera?'
+		case 'Registrar':
+			return '¿Inscribir esta clase? '
+		case 'CancelarInscripcion':
+			return '¿Cancelar inscripción?'
+		case 'SalirLista':
+			return '¿Salir de lista de espera?'
+	}
   }
 
   return (
@@ -24,21 +63,16 @@ export default function ConfirmationDialog({handleClaseRegistrada, handleClose, 
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
-        {Number(clase.cupo_actual) < Number(clase.cupo_maximo) ?
-          '¿Inscribir esta clase? '
-          :
-          '¿Entrar a lista de espera?'
-        }
+        <DialogTitle >
+			{
+				dialogTitle()
+			}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description"> 
-          {Number(clase.cupo_actual) < Number(clase.cupo_maximo) ?
-          `Estas seguro que quieres inscribir la clase ${clase.clave} ${clase.nombre_curso} ${clase.nivel}, 
-          recuerda que hay inscripciones limitadas.`
-          :
-          `Estas seguro que quieres entrar a la lista de espera de la clase ${clase.clave} ${clase.nombre_curso} ${clase.nivel}.`
-          }
+          <DialogContentText i> 
+			{
+				dialogContent(clase)
+			}	
           </DialogContentText>
         </DialogContent>
         <DialogActions>

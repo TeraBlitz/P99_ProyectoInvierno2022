@@ -63,7 +63,7 @@ const ClaseModal = ({clase}) => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <Typography><strong>Lugares disponibles:</strong> {(Number(clase.cupo_maximo) - Number(clase.cupo_actual)).toString()}</Typography>
+            <Typography><strong>Cupos:</strong> Curso  {(Number(clase.cupo_actual) / Number(clase.cupo_maximo) * 100).toString()}% lleno!</Typography>
         </Box>
         </>
     )

@@ -8,7 +8,7 @@ import CircleIcon from '@mui/icons-material/Circle';
 const MiRegistro = () => {
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ maxWidth: 345, maxHeight: 110, m: 2 }}>
         <CardContent>
         <Typography gutterBottom variant="body2" sx={{mb: 2, display: 'flex', alignItems: 'center'}}>
             Clases Inscritas

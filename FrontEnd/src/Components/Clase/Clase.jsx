@@ -38,7 +38,7 @@ function Clase({handleOpenDialog, handleMoreInfo, clase}) {
                     <Typography variant='body1'><strong>Nivel:</strong> {nivelDict[clase.nivel]}</Typography>
                         <Typography sx={{ color: clase.cupo_actual / clase.cupo_maximo >= 1 ? "red" : "black" }} variant='body1'>
                             { Number(clase.cupo_actual) / Number(clase.cupo_maximo)  >=1 ? <strong>Lleno</strong>
-                                : <strong>Quedan  {(Number(clase.cupo_maximo) - Number(clase.cupo_actual)).toString()}  puestos!</strong> 
+                                : <strong>Curso  {(Number(clase.cupo_actual) / Number(clase.cupo_maximo) * 100).toString()}% lleno!</strong> 
                             }
                         </Typography>
                 </Box>
