@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import datos from "./DataAlumnos"
 
 
@@ -32,44 +32,57 @@ import Modal from '@mui/material/Modal';
 
 
 // Renderizado de tarjeta individual
-export default function TarjetaMisC(props){
+export default function TarjetaMisC({ clase }){
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+	const [open, setOpen] = useState(false);
 
+	const handleOpen = () => {
+		setOpen(true);
+	};
+	const handleClose = () => {
+		setOpen(false);
+	};
+
+	const nivelDict = {
+        '1' : 'Desde cero',
+        '2' : 'Con bases',
+        '3' : 'Intermedio',
+        '4' : 'Avanzado'
+    }
+	const getHorario = (clase) => {
+        return `${clase.lunes ? `Lun: ${clase.lunes}` : ''}
+                ${clase.martes ? `Mar: ${clase.martes}` : ''}
+                ${clase.miercoles ? `Mierc: ${clase.miercoles}` : ''}
+                ${clase.jueves ? `Juev: ${clase.jueves}` : ''}
+                ${clase.viernes ? `Vier: ${clase.viernes}` : ''}
+                ${clase.sabado ? `Sab: ${clase.sabado}` : ''}`
+    }
 
     return(
       <div>
-        <Card sx={{ minWidth: 275, bgcolor: 'grey.200' }}>
+        <Card sx={{ maxWidth: 275}}>
             <CardContent>
                 <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                {props.item.claveCurso}
+                	{clase.clave}
                 </Typography>
                 <Typography variant="h5" component="div">
-                {props.item.nombre}
+                	{clase.nombre_curso}
                 </Typography>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {props.item.nivel}
+                	{nivelDict[clase.nivel]}
                 </Typography>
                 <Typography variant="body2">
-                {props.item.horario}
-
+					<strong>Horario:</strong>
+					<br/>
+                	{getHorario(clase)}
                 </Typography>
-                <h5 className="leyendaFaltas">Faltas: {props.item.faltas}</h5>
             </CardContent>
           <CardActions>
-            <Button size="small" onClick={handleOpen}>Mas Infromacion</Button>
+            <Button size="small" onClick={handleOpen}>Mas Información</Button>
               {/* Empieza el modal parent*/ }
                 <Modal
                     open={open}
                     onClose={handleClose}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
                 >
                     <Card sx={style}>
                         <Typography variant="h5" component="div">
@@ -79,24 +92,16 @@ export default function TarjetaMisC(props){
 
                         <h5 className="leyendaFaltas">Maestro: </h5>
                         <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                            {props.item.maestro}
+                            {clase.nombreProfesor} {clase.apellidosProfesor}
                           </Typography>
 
                           <h5 className="leyendaFaltas">Contacto: </h5>
                           <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                            {props.item.contacto}
+								<Button variant="contained" className="btnContacto"
+										href="https://es-la.facebook.com/" target='_blank' > 
+									Contactanos
+								</Button>
                           </Typography>
-
-                          <h5 className="leyendaFaltas">Link: </h5>
-                          <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                            {props.item.link}
-                          </Typography>
-
-                          <h5 className="leyendaFaltas">Notas del profesor: </h5>
-                          <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                             {props.item.notas}
-                          </Typography>
-
 
                     </Card>
                 </Modal>
