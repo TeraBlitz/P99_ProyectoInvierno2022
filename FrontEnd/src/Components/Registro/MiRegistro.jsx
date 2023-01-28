@@ -8,14 +8,14 @@ import CircleIcon from '@mui/icons-material/Circle';
 const MiRegistro = () => {
 
   return (
-    <Card sx={{ maxWidth: 345, maxHeight: 110, m: 2 }}>
+    <Card sx={{ maxWidth: 345, maxHeight: 150, ml: 2}}>
         <CardContent>
         <Typography gutterBottom variant="body2" sx={{mb: 2, display: 'flex', alignItems: 'center'}}>
             Clases Inscritas
             <CircleIcon sx={{ml: 2, color: 'lightgreen'}}/>
         </Typography>
         <Divider variant="middle"/>
-        <Typography gutterBottom variant="body2" sx={{mt: 2, display: 'flex', alignItems: 'center'}}>
+        <Typography variant="body2" sx={{mt: 2, display: 'flex', alignItems: 'center'}}>
             Lista de espera
             <CircleIcon sx={{ ml: 2,color: 'lightyellow'}}/>
         </Typography>

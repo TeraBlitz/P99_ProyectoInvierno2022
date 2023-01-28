@@ -11,6 +11,7 @@ import Modal from '@mui/material/Modal'
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import SearchIcon from '@mui/icons-material/Search';
 import { getStudents } from '../../api/students'
 import { getClasses } from '../../api/classes'
 import { userContext } from './../../App.jsx'
@@ -94,6 +95,10 @@ function RegistroClasesAlumnos({changeContent}) {
         return `${params.row.nombreProfesor} ${params.row.apellidosProfesor}`
     }
 
+    const getCupo = (params) => {
+        return `${(Number(params.row.cupo_actual) / Number(params.row.cupo_maximo) * 100).toString()}%`
+    }
+
     const columns = [
         {
             field: 'clavePeriodo',
@@ -105,12 +110,12 @@ function RegistroClasesAlumnos({changeContent}) {
         { 
             field: 'clave',
             headerName: 'Clave',
-            width: 100 
+            width: 90 
         },
         {
             field: 'nombre_curso',
             headerName: 'Curso',
-            width: 120,
+            width: 90,
             editable: false,
         },
         {
@@ -142,9 +147,17 @@ function RegistroClasesAlumnos({changeContent}) {
         {
             field: 'profesor',
             headerName: 'Profesor',
-            width: 120,
+            width: 140,
             editable: 'false',
             valueGetter: getProfesor,
+        },
+        ,
+        {
+            field: 'cupos',
+            headerName: 'Curso % lleno',
+            width: 100,
+            editable: 'false',
+            valueGetter: getCupo,
         },
         {
             field: "actions",
@@ -168,6 +181,10 @@ function RegistroClasesAlumnos({changeContent}) {
     ];
 
     const handleClick = (clase) => {
+        if (currentStudent == null) {
+            setSelectAlertOpen(true);
+            return
+        }  
         switch (clase.status) {
             case 'Inscrito':
                 setDialogAction('CancelarInscripcion')
@@ -178,7 +195,10 @@ function RegistroClasesAlumnos({changeContent}) {
                 handleOpenDialog(clase);
                 break;
             case '':
-                setDialogAction('Registrar')
+                Number(params.row.cupo_actual) < Number(params.row.cupo_maximo) ?
+                    setDialogAction('Registrar')
+                :
+                    setDialogAction('ListaEspera')
                 handleOpenDialog(clase);
         }
     }
@@ -233,11 +253,7 @@ function RegistroClasesAlumnos({changeContent}) {
         filterClasses(e.target.value);
     }
 
-    const handleListaEspera = (clase) =>{
-        if (currentStudent == null) {
-            setSelectAlertOpen(true);
-            return
-        }     
+    const handleListaEspera = (clase) =>{   
         let lista = [];   
         getWaitList().then((data) => {
             lista = data.filter(lista => lista.idAlumno === currentStudent._id);
@@ -254,10 +270,6 @@ function RegistroClasesAlumnos({changeContent}) {
     }
 
     const handleSalirListaEspera = (clase) => {
-        if (currentStudent == null) {
-            setSelectAlertOpen(true);
-            return
-        }  
         let periodo = [];
         let myWaitList = [];
         findTerm(new URLSearchParams({ 'clave' : clase.clavePeriodo}))
@@ -277,11 +289,7 @@ function RegistroClasesAlumnos({changeContent}) {
         })
     }
 
-    const handleClaseRegistrada = (clase) => {
-        if (currentStudent == null) {
-            setSelectAlertOpen(true);
-            return
-        }  
+    const handleClaseRegistrada = (clase) => { 
         // Hacer validación de numero de clases disponibles por inscribir
         if (claseRegistrada[0]) {
             setError('block')
@@ -307,10 +315,6 @@ function RegistroClasesAlumnos({changeContent}) {
     }
 
     const handleCancelarClaseRegistrada = (clase) => {
-        if (currentStudent == null) {
-            setSelectAlertOpen(true);
-            return
-        }  
         let periodo = []
         let myClassStudent = []
         findTerm(new URLSearchParams({ 'clave' : clase.clavePeriodo}))
@@ -397,7 +401,7 @@ function RegistroClasesAlumnos({changeContent}) {
                 </FormControl>
                 <TextField label='Nombre' value={nameFilter || ''} onChange={handleNameFilter} helperText="Busca tu clase" sx={{display: {xs: 'flex', sm: 'none'}, mt: 1 }} fullWidth/>
             </Box>
-            <Box sx={{ textAlign: 'center', width: '100%', paddingX: '20px', paddingBottom: '10px', overflowY: 'scroll', display: { xs: 'block', sm: 'none' } }}>
+            <Box sx={{ textAlign: 'center', width: '100%', paddingX: '20px', paddingBottom: '10px', overflowY: 'scroll', display: { xs: 'block', md: 'none' } }}>
                 {
                     filteredClasses.length !== 0 ?    
                     filteredClasses.map(e => (
@@ -412,57 +416,55 @@ function RegistroClasesAlumnos({changeContent}) {
                         </Box>
                 }
             </Box >
-            <Box sx={{ width: '100%', display: {xs: 'none', sm: 'flex'}, justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', flexDirection:'column' }}>
-                <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Box 
+                sx={{ display: {xs: 'none', md: 'flex'},
+                justifyContent: 'center', alignItems: 'center',
+                flexDirection:'column' }}
+            >
+                <Box sx={{display: 'flex'}}>
                     <Card
                         sx={{
-                            textAlign: "left",
-                            ml: 1,
-                            my: 2,
-                            '& .MuiTextField-root': { m: 1, width: '35ch' },
-                            minWidth: '340px',
+                            textAlign: "center", ml: 1, my: 2,
+                            display: 'flex'
                         }}
+                    >
+                        <SearchIcon color='primary' width='2em' height='2em' sx={{alignSelf: 'center', ml: 0.5}}/>
+                        <CardContent 
+                            sx={{ display: 'flex', flexDirection: 'row',
+                            flexWrap: 'wrap', alignItems: 'center',
+                            '& .MuiTextField-root': { m: 1, width: '25ch' }, p: 1}}
                         >
-                    <Typography
-                        gutterBottom
-                        variant="h5"
-                        component="div"
-                        sx={{ textAlign: "center", fontFamily: 'arial', mt: 1}}
-                        >
-                        Busqueda
-                    </Typography>
-                    <CardContent sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                        <TextField
-                            style={{ paddingBottom: "15px", fontFamily: 'arial', width: '25ch' }}
-                            label="Curso"
-                            onChange={e => { setItems([{ columnField: 'nombre_curso', operatorValue: 'contains', value: e.target.value }]) }}></TextField>
-                        <TextField
-                            style={{ paddingBottom: "15px", width: "25ch", fontFamily: 'arial' }}
-                            label="Nivel"
-                            onChange={e => { setItems([{ columnField: 'nivel', operatorValue: 'contains', value: e.target.value }]) }}
-                            select
-                            >
-                            {["", "Desde cero", "Con bases", "Intermedio", "Avanzado"].map(e => (
-                                <MenuItem value={e} key={e}>
-                                    {e}
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                        <TextField
-                            style={{ paddingBottom: "15px", width: "25ch", fontFamily: 'arial' }}
-                            label="Periodo"
-                            onChange={e => { setItems([{ columnField: 'clavePeriodo', operatorValue: 'contains', value: e.target.value }]) }}
-                            >
-                        </TextField>
-                        <TextField
-                            style={{ paddingBottom: "15px", width: "25ch", fontFamily: 'arial' }}
-                            label="Modalidad"
-                            onChange={e => { setItems([{ columnField: 'modalidad', operatorValue: 'contains', value: e.target.value }]) }}
-                            >
-                        </TextField>
-                    </CardContent>
+                            <TextField
+                                style={{ fontFamily: 'arial'}}
+                                label="Curso"
+                                onChange={e => { setItems([{ columnField: 'nombre_curso', operatorValue: 'contains', value: e.target.value }]) }}></TextField>
+                            <TextField
+                                style={{ fontFamily: 'arial' }}
+                                label="Nivel"
+                                onChange={e => { setItems([{ columnField: 'nivel', operatorValue: 'contains', value: e.target.value }]) }}
+                                select
+                                >
+                                {["", "Desde cero", "Con bases", "Intermedio", "Avanzado"].map(e => (
+                                    <MenuItem value={e} key={e}>
+                                        {e}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                            <TextField
+                                style={{ fontFamily: 'arial'}}
+                                label="Periodo"
+                                onChange={e => { setItems([{ columnField: 'clavePeriodo', operatorValue: 'contains', value: e.target.value }]) }}
+                                >
+                            </TextField>
+                            <TextField
+                                style={{ fontFamily: 'arial'}}
+                                label="Modalidad"
+                                onChange={e => { setItems([{ columnField: 'modalidad', operatorValue: 'contains', value: e.target.value }]) }}
+                                >
+                            </TextField>
+                        </CardContent>
                     </Card>
-                    <MiRegistro />
+                    <MiRegistro/>
                 </Box>
                 <Box
                     sx={{
