@@ -154,7 +154,7 @@ function RegistroClasesAlumnos({changeContent}) {
         ,
         {
             field: 'cupos',
-            headerName: 'Curso % lleno',
+            headerName: '% curso lleno',
             width: 100,
             editable: 'false',
             valueGetter: getCupo,
@@ -195,7 +195,7 @@ function RegistroClasesAlumnos({changeContent}) {
                 handleOpenDialog(clase);
                 break;
             case '':
-                Number(params.row.cupo_actual) < Number(params.row.cupo_maximo) ?
+                Number(clase.cupo_actual) < Number(clase.cupo_maximo) ?
                     setDialogAction('Registrar')
                 :
                     setDialogAction('ListaEspera')
@@ -305,10 +305,10 @@ function RegistroClasesAlumnos({changeContent}) {
                     'idAlumno' : currentStudent._id,
                     'idPeriodo' : periodo[0]._id
                 })).then((data) => {
-                    //console.log(data);
-                    setClaseRegistrada([clase._id])
                     clase.status = 'Inscrito'
                     handleCloseDialog();
+                }).catch((error) => {
+                    console.log(error)
                 })
             })
         }
