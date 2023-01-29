@@ -308,7 +308,8 @@ function RegistroClasesAlumnos({changeContent}) {
                     clase.status = 'Inscrito'
                     handleCloseDialog();
                 }).catch((error) => {
-                    console.log(error)
+                    console.log(error);
+                    alert(error);
                 })
             })
         }
