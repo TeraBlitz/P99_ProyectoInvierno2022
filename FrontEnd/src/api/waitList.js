@@ -1,4 +1,4 @@
-import { postData, getData } from '../utils/requestUtils'
+import { postData, getData, deleteData } from '../utils/requestUtils'
 
 export const createWaitList = (body) => {
     return postData('https://p99test.fly.dev/v1/listas/create', body)
@@ -13,5 +13,5 @@ export const getWaitList = () => {
 }
 
 export const deleteWaitList = (id) => {
-    return postData('https://p99test.fly.dev/v1/listas/delete', id)
+    return deleteData('https://p99test.fly.dev/v1/listas/delete', id)
 }

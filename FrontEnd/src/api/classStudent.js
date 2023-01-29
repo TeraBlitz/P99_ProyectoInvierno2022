@@ -1,4 +1,4 @@
-import { postData, getData } from '../utils/requestUtils'
+import { postData, getData, deleteData } from '../utils/requestUtils'
 
 export const createClassStudent = (body) => {
     return postData('https://p99test.fly.dev/v1/alumnoClases/create', body)
@@ -9,5 +9,5 @@ export const getClassStudent = () => {
 }
 
 export const deleteClassStudent = (id) => {
-    return postData('https://p99test.fly.dev/v1/alumnoClases/delete', id)
+    return deleteData('https://p99test.fly.dev/v1/alumnoClases/delete', id)
 }
