@@ -405,7 +405,7 @@ function RegistroClasesAlumnos({changeContent}) {
                 {
                     filteredClasses.length !== 0 ?    
                     filteredClasses.map(e => (
-                        <Clase handleOpenDialog={handleOpenDialog} handleMoreInfo={handleMoreInfo} key={e._id} clase={e} />
+                        <Clase handleClick={handleClick} handleMoreInfo={handleMoreInfo} key={e._id} clase={e} />
                         ))
                         :
                         <Box sx={{ height: '100vh', display: 'flex',
