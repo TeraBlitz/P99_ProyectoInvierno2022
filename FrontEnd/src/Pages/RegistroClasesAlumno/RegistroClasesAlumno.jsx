@@ -399,7 +399,7 @@ function RegistroClasesAlumnos({changeContent}) {
                         ))}
                     </Select>
                 </FormControl>
-                <TextField label='Nombre' value={nameFilter || ''} onChange={handleNameFilter} helperText="Busca tu clase" sx={{display: {xs: 'flex', sm: 'none'}, mt: 1 }} fullWidth/>
+                <TextField label='Nombre' value={nameFilter || ''} onChange={handleNameFilter} helperText="Busca tu clase" sx={{display: {xs: 'flex', md: 'none'}, mt: 1 }} fullWidth/>
             </Box>
             <Box sx={{ textAlign: 'center', width: '100%', paddingX: '20px', paddingBottom: '10px', overflowY: 'scroll', display: { xs: 'block', md: 'none' } }}>
                 {
