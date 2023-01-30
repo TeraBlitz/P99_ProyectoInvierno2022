@@ -959,24 +959,24 @@ export default function ShowClass() {
 
   const columns = useMemo(
     () => [
-      { field: "clave", headerName: "Clave", width: 70 },
-      { field: "nombre_curso", headerName: "Curso", width: 120 },
-      { field: "niveles", headerName: "Nivel", width: 100 },
+      { field: "clave", headerName: "Clave", width: 68 },
+      { field: "nombre_curso", headerName: "Curso", width: 80 },
+      { field: "niveles", headerName: "Nivel", width: 95 },
       {
         field: "nombreCompleto",
         headerName: "Profesor",
-        width: 140,
+        width: 150,
         sortable: false,
       },
-      { field: "cupo_maximo", headerName: "Capacidad", width: 160 },
-      { field: "edades", headerName: "Edades", width: 160 },
-      { field: "fechas", headerName: "Fechas", width: 160 },
-      { field: "modalidad", headerName: "modalidad", width: 111 },
+      { field: "cupo_maximo", headerName: "Capacidad", width: 90 },
+      { field: "edades", headerName: "Edades", width: 70 },
+      { field: "fechas", headerName: "Fechas", width: 200 },
+      { field: "modalidad", headerName: "modalidad", width: 88 },
       {
         field: "actions",
         headerName: "Acciones",
         type: "actions",
-        width: 175,
+        width: 125,
         renderCell: (params) => <Actions {...{ params, seleccionarConsola }} />,
       },
       {
@@ -1122,9 +1122,6 @@ export default function ShowClass() {
             >
               <InsertDriveFile /> Importar CSV
             </Button>
-
-
-
 
         <Box sx={{
            position:"absolute",
