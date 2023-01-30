@@ -7,9 +7,8 @@ async function getAllProfesor(req, res) {
     try {
         const database = clientConnect.db(mongodbInf.database);
         const collection = database.collection(COLLECTION_NAME);
-
         const result = await collection.find().toArray();
-        // console.log(JSON.stringify(result))
+        console.log(JSON.stringify(result))
         res.send(result);
     } catch (err) {
         res.send(`ERROR: ${err}`);
