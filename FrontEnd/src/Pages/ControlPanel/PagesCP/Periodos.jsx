@@ -83,10 +83,11 @@ export default function Periodos() {
 
       if (element.clavePeriodo === clave){
 
-        if(listaProfes.includes(element.matriculaMaestro)){
+        console.log(element)
+        if(listaProfes.includes(element.matriculaProfesor)){
 
         }else{
-            listaProfes.push(element.matriculaMaestro)
+            listaProfes.push(element.matriculaProfesor)
         }
 
       }
