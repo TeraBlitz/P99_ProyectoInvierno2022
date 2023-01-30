@@ -58,7 +58,7 @@ const ControlPanel = ({changeContent}) => {
     const  getPeriodos = async () => {
       const res = await axios.get("https://p99test.fly.dev/v1/periodos");
       setData(res.data);
-      console.log('Fetch Periodos', res.data)
+      //console.log('Fetch Periodos', res.data)
       periodoActual = compararFecha(res.data)
     };
 
@@ -122,7 +122,7 @@ function contarClases(datos){
     let contadorClases = 0;
 
     datos.forEach(element => {
-        console.log("Periodo: ", element.clavePeriodo)
+        //console.log("Periodo: ", element.clavePeriodo)
         if(element.clavePeriodo === periodoActual){
             contadorClases = contadorClases +1
         }

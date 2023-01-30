@@ -27,8 +27,9 @@ import { getStudents } from "../../../api/students";
 export default function ShowClass() {
   let array = [];
   let array2 = [];
+  let array3 = [];
   // Selector de periodos
-  let id;
+  let id = "";
   const [dataPeriodo, setDataPeriodo] = useState([]);
 
   const getPeriodos = async () => {
@@ -438,12 +439,13 @@ export default function ShowClass() {
   };
 
   let seleccionarConsola = (consola, caso) => {
-    
+    setNuevaClase(consola)
+    array3 = consola
+    id = array3._id
     
     if (caso === "Editar") {
       editClasses(consola);
     } else if (caso === "Eliminar") {
-      id = consola._id;
       abrirCerrarModalEliminar();
     } 
   };
@@ -503,6 +505,25 @@ export default function ShowClass() {
     setModalEliminar(!modalEliminar);
   };
 
+  const postDelete = async (e) => {
+    console.log(array3._id)
+    try {
+      await fetch("https://p99test.fly.dev/v1/clases/delete", {
+        method: "Delete",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          _id: nuevaClase._id,
+        }),
+      });
+      abrirCerrarModalEliminar();
+      resetClases();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const bodyEliminar = (
     <div
       style={{
@@ -531,7 +552,7 @@ export default function ShowClass() {
       <br />
       <br />
       <div align="center">
-        <Button color="error" onClick={deleteClass(id)}>
+        <Button color="error" onClick={postDelete}>
           Confirmar
         </Button>
         <Button onClick={() => abrirCerrarModalEliminar()} color="primary">
@@ -540,21 +561,9 @@ export default function ShowClass() {
       </div>
     </div>
   );
+ 
 
-  async function deleteClass(id) {
-    await fetch("https://p99test.fly.dev/v1/clases/delete", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
-        _id: id,
-      }),
-    }).then(() => {
-      resetClases();
-    });
-    handleClose();
-  }
+ 
 
   //-------------------------------Datos de ventanas modales---------------
   const bodyInsertar = (
