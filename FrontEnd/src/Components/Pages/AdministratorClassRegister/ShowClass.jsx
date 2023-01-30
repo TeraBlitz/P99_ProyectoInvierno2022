@@ -1001,8 +1001,8 @@ export default function ShowClass() {
           width: 250,
           position: "absolute",
           textAlign: "left",
-          marginLeft: "910px",
-          marginTop: "30px",
+          marginLeft: "940px",
+          marginTop: "52px",
           fontFamily:'arial',
           borderRadius: "8px",
 
@@ -1018,12 +1018,12 @@ export default function ShowClass() {
       </Box>
       <Card
         sx={{
-          maxWidth: 255,
+          width: 1140,
           position: "absolute",
           textAlign: "left",
-          marginLeft: "5px",
+          marginLeft: "50px",
           marginTop: "120px",
-          border: "2px solid  rgb(165, 165, 180)",
+          bgcolor: "grey.200",
           borderRadius: "8px",
         }}
       >
@@ -1032,12 +1032,12 @@ export default function ShowClass() {
             gutterBottom
             variant="h5"
             component="div"
-            sx={{ textAlign: "center", fontFamily: "arial" }}
+            sx={{ textAlign: "left", fontFamily: "arial", marginLeft:"15px" }}
           >
             Filtros
           </Typography>
           <TextField
-            style={{ paddingBottom: "15px", fontFamily: "arial" }}
+            style={{ paddingBottom: "5px", fontFamily: "arial", marginLeft:"10px" , width:330}}
             label="Curso"
             onChange={(e) => {
               setItems([
@@ -1050,7 +1050,7 @@ export default function ShowClass() {
             }}
           ></TextField>
           <TextField
-            style={{ paddingBottom: "15px", fontFamily: "arial" }}
+            style={{ paddingBottom: "5px", fontFamily: "arial" , marginLeft:"54px" , width:330}}
             label="Nivel"
             onChange={(e) => {
               setItems([
@@ -1063,7 +1063,7 @@ export default function ShowClass() {
             }}
           ></TextField>
           <TextField
-            style={{ paddingBottom: "15px", fontFamily: "arial" }}
+            style={{ paddingBottom: "5px", fontFamily: "arial", marginLeft:"40px"  , width:330}}
             label="Profesor"
             onChange={(e) => {
               setItems([
@@ -1084,7 +1084,7 @@ export default function ShowClass() {
           padding: "15px",
           height: "450px",
           position: "absolute",
-          marginLeft: "265px",
+          marginLeft: "40px",
         }}
       >
         <Typography
@@ -1093,17 +1093,19 @@ export default function ShowClass() {
           sx={{ textAlign: "left", mt: 3, mb: 3, fontFamily: "arial" }}
         >
           Clases
-          <div
-            style={{
-              display: "flex",
-              width: "50%",
-              justifyContent: "space-evenly",
-            }}
-          >
+          </Typography>
+
+          </Box>
             <Button
               variant="contained"
               color="success"
               onClick={() => addClass()}
+              sx={{
+                position:"absolute",
+                marginTop:"52px",
+                marginLeft:"620px",
+
+              }}
             >
               {<AddCircleOutlineIcon />} Crear
             </Button>
@@ -1111,13 +1113,27 @@ export default function ShowClass() {
               variant="contained"
               color="info"
               onClick={() => importFile()}
+              sx={{
+                position:"absolute",
+                marginTop:"52px",
+                marginLeft:"750px",
+                marginRight:"30px"
+              }}
             >
               <InsertDriveFile /> Importar CSV
             </Button>
-          </div>
-        </Typography>
 
-        <Box sx={{ height: "75vh", width: "64vw" }}>
+
+
+
+        <Box sx={{
+           position:"absolute",
+           height: "60vh",
+           width: "1140px" ,
+           marginTop:"280px",
+           marginLeft:"50px"
+
+           }}>
           <DataGrid
             columns={columns}
             rows={data}
@@ -1165,7 +1181,6 @@ export default function ShowClass() {
                   <WaitList clase={currentClase} waitList={currentWaitList}/>
               </>
           </Modal>
-      </Box>
-    </div>
+      </div>
   );
 }
