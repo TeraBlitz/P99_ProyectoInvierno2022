@@ -27,7 +27,7 @@ import Inicio from './Pages/Inicio/Inicio'
 export const userContext = createContext()
 function App() {
     const [open, setOpen] = useState(false)
-    const [content, setContent] = useState('content')
+    const [content, setContent] = useState('Inicio')
     const [isSignedIn, setIsSignedIn] = useState(false)
     const [user, setUser] = useState({})
     const [loginError, setLoginError] = useState('none');
