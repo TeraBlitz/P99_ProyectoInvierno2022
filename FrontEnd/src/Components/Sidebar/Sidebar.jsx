@@ -32,7 +32,7 @@ function Sidebar(props) {
         },
         {
             key: 5,
-            title: 'Mis Clases (Estudiantes)',
+            title: 'Mis Clases',
             content: 'MisClases',
             rol: 'estudiante'
         },
