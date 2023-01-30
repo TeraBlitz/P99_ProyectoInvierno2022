@@ -18,6 +18,7 @@ import ForgotPassword from './Pages/ForgotPassword/ForgotPassword'
 import SignUp from './Pages/SignUp/SignUp'
 import { createUser } from './api/users'
 import { Password } from '@mui/icons-material'
+import Inicio from './Pages/Inicio/Inicio'
 
 
 
@@ -63,6 +64,8 @@ function App() {
         Alumnos: <Alumnos />,
 
         Profesores: <Profesores />,
+
+        Inicio: <Inicio/>
 
 
     }
@@ -118,6 +121,7 @@ function App() {
             <SignUp  createUser={createUser}/>
             :
             <userContext.Provider value={user}>
+
                 <Box id="main" sx={{ display: 'flex' }}>
                     <Sidebar open={open} changeDrawerState={changeDrawerState} changeContent={changeContent} handleSignOut={handleSignIn} />
                     <Box sx={{

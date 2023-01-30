@@ -49,6 +49,12 @@ function Sidebar(props) {
             content: '',
             rol: 'any'
         },
+        {
+            key: 8,
+            title: 'Inicio',
+            content: 'Inicio',
+            rol: 'any'
+        }
 
     ]
 
