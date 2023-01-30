@@ -113,9 +113,9 @@ function App() {
     }
 
     return !isSignedIn && hasAccount ?
-        <SignIn handleSignIn={handleSignIn} handleUser={handleUser} loginError={loginError} changeHasAccount = {changeHasAccount} /> || <SignUp></SignUp>
+        <SignIn handleSignIn={handleSignIn} handleUser={handleUser} loginError={loginError} changeHasAccount ={changeHasAccount}/> || <SignUp></SignUp>
         : !isSignedIn && !hasAccount ?
-            <SignUp  createUser={createUser}/>
+            <SignUp createUser={createUser} changeHasAccount={changeHasAccount}/>
             :
             <userContext.Provider value={user}>
                 <Box id="main" sx={{ display: 'flex' }}>
