@@ -24,7 +24,7 @@ h1{
     display: grid;
     gap: 20px;
     grid-template-columns: repeat(auto-fit,minmax(275px,1fr));
-
+    margin-bottom: 16px;
 
 
 }
