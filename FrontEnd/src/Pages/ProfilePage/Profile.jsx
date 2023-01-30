@@ -3,6 +3,8 @@ import Fab from '@mui/material/Fab';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
 import CircularProgress from '@mui/material/CircularProgress';
 import MuiAlert from '@mui/material/Alert';
@@ -66,28 +68,6 @@ const Profile = () =>{
         getUserInfo();
     }, []);
 
-    useEffect(() => {
-        const getUserStudents = () =>{
-            fetch(`https://p99test.fly.dev/v1/alumnos/find`,
-            {
-                method: 'POST',
-                redirect: 'follow',
-                body: new URLSearchParams(
-                    {
-                        idUser : userValues._id
-                    }
-                )
-            })
-            .then(response => response.json())
-            .then(result => {
-                setStudents(result);
-            })
-            .catch(error => {
-                console.log(error);
-            })
-        }
-        getUserStudents();
-    }, []);
 
     useEffect(() => {
        const getUserStudents = () =>{
@@ -161,7 +141,7 @@ const Profile = () =>{
                 </Box>
                 {
                     userValues.rol === 'estudiante' ?
-                    <Box sx={{ display: 'flex', flexDirection: 'column', position: 'absolute',  bottom: 16,  right: 16}}>
+                    <Box sx={{ display: {xs: 'flex', md: 'none'}, flexDirection: 'column', position: 'absolute',  bottom: 16,  right: 16}}>
                         <Fab color="primary" aria-label="add" sx={{ display: addStudent ? 'none' : ''}} 
                                 onClick={() => { setAddStudent(!addStudent); }}>
                             <AddIcon />
@@ -178,9 +158,9 @@ const Profile = () =>{
                 <TextField name="correo" label="Correo" InputProps={{readOnly: true}} value={userInfo.correo || ''}/>
             </Box>
 
-            <Box sx={{ fontFamily: 'default', fontSize: 'h6.fontSize', py: 2,
-                     display: userValues.rol === 'estudiante' ? 'flex' : 'none' }}>
-                Estudiante(s)
+            <Box sx={{ py: 2, display: userValues.rol === 'estudiante' ? 'flex' : 'none', justifyContent: 'space-between' }}>
+                <Typography variant='h6'>Estudiante(s)</Typography> 
+                <Button sx={{display: {xs: 'none', md: 'flex'}}} onClick={() => { setAddStudent(!addStudent); }} variant="outlined">Agregar estudiante </Button>
             </Box>
    
             <Box>
