@@ -529,7 +529,7 @@ export default function ShowClass() {
       style={{
         position: "absolute",
         width: 260,
-        height: 280,
+        height: 220,
         backgroundColor: "#fefefd",
         top: "50%",
         left: "50%",
