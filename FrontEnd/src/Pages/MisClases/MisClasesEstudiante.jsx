@@ -17,7 +17,7 @@ import { getClassStudent } from  './../../api/classStudent.js';
 import { userContext } from "../../App";
 
 
-const MisClasesEstudiante = () => {
+const MisClasesEstudiante = ({changeContent}) => {
 
 	const [students, setStudents] = useState(null);
     const [allClases, setAllClases] = useState(null);

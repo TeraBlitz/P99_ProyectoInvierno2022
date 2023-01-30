@@ -54,7 +54,7 @@ function App() {
 
         ControlPanel: <ControlPanel changeContent={changeContent} />,
 
-        MisClases: <MisClases />,
+        MisClases: <MisClases changeContent={changeContent}/>,
 
         inscripcion: <ShowClass />,
 
