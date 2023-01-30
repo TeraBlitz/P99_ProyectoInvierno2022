@@ -925,7 +925,7 @@ export default function Alumnos() {
           position: "absolute",
           textAlign: "left",
           marginLeft: "910px",
-          marginTop: "30px",
+          marginTop: "50px",
           fontFamily:'arial',
           borderRadius: "8px",
 
@@ -949,7 +949,7 @@ export default function Alumnos() {
           position: "absolute",
           textAlign: "left",
           marginLeft: "65px",
-          marginTop: "150px",
+          marginTop: "120px",
           bgcolor: "grey.200",
           borderRadius: "8px",
         }}
@@ -991,7 +991,7 @@ export default function Alumnos() {
           height: "450px",
           position: "absolute",
           marginLeft: "50px",
-          marginTop: "320px",
+          marginTop: "270px",
         }}
       >
         <DataGrid
