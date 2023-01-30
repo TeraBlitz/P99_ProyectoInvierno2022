@@ -32,7 +32,7 @@ const SignIn = ({isSignedIn, handleSignIn  , handleUser , loginError , changeHas
                 </Typography>
                 <Typography variant="h7" sx={{color:'red' , display: loginError , textAlign:'center'}}> usuario o contraseña incorrecta</Typography>
                     <TextField name="correo" required 
-                    fullWidth label='Usuario'
+                    fullWidth label='Correo'
                     sx={{my: 2, input: {color: 'white'}}}
                     InputLabelProps={{style: {color: '#E6F4F1'}}}
                     onChange={handleChange}
