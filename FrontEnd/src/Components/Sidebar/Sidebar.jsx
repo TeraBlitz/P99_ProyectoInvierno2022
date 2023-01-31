@@ -13,6 +13,12 @@ function Sidebar(props) {
     const userValues = useContext(userContext)
     const options = [
         {
+            key: 0,
+            title: 'Inicio',
+            content: 'Inicio',
+            rol: 'any'
+        },
+        {
             key: 1,
             title: 'Perfil',
             content: 'Profile',
