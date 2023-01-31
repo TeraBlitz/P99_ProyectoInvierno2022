@@ -63,7 +63,6 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
             setInfoOpen(true);
             return
         }
-        setAddStudent(!addStudent);
         createStudent(new URLSearchParams(studentData)).then((data) => {
             //console.log(data);
         })
@@ -71,6 +70,7 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
             //console.log(error.message);
             if (error.message.includes('Un documen')){
                 setAlertMessage('Estudiante agregado correctamente.')
+                setAddStudent(!addStudent);
                 setSuccessOpen(true);
             }
             else{

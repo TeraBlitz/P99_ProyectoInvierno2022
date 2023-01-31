@@ -18,6 +18,7 @@ import ForgotPassword from './Pages/ForgotPassword/ForgotPassword'
 import SignUp from './Pages/SignUp/SignUp'
 import { createUser } from './api/users'
 import { Password } from '@mui/icons-material'
+import Inicio from './Pages/Inicio/Inicio'
 
 
 
@@ -26,7 +27,7 @@ import { Password } from '@mui/icons-material'
 export const userContext = createContext()
 function App() {
     const [open, setOpen] = useState(false)
-    const [content, setContent] = useState('content')
+    const [content, setContent] = useState('Inicio')
     const [isSignedIn, setIsSignedIn] = useState(false)
     const [user, setUser] = useState({})
     const [loginError, setLoginError] = useState('none');
@@ -54,7 +55,7 @@ function App() {
 
         ControlPanel: <ControlPanel changeContent={changeContent} />,
 
-        MisClases: <MisClases />,
+        MisClases: <MisClases changeContent={changeContent}/>,
 
         inscripcion: <ShowClass />,
 
@@ -63,6 +64,8 @@ function App() {
         Alumnos: <Alumnos />,
 
         Profesores: <Profesores />,
+
+        Inicio: <Inicio/>
 
 
     }
@@ -82,6 +85,9 @@ function App() {
             changeHasAccount()
         })    }
 
+    const handleSignOut = () =>{
+        setIsSignedIn(false);
+    }
 
     const handleSignIn = (e) => {
         e.preventDefault();
@@ -113,13 +119,14 @@ function App() {
     }
 
     return !isSignedIn && hasAccount ?
-        <SignIn handleSignIn={handleSignIn} handleUser={handleUser} loginError={loginError} changeHasAccount = {changeHasAccount} /> || <SignUp></SignUp>
+        <SignIn handleSignIn={handleSignIn} handleUser={handleUser} loginError={loginError} changeHasAccount ={changeHasAccount}/> || <SignUp></SignUp>
         : !isSignedIn && !hasAccount ?
-            <SignUp  createUser={createUser}/>
+            <SignUp createUser={createUser} changeHasAccount={changeHasAccount}/>
             :
             <userContext.Provider value={user}>
+
                 <Box id="main" sx={{ display: 'flex' }}>
-                    <Sidebar open={open} changeDrawerState={changeDrawerState} changeContent={changeContent} handleSignOut={handleSignIn} />
+                    <Sidebar open={open} changeDrawerState={changeDrawerState} changeContent={changeContent} handleSignOut={handleSignOut} />
                     <Box sx={{
                         width: '100%',
                         position: 'relative',

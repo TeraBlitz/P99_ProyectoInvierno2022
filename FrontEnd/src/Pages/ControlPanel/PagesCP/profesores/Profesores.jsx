@@ -476,11 +476,11 @@ const bodyEliminar = (
     <div>
       <Card
         sx={{
-          width: 970,
+          width: 1120,
           position: "absolute",
           textAlign: "left",
           marginLeft: "65px",
-          marginTop: "150px",
+          marginTop: "125px",
           bgcolor: "grey.200",
           borderRadius: "8px",
         }}
@@ -495,7 +495,7 @@ const bodyEliminar = (
             Filtro
           </Typography>
            <TextField
-            style={{ paddingBottom: "10px", fontFamily: "arial" , width:920, marginLeft:7}}
+            style={{ paddingBottom: "10px", fontFamily: "arial" , width:1070, marginLeft:7}}
             label="Ingrese un nombre para buscar"
             onChange={(e) => {
               setItems([
@@ -514,8 +514,8 @@ const bodyEliminar = (
           width: 250,
           position: "absolute",
           textAlign: "left",
-          marginLeft: "910px",
-          marginTop: "30px",
+          marginLeft: "930px",
+          marginTop: "67px",
           fontFamily:'arial',
           borderRadius: "8px",
 
@@ -553,7 +553,7 @@ const bodyEliminar = (
           Profesores
 
           <Button
-            sx={{ marginLeft: "270px" }}
+            sx={{ marginLeft: "400px" }}
             variant="contained"
             color="success"
             onClick={() => abrirCerrarModalInsertar()}
@@ -569,10 +569,10 @@ const bodyEliminar = (
         sx={{
           width: "1150px",
           padding: "15px",
-          height: "450px",
+          height: "430px",
           position: "absolute",
           marginLeft: "50px",
-          marginTop: "300px"
+          marginTop: "270px"
         }}>
 
         <DataGrid

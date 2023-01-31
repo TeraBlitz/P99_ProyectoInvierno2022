@@ -17,12 +17,14 @@ import SignUpInput from '../../Components/SignUp/SignUpInput';
 const userData = {
     'user_name': '',
     'correo': '',
-    'password': ''
+    'password': '',
+    'verify_password': ''
 };
 
-const SignUp = ({createUser}) => {
+const SignUp = ({createUser, changeHasAccount}) => {
     const [userInfo, setUserInfo] = useState(userData);
     const [showPassword, setShowPassword] = useState(false);
+    const [showMessage, setShowMessage] = useState(false);
     
     const handleChange = (e) => setUserInfo(prevState => ({ ...prevState, [e.target.name]: e.target.value })); 
 
@@ -36,6 +38,10 @@ const SignUp = ({createUser}) => {
         // Enviar esta informacion a bd
         e.preventDefault();
         // Pasar esta función para añadir al usuario
+        if(userInfo.password !== userInfo.verify_password){
+            setShowMessage(true);
+            return
+        }
         createUser(userInfo); 
     };
     
@@ -49,16 +55,18 @@ const SignUp = ({createUser}) => {
                     <Typography component='h1' variant="h4" sx={{color: '#E6F4F1', mb: 1, fontWeight: '400', textAlign: 'center', width: '100%'}}>
                         Crea una cuenta
                     </Typography>
-                        <SignUpInput name={'user_name'} label={'Usuario'} value={userInfo.user_name} handleChange={handleChange}/>
-                        <SignUpInput name={'correo'} label={'Correo'} value={userInfo.correo} handleChange={handleChange} type={'email'}/>
+                        <Typography sx={{display: showMessage ? 'flex' : 'none', color: 'red'}}>
+                            Las contraseñas no coinciden, intenta de nuevo
+                        </Typography>
+                        <SignUpInput name={'user_name'} label={'Usuario'} value={userInfo.user_name} handleChange={handleChange} helperTextContent={'Crea tu usuario'}/>
+                        <SignUpInput name={'correo'} label={'Correo'} value={userInfo.correo} handleChange={handleChange} helperTextContent={''} type={'email'}/>
                         <FormControl
                             required 
                             sx={{input: {color: 'white'}, my: 1}} variant="outlined"
                             >
                             <InputLabel htmlFor="input-contraseña" sx={{color: '#E6F4F1'}}>Contraseña</InputLabel>
                             <OutlinedInput
-                                name={'password'}
-                                id="input-contraseña"
+                                name='password'
                                 type={showPassword ? 'text' : 'password'}
                                 endAdornment={
                                 <InputAdornment position="end">
@@ -79,13 +87,40 @@ const SignUp = ({createUser}) => {
                                 onInput={e => e.target.setCustomValidity('')}
                             />
                         </FormControl>
+                        <FormControl
+                            required 
+                            sx={{input: {color: 'white'}, my: 1}} variant="outlined"
+                            >
+                            <InputLabel htmlFor="input-contraseña" sx={{color: '#E6F4F1'}}>Confirmar contraseña</InputLabel>
+                            <OutlinedInput
+                                name='verify_password'
+                                type={showPassword ? 'text' : 'password'}
+                                endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={handleClickShowPassword}
+                                    onMouseDown={handleMouseDownPassword}
+                                    edge="end"
+                                    color='primary'
+                                    >
+                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                                }
+                                label="Verificar Contraseña"
+                                onChange={handleChange} fullWidth
+                                onInvalid={e => e.target.setCustomValidity(`Vuelve a escribir tu contraseña`)} 
+                                onInput={e => e.target.setCustomValidity('')}
+                            />
+                        </FormControl>
                     <Box sx={{my: 1}}>
                         <Button fullWidth type='submit' sx={{backgroundColor: '#4472C4', color: 'white'}}>Crear cuenta</Button>
                     </Box>
                     <Box>
                         <Typography variant="body1" sx={{color: '#E6F4F1'}}>
                         ¿Ya tienes una cuenta? 
-                        <Link sx={{pl: 1, color: '#0099DF'}} underline="hover">Inicia sesión!</Link>
+                        <Link sx={{pl: 1, color: '#0099DF'}} underline="hover" onClick={changeHasAccount}>Inicia sesión!</Link>
                         </Typography>
                     </Box>
                 </Box>

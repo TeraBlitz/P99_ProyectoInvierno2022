@@ -1,13 +1,16 @@
-import React from "react";
-import datos from "./DataAlumnos"
-
-
+import React, {useState} from "react";
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import FacebookIcon from '@mui/icons-material/Facebook';
 import Typography from '@mui/material/Typography';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Modal from '@mui/material/Modal';
 
 
@@ -32,71 +35,107 @@ import Modal from '@mui/material/Modal';
 
 
 // Renderizado de tarjeta individual
-export default function TarjetaMisC(props){
+export default function TarjetaMisC({ clase }){
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+	const [open, setOpen] = useState(false);
 
+	const handleOpen = () => {
+		setOpen(true);
+	};
+	const handleClose = () => {
+		setOpen(false);
+	};
+
+	const nivelDict = {
+        '1' : 'Desde cero',
+        '2' : 'Con bases',
+        '3' : 'Intermedio',
+        '4' : 'Avanzado'
+    }
+	const getHorario = (clase) => {
+        return `${clase.lunes ? `Lun: ${clase.lunes}` : ''}
+                ${clase.martes ? `Mar: ${clase.martes}` : ''}
+                ${clase.miercoles ? `Mierc: ${clase.miercoles}` : ''}
+                ${clase.jueves ? `Juev: ${clase.jueves}` : ''}
+                ${clase.viernes ? `Vier: ${clase.viernes}` : ''}
+                ${clase.sabado ? `Sab: ${clase.sabado}` : ''}`
+    }
 
     return(
       <div>
-        <Card sx={{ minWidth: 275, bgcolor: 'grey.200' }}>
+        <Card sx={{ maxWidth: 275}}>
             <CardContent>
                 <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                {props.item.claveCurso}
+                	{clase.clave}
                 </Typography>
                 <Typography variant="h5" component="div">
-                {props.item.nombre}
+                	{clase.nombre_curso}
                 </Typography>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {props.item.nivel}
+                	{nivelDict[clase.nivel]}
                 </Typography>
                 <Typography variant="body2">
-                {props.item.horario}
-
+					<strong>Horario:</strong>
                 </Typography>
-                <h5 className="leyendaFaltas">Faltas: {props.item.faltas}</h5>
+				<TableContainer component={Paper} sx={{my: 1}}>
+					<Table  size="small">
+						<TableBody>
+								<TableRow sx={{ '&:last-child td': { border: 0 } }}>
+									<TableCell align="center"><strong>Lunes</strong></TableCell>
+									<TableCell align="center">{clase.lunes ? clase.lunes : '-'}</TableCell>
+								</TableRow>
+								<TableRow sx={{ '&:last-child td': { border: 0 } }}>
+									<TableCell align="center"><strong>Martes</strong> </TableCell>
+									<TableCell align="center">{clase.martes ? clase.martes : '-'}</TableCell>
+								</TableRow>
+								<TableRow sx={{ '&:last-child td': { border: 0 } }}>
+									<TableCell align="center"><strong>Miércoles</strong></TableCell>
+									<TableCell align="center">{clase.miercoles ? clase.miercoles : '-'}</TableCell>
+								</TableRow>
+								<TableRow sx={{ '&:last-child td': { border: 0 } }}>
+									<TableCell align="center"><strong>Jueves</strong></TableCell>
+									<TableCell align="center">{clase.jueves ? clase.jueves : '-'}</TableCell>
+								</TableRow>
+								<TableRow sx={{ '&:last-child td': { border: 0 } }}>
+									<TableCell align="center"><strong>Viernes</strong></TableCell>
+									<TableCell align="center">{clase.viernes ? clase.viernes : '-'}</TableCell>
+								</TableRow>
+								<TableRow sx={{ '&:last-child td': { border: 0 } }}>
+									<TableCell align="center"><strong>Sábado</strong></TableCell>
+									<TableCell align="center">{clase.sabado ? clase.sabado : '-'}</TableCell>
+								</TableRow>
+						</TableBody>
+					</Table>
+            	</TableContainer>
             </CardContent>
           <CardActions>
-            <Button size="small" onClick={handleOpen}>Mas Infromacion</Button>
+            <Button size="small" onClick={handleOpen}>Más Información</Button>
               {/* Empieza el modal parent*/ }
                 <Modal
                     open={open}
                     onClose={handleClose}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
+					sx={{display: 'flex',
+					alignContent: 'center', justifyContent: 'center'}}
                 >
-                    <Card sx={style}>
-                        <Typography variant="h5" component="div">
+                    <Card sx={{m: 1, p: 2, height: '250px'}}>
+                        <Typography variant="h5" component="div" gutterBottom>
                             Informacion Adicional
                         </Typography>
-                        <div className="spacer"></div>
-
                         <h5 className="leyendaFaltas">Maestro: </h5>
                         <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                            {props.item.maestro}
-                          </Typography>
-
-                          <h5 className="leyendaFaltas">Contacto: </h5>
-                          <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                            {props.item.contacto}
-                          </Typography>
-
-                          <h5 className="leyendaFaltas">Link: </h5>
-                          <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                            {props.item.link}
-                          </Typography>
-
-                          <h5 className="leyendaFaltas">Notas del profesor: </h5>
-                          <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                             {props.item.notas}
-                          </Typography>
-
+                            {clase.nombreProfesor} {clase.apellidosProfesor}
+						</Typography>
+                        <h5 className="leyendaFaltas">Modalidad: </h5>
+                        <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                            {clase.modalidad.charAt(0).toUpperCase() + clase.modalidad.slice(1)}
+						</Typography>
+						<h5 className="leyendaFaltas">Contacto: </h5>
+						<Typography sx={{ mb: 1.5 }} color="text.secondary">
+							<Button variant="contained" startIcon={<FacebookIcon />} sx={{mt: 1}}
+									href="https://es-la.facebook.com/" target='_blank'> 
+								Contactanos
+							</Button>
+						</Typography>
 
                     </Card>
                 </Modal>

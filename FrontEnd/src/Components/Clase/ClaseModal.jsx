@@ -45,7 +45,7 @@ const ClaseModal = ({clase}) => {
                                 <TableCell align="center">{clase.martes ? clase.martes : '-'}</TableCell>
                             </TableRow>
                             <TableRow sx={{ '&:last-child td': { border: 0 } }}>
-                                <TableCell align="center"><strong>Miercoles</strong></TableCell>
+                                <TableCell align="center"><strong>Miércoles</strong></TableCell>
                                 <TableCell align="center">{clase.miercoles ? clase.miercoles : '-'}</TableCell>
                             </TableRow>
                             <TableRow sx={{ '&:last-child td': { border: 0 } }}>
@@ -57,13 +57,13 @@ const ClaseModal = ({clase}) => {
                                 <TableCell align="center">{clase.viernes ? clase.viernes : '-'}</TableCell>
                             </TableRow>
                             <TableRow sx={{ '&:last-child td': { border: 0 } }}>
-                                <TableCell align="center"><strong>Sabado</strong></TableCell>
+                                <TableCell align="center"><strong>Sábado</strong></TableCell>
                                 <TableCell align="center">{clase.sabado ? clase.sabado : '-'}</TableCell>
                             </TableRow>
                     </TableBody>
                 </Table>
             </TableContainer>
-            <Typography><strong>Lugares disponibles:</strong> {(Number(clase.cupo_maximo) - Number(clase.cupo_actual)).toString()}</Typography>
+            <Typography><strong>Cupos:</strong> ¡Curso  {(Number(clase.cupo_actual) / Number(clase.cupo_maximo) * 100).toString()}% lleno!</Typography>
         </Box>
         </>
     )

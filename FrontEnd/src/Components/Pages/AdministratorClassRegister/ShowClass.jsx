@@ -25,11 +25,13 @@ import { getWaitList } from '../../../api/waitList'
 import { getStudents } from "../../../api/students";
 
 export default function ShowClass() {
-    let array = [];
-    let array2 = [];
-    // Selector de periodos
 
-    const [dataPeriodo, setDataPeriodo] = useState([]);
+  let array = [];
+  let array2 = [];
+  let array3 = [];
+  // Selector de periodos
+  let id = "";
+  const [dataPeriodo, setDataPeriodo] = useState([]);
 
     const getPeriodos = async () => {
         const res = await axios.get("http://localhost:8080/v1/periodos");
@@ -404,9 +406,18 @@ export default function ShowClass() {
             }
         }
 
-        // clasesJson & profesoresJson
-        
-        
+
+  let seleccionarConsola = (consola, caso) => {
+    setNuevaClase(consola)
+    array3 = consola
+    id = array3._id
+    
+    if (caso === "Editar") {
+      editClasses(consola);
+    } else if (caso === "Eliminar") {
+      abrirCerrarModalEliminar();
+    } 
+  };
 
         //
         await fetch("https://p99test.fly.test/v1/csv/subirClases", {
@@ -453,7 +464,6 @@ export default function ShowClass() {
     const updateClass = (nuevaClase) => {
         delete nuevaClase.fechas;
         delete nuevaClase.edades;
-
         nuevaClase.nombreProfesor = currentProfesor.nombre;
         nuevaClase.matriculaProfesor = currentProfesor.matricula;
         nuevaClase.apellidosProfesor = currentProfesor.apellidos;
@@ -481,6 +491,70 @@ export default function ShowClass() {
             resetClases();
         })
     };
+  //------------------------------------Eliminar-------------------------------------
+  // Se agrego un componente de dialogo para confirmar la eliminacion de una clase
+  const [modalEliminar, setModalEliminar] = useState(false);
+
+  const abrirCerrarModalEliminar = () => {
+    setModalEliminar(!modalEliminar);
+  };
+
+  const postDelete = async (e) => {
+    console.log(array3._id)
+    try {
+      await fetch("https://p99test.fly.dev/v1/clases/delete", {
+        method: "Delete",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          _id: nuevaClase._id,
+        }),
+      });
+      abrirCerrarModalEliminar();
+      resetClases();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const bodyEliminar = (
+    <div
+      style={{
+        position: "absolute",
+        width: 260,
+        height: 220,
+        backgroundColor: "#fefefd",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        border: "4px solid  rgb(165, 165, 180)",
+        margin: "auto",
+        borderRadius: "10px",
+        padding: "20px",
+      }}
+    >
+      <h3
+        style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" }}
+        align="center"
+      >
+        Eliminar alumno
+      </h3>
+      <Typography style={{ align: "justify", fontFamily: "arial" }}>
+      Esta clase  y toda su información relacionada a ella va a ser eliminada
+      </Typography>
+      <br />
+      <br />
+      <div align="center">
+        <Button color="error" onClick={postDelete}>
+          Confirmar
+        </Button>
+        <Button onClick={() => abrirCerrarModalEliminar()} color="primary">
+          Cancelar
+        </Button>
+      </div>
+    </div>
+  );
 
     const addClass = () => {
         setCurrentProfesor({
@@ -955,6 +1029,7 @@ export default function ShowClass() {
             })
         })
     }
+
 
     //---------------------------------------Show--------------
     const [pageSize, SetPageSize] = useState(5);

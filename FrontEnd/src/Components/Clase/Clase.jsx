@@ -6,7 +6,7 @@ import CardActions from '@mui/material/CardActions'
 import Divider from '@mui/material/Divider';
 
 
-function Clase({handleOpenDialog, handleMoreInfo, clase}) {
+function Clase({handleClick, handleMoreInfo, clase}) {
 
     const nivelDict = {
         '1' : 'Desde cero',
@@ -38,7 +38,7 @@ function Clase({handleOpenDialog, handleMoreInfo, clase}) {
                     <Typography variant='body1'><strong>Nivel:</strong> {nivelDict[clase.nivel]}</Typography>
                         <Typography sx={{ color: clase.cupo_actual / clase.cupo_maximo >= 1 ? "red" : "black" }} variant='body1'>
                             { Number(clase.cupo_actual) / Number(clase.cupo_maximo)  >=1 ? <strong>Lleno</strong>
-                                : <strong>Quedan  {(Number(clase.cupo_maximo) - Number(clase.cupo_actual)).toString()}  puestos!</strong> 
+                                : <strong>¡Curso  {(Number(clase.cupo_actual) / Number(clase.cupo_maximo) * 100).toString()}% lleno!</strong> 
                             }
                         </Typography>
                 </Box>
@@ -50,15 +50,13 @@ function Clase({handleOpenDialog, handleMoreInfo, clase}) {
                     Detalle
                 </Button>
                 { Number(clase.cupo_actual) < Number(clase.cupo_maximo) ?
-                <Button size='small' onClick={() => handleOpenDialog(clase)} 
-                    sx={{ width: '50%'}}
-                    disabled={clase.status === "Inscrito" ? true : false}>
-                    Inscribir
+                <Button size='small' onClick={() => handleClick(clase)}>
+                    {clase.status === "Inscrito" && clase.status !== 'ListaEspera'
+                        ? 'Cancelar Registro' : 'Inscribir'}
                 </Button>  :
-                <Button size='small' onClick={() => handleOpenDialog(clase)} 
-                    sx={{ width: '50%'}}
-                    disabled={clase.status === "ListaEspera" ? true : false}>
-                    Lista Espera
+                <Button size='small' onClick={() => handleClick(clase)}>
+                    {clase.status === "ListaEspera" && clase.status !== 'Inscrito'
+                        ? 'Salir de Lista' : 'Lista Espera'}
                 </Button> }
             </CardActions>
         </Card>
