@@ -10,7 +10,7 @@ export default function Inicio(){
             <div className="container2">
 
                 <img className="logo" src={logo}></img>
-                <h3 className="headerText">"La unión hace la fuerza"</h3>
+                <h2 className="headerText">"La unión hace la fuerza"</h2>
             </div>
             <br></br>
             <div className="containerBody">
@@ -39,7 +39,8 @@ export default function Inicio(){
             </div>
 
             <div className="footerContainer">
-
+                <p className="footerText">Si tienes dudas sobre cómo usar la página para inscribirte, puedes ver el tutorial en el siguiente
+                <a href="https://es-la.facebook.com/" target="_blank" rel="noopener noreferrer"> enlace</a></p>
             </div>
         </div>
     )
