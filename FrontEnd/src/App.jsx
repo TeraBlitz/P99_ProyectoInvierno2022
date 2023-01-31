@@ -64,8 +64,6 @@ function App() {
 
         Profile: <Profile />,
 
-        ControlPanel: <ControlPanel changeContent={changeContent} />,
-
         MisClases: <MisClases changeContent={changeContent} />,
 
         inscripcion: <ShowClass />,
