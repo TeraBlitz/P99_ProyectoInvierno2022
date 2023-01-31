@@ -18,47 +18,43 @@ async function getAllClase(req, res) {
 
 // Create
 async function createClase(req, res) {
+    try {
+        const database = clientConnect.db(mongodbInf.database);
+        const collection = database.collection("clases");
 
-  try {
-    const database = clientConnect.db(mongodbInf.database);
-    const collection = database.collection("clases");
+        // Crear un Doc
+        const doc = [
+            {
+                clave: req.body.clave,
+                area: req.body.area,
+                modalidad: req.body.modalidad,
+                nombre_curso: req.body.nombre_curso,
+                nivel: req.body.nivel,
+                nombreProfesor: req.body.nombreProfesor,
+                apellidosProfesor: req.body.apellidosProfesor,
+                matriculaProfesor: req.body.matriculaProfesor,
+                clavePeriodo: req.body.clavePeriodo,
+                edad_minima: req.body.edad_minima,
+                edad_maxima: req.body.edad_maxima,
+                lunes: req.body.lunes,
+                martes: req.body.martes,
+                miercoles: req.body.miercoles,
+                jueves: req.body.jueves,
+                viernes: req.body.viernes,
+                sabado: req.body.sabado,
+                cupo_maximo: req.body.cupo_maximo,
+                cupo_actual: req.body.cupo_actual,
+            },
+        ];
 
-    // Crear un Doc
-    const doc = [
-      {
-        clave: req.body.clave,
-        area: req.body.area,
-        modalidad: req.body.modalidad,
-        nombre_curso: req.body.nombre_curso,
-        nivel: req.body.nivel,
-        nombreProfesor: req.body.nombreProfesor,
-        apellidosProfesor: req.body.apellidosProfesor,
-        matriculaProfesor: req.body.matriculaProfesor,
-        clavePeriodo: req.body.clavePeriodo,
-        edad_minima: req.body.edad_minima,
-        edad_maxima: req.body.edad_maxima,
-        lunes: req.body.lunes,
-        martes: req.body.martes,
-        miercoles: req.body.miercoles,
-        jueves: req.body.jueves,
-        viernes: req.body.viernes,
-        sabado: req.body.sabado,
-        cupo_maximo: req.body.cupo_maximo,
-        cupo_actual: req.body.cupo_actual,
-      },
-    ];
-
-    const result = await collection.insertMany(doc);
-    for (i = 0; i < result.insertedCount; i++)
-      res.send(
-        `Un documento fue insertado con el ID: ${result.insertedIds[i]}`
-      );
-  } catch (err) {
-    res.send(`ERROR: ${err}`);
-  } finally {
-    await clientConnect.close();
-  }
-
+        const result = await collection.insertMany(doc);
+        for (i = 0; i < result.insertedCount; i++)
+        res.send(
+            `Un documento fue insertado con el ID: ${result.insertedIds[i]}`
+        );
+    } catch (err) {
+        res.send(`ERROR: ${err}`);
+    }
 }
 // Test createClase
 // createClase().catch(console.dir);
@@ -66,45 +62,45 @@ async function createClase(req, res) {
 // Update
 async function updateClase(req, res) {
 
-  try {
-    const database = clientConnect.db(mongodbInf.database);
-    const collection = database.collection("clases");
+    try {
+        const database = clientConnect.db(mongodbInf.database);
+        const collection = database.collection("clases");
 
-    // Crear el documento actualizado
-    const idDoc = {
-      _id: new mongodb.ObjectId(req.body._id),
-    };
-    const doc = {
-      $set: {
-        clave: req.body.clave,
-        area: req.body.area,
-        modalidad: req.body.modalidad,
-        nombre_curso: req.body.nombre_curso,
-        nivel: req.body.nivel,
-        nombreProfesor: req.body.nombreProfesor,
-        apellidosProfesor: req.body.apellidosProfesor,
-        matriculaProfesor: req.body.matriculaProfesor,
-        clavePeriodo: req.body.clavePeriodo,
-        edad_minima: req.body.edad_minima,
-        edad_maxima: req.body.edad_maxima,
-        lunes: req.body.lunes,
-        martes: req.body.martes,
-        miercoles: req.body.miercoles,
-        jueves: req.body.jueves,
-        viernes: req.body.viernes,
-        sabado: req.body.sabado,
-        cupo_maximo: req.body.cupo_maximo,
-        cupo_actual: req.body.cupo_actual,
-      },
-    };
+        // Crear el documento actualizado
+        const idDoc = {
+            _id: new mongodb.ObjectId(req.body._id),
+        };
+        const doc = {
+            $set: {
+                clave: req.body.clave,
+                area: req.body.area,
+                modalidad: req.body.modalidad,
+                nombre_curso: req.body.nombre_curso,
+                nivel: req.body.nivel,
+                nombreProfesor: req.body.nombreProfesor,
+                apellidosProfesor: req.body.apellidosProfesor,
+                matriculaProfesor: req.body.matriculaProfesor,
+                clavePeriodo: req.body.clavePeriodo,
+                edad_minima: req.body.edad_minima,
+                edad_maxima: req.body.edad_maxima,
+                lunes: req.body.lunes,
+                martes: req.body.martes,
+                miercoles: req.body.miercoles,
+                jueves: req.body.jueves,
+                viernes: req.body.viernes,
+                sabado: req.body.sabado,
+                cupo_maximo: req.body.cupo_maximo,
+                cupo_actual: req.body.cupo_actual,
+            },
+        };
 
-    const result = await collection.findOneAndUpdate(idDoc, doc);
-    res.send(
-      `Documento con _id: ${result.value._id} actualizado con exito. Status: ${result.ok}.`
-    );
-  } catch (err) {
-    res.send(`updateClase ERROR: ${err}`);
-  } 
+        const result = await collection.findOneAndUpdate(idDoc, doc);
+        res.send(
+            `Documento con _id: ${result.value._id} actualizado con exito. Status: ${result.ok}.`
+        );
+    } catch (err) {
+        res.send(`updateClase ERROR: ${err}`);
+    } 
 
 }
 // Test updateClase
@@ -118,16 +114,16 @@ async function deleteClase(req, res) {
 
         // ID documento a eliminar
         const idDoc = {
-        _id: new mongodb.ObjectId(req.body._id),
+            _id: new mongodb.ObjectId(req.body._id),
         };
 
         const result = await collection.deleteMany(idDoc);
         // console.log(JSON.stringify(result))
 
         if (result.deletedCount === 1) {
-        res.send(`Documento con _id: ${idDoc._id} eliminado con exito.`);
+            res.send(`Documento con _id: ${idDoc._id} eliminado con exito.`);
         } else {
-        res.send("Ningun documento encontrado. 0 Documentos eliminados.");
+            res.send("Ningun documento encontrado. 0 Documentos eliminados.");
         }
     } catch (err) {
         console.log(`ERROR: ${err}`);
@@ -180,9 +176,9 @@ async function findClase(req, res) {
         }
         const result = await collection.find(query).toArray();
         if (result == "") {
-        res.send(`Ninguna clase encontrada con ${key} : ${value}`);
+            res.send(`Ninguna clase encontrada con ${key} : ${value}`);
         } else {
-        res.send(result);
+            res.send(result);
         }
     } catch (err) {
         console.log(`ERROR: ${err}`);
