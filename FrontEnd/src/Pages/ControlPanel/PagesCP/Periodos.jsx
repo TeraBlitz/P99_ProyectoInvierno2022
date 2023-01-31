@@ -370,10 +370,14 @@ export default function Periodos() {
   console.log('data: ',data)
   return (
 
-    <div className="container">
-      <h1>Periodos</h1>
+    <div >
+      <h1 className="tittle">Periodos</h1>
 
-      <Button variant="contained" onClick={() => abrirCerrarModalInsertar()}>
+      <Button variant="contained" onClick={() => abrirCerrarModalInsertar()} sx={{
+
+        marginTop:'-15px'
+
+      }}>
         Nuevo Periodo
       </Button>
       <Modal
