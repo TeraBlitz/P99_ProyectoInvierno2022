@@ -27,8 +27,9 @@ import { getStudents } from "../../../api/students";
 export default function ShowClass() {
   let array = [];
   let array2 = [];
+  let array3 = [];
   // Selector de periodos
-
+  let id = "";
   const [dataPeriodo, setDataPeriodo] = useState([]);
 
   const getPeriodos = async () => {
@@ -438,12 +439,15 @@ export default function ShowClass() {
   };
 
   let seleccionarConsola = (consola, caso) => {
+    setNuevaClase(consola)
+    array3 = consola
+    id = array3._id
+    
     if (caso === "Editar") {
       editClasses(consola);
     } else if (caso === "Eliminar") {
-      deleteClass(consola._id);
-    } else {
-    }
+      abrirCerrarModalEliminar();
+    } 
   };
 
   //Funciones que actualiza los datos con las modificacioness
@@ -495,21 +499,71 @@ export default function ShowClass() {
 
   //------------------------------------Eliminar-------------------------------------
   // Se agrego un componente de dialogo para confirmar la eliminacion de una clase
+  const [modalEliminar, setModalEliminar] = useState(false);
 
-  async function deleteClass(id) {
-    await fetch("https://p99test.fly.dev/v1/clases/delete", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
-        _id: id,
-      }),
-    }).then(() => {
+  const abrirCerrarModalEliminar = () => {
+    setModalEliminar(!modalEliminar);
+  };
+
+  const postDelete = async (e) => {
+    console.log(array3._id)
+    try {
+      await fetch("https://p99test.fly.dev/v1/clases/delete", {
+        method: "Delete",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          _id: nuevaClase._id,
+        }),
+      });
+      abrirCerrarModalEliminar();
       resetClases();
-    });
-    handleClose();
-  }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const bodyEliminar = (
+    <div
+      style={{
+        position: "absolute",
+        width: 260,
+        height: 220,
+        backgroundColor: "#fefefd",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        border: "4px solid  rgb(165, 165, 180)",
+        margin: "auto",
+        borderRadius: "10px",
+        padding: "20px",
+      }}
+    >
+      <h3
+        style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" }}
+        align="center"
+      >
+        Eliminar alumno
+      </h3>
+      <Typography style={{ align: "justify", fontFamily: "arial" }}>
+      Esta clase  y toda su información relacionada a ella va a ser eliminada
+      </Typography>
+      <br />
+      <br />
+      <div align="center">
+        <Button color="error" onClick={postDelete}>
+          Confirmar
+        </Button>
+        <Button onClick={() => abrirCerrarModalEliminar()} color="primary">
+          Cancelar
+        </Button>
+      </div>
+    </div>
+  );
+ 
+
+ 
 
   //-------------------------------Datos de ventanas modales---------------
   const bodyInsertar = (
@@ -1160,8 +1214,8 @@ export default function ShowClass() {
         <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
           {bodyInsertar}
         </Modal>
-        <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
-          {bodyInsertar}
+        <Modal open={modalEliminar} onClose={abrirCerrarModalEliminar}>
+          {bodyEliminar}
         </Modal>
 
         <Modal open={modalEditar} onClose={() => abrirCerrarModalEditar()}>
