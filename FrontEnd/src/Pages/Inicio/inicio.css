@@ -1,20 +1,49 @@
+p{
+  font-size: 20px;
+}
+h3{
+  font-size: 30px;
+  margin-bottom: 3%;
+}
+
 .container {
-    margin: 20px
-  }
 
-  .container2 {
-    text-align: center;
-    width: 100%;
-    display: flex;
+  align-items: center;
+  justify-content: center;
 
-  }
+}
 
-  .tittle{
-    font-weight: 35px;
-    width: 30%;
-  }
-  .logo{
-    display: flex;
-    width: 15%;
+.container2 {
+  display: flex;
+  align-items: center;
+  height: 30vh;
+}
 
-  }
+.logo {
+  margin-left: 10%;
+  width: 30%;
+
+}
+.headerText{
+  width: 45%;
+  font-size: 50px;
+  margin-left: 10%;
+  text-align: center;
+}
+
+.containerBody{
+  margin-top: 3%;
+  width: 100%;
+  display: grid;
+  gap: 40px;
+  grid-template-columns: repeat(auto-fit,minmax(275px,1fr));
+}
+.textColumn{
+  text-align: center;
+}
+.footerContainer{
+  margin-top: 5%;
+  background-color: aqua;
+  height: 20vh;
+
+}
