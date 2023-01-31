@@ -1,16 +1,20 @@
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    margin: 20px
   }
 
   .container2 {
     text-align: center;
-    width: 70%
+    width: 100%;
+    display: flex;
+
   }
 
-  .logo {
-    width: 100%;
-    height: auto;
+  .tittle{
+    font-weight: 35px;
+    width: 30%;
+  }
+  .logo{
+    display: flex;
+    width: 15%;
+
   }
