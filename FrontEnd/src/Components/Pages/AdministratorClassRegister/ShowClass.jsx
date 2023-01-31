@@ -438,14 +438,14 @@ export default function ShowClass() {
   };
 
   let seleccionarConsola = (consola, caso) => {
-    
-    
+
+
     if (caso === "Editar") {
       editClasses(consola);
     } else if (caso === "Eliminar") {
       id = consola._id;
       abrirCerrarModalEliminar();
-    } 
+    }
   };
 
   //Funciones que actualiza los datos con las modificacioness
@@ -1127,7 +1127,7 @@ export default function ShowClass() {
         sx={{
           width: "740px",
           padding: "15px",
-          height: "450px",
+          height: "100px",
           position: "absolute",
           marginLeft: "40px",
         }}
