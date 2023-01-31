@@ -1,5 +1,8 @@
+
+const host = "https://p99test.fly.dev"
+
 export const postData = async (url = '', data = {}) => {
-    const response = await fetch(url, {
+    const response = await fetch(host+url, {
         method: 'POST', 
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
@@ -10,7 +13,7 @@ export const postData = async (url = '', data = {}) => {
 }
 
 export const putData = async (url = '', data = {}) => {
-    const response = await fetch(url, {
+    const response = await fetch(host+url, {
         method: 'PUT', 
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
@@ -21,7 +24,7 @@ export const putData = async (url = '', data = {}) => {
 }
 
 export const getData = async (url = '') => {
-    const response = await fetch(url, {
+    const response = await fetch(host+url, {
         method: 'GET', 
         headers: {
             'Content-Type': 'application/json'
@@ -31,7 +34,7 @@ export const getData = async (url = '') => {
 }
 
 export const deleteData = async (url = '', data = {}) => {
-    const response = await fetch(url, {
+    const response = await fetch(host+url, {
         method: 'DELETE', 
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
