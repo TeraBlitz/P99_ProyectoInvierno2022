@@ -439,15 +439,12 @@ export default function ShowClass() {
   };
 
   let seleccionarConsola = (consola, caso) => {
-    setNuevaClase(consola)
-    array3 = consola
-    id = array3._id
-    
+
     if (caso === "Editar") {
       editClasses(consola);
     } else if (caso === "Eliminar") {
       abrirCerrarModalEliminar();
-    } 
+    }
   };
 
   //Funciones que actualiza los datos con las modificacioness
@@ -1140,7 +1137,7 @@ export default function ShowClass() {
         sx={{
           width: "740px",
           padding: "15px",
-          height: "450px",
+          height: "100px",
           position: "absolute",
           marginLeft: "40px",
         }}
