@@ -34,14 +34,14 @@ export default function ShowClass() {
   const [dataPeriodo, setDataPeriodo] = useState([]);
 
     const getPeriodos = async () => {
-        const res = await axios.get("http://localhost:8080/v1/periodos");
+        const res = await axios.get("http://p99test.fly.dev/v1/periodos");
         setDataPeriodo(res.data);
     };
 
     const [claseResp, setClaseResp] = useState([]);
 
     const getClaseResp = async () => {
-        const res = await axios.get("https://p99test.fly.test/v1/clases");
+        const res = await axios.get("https://p99test.fly.dev/v1/clases");
         setClaseResp(res.data);
     };
 
@@ -130,7 +130,7 @@ export default function ShowClass() {
     const [nuevaClase, setNuevaClase] = useState(classTemplate);
 
     const getOptions = async () => {
-        await fetch("https://p99test.fly.test/v1/profesores", {
+        await fetch("https://p99test.fly.dev/v1/profesores", {
             method: "GET",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
@@ -156,7 +156,7 @@ export default function ShowClass() {
     };
     const resetClases = async () => {
         let dataList = [];
-        await fetch("https://p99test.fly.test/v1/clases", {
+        await fetch("https://p99test.fly.dev/v1/clases", {
             method: "GET",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
@@ -252,7 +252,7 @@ export default function ShowClass() {
         }
         delete nuevaClase.niveles;
 
-        await fetch("https://p99test.fly.test/v1/clases/create", {
+        await fetch("https://p99test.fly.dev/v1/clases/create", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
@@ -420,7 +420,7 @@ export default function ShowClass() {
   };
 
         //
-        await fetch("https://p99test.fly.test/v1/csv/subirClases", {
+        await fetch("https://p99test.fly.dev/v1/csv/subirClases", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
@@ -436,7 +436,7 @@ export default function ShowClass() {
             .catch((error) => console.log("Error(ShowClass): ", error));
 
         //
-        await fetch("https://p99test.fly.test/v1/csv/subirProfesores", {
+        await fetch("https://p99test.fly.dev/v1/csv/subirProfesores", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
@@ -479,7 +479,7 @@ export default function ShowClass() {
             nuevaClase.nivel = "4";
         }
         delete nuevaClase.niveles;
-        fetch("https://p99test.fly.test/v1/clases/update", {
+        fetch("https://p99test.fly.dev/v1/clases/update", {
             method: "PUT",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
@@ -571,7 +571,7 @@ export default function ShowClass() {
     // Se agrego un componente de dialogo para confirmar la eliminacion de una clase
 
     async function deleteClass(id) {
-        await fetch("https://p99test.fly.test/v1/clases/delete", {
+        await fetch("https://p99test.fly.dev/v1/clases/delete", {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
