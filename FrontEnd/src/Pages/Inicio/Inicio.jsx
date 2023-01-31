@@ -22,17 +22,17 @@ export default function Inicio(){
 
                 <div className="textColumn">
                     <h3>¿Qué ofrecemos?</h3>
-                    <p>Gratuidad: sin cuotas de inscripción, materiales accesibles.
-                        Clases personalizadas: cursos  adaptables a los alumnos y su ritmo de aprendizaje.
-                        Variedad: contenido según los intereses y necesidades de los alumnos.
+                    <p><b>Gratuidad:</b> sin cuotas de inscripción, materiales accesibles.<br/>
+                        <b>Clases personalizadas:</b> cursos  adaptables a los alumnos y su ritmo de aprendizaje.<br/>
+                        <b>Variedad:</b> contenido según los intereses y necesidades de los alumnos.
                     </p>
                 </div>
 
                 <div className="textColumn">
                     <h3>Nuestros cursos</h3>
-                    <p>Reforzamiento académico (asesorías 1 a 1 para reforzar conocimientos académicos)
-                        Talleres (artísticos, culturales y deportivos)
-                        Cursos de Idiomas  (variedad de lenguas extranjeras disponibles)
+                    <p><b>Reforzamiento académico</b> (asesorías 1 a 1 para reforzar conocimientos académicos)<br/>
+                        <b>Talleres</b> (artísticos, culturales y deportivos)<br/>
+                        <b>Cursos de Idiomas  </b>(variedad de lenguas extranjeras disponibles)
                     </p>
                 </div>
 
