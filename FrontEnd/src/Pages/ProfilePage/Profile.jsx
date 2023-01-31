@@ -160,7 +160,7 @@ const Profile = () =>{
 
             <Box sx={{ py: 2, display: userValues.rol === 'estudiante' ? 'flex' : 'none', justifyContent: 'space-between' }}>
                 <Typography variant='h6'>Estudiante(s)</Typography> 
-                <Button sx={{display: {xs: 'none', md: 'flex'}}} onClick={() => { setAddStudent(!addStudent); }} variant="outlined">Agregar estudiante </Button>
+               
             </Box>
    
             <Box>
@@ -183,7 +183,8 @@ const Profile = () =>{
                             setIsEditing={setIsEditing}
                         />    
                     )
-                } 
+                }
+                <Button sx={{display: {xs: 'none', md: 'flex', textTransform: 'none', backgroundColor: '#57a1f1', fontSize: '18px'}}} onClick={() => { setAddStudent(!addStudent); }} variant="contained"  endIcon={<AddIcon/>}>Agregar estudiante </Button>
             </Box>
             <Modal
                 open={addStudent}
