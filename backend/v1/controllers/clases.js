@@ -7,7 +7,6 @@ async function getAllClase(req, res) {
     try {
         const database = clientConnect.db(mongodbInf.database);
         const collection = database.collection(COLLECTION_NAME);
-
         const result = await collection.find().toArray();
         res.send(result);
     } catch (err) {
@@ -21,8 +20,7 @@ async function getAllClase(req, res) {
 async function createClase(req, res) {
 
   try {
-    await client.connect();
-    const database = client.db(mongodbInf.database);
+    const database = clientConnect.db(mongodbInf.database);
     const collection = database.collection("clases");
 
     // Crear un Doc
@@ -58,7 +56,7 @@ async function createClase(req, res) {
   } catch (err) {
     res.send(`ERROR: ${err}`);
   } finally {
-    await client.close();
+    await clientConnect.close();
   }
 
 }
@@ -69,8 +67,7 @@ async function createClase(req, res) {
 async function updateClase(req, res) {
 
   try {
-    await client.connect();
-    const database = client.db(mongodbInf.database);
+    const database = clientConnect.db(mongodbInf.database);
     const collection = database.collection("clases");
 
     // Crear el documento actualizado

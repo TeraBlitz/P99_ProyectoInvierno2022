@@ -2,7 +2,7 @@ import React from 'react'
 import TextField from '@mui/material/TextField';
 
 
-const SignUpInput = ({name, label, type, value, handleChange}) => (
+const SignUpInput = ({name, label, type, value, handleChange, helperTextContent}) => (
     <TextField name={name} required 
         fullWidth label={label}
         sx={{input: {color: 'white'}, my: 1}}
@@ -12,6 +12,8 @@ const SignUpInput = ({name, label, type, value, handleChange}) => (
         onInput={e => e.target.setCustomValidity('')}
         type={type}
         value={value}
+        helperText={helperTextContent}
+        FormHelperTextProps={{sx: {color: 'white'}}}
     />
 )
 

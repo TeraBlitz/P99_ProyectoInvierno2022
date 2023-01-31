@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import './MisClases.css';
 import TarjetaMisC from './TarjetaMisC';
 import Box from '@mui/material/Box'
+import Link from '@mui/material/Link'
+
 import Button from "@mui/material/Button";
 import CircularProgress from '@mui/material/CircularProgress';
 import InputLabel from '@mui/material/InputLabel';
@@ -17,7 +19,7 @@ import { getClassStudent } from  './../../api/classStudent.js';
 import { userContext } from "../../App";
 
 
-const MisClasesEstudiante = () => {
+const MisClasesEstudiante = ({changeContent}) => {
 
 	const [students, setStudents] = useState(null);
     const [allClases, setAllClases] = useState(null);

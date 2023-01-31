@@ -10,11 +10,14 @@ function SidebarButton(props) {
 
     }
 
-    return (
+    return props.order === 7 ?
+        <ListItemButton onClick={() => handleClick()} sx={{position: 'absolute', bottom: '15px'}}>
+            <ListItemText>{props.title}</ListItemText>
+        </ListItemButton>
+    :
         <ListItemButton onClick={() => handleClick()}>
             <ListItemText>{props.title}</ListItemText>
         </ListItemButton>
-    )
 }
 
 export default SidebarButton

@@ -50,6 +50,7 @@ function Sidebar(props) {
             rol: 'any'
         },
 
+
     ]
 
     const listItems = (
@@ -57,7 +58,7 @@ function Sidebar(props) {
             {options.map(e => {
                 if (userValues.rol == e.rol || e.rol=='any') {
                     return (
-                        <SidebarButton key={e.key} content={e.content} title={e.title} setOpen={props.setOpen} changeContent={props.changeContent} changeDrawerState={props.changeDrawerState} />
+                        <SidebarButton key={e.key} order={e.key} content={e.content} title={e.title} setOpen={props.setOpen} changeContent={props.changeContent} changeDrawerState={props.changeDrawerState} />
                     )
                 }
             }

@@ -4,7 +4,7 @@ import Clase from '../../Components/Clase/Clase'
 import CircularProgress from '@mui/material/CircularProgress'
 import { Alert, Button, Link } from '@mui/material'
 import Snackbar from '@mui/material/Snackbar'
-import { AlertTitle } from '@mui/material'
+import Autocomplete from '@mui/material/Autocomplete'
 import { Card, CardContent, Typography, TextField, MenuItem } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 import Modal from '@mui/material/Modal'
@@ -28,6 +28,7 @@ function RegistroClasesAlumnos({changeContent}) {
     const [currentStudent, setCurrentStudent] = useState(null);
     const [error, setError] = useState('none');
     const [clases, setClases] = useState(null);
+    const [classNames, setClassNames] = useState([]);
     const [claseRegistrada, setClaseRegistrada] = useState([]); // esto se obtendria de la base de datos
     const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
     const [openMoreInfo, setOpenMoreInfo] = useState(false);
@@ -53,8 +54,13 @@ function RegistroClasesAlumnos({changeContent}) {
 
      useEffect(() => {
         const getStudentClasses = () =>{
+            let allClassNames = []
             getClasses().then(
                 (data) => {
+                    for (let i = 0; i < data.length; i++) {
+                        allClassNames.push(data[i].nombre_curso);
+                        setClassNames([...new Set(allClassNames)]);
+                    }
                     setClases(data);
                     setFilteredClasses(data);
                 });
@@ -344,9 +350,9 @@ function RegistroClasesAlumnos({changeContent}) {
         setOpenConfirmationDialog(false);
     };
 
-    const handleNameFilter = (e) => {
-        setNameFilter(e.target.value);
-        const filteredClasses = clases.filter(clase => clase.nombre_curso.toLowerCase().includes(e.target.value.trim().toLowerCase()));
+    const handleNameFilter = (value) => {
+        //setNameFilter(value);
+        const filteredClasses = clases.filter(clase => clase.nombre_curso.toLowerCase().includes(value.trim().toLowerCase()));
         setFilteredClasses(filteredClasses);
     }
 
@@ -400,7 +406,15 @@ function RegistroClasesAlumnos({changeContent}) {
                         ))}
                     </Select>
                 </FormControl>
-                <TextField label='Nombre' value={nameFilter || ''} onChange={handleNameFilter} helperText="Busca tu clase" sx={{display: {xs: 'flex', md: 'none'}, mt: 1 }} fullWidth/>
+                
+                <Autocomplete
+                    disablePortal
+                    options={classNames}
+                    onChange={(e, newvalue) =>  handleNameFilter(newvalue)}
+                    onInputChange={(e, newvalue) => handleNameFilter(newvalue)}
+                    sx={{display: {xs: 'flex', md: 'none'}, mt: 1 }} fullWidth
+                    renderInput={(params) => <TextField {...params} label="Curso" helperText='Busca tu curso'/>}
+                />
             </Box>
             <Box sx={{ textAlign: 'center', width: '100%', paddingX: '20px', paddingBottom: '10px', overflowY: 'scroll', display: { xs: 'block', md: 'none' } }}>
                 {
@@ -435,10 +449,13 @@ function RegistroClasesAlumnos({changeContent}) {
                             flexWrap: 'wrap', alignItems: 'center',
                             '& .MuiTextField-root': { m: 1, width: '25ch' }, p: 1}}
                         >
-                            <TextField
-                                style={{ fontFamily: 'arial'}}
-                                label="Curso"
-                                onChange={e => { setItems([{ columnField: 'nombre_curso', operatorValue: 'contains', value: e.target.value }]) }}></TextField>
+                            <Autocomplete
+                            disablePortal
+                            options={classNames}
+                            onChange={(e, newvalue) => { setItems([{ columnField: 'nombre_curso', operatorValue: 'contains', value: newvalue }]) }}
+                            onInputChange={(e, newvalue) => { setItems([{ columnField: 'nombre_curso', operatorValue: 'contains', value: newvalue }]) }}
+                            renderInput={(params) => <TextField {...params} label="Curso" />}
+                            />
                             <TextField
                                 style={{ fontFamily: 'arial' }}
                                 label="Nivel"
