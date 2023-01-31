@@ -509,6 +509,7 @@ const bodyEliminar = (
           ></TextField>
         </CardContent>
       </Card>
+      
       <Box
         sx={{
           width: 250,

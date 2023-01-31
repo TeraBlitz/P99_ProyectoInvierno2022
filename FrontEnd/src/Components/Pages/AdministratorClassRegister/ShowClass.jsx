@@ -1090,6 +1090,7 @@ export default function ShowClass() {
           >
             Filtros
           </Typography>
+          
           <TextField
             style={{ paddingBottom: "5px", fontFamily: "arial", marginLeft:"10px" , width:330}}
             label="Curso"
@@ -1103,32 +1104,35 @@ export default function ShowClass() {
               ]);
             }}
           ></TextField>
+          
           <TextField
             style={{ paddingBottom: "5px", fontFamily: "arial" , marginLeft:"54px" , width:330}}
             label="Nivel"
             onChange={(e) => {
               setItems([
                 {
-                  columnField: "nivel",
+                  columnField: "niveles",
                   operatorValue: "contains",
                   value: e.target.value,
                 },
               ]);
             }}
           ></TextField>
+
           <TextField
             style={{ paddingBottom: "5px", fontFamily: "arial", marginLeft:"40px"  , width:330}}
             label="Profesor"
             onChange={(e) => {
               setItems([
                 {
-                  columnField: "matriculaProfesor",
+                  columnField: "nombreCompleto",
                   operatorValue: "contains",
                   value: e.target.value,
                 },
               ]);
             }}
           ></TextField>
+          
         </CardContent>
       </Card>
 
