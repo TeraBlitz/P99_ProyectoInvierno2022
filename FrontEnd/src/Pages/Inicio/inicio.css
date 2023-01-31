@@ -1,3 +1,7 @@
+body {
+  height: 100%;
+  overflow-y: hidden;
+}
 a{
   color: #d5a419;
 }
@@ -55,7 +59,7 @@ h3{
 .footerContainer{
   width: 300px;
   margin-top: 50px;
-
+  margin-bottom: 50px;
   height: 20vh;
   border-radius: 20px;
   margin: auto;
@@ -73,4 +77,7 @@ h3{
   margin: auto;
 
 
+}
+.spacerMobile{
+  height: 50px;
 }

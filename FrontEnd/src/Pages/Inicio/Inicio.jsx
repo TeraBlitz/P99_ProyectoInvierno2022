@@ -42,6 +42,7 @@ export default function Inicio(){
                 <p className="footerText">Si tienes dudas sobre cómo usar la página para inscribirte, puedes ver el tutorial en el siguiente
                 <a href="https://es-la.facebook.com/" target="_blank" rel="noopener noreferrer"> enlace</a></p>
             </div>
+            <div className="spacerMobile"></div>
         </div>
     )
 }
