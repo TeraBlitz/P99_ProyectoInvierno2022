@@ -20,7 +20,7 @@ import { createUser } from './api/users'
 import { Password } from '@mui/icons-material'
 import Inicio from './Pages/Inicio/Inicio'
 import CloseIcon from '@mui/icons-material/Close'
-import {findStudents} from './api/students.js'
+import { getStudents } from './api/students.js'
 
 
 
@@ -34,21 +34,20 @@ function App() {
     const [hasAccount, sethasAccount] = useState(true);
     const [snack, setSnack] = useState(false)
 
-    useEffect(() => {
-        // paso 1 : encontrar el usuario en usuario-alumno
-        // paso 2 : checar si el usuario tiene un alumno
-        // paso 3 : si no lo tiene, sacar la snackbar
-        // por ahora solo saca la snackbar al principio
-        if (user.rol == "estudiante") {
-            findStudents(user)
-            setSnack(true);
-        }
-
-    }, [user])
     const handleUser = (params) => {
         setUser(params)
     }
 
+    const handleStudent = async (User) => {
+        console.log("handleStudent")
+        getStudents().then(result=>{
+            const student = result.filter(s=>s.idUser === User._id)
+            if (student.length == 0){
+                setSnack(true)
+            }
+        }
+        )
+    }
     const changeDrawerState = () => {
         setOpen(!open)
     }
@@ -80,7 +79,6 @@ function App() {
         Inicio: <Inicio />,
 
         ControlPanel: <ControlPanel changeContent={changeContent} />,
-        MisClases: <MisClases />,
         Registro: <ShowClass />
     }
 
@@ -122,7 +120,9 @@ function App() {
             .then(response => response.json())
             .then(result => {
                 if (result.msg == "Login OK") {
+                    console.log(result.data_user)
                     handleUser(result.data_user)
+                    handleStudent(result.data_user)
                     setIsSignedIn(true)
                 }
                 else {
