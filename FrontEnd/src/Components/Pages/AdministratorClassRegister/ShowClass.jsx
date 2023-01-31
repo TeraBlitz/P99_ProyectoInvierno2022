@@ -7,7 +7,6 @@ import {
     TextField,
     Box,
     Typography,
-    Autocomplete,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { grey } from "@mui/material/colors";
@@ -410,17 +409,6 @@ export default function ShowClass() {
         }
 
 
-  let seleccionarConsola = (consola, caso) => {
-    setNuevaClase(consola)
-    array3 = consola
-    id = array3._id
-
-    if (caso === "Editar") {
-      editClasses(consola);
-    } else if (caso === "Eliminar") {
-      abrirCerrarModalEliminar();
-    }
-  };
 
         //
         await fetch("https://p99test.fly.dev/v1/csv/subirClases", {
@@ -450,14 +438,6 @@ export default function ShowClass() {
         });
     };
 
-    let seleccionarConsola = (consola, caso) => {
-        if (caso === "Editar") {
-            editClasses(consola);
-        } else if (caso === "Eliminar") {
-            deleteClass(consola._id);
-        } else {
-        }
-    };
 
     //Funciones que actualiza los datos con las modificacioness
     const handleClick2 = (e) => {
@@ -496,6 +476,20 @@ export default function ShowClass() {
     };
   //------------------------------------Eliminar-------------------------------------
   // Se agrego un componente de dialogo para confirmar la eliminacion de una clase
+
+  
+  let seleccionarConsola = (consola, caso) => {
+    setNuevaClase(consola)
+    array3 = consola
+    id = array3._id
+
+    if (caso === "Editar") {
+      editClasses(consola);
+    } else if (caso === "Eliminar") {
+      abrirCerrarModalEliminar();
+    }
+  };
+  
   const [modalEliminar, setModalEliminar] = useState(false);
 
   const abrirCerrarModalEliminar = () => {
@@ -573,20 +567,7 @@ export default function ShowClass() {
     //------------------------------------Eliminar-------------------------------------
     // Se agrego un componente de dialogo para confirmar la eliminacion de una clase
 
-    async function deleteClass(id) {
-        await fetch("https://p99test.fly.dev/v1/clases/delete", {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: new URLSearchParams({
-                _id: id,
-            }),
-        }).then(() => {
-            resetClases();
-        });
-        handleClose();
-    }
+    
 
     //-------------------------------Datos de ventanas modales---------------
     const bodyInsertar = (
