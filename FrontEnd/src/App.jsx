@@ -55,7 +55,7 @@ function App() {
 
         ControlPanel: <ControlPanel changeContent={changeContent} />,
 
-        MisClases: <MisClases />,
+        MisClases: <MisClases changeContent={changeContent}/>,
 
         inscripcion: <ShowClass />,
 
@@ -85,6 +85,9 @@ function App() {
             changeHasAccount()
         })    }
 
+    const handleSignOut = () =>{
+        setIsSignedIn(false);
+    }
 
     const handleSignIn = (e) => {
         e.preventDefault();
@@ -123,7 +126,7 @@ function App() {
             <userContext.Provider value={user}>
 
                 <Box id="main" sx={{ display: 'flex' }}>
-                    <Sidebar open={open} changeDrawerState={changeDrawerState} changeContent={changeContent} handleSignOut={handleSignIn} />
+                    <Sidebar open={open} changeDrawerState={changeDrawerState} changeContent={changeContent} handleSignOut={handleSignOut} />
                     <Box sx={{
                         width: '100%',
                         position: 'relative',
