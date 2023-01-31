@@ -50,6 +50,7 @@ function Sidebar(props) {
             rol: 'any'
         },
 
+
     ]
 
     const listItems = (
