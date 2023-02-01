@@ -19,6 +19,7 @@ import Select from "react-select";
 import { createProfesor, deleteProfesor, getProfesors, updateProfesor } from "../../../../api/profesors";
 import { getClasses } from "../../../../api/classes";
 import { getPeriodos } from "../../../../api/Periodos";
+import { CSVLink } from "react-csv";
 
 export default function Profesores() {
     //------------------------------------Obtener info----------------
@@ -553,6 +554,15 @@ export default function Profesores() {
                     </Button>
                 </Typography>
 
+                <CSVLink data={data} filename="alumnos.csv">
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        sx={{ marginLeft: "440px", marginTop: "-120px" }}
+                    >
+                        Exportar a CSV
+                    </Button>
+                </CSVLink>
 
             </Box>
 
