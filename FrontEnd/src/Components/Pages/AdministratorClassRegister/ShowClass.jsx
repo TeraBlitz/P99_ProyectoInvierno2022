@@ -1105,7 +1105,7 @@ export default function ShowClass() {
 
         </CardContent>
       </Card>
-            
+
       <Box
         sx={{
           width: "740px",
@@ -1115,7 +1115,7 @@ export default function ShowClass() {
           marginLeft: "40px",
         }}
       >
-        
+
 
         <Typography
           variant="h3"
@@ -1124,17 +1124,18 @@ export default function ShowClass() {
         >
           Clases
           </Typography>
-          <CSVLink data={data} filename="alumnos.csv">
+
+
+          </Box>
+            <CSVLink data={data} filename="alumnos.csv">
                     <Button
                         color="primary"
                         variant="contained"
-                        sx={{ marginLeft: "300px", marginTop: "-120px" }}
+                        sx={{ position:'absolute', marginLeft: "400px", marginTop: "52px" }}
                     >
                         Exportar a CSV
                     </Button>
                 </CSVLink>
-
-          </Box>
             <Button
               variant="contained"
               color="success"
@@ -1142,7 +1143,7 @@ export default function ShowClass() {
               sx={{
                 position:"absolute",
                 marginTop:"52px",
-                marginLeft:"570px",
+                marginLeft:"580px",
 
               }}
             >
@@ -1162,8 +1163,8 @@ export default function ShowClass() {
               <InsertDriveFile /> Importar CSV
             </Button>
 
-            
-            
+
+
 
                 <Box sx={{
                    position:"absolute",

@@ -558,7 +558,7 @@ export default function Profesores() {
                     <Button
                         color="primary"
                         variant="contained"
-                        sx={{ marginLeft: "440px", marginTop: "-120px" }}
+                        sx={{ marginLeft: "445px", marginTop: "-115px" }}
                     >
                         Exportar a CSV
                     </Button>
