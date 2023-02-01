@@ -59,7 +59,6 @@ function App() {
         Alumnos: <Alumnos/>,
 
         Profesores: <Profesores/>
-
     }
 
 
