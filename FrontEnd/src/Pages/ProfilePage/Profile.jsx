@@ -57,23 +57,21 @@ const Profile = () =>{
     const userValues = useContext(userContext)
 
     useEffect(() => {
-        const getUserInfo = () =>{
-            getUser().then(
-                (data) => {
-                    const currentUser = data.find(user => user._id === userValues._id);
-                    setUserInfo(currentUser);
-                    //console.log(currentUser)
-                });
-        }
+        const getUserInfo =  () =>{
+            getUser().then(response=>response.json()).then((result) => {
+                const currentUser = result.find(user => user._id === userValues._id);
+                setUserInfo(currentUser);
+                //console.log(currentUser)
+                })
+            }
         getUserInfo();
     }, []);
 
 
     useEffect(() => {
        const getUserStudents = () =>{
-            getStudents().then(
-                (data) => {
-                    const students = data.filter(student => student.idUser === userValues._id);
+            getStudents().then(response=>response.json()).then((result) => {
+                    const students = result.filter(student => student.idUser === userValues._id);
                     setStudents(students);
                     //console.log(students)
             });

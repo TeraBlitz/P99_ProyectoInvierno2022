@@ -65,27 +65,23 @@ const EditStudentProfile = ({
             setInfoOpen(true);
             return
         }
-        setOpenEditModal(!openEditModal)
-        setIsEditing(!isEditing);
-        updateStudent(new URLSearchParams(studentData)).then((data) => {
-            //console.log(data);
-        })
-        .catch((error) => {
-            
-            if (error.message.includes('Documento')){
-                setAlertMessage('Información del estudiante actualizada correctamente.');
-                setSuccessOpen(true);
-            }
-            else{
+        updateStudent(studentData).then((data) => {
+            if(data.status === 400){
                 setAlertMessage('Se produjo un error al actualizar al estudiante.');
                 setErrorOpen(true);
+                return
             }
-            getStudents().then(
-                (data) => {
-                    const students = data.filter(student => student.idUser === studentInfo.idUser);
-                    setStudents(students);
+
+            setAlertMessage('Información del estudiante actualizada correctamente.');
+            setSuccessOpen(true);
+            getStudents().then(response=>response.json()).then((data) => {
+                const students = data.filter(student => student.idUser === studentInfo.idUser);
+                setStudents(students);
             });
-        });
+            setIsEditing(!isEditing);
+            setOpenEditModal(!openEditModal)
+            
+        })
     };
 
     const handleCancel = () => {
