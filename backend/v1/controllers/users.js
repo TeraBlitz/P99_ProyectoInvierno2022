@@ -10,45 +10,13 @@ async function getAllUser(req, res) {
         const collection = database.collection(COLLECTION_NAME);
 
         const result = await collection.find().toArray();
+
+        // Importante Eliminar el Password de la respuesta.
+        result.forEach(user => {
+            delete user.password
+        });
+
         res.send(result);
-    } catch (err) {
-        res.send(`ERROR: ${err}`);
-    }
-}
-// Test getAllUser
-// getAllUser().catch(console.dir);
-
-async function findUser(req, res) {
-    try {
-        const database = clientConnect.db(mongodbInf.database);
-        const collection = database.collection(COLLECTION_NAME);
-
-        // Detectar la key y crear la query
-        let query = ""
-        let key = ""
-        let value = ""
-        if(req.body.user_name){
-            key = "Nombre de Usuario"
-            value = req.body.user_name
-            query = {user_name: value};
-        }else if(req.body.correo){
-            key = "Correo"
-            value = req.body.correo
-            query = {correo: value};
-        }else{
-            throw("Parametros invalidos.")
-        }
-
-        // Ejecucion de la query
-        const result = await collection.find(query).toArray();
-
-        if(result == ''){
-            res.send(`Ningun user con ${key}:"${value}" encontrado.`);
-        }else{
-            delete result[0].password
-            res.send(result[0]);
-        }
-        
     } catch (err) {
         res.send(`ERROR: ${err}`);
     }
@@ -83,7 +51,10 @@ async function createUser(req, res) {
             `Un documento fue insertado con el ID: ${result.insertedIds[i]}`
         );
     } catch (err) {
-        res.send(`ERROR: ${err}`);
+        console.log(err)
+        return res.status(500).json({
+            msg: 'Ha ocurrido un error inesperado, hable con el administrador.'
+        })
     }
 }
 // Test createUser
@@ -146,10 +117,48 @@ async function deleteUser(req, res) {
 // Test deleteUser
 // deleteUser().catch(console.dir);
 
+async function findUser(req, res) {
+    try {
+        const database = clientConnect.db(mongodbInf.database);
+        const collection = database.collection(COLLECTION_NAME);
+
+        // Detectar la key y crear la query
+        let query = ""
+        let key = ""
+        let value = ""
+        if(req.body.user_name){
+            key = "Nombre de Usuario"
+            value = req.body.user_name
+            query = {user_name: value};
+        }else if(req.body.correo){
+            key = "Correo"
+            value = req.body.correo
+            query = {correo: value};
+        }else{
+            throw("Parametros invalidos.")
+        }
+
+        // Ejecucion de la query
+        const result = await collection.find(query).toArray();
+
+        if(result == ''){
+            res.send(`Ningun user con ${key}:"${value}" encontrado.`);
+        }else{
+            delete result[0].password
+            res.send(result[0]);
+        }
+        
+    } catch (err) {
+        res.send(`ERROR: ${err}`);
+    }
+}
+// Test getAllUser
+// getAllUser().catch(console.dir);
+
 module.exports = {
-    findUser,
     getAllUser, 
     createUser, 
     updateUser, 
-    deleteUser 
+    deleteUser,
+    findUser
 };
