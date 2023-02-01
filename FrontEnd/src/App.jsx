@@ -21,6 +21,7 @@ import { Password } from '@mui/icons-material'
 import Inicio from './Pages/Inicio/Inicio'
 import CloseIcon from '@mui/icons-material/Close'
 import { getStudents } from './api/students.js'
+import { Login } from './api/Login.js'
 
 
 
@@ -39,14 +40,15 @@ function App() {
     }
 
     const handleStudent = async (User) => {
-        console.log("handleStudent")
-        getStudents().then(result=>{
-            const student = result.filter(s=>s.idUser === User._id)
-            if (student.length == 0){
-                setSnack(true)
+        if (user.rol == "estudiante") {
+            getStudents().then(result => {
+                const student = result.filter(s => s.idUser === User._id)
+                if (student.length == 0) {
+                    setSnack(true)
+                }
             }
+            )
         }
-        )
     }
     const changeDrawerState = () => {
         setOpen(!open)
@@ -76,8 +78,6 @@ function App() {
 
         Inicio: <Inicio />,
 
-        ControlPanel: <ControlPanel changeContent={changeContent} />,
-        Registro: <ShowClass />
     }
 
     const createUser = async (user) => {
@@ -103,19 +103,7 @@ function App() {
     const handleSignIn = (e) => {
         e.preventDefault();
         // Mandar y validad esta informacion
-
-
-        fetch(`https://p99test.fly.dev/v1/auth/login`,
-            {
-                method: 'POST',
-                body: new URLSearchParams(
-                    {
-                        correo: user.correo,
-                        password: user.contraseña
-                    }
-                )
-            })
-            .then(response => response.json())
+        Login(user)
             .then(result => {
                 if (result.msg == "Login OK") {
                     console.log(result.data_user)
@@ -128,7 +116,6 @@ function App() {
                 }
             })
 
-            .catch(error => console.log('error', error));
     }
 
     return !isSignedIn && hasAccount ?

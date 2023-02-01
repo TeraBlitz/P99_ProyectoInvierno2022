@@ -32,6 +32,7 @@ async function createAlumnoClases(req, res) {
                 idAlumno: new mongodb.ObjectId(req.body.idAlumno),
                 idClase: new mongodb.ObjectId(req.body.idClase),
                 idPeriodo: new mongodb.ObjectId(req.body.idPeriodo),
+                areaClase: req.body.areaClase
             },
         ];
 

@@ -112,7 +112,7 @@ const MisClasesEstudiante = ({changeContent}) => {
     return(
         <div>
 			<Box sx={{m: 2, overflow: 'hidden'}}>
-				<Typography variant="h3" sx={{ mb: 2 }}>Mis clases</Typography>
+				<Typography variant="h3" sx={{ mb: 2, color: '#004a98' }}>Mis clases</Typography>
                 <FormControl fullWidth sx={{ mb: 2 }}>
                     <InputLabel>Estudiantes</InputLabel>
                     <Select
