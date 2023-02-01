@@ -14,11 +14,10 @@ import { useMemo } from "react";
 import Actions from "./ActAlumnos";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import axios from "axios";
 import { CSVLink } from "react-csv";
 
 import Select from "react-select";
-import { getStudents } from "../../../../api/students";
+import { deleteStudent, getStudents, updateStudent } from "../../../../api/students";
 import { getPeriodos } from "../../../../api/Periodos";
 import { getClassStudent } from "../../../../api/classStudent";
 
@@ -51,14 +50,14 @@ export default function Alumnos() {
     };
 
     const getAllPeriodos = async () => {
-        await getPeriodos().then(response=>response.json()).then(result=>{
+        await getPeriodos().then(response => response.json()).then(result => {
             setDataPeriodo(result);
         })
 
     };
 
     const getAlumnoClase = async () => {
-        await getClassStudent().then(response=>response.json()).then(result=>{
+        await getClassStudent().then(response => response.json()).then(result => {
             setDataAlumnoClase(result);
         })
     };
@@ -150,35 +149,29 @@ export default function Alumnos() {
     const postEditar = async (e) => {
         e.preventDefault();
         try {
-            await fetch("https://p99test.fly.dev/v1/alumnos/update", {
-                method: "Put",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
-                body: new URLSearchParams({
-                    _id: consolaSeleccionada._id,
-                    clave_unica_identificacion:
-                        consolaSeleccionada.clave_unica_identificacion,
-                    curp: consolaSeleccionada.curp,
-                    nombre: consolaSeleccionada.nombre,
-                    apellido_paterno: consolaSeleccionada.apellido_paterno,
-                    apellido_materno: consolaSeleccionada.apellido_materno,
-                    fecha_de_nacimiento: consolaSeleccionada.fecha_de_nacimiento,
-                    tutor_nombre: consolaSeleccionada.tutor_nombre,
-                    tutor_apellido_paterno: consolaSeleccionada.tutor_apellido_paterno,
-                    tutor_apellido_materno: consolaSeleccionada.tutor_apellido_materno,
-                    tutor_correo: consolaSeleccionada.tutor_correo,
-                    tutor_num_telefono: consolaSeleccionada.tutor_num_telefono,
-                    num_telefono: consolaSeleccionada.num_telefono,
-                    pais: consolaSeleccionada.pais,
-                    estado: consolaSeleccionada.estado,
-                    ciudad: consolaSeleccionada.ciudad,
-                    colonia: consolaSeleccionada.colonia,
-                    codigo_postal: consolaSeleccionada.codigo_postal,
-                    escolaridad: consolaSeleccionada.escolaridad,
-                    ultima_escuela: consolaSeleccionada.ultima_escuela,
-                }),
-            });
+            await updateStudent({
+                _id: consolaSeleccionada._id,
+                clave_unica_identificacion:
+                    consolaSeleccionada.clave_unica_identificacion,
+                curp: consolaSeleccionada.curp,
+                nombre: consolaSeleccionada.nombre,
+                apellido_paterno: consolaSeleccionada.apellido_paterno,
+                apellido_materno: consolaSeleccionada.apellido_materno,
+                fecha_de_nacimiento: consolaSeleccionada.fecha_de_nacimiento,
+                tutor_nombre: consolaSeleccionada.tutor_nombre,
+                tutor_apellido_paterno: consolaSeleccionada.tutor_apellido_paterno,
+                tutor_apellido_materno: consolaSeleccionada.tutor_apellido_materno,
+                tutor_correo: consolaSeleccionada.tutor_correo,
+                tutor_num_telefono: consolaSeleccionada.tutor_num_telefono,
+                num_telefono: consolaSeleccionada.num_telefono,
+                pais: consolaSeleccionada.pais,
+                estado: consolaSeleccionada.estado,
+                ciudad: consolaSeleccionada.ciudad,
+                colonia: consolaSeleccionada.colonia,
+                codigo_postal: consolaSeleccionada.codigo_postal,
+                escolaridad: consolaSeleccionada.escolaridad,
+                ultima_escuela: consolaSeleccionada.ultima_escuela,
+            })
             abrirCerrarModalEditar();
             getAlumnos();
         } catch (error) {
@@ -189,15 +182,9 @@ export default function Alumnos() {
     // Procedimiento para eliminar
     const postDelete = async (e) => {
         try {
-            await fetch("https://p99test.fly.dev/v1/alumnos/delete", {
-                method: "Delete",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
-                body: new URLSearchParams({
+            await deleteStudent({
                     _id: consolaSeleccionada._id,
-                }),
-            });
+                })
             abrirCerrarModalEliminar();
             getAlumnos();
         } catch (error) {
