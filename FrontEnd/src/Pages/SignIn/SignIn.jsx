@@ -86,7 +86,7 @@ const SignIn = ({
           />
           <br />
           <TextField
-            name="contraseña"
+            name="password"
             required
             fullWidth
             label="Contraseña"
