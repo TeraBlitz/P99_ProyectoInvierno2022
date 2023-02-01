@@ -51,7 +51,7 @@ p{
   display: grid;
   gap: 40px;
   grid-template-columns: repeat(auto-fit,minmax(275px,1fr));
-  margin-bottom: 5%;
+  margin-bottom: 3%;
 }
 .textColumn{
   text-align: center;
@@ -60,7 +60,7 @@ p{
   width: 300px;
   margin-top: 50px;
   margin-bottom: 50px;
-  height: 20vh;
+  height: 25vh;
   border-radius: 20px;
   margin: auto;
   align-items: center;
@@ -79,5 +79,5 @@ p{
 
 }
 .spacerMobile{
-  height: 120px;
+  height: 70px;
 }
