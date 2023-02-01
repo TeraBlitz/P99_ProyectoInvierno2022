@@ -65,7 +65,7 @@ function App() {
         MisClasesProfesor: <MisClasesProfesor />,
 
         Profile: <Profile />,
-        
+
         ControlPanel: <ControlPanel changeContent={changeContent} />,
 
         MisClases: <MisClases changeContent={changeContent} />,
@@ -85,7 +85,7 @@ function App() {
     const createUser = async (user) => {
         user.status = "10"
         user.rol = "estudiante"
-        console.log(user)
+
 
         await fetch("https://p99test.fly.dev/v1/users/create", {
             method: 'POST',
@@ -93,7 +93,7 @@ function App() {
             body: new URLSearchParams(user)
         }
         ).then(e => {
-            console.log(e)
+
             changeHasAccount()
         })
     }
@@ -108,7 +108,7 @@ function App() {
         Login(user)
             .then(result => {
                 if (result.msg == "Login OK") {
-                    console.log(result.data_user)
+
                     handleUser(result.data_user)
                     handleStudent(result.data_user)
                     setIsSignedIn(true)

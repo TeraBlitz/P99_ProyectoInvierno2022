@@ -12,12 +12,12 @@ import CardContent from "@mui/material/CardContent";
 export default function Periodos() {
 
   useEffect(() => {
-    console.log('empieza use efect')
+
 
      getPeriodos();
      getClase();
 
-     console.log('Periodos: ',data)
+
    }, []);
 
 
@@ -60,7 +60,7 @@ export default function Periodos() {
     const res = await axios.get("https://p99test.fly.dev/v1/periodos");
     setData(res.data);
 
-    console.log('fetch datos',res.data)
+
   };
 
   //Clases
@@ -83,7 +83,7 @@ export default function Periodos() {
 
       if (element.clavePeriodo === clave){
 
-        console.log(element)
+
         if(listaProfes.includes(element.matriculaProfesor)){
 
         }else{
@@ -196,9 +196,9 @@ export default function Periodos() {
       setCursos_max_por_alumno("");
       setidiomas_max_por_alumno("");
     } catch (error) {
-      console.log(error);
+
     }
-    console.log('Datos Posteados: ',data)
+
   };
 
   const [modalEditar, setModalEditar] = useState(false);
@@ -252,7 +252,7 @@ export default function Periodos() {
       abrirCerrarModalEliminar();
       getPeriodos();
     } catch (error) {
-      console.log(error);
+
     }
   };
 
@@ -331,7 +331,7 @@ export default function Periodos() {
 
       }));
     }
-    console.log(consolaSeleccionada.fecha_inicio )
+
 
   };
   // Editar
@@ -362,12 +362,12 @@ export default function Periodos() {
       abrirCerrarModalEditar();
       getPeriodos();
     } catch (error) {
-      console.log(error);
+
     }
   };
 
 
-  console.log('data: ',data)
+
   return (
 
     <div >

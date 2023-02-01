@@ -134,7 +134,7 @@ export default function ShowClass() {
 
     const getOptions = async () => {
         await getProfesors().then(response=>response.json()).then((result) => {
-            console.log(result)
+
             let newProfList = [];
             result.forEach((profesor) => {
                 profesor.nombreCompleto = profesor.nombre + " " + profesor.apellidos;
@@ -204,7 +204,7 @@ export default function ShowClass() {
                             result[i].nombreProfesor + " " + result[i].apellidosProfesor,
                     }];
                 }
-                console.log(dataList)
+
                 setData(dataList)
             });
         getOptions();
@@ -393,7 +393,7 @@ export default function ShowClass() {
             }
         }
 
-        console.log(profesoresJson)
+
         await subirProfes({
             profesoresJson: JSON.stringify(profesoresJson),
         });
@@ -465,7 +465,7 @@ export default function ShowClass() {
     };
 
     const postDelete = async (e) => {
-        console.log(array3._id)
+
         try {
             await deleteClasses({
                     _id: nuevaClase._id,
@@ -473,7 +473,7 @@ export default function ShowClass() {
             abrirCerrarModalEliminar();
             resetClases();
         } catch (error) {
-            console.log(error);
+
         }
     };
 

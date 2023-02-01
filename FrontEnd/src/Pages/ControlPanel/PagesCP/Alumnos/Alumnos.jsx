@@ -59,7 +59,7 @@ export default function Alumnos() {
 
 
   useEffect(() => {
-    console.log("Empieza UseEfect")
+
     getAlumnos();
     getAlumnos2();
     getPeriodos();
@@ -112,7 +112,7 @@ export default function Alumnos() {
       ...prevState,
       [name]: value,
     }));
-    console.log(consolaSeleccionada);
+
   };
 
   // Abrir y cerra modales
@@ -175,7 +175,7 @@ export default function Alumnos() {
       abrirCerrarModalEditar();
       getAlumnos();
     } catch (error) {
-      console.log(error);
+
     }
   };
 
@@ -194,7 +194,7 @@ export default function Alumnos() {
       abrirCerrarModalEliminar();
       getAlumnos();
     } catch (error) {
-      console.log(error);
+
     }
   };
   //-------------------------------Datos de ventanas modales---------------
@@ -853,21 +853,20 @@ export default function Alumnos() {
     array = []
     array2 = []
     array3 = []
-    console.log(guardaData)
-    console.log(event.value);
+
 
     array2.push(dataAlumnoClase.filter(data => data.idPeriodo === event.value));
-    console.log(array2[0])
+
     for (let i=0; i< array2.length;i++){
       for (let j=0; j< array2[i].length;j++){
         array.push(guardaData.filter(data => data._id === array2[i][j].idAlumno))
       }
     }
-    console.log(array)
+
     for (let i=0; i< array.length;i++){
       array3.push(array[i][0])
     }
-    console.log(array3)
+
     if( array3.length > 0){
       setData(array3)
     }else{

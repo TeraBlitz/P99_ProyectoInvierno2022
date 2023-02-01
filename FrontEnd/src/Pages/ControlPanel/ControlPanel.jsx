@@ -118,7 +118,7 @@ function compararFecha(data){
 // -------------------Funcion para contar cursos en periodo actual
 
 function contarClases(datos){
-    console.log("Este es la data inicial",datos)
+   // console.log("Este es la data inicial",datos)
     let contadorClases = 0;
 
     datos.forEach(element => {
@@ -145,7 +145,7 @@ function contarProfes(datos){
     }
 
     });
-    console.log(listaProfes)
+
     return(listaProfes.length)
 }
 
