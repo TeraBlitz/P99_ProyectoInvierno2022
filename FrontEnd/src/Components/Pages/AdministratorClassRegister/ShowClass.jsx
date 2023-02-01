@@ -7,7 +7,6 @@ import {
     TextField,
     Box,
     Typography,
-    Autocomplete,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { grey } from "@mui/material/colors";
@@ -47,7 +46,9 @@ export default function ShowClass() {
         array = [];
         array2 = [];
 
+
         array2.push(data.filter((data) => data.clavePeriodo === event.label));
+
 
         for (let i = 0; i < array2.length; i++) {
             for (let j = 0; j < array2[i].length; j++) {
@@ -55,12 +56,16 @@ export default function ShowClass() {
             }
         }
 
+
         if (array.length > 0) {
             setData(array);
         } else {
             resetClases();
         }
     };
+
+
+
 
     //--------------------------------------------Agregar----------------
     //Estados de agregar
@@ -296,6 +301,7 @@ export default function ShowClass() {
 
     const handleChange2 = (e) => {
 
+
         const { name, value } = e.target;
         setNuevaClase({ ...nuevaClase, [name]: value });
     };
@@ -391,6 +397,8 @@ export default function ShowClass() {
         await subirProfes({
             profesoresJson: JSON.stringify(profesoresJson),
         });
+
+        //
         await subirClases({
             clasesJson: JSON.stringify(clasesJson),
         }).then(() => {
@@ -398,16 +406,12 @@ export default function ShowClass() {
             })
 
         //
+
     };
 
-    let seleccionarConsola = (consola, caso) => {
-        if (caso === "Editar") {
-            editClasses(consola);
-        } else if (caso === "Eliminar") {
-            deleteClass(consola._id);
-        } else {
-        }
-    };
+
+
+
 
     //Funciones que actualiza los datos con las modificacioness
     const handleClick2 = (e) => {
@@ -438,9 +442,23 @@ export default function ShowClass() {
             resetClases();
         })
     };
-    //------------------------------------Eliminar-------------------------------------
-    // Se agrego un componente de dialogo para confirmar la eliminacion de una clase
-    const [modalEliminar, setModalEliminar] = useState(false);
+  //------------------------------------Eliminar-------------------------------------
+  // Se agrego un componente de dialogo para confirmar la eliminacion de una clase
+
+
+  let seleccionarConsola = (consola, caso) => {
+    setNuevaClase(consola)
+    array3 = consola
+    id = array3._id
+
+    if (caso === "Editar") {
+      editClasses(consola);
+    } else if (caso === "Eliminar") {
+      abrirCerrarModalEliminar();
+    }
+  };
+
+  const [modalEliminar, setModalEliminar] = useState(false);
 
     const abrirCerrarModalEliminar = () => {
         setModalEliminar(!modalEliminar);
@@ -449,7 +467,7 @@ export default function ShowClass() {
     const postDelete = async (e) => {
         console.log(array3._id)
         try {
-            await deleteClass({
+            await deleteClasses({
                     _id: nuevaClase._id,
                 })
             abrirCerrarModalEliminar();
@@ -511,13 +529,7 @@ export default function ShowClass() {
     //------------------------------------Eliminar-------------------------------------
     // Se agrego un componente de dialogo para confirmar la eliminacion de una clase
 
-    async function deleteClass(id) {
-         deleteClasses({
-                _id: id,
-            }).then(e=>{
-                resetClases();
-            })
-    }
+
 
     //-------------------------------Datos de ventanas modales---------------
     const bodyInsertar = (
@@ -970,227 +982,232 @@ export default function ShowClass() {
 
     const columns = useMemo(
         () => [
-            { field: "clave", headerName: "Clave", width: 70 },
-            { field: "nombre_curso", headerName: "Curso", width: 120 },
-            { field: "niveles", headerName: "Nivel", width: 100 },
-            {
-                field: "nombreCompleto",
-                headerName: "Profesor",
-                width: 140,
-                sortable: false,
-            },
-            { field: "cupo_maximo", headerName: "Capacidad", width: 160 },
-            { field: "edades", headerName: "Edades", width: 160 },
-            { field: "fechas", headerName: "Fechas", width: 160 },
-            { field: "modalidad", headerName: "modalidad", width: 111 },
-            {
-                field: "actions",
-                headerName: "Acciones",
-                type: "actions",
-                width: 175,
-                renderCell: (params) => <Actions {...{ params, seleccionarConsola }} />,
-            },
-            {
-                field: "wait_list",
-                headerName: "Lista Espera",
-                type: "actions",
-                width: 150,
-                renderCell: (params) => (
-                    <Button size="small" onClick={() => getClassWaitList(params.row)}>Lista Espera</Button>
-                ),
-            },
+          { field: "clave", headerName: "Clave", width: 68 },
+          { field: "nombre_curso", headerName: "Curso", width: 80 },
+          { field: "niveles", headerName: "Nivel", width: 95 },
+          {
+            field: "nombreCompleto",
+            headerName: "Profesor",
+            width: 150,
+            sortable: false,
+          },
+          { field: "cupo_maximo", headerName: "Capacidad", width: 90 },
+          { field: "edades", headerName: "Edades", width: 70 },
+          { field: "fechas", headerName: "Fechas", width: 200 },
+          { field: "modalidad", headerName: "modalidad", width: 88 },
+          {
+            field: "actions",
+            headerName: "Acciones",
+            type: "actions",
+            width: 125,
+            renderCell: (params) => <Actions {...{ params, seleccionarConsola }} />,
+          },
+          {
+              field: "wait_list",
+              headerName: "Lista Espera",
+              type: "actions",
+              width: 150,
+              renderCell: (params) => (
+                  <Button size="small" onClick={() => getClassWaitList(params.row)}>Lista Espera</Button>
+              ),
+          },
         ],
         [data, profesorList]
-    );
+      );
 
     //---------------------------------------Filter---------------------------
     const [items, setItems] = useState([]);
     return (
-        <div>
+    <div>
             <Box
                 sx={{
                     width: 250,
                     position: "absolute",
                     textAlign: "left",
-                    marginLeft: "940px",
-                    marginTop: "52px",
+                    marginLeft: "910px",
+                    marginTop: "50px",
                     fontFamily: 'arial',
                     borderRadius: "8px",
 
-                }}
-            >
-                <Select
-                    options={dataPeriodo.map((sup) => ({
-                        label: sup.clave,
-                        value: sup._id,
-                    }))}
-                    onChange={handleSelectChange}
-                />
-            </Box>
-            <Card
-                sx={{
-                    width: 1140,
-                    position: "absolute",
-                    textAlign: "left",
-                    marginLeft: "50px",
-                    marginTop: "120px",
-                    bgcolor: "grey.200",
-                    borderRadius: "8px",
-                }}
-            >
-                <CardContent>
-                    <Typography
-                        gutterBottom
-                        variant="h5"
-                        component="div"
-                        sx={{ textAlign: "left", fontFamily: "arial", marginLeft: "15px" }}
-                    >
-                        Filtros
-                    </Typography>
-                    <TextField
-                        style={{ paddingBottom: "5px", fontFamily: "arial", marginLeft: "10px", width: 330 }}
-                        label="Curso"
-                        onChange={(e) => {
-                            setItems([
-                                {
-                                    columnField: "nombre_curso",
-                                    operatorValue: "contains",
-                                    value: e.target.value,
-                                },
-                            ]);
-                        }}
-                    ></TextField>
-                    <TextField
-                        style={{ paddingBottom: "5px", fontFamily: "arial", marginLeft: "54px", width: 330 }}
-                        label="Nivel"
-                        onChange={(e) => {
-                            setItems([
-                                {
-                                    columnField: "niveles",
-                                    operatorValue: "contains",
-                                    value: e.target.value,
-                                },
-                            ]);
-                        }}
-                    ></TextField>
-                    <TextField
-                        style={{ paddingBottom: "5px", fontFamily: "arial", marginLeft: "40px", width: 330 }}
-                        label="Profesor"
-                        onChange={(e) => {
-                            setItems([
-                                {
-                                    columnField: "matriculaProfesor",
-                                    operatorValue: "contains",
-                                    value: e.target.value,
-                                },
-                            ]);
-                        }}
-                    ></TextField>
-                </CardContent>
-            </Card>
+        }}
+      >
+        <Select
+          options={dataPeriodo.map((sup) => ({
+            label: sup.clave,
+            value: sup._id,
+          }))}
+          onChange={handleSelectChange}
+        />
+      </Box>
+      <Card
+        sx={{
+          width: 1140,
+          position: "absolute",
+          textAlign: "left",
+          marginLeft: "50px",
+          marginTop: "120px",
+          bgcolor: "grey.200",
+          borderRadius: "8px",
+        }}
+      >
+        <CardContent>
+          <Typography
+            gutterBottom
+            variant="h5"
+            component="div"
+            sx={{ textAlign: "left", fontFamily: "arial", marginLeft:"15px" }}
+          >
+            Filtros
+          </Typography>
 
-            <Box
-                sx={{
-                    width: "740px",
-                    padding: "15px",
-                    height: "450px",
-                    position: "absolute",
-                    marginLeft: "40px",
-                }}
-            >
-                <Typography
-                    variant="h3"
-                    component="h3"
-                    sx={{ textAlign: "left", mt: 3, mb: 3, fontFamily: "arial" }}
-                >
-                    Clases
-                </Typography>
+          <TextField
+            style={{ paddingBottom: "5px", fontFamily: "arial", marginLeft:"10px" , width:330}}
+            label="Curso"
+            onChange={(e) => {
+              setItems([
+                {
+                  columnField: "nombre_curso",
+                  operatorValue: "contains",
+                  value: e.target.value,
+                },
+              ]);
+            }}
+          ></TextField>
 
-            </Box>
+          <TextField
+            style={{ paddingBottom: "5px", fontFamily: "arial" , marginLeft:"54px" , width:330}}
+            label="Nivel"
+            onChange={(e) => {
+              setItems([
+                {
+                  columnField: "niveles",
+                  operatorValue: "contains",
+                  value: e.target.value,
+                },
+              ]);
+            }}
+          ></TextField>
+
+          <TextField
+            style={{ paddingBottom: "5px", fontFamily: "arial", marginLeft:"40px"  , width:330}}
+            label="Profesor"
+            onChange={(e) => {
+              setItems([
+                {
+                  columnField: "nombreCompleto",
+                  operatorValue: "contains",
+                  value: e.target.value,
+                },
+              ]);
+            }}
+          ></TextField>
+
+        </CardContent>
+      </Card>
+
+      <Box
+        sx={{
+          width: "740px",
+          padding: "15px",
+          height: "100px",
+          position: "absolute",
+          marginLeft: "40px",
+        }}
+      >
+        <Typography
+          variant="h3"
+          component="h3"
+          sx={{ textAlign: "left", mt: 3, mb: 3, fontFamily: "arial" }}
+        >
+          Clases
+          </Typography>
+
+          </Box>
             <Button
-                variant="contained"
-                color="success"
-                onClick={() => addClass()}
-                sx={{
-                    position: "absolute",
-                    marginTop: "52px",
-                    marginLeft: "620px",
+              variant="contained"
+              color="success"
+              onClick={() => addClass()}
+              sx={{
+                position:"absolute",
+                marginTop:"52px",
+                marginLeft:"570px",
 
-                }}
+              }}
             >
-                {<AddCircleOutlineIcon />} Crear
+              {<AddCircleOutlineIcon />} Crear
             </Button>
             <Button
-                variant="contained"
-                color="info"
-                onClick={() => importFile()}
-                sx={{
-                    position: "absolute",
-                    marginTop: "52px",
-                    marginLeft: "750px",
-                    marginRight: "30px"
-                }}
+              variant="contained"
+              color="info"
+              onClick={() => importFile()}
+              sx={{
+                position:"absolute",
+                marginTop:"52px",
+                marginLeft:"700px",
+                marginRight:"30px"
+              }}
             >
-                <InsertDriveFile /> Importar CSV
+              <InsertDriveFile /> Importar CSV
             </Button>
 
-            <Box sx={{
-                position: "absolute",
-                height: "60vh",
-                width: "1140px",
-                marginTop: "280px",
-                marginLeft: "50px"
+                <Box sx={{
+                   position:"absolute",
+                   height: "60vh",
+                   width: "1140px" ,
+                   marginTop:"280px",
+                   marginLeft:"50px"
+                     }}>
+                    <DataGrid
+                        columns={columns}
+                        rows={data}
+                        getRowId={(row) => row._id}
+                        rowsPerPageOptions={[5, 10, 20]}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newPageSize) => SetPageSize(newPageSize)}
+                        getRowSpacing={(params) => ({
+                            top: params.isFirstVisible ? 0 : 5,
+                            bottom: params.isLastVisible ? 0 : 5,
+                        })}
+                        sx={{
+                            [`& .${gridClasses.row}`]: {
+                                bgcolor: (theme) =>
+                                    theme.palette.mode === "light" ? grey[200] : grey[900],
+                                fontFamily: "arial",
+                            },
+                        }}
+                        disableSelectionOnClick={true}
+                        filterModel={{
+                            items: items,
+                        }}
+                    />
+                </Box>
 
-            }}>
-                <DataGrid
-                    columns={columns}
-                    rows={data}
-                    getRowId={(row) => row._id}
-                    rowsPerPageOptions={[5, 10, 20]}
-                    pageSize={pageSize}
-                    onPageSizeChange={(newPageSize) => SetPageSize(newPageSize)}
-                    getRowSpacing={(params) => ({
-                        top: params.isFirstVisible ? 0 : 5,
-                        bottom: params.isLastVisible ? 0 : 5,
-                    })}
+                {/* Creacion de modales */}
+                <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
+                    {bodyInsertar}
+                </Modal>
+
+
+                <Modal open={modalEditar} onClose={() => abrirCerrarModalEditar()}>
+                    {bodyEditar}
+                </Modal>
+                <Modal open={modalEliminar} onClose={abrirCerrarModalEliminar}>
+                    {bodyEliminar}
+                 </Modal>
+                <Modal
+                    open={openWaitList}
+                    onClose={() => setOpenWaitList(!openWaitList)}
                     sx={{
-                        [`& .${gridClasses.row}`]: {
-                            bgcolor: (theme) =>
-                                theme.palette.mode === "light" ? grey[200] : grey[900],
-                            fontFamily: "arial",
-                        },
+                        height: '100vh', display: 'flex',
+                        alignContent: 'center', justifyContent: 'center',
+                        flexWrap: 'wrap', overflowY: 'scroll'
                     }}
-                    disableSelectionOnClick={true}
-                    filterModel={{
-                        items: items,
-                    }}
-                />
-            </Box>
+                >
+                    <>
+                        <WaitList clase={currentClase} waitList={currentWaitList} />
+                    </>
+                </Modal>
 
-            {/* Creacion de modales */}
-            <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
-                {bodyInsertar}
-            </Modal>
-            <Modal open={modalEliminar} onClose={abrirCerrarModalEliminar}>
-                {bodyEliminar}
-            </Modal>
-
-            <Modal open={modalEditar} onClose={() => abrirCerrarModalEditar()}>
-                {bodyEditar}
-            </Modal>
-            <Modal
-                open={openWaitList}
-                onClose={() => setOpenWaitList(!openWaitList)}
-                sx={{
-                    height: '100vh', display: 'flex',
-                    alignContent: 'center', justifyContent: 'center',
-                    flexWrap: 'wrap', overflowY: 'scroll'
-                }}
-            >
-                <>
-                    <WaitList clase={currentClase} waitList={currentWaitList} />
-                </>
-            </Modal>
-        </div>
+    </div>
     );
 }
