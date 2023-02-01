@@ -38,7 +38,7 @@ function Clase({handleClick, handleMoreInfo, clase}) {
                     <Typography variant='body1'><strong>Nivel:</strong> {nivelDict[clase.nivel]}</Typography>
                         <Typography sx={{ color: clase.cupo_actual / clase.cupo_maximo >= 1 ? "red" : "black" }} variant='body1'>
                             { Number(clase.cupo_actual) / Number(clase.cupo_maximo)  >=1 ? <strong>Lleno</strong>
-                                : <strong>¡Curso  {(Number(clase.cupo_actual) / Number(clase.cupo_maximo) * 100).toString()}% lleno!</strong> 
+                                : <strong>¡Curso  {(Number(clase.cupo_actual) / Number(clase.cupo_maximo) * 100).toFixed()}% lleno!</strong> 
                             }
                         </Typography>
                 </Box>
