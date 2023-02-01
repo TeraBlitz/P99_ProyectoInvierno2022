@@ -82,18 +82,11 @@ function App() {
 
     }
 
-    const createUser = async (user) => {
+    const createUsers = async (user) => {
         user.status = "10"
         user.rol = "estudiante"
         console.log(user)
-
-        await fetch("https://p99test.fly.dev/v1/users/create", {
-            method: 'POST',
-            redirect: 'follow',
-            body: new URLSearchParams(user)
-        }
-        ).then(e => {
-            console.log(e)
+        createUser().then(e => {
             changeHasAccount()
         })
     }
@@ -121,9 +114,9 @@ function App() {
     }
 
     return !isSignedIn && hasAccount ?
-        <SignIn handleSignIn={handleSignIn} handleUser={handleUser} loginError={loginError} changeHasAccount={changeHasAccount} /> || <SignUp></SignUp>
+        <SignIn handleSignIn={handleSignIn} handleUser={handleUser} loginError={loginError} changeHasAccount={changeHasAccount} /> 
         : !isSignedIn && !hasAccount ?
-            <SignUp createUser={createUser} changeHasAccount={changeHasAccount} />
+            <SignUp createUser={createUsers} changeHasAccount={changeHasAccount} />
             :
             <userContext.Provider value={user}>
                 <Box id="main" sx={{ display: 'flex' }}>
