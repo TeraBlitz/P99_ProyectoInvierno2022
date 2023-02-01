@@ -135,14 +135,14 @@ const Profile = () =>{
     
     return (
         <Box sx={{p: 1, ml: 1}}>
-            <Box sx={{ fontFamily: 'default', fontSize: 'h3.fontSize', py: 2, display:'flex' }}>
+            <Box sx={{ fontFamily: 'default', fontSize: 'h3.fontSize', py: 2, display:'flex', color: '#004a98'}}>
                 <Box>
                     Mi perfil
                 </Box>
                 {
                     userValues.rol === 'estudiante' ?
                     <Box sx={{ display: {xs: 'flex', md: 'none'}, flexDirection: 'column', position: 'absolute',  bottom: 16,  right: 16}}>
-                        <Fab color="primary" aria-label="add" sx={{ display: addStudent ? 'none' : ''}} 
+                        <Fab color="primary" aria-label="add" sx={{ display: addStudent ? 'none' : '', backgroundColor: '#57a1f1'}} 
                                 onClick={() => { setAddStudent(!addStudent); }}>
                             <AddIcon />
                         </Fab>
@@ -150,7 +150,7 @@ const Profile = () =>{
                     : null
                 }
             </Box>
-            <Box sx={{ typography: 'subtitle2', fontWeight: 'light', fontFamily: 'default' }}>
+            <Box sx={{ typography: 'h6', fontFamily: 'default' }}>
                 Datos Usuario
             </Box> 
             <Box sx={{'& .MuiTextField-root': { m: 1, width: '35ch' }, display: 'flex', alignItems: 'center',  flexWrap: 'wrap' }}>
@@ -158,9 +158,8 @@ const Profile = () =>{
                 <TextField name="correo" label="Correo" InputProps={{readOnly: true}} value={userInfo.correo || ''}/>
             </Box>
 
-            <Box sx={{ py: 2, display: userValues.rol === 'estudiante' ? 'flex' : 'none', justifyContent: 'space-between' }}>
+            <Box sx={{ pt: 2, display: userValues.rol === 'estudiante' ? 'flex' : 'none', justifyContent: 'space-between', mt: 2}}>
                 <Typography variant='h6'>Estudiante(s)</Typography> 
-                <Button sx={{display: {xs: 'none', md: 'flex'}}} onClick={() => { setAddStudent(!addStudent); }} variant="outlined">Agregar estudiante </Button>
             </Box>
    
             <Box>
@@ -183,7 +182,10 @@ const Profile = () =>{
                             setIsEditing={setIsEditing}
                         />    
                     )
-                } 
+                }
+                <Box sx={{display: {xs: 'none', md: 'flex', justifyContent: 'flex-end'}}}>
+                    <Button sx={{textTransform: 'none', backgroundColor: '#57a1f1', fontSize: '18px'}} onClick={() => { setAddStudent(!addStudent); }} variant="contained"  endIcon={<AddIcon/>}>Agregar estudiante </Button>
+                </Box>
             </Box>
             <Modal
                 open={addStudent}
