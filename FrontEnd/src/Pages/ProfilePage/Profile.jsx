@@ -57,23 +57,21 @@ const Profile = () =>{
     const userValues = useContext(userContext)
 
     useEffect(() => {
-        const getUserInfo = () =>{
-            getUser().then(
-                (data) => {
-                    const currentUser = data.find(user => user._id === userValues._id);
-                    setUserInfo(currentUser);
-                    //console.log(currentUser)
-                });
-        }
+        const getUserInfo =  () =>{
+            getUser().then(response=>response.json()).then((result) => {
+                const currentUser = result.find(user => user._id === userValues._id);
+                setUserInfo(currentUser);
+                //console.log(currentUser)
+                })
+            }
         getUserInfo();
     }, []);
 
 
     useEffect(() => {
        const getUserStudents = () =>{
-            getStudents().then(
-                (data) => {
-                    const students = data.filter(student => student.idUser === userValues._id);
+            getStudents().then(response=>response.json()).then((result) => {
+                    const students = result.filter(student => student.idUser === userValues._id);
                     setStudents(students);
                     //console.log(students)
             });
@@ -89,25 +87,21 @@ const Profile = () =>{
 
     const deleteCurrentStudent = () => {
         handleCloseDialog();
-        deleteStudent(new URLSearchParams({'_id': currentStudent._id})).then((data) => {
+        deleteStudent({'_id': currentStudent._id}).then((data) => {
             console.log(data)
-        })
-        .catch((error) => {
-            console.log(error.message);
-            if (error.message.includes('Documen')){
-                setAlertMessage('Estudiante eliminado correctamente.')
-                setSuccessOpen(true);
-            }
-            else{
+            if(data.status === 400){
                 setAlertMessage('Se produjo un error al eliminar al estudiante.')
                 setErrorOpen(true);
             }
+            else{
+                setAlertMessage('Estudiante eliminado correctamente.')
+                setSuccessOpen(true);
+            }
         })
         .finally(() => {
-            findStudents(new URLSearchParams({'idUser': userValues._id})).then(
-                (data) => {
-                    console.log(data);
-                    setStudents(data);
+            findStudents({'idUser': userValues._id}).then(response=>response.json()).then((data) => {
+                console.log(data);
+                setStudents(data);
             });
         })
 
@@ -135,14 +129,14 @@ const Profile = () =>{
     
     return (
         <Box sx={{p: 1, ml: 1}}>
-            <Box sx={{ fontFamily: 'default', fontSize: 'h3.fontSize', py: 2, display:'flex' }}>
+            <Box sx={{ fontFamily: 'default', fontSize: 'h3.fontSize', py: 2, display:'flex', color: '#004a98'}}>
                 <Box>
                     Mi perfil
                 </Box>
                 {
                     userValues.rol === 'estudiante' ?
                     <Box sx={{ display: {xs: 'flex', md: 'none'}, flexDirection: 'column', position: 'absolute',  bottom: 16,  right: 16}}>
-                        <Fab color="primary" aria-label="add" sx={{ display: addStudent ? 'none' : ''}} 
+                        <Fab color="primary" aria-label="add" sx={{ display: addStudent ? 'none' : '', backgroundColor: '#57a1f1'}} 
                                 onClick={() => { setAddStudent(!addStudent); }}>
                             <AddIcon />
                         </Fab>
@@ -150,7 +144,7 @@ const Profile = () =>{
                     : null
                 }
             </Box>
-            <Box sx={{ typography: 'subtitle2', fontWeight: 'light', fontFamily: 'default' }}>
+            <Box sx={{ typography: 'h6', fontFamily: 'default' }}>
                 Datos Usuario
             </Box> 
             <Box sx={{'& .MuiTextField-root': { m: 1, width: '35ch' }, display: 'flex', alignItems: 'center',  flexWrap: 'wrap' }}>
@@ -158,9 +152,8 @@ const Profile = () =>{
                 <TextField name="correo" label="Correo" InputProps={{readOnly: true}} value={userInfo.correo || ''}/>
             </Box>
 
-            <Box sx={{ py: 2, display: userValues.rol === 'estudiante' ? 'flex' : 'none', justifyContent: 'space-between' }}>
+            <Box sx={{ pt: 2, display: userValues.rol === 'estudiante' ? 'flex' : 'none', justifyContent: 'space-between', mt: 2}}>
                 <Typography variant='h6'>Estudiante(s)</Typography> 
-                <Button sx={{display: {xs: 'none', md: 'flex'}}} onClick={() => { setAddStudent(!addStudent); }} variant="outlined">Agregar estudiante </Button>
             </Box>
    
             <Box>
@@ -183,7 +176,10 @@ const Profile = () =>{
                             setIsEditing={setIsEditing}
                         />    
                     )
-                } 
+                }
+                <Box sx={{display: {xs: 'none', md: 'flex', justifyContent: 'flex-end'}}}>
+                    <Button sx={{textTransform: 'none', backgroundColor: '#57a1f1', fontSize: '18px'}} onClick={() => { setAddStudent(!addStudent); }} variant="contained"  endIcon={<AddIcon/>}>Agregar estudiante </Button>
+                </Box>
             </Box>
             <Modal
                 open={addStudent}

@@ -7,7 +7,6 @@ import {
     TextField,
     Box,
     Typography,
-    Autocomplete,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { grey } from "@mui/material/colors";
@@ -17,52 +16,56 @@ import Actions from "./Actions";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import MenuItem from "@mui/material/MenuItem";
-import axios from "axios";
 import { InsertDriveFile } from "@mui/icons-material";
 import Select from "react-select";
 import WaitList from "./WaitList";
 import { getWaitList } from '../../../api/waitList'
 import { getStudents } from "../../../api/students";
+import { getPeriodos } from '../../../api/Periodos';
+import { getProfesors } from '../../../api/profesors.js'
+import { createClass, deleteClasses, getClasses , updateClass} from '../../../api/classes.js'
+import { subirClases, subirProfes } from "../../../api/csv";
 
 export default function ShowClass() {
 
-  let array = [];
-  let array2 = [];
-  let array3 = [];
-  // Selector de periodos
-  let id = "";
-  const [dataPeriodo, setDataPeriodo] = useState([]);
+    let array = [];
+    let array2 = [];
+    let array3 = [];
+    // Selector de periodos
+    let id = "";
+    const [dataPeriodo, setDataPeriodo] = useState([]);
 
-    const getPeriodos = async () => {
-        const res = await axios.get("http://p99test.fly.dev/v1/periodos");
-        setDataPeriodo(res.data);
+    const getAllPeriodos = async () => {
+        getPeriodos().then(response=>response.json()).then(result => {
+            setDataPeriodo(result)
+        })
     };
 
-    const [claseResp, setClaseResp] = useState([]);
-
-    const getClaseResp = async () => {
-        const res = await axios.get("https://p99test.fly.dev/v1/clases");
-        setClaseResp(res.data);
-    };
 
     const handleSelectChange = (event) => {
         array = [];
         array2 = [];
-        
+
+
         array2.push(data.filter((data) => data.clavePeriodo === event.label));
-        
+
+
         for (let i = 0; i < array2.length; i++) {
             for (let j = 0; j < array2[i].length; j++) {
                 array.push(array2[i][j]);
             }
         }
-        
+
+
         if (array.length > 0) {
             setData(array);
         } else {
             resetClases();
         }
     };
+
+
+
 
     //--------------------------------------------Agregar----------------
     //Estados de agregar
@@ -130,41 +133,29 @@ export default function ShowClass() {
     const [nuevaClase, setNuevaClase] = useState(classTemplate);
 
     const getOptions = async () => {
-        await fetch("https://p99test.fly.dev/v1/profesores", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-        })
-            .then((e) => {
-                return e.json();
-            })
-            .then((e) => {
-                // setProfesorList([])
-                let newProfList = [];
-                e.forEach((profesor) => {
-                    profesor.nombreCompleto = profesor.nombre + " " + profesor.apellidos;
-                    newProfList.push(profesor);
-                });
-                setProfesorList(newProfList);
+        await getProfesors().then(response=>response.json()).then((result) => {
+            console.log(result)
+            let newProfList = [];
+            result.forEach((profesor) => {
+                profesor.nombreCompleto = profesor.nombre + " " + profesor.apellidos;
+                newProfList.push(profesor);
             });
+            setProfesorList(newProfList);
+        });
     };
 
     //Funcion click para abrir el modal
     const abrirCerrarModalInsertar = () => {
         setModalInsertar(!modalInsertar);
     };
+
     const resetClases = async () => {
         let dataList = [];
-        await fetch("https://p99test.fly.dev/v1/clases", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-        })
-            .then((response) => response.json())
+        await getClasses()
+            .then(response =>{
+                return response.json()
+            })
             .then((result) => {
-                console.log(result)
                 for (let i = 0; i < result.length; i++) {
                     let fechas = "";
                     let edades = "";
@@ -185,7 +176,7 @@ export default function ShowClass() {
                     result[i].nivel == "3" ? (niveles = "intermedio") : "";
                     result[i].nivel == "4" ? (niveles = "avanzado") : "";
 
-                    dataList.push({
+                    dataList = [...dataList, {
                         _id: result[i]._id,
                         clave: result[i].clave,
                         nombre_curso: result[i].nombre_curso,
@@ -211,14 +202,15 @@ export default function ShowClass() {
                         apellidosProfesor: result[i].apellidosProfesor,
                         nombreCompleto:
                             result[i].nombreProfesor + " " + result[i].apellidosProfesor,
-                    });
+                    }];
                 }
+                console.log(dataList)
+                setData(dataList)
             });
-        setData(dataList)
         getOptions();
     };
     useEffect(() => {
-        resetClases(), getClaseResp();
+        resetClases();
     }, []);
 
     const handleClose = () => {
@@ -252,13 +244,7 @@ export default function ShowClass() {
         }
         delete nuevaClase.niveles;
 
-        await fetch("https://p99test.fly.dev/v1/clases/create", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: new URLSearchParams(nuevaClase),
-        }).then(() => {
+        createClass(nuevaClase).then(() => {
             abrirCerrarModalInsertar();
             resetClases();
         });
@@ -301,7 +287,7 @@ export default function ShowClass() {
     //Funcion que guarda informacion del modal
     useEffect(() => {
         setClase(claseActual);
-        getPeriodos();
+        getAllPeriodos();
     }, [claseActual]);
 
     //Estado que guarda el array modificado
@@ -314,7 +300,8 @@ export default function ShowClass() {
     };
 
     const handleChange2 = (e) => {
-        
+
+
         const { name, value } = e.target;
         setNuevaClase({ ...nuevaClase, [name]: value });
     };
@@ -406,62 +393,32 @@ export default function ShowClass() {
             }
         }
 
-
-  let seleccionarConsola = (consola, caso) => {
-    setNuevaClase(consola)
-    array3 = consola
-    id = array3._id
-    
-    if (caso === "Editar") {
-      editClasses(consola);
-    } else if (caso === "Eliminar") {
-      abrirCerrarModalEliminar();
-    } 
-  };
+        console.log(profesoresJson)
+        await subirProfes({
+            profesoresJson: JSON.stringify(profesoresJson),
+        });
 
         //
-        await fetch("https://p99test.fly.dev/v1/csv/subirClases", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: new URLSearchParams({
-                clasesJson: JSON.stringify(clasesJson),
-            }),
-        })
-            .then((response) => response.json())
-            .then((result) => {
+        await subirClases({
+            clasesJson: JSON.stringify(clasesJson),
+        }).then(() => {
                 resetClases();
             })
-            .catch((error) => console.log("Error(ShowClass): ", error));
 
         //
-        await fetch("https://p99test.fly.dev/v1/csv/subirProfesores", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: new URLSearchParams({
-                profesoresJson: JSON.stringify(profesoresJson),
-            }),
-        });
+
     };
 
-    let seleccionarConsola = (consola, caso) => {
-        if (caso === "Editar") {
-            editClasses(consola);
-        } else if (caso === "Eliminar") {
-            deleteClass(consola._id);
-        } else {
-        }
-    };
+
+
+
 
     //Funciones que actualiza los datos con las modificacioness
     const handleClick2 = (e) => {
         e.preventDefault();
-        updateClass(clase);
+        updateClase(clase);
     };
-    const updateClass = (nuevaClase) => {
+    const updateClase = (nuevaClase) => {
         delete nuevaClase.fechas;
         delete nuevaClase.edades;
         nuevaClase.nombreProfesor = currentProfesor.nombre;
@@ -479,82 +436,84 @@ export default function ShowClass() {
             nuevaClase.nivel = "4";
         }
         delete nuevaClase.niveles;
-        fetch("https://p99test.fly.dev/v1/clases/update", {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: new URLSearchParams(nuevaClase),
-        }).then((e) => {
-            
+        updateClass(nuevaClase)
+        .then((e) => {
             abrirCerrarModalEditar();
             resetClases();
         })
     };
   //------------------------------------Eliminar-------------------------------------
   // Se agrego un componente de dialogo para confirmar la eliminacion de una clase
-  const [modalEliminar, setModalEliminar] = useState(false);
 
-  const abrirCerrarModalEliminar = () => {
-    setModalEliminar(!modalEliminar);
-  };
 
-  const postDelete = async (e) => {
-    console.log(array3._id)
-    try {
-      await fetch("https://p99test.fly.dev/v1/clases/delete", {
-        method: "Delete",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams({
-          _id: nuevaClase._id,
-        }),
-      });
+  let seleccionarConsola = (consola, caso) => {
+    setNuevaClase(consola)
+    array3 = consola
+    id = array3._id
+
+    if (caso === "Editar") {
+      editClasses(consola);
+    } else if (caso === "Eliminar") {
       abrirCerrarModalEliminar();
-      resetClases();
-    } catch (error) {
-      console.log(error);
     }
   };
 
-  const bodyEliminar = (
-    <div
-      style={{
-        position: "absolute",
-        width: 260,
-        height: 220,
-        backgroundColor: "#fefefd",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        border: "4px solid  rgb(165, 165, 180)",
-        margin: "auto",
-        borderRadius: "10px",
-        padding: "20px",
-      }}
-    >
-      <h3
-        style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" }}
-        align="center"
-      >
-        Eliminar alumno
-      </h3>
-      <Typography style={{ align: "justify", fontFamily: "arial" }}>
-      Esta clase  y toda su información relacionada a ella va a ser eliminada
-      </Typography>
-      <br />
-      <br />
-      <div align="center">
-        <Button color="error" onClick={postDelete}>
-          Confirmar
-        </Button>
-        <Button onClick={() => abrirCerrarModalEliminar()} color="primary">
-          Cancelar
-        </Button>
-      </div>
-    </div>
-  );
+  const [modalEliminar, setModalEliminar] = useState(false);
+
+    const abrirCerrarModalEliminar = () => {
+        setModalEliminar(!modalEliminar);
+    };
+
+    const postDelete = async (e) => {
+        console.log(array3._id)
+        try {
+            await deleteClasses({
+                    _id: nuevaClase._id,
+                })
+            abrirCerrarModalEliminar();
+            resetClases();
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const bodyEliminar = (
+        <div
+            style={{
+                position: "absolute",
+                width: 260,
+                height: 220,
+                backgroundColor: "#fefefd",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                border: "4px solid  rgb(165, 165, 180)",
+                margin: "auto",
+                borderRadius: "10px",
+                padding: "20px",
+            }}
+        >
+            <h3
+                style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" }}
+                align="center"
+            >
+                Eliminar alumno
+            </h3>
+            <Typography style={{ align: "justify", fontFamily: "arial" }}>
+                Esta clase  y toda su información relacionada a ella va a ser eliminada
+            </Typography>
+            <br />
+            <br />
+            <div align="center">
+                <Button color="error" onClick={postDelete}>
+                    Confirmar
+                </Button>
+                <Button onClick={() => abrirCerrarModalEliminar()} color="primary">
+                    Cancelar
+                </Button>
+            </div>
+        </div>
+    );
 
     const addClass = () => {
         setCurrentProfesor({
@@ -570,20 +529,7 @@ export default function ShowClass() {
     //------------------------------------Eliminar-------------------------------------
     // Se agrego un componente de dialogo para confirmar la eliminacion de una clase
 
-    async function deleteClass(id) {
-        await fetch("https://p99test.fly.dev/v1/clases/delete", {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: new URLSearchParams({
-                _id: id,
-            }),
-        }).then(() => {
-            resetClases();
-        });
-        handleClose();
-    }
+
 
     //-------------------------------Datos de ventanas modales---------------
     const bodyInsertar = (
@@ -624,7 +570,7 @@ export default function ShowClass() {
                         paddingBottom: "15px",
                         fontFamily: "arial",
                         marginRight: 10,
-                            width:'40%'
+                        width: '40%'
                     }}
                     label={atribute.value}
                     onChange={(e) => {
@@ -702,7 +648,7 @@ export default function ShowClass() {
                             paddingBottom: "15px",
                             fontFamily: "arial",
                             marginRight: 10,
-                            width:'40%'
+                            width: '40%'
                         }}
                         label={atribute.value}
                         onChange={(e) => {
@@ -1004,10 +950,10 @@ export default function ShowClass() {
         let waitList = [];
         let students = [];
         let result = [];
-        getStudents().then((data) => {
+        getStudents().then(response=>response.json()).then((data) => {
             students = data;
         }).then(() => {
-            getWaitList().then((data) => {
+            getWaitList().then(response=>response.json()).then((data) => {
                 waitList = data.filter(lista => lista.idClase === clase._id);
                 waitList.map((inWaitList) => {
                     for (let i = 0; i < students.length; i++) {
@@ -1036,165 +982,181 @@ export default function ShowClass() {
 
     const columns = useMemo(
         () => [
-            { field: "clave", headerName: "Clave", width: 70 },
-            { field: "nombre_curso", headerName: "Curso", width: 120 },
-            { field: "niveles", headerName: "Nivel", width: 100 },
-            {
-                field: "nombreCompleto",
-                headerName: "Profesor",
-                width: 140,
-                sortable: false,
-            },
-            { field: "cupo_maximo", headerName: "Capacidad", width: 160 },
-            { field: "edades", headerName: "Edades", width: 160 },
-            { field: "fechas", headerName: "Fechas", width: 160 },
-            { field: "modalidad", headerName: "modalidad", width: 111 },
-            {
-                field: "actions",
-                headerName: "Acciones",
-                type: "actions",
-                width: 175,
-                renderCell: (params) => <Actions {...{ params, seleccionarConsola }} />,
-            },
-            {
-                field: "wait_list",
-                headerName: "Lista Espera",
-                type: "actions",
-                width: 150,
-                renderCell: (params) => (
-                    <Button size="small" onClick={() => getClassWaitList(params.row)}>Lista Espera</Button>
-                ),
-            },
+          { field: "clave", headerName: "Clave", width: 68 },
+          { field: "nombre_curso", headerName: "Curso", width: 80 },
+          { field: "niveles", headerName: "Nivel", width: 95 },
+          {
+            field: "nombreCompleto",
+            headerName: "Profesor",
+            width: 150,
+            sortable: false,
+          },
+          { field: "cupo_maximo", headerName: "Capacidad", width: 90 },
+          { field: "edades", headerName: "Edades", width: 70 },
+          { field: "fechas", headerName: "Fechas", width: 200 },
+          { field: "modalidad", headerName: "modalidad", width: 88 },
+          {
+            field: "actions",
+            headerName: "Acciones",
+            type: "actions",
+            width: 125,
+            renderCell: (params) => <Actions {...{ params, seleccionarConsola }} />,
+          },
+          {
+              field: "wait_list",
+              headerName: "Lista Espera",
+              type: "actions",
+              width: 150,
+              renderCell: (params) => (
+                  <Button size="small" onClick={() => getClassWaitList(params.row)}>Lista Espera</Button>
+              ),
+          },
         ],
         [data, profesorList]
-    );
+      );
 
     //---------------------------------------Filter---------------------------
     const [items, setItems] = useState([]);
     return (
-        <div>
+    <div>
             <Box
                 sx={{
                     width: 250,
                     position: "absolute",
                     textAlign: "left",
                     marginLeft: "910px",
-                    marginTop: "30px",
+                    marginTop: "50px",
                     fontFamily: 'arial',
                     borderRadius: "8px",
 
-                }}
-            >
-                <Select
-                    options={dataPeriodo.map((sup) => ({
-                        label: sup.clave,
-                        value: sup._id,
-                    }))}
-                    onChange={handleSelectChange}
-                />
-            </Box>
-            <Card
-                sx={{
-                    maxWidth: 255,
-                    position: "absolute",
-                    textAlign: "left",
-                    marginLeft: "5px",
-                    marginTop: "120px",
-                    border: "2px solid  rgb(165, 165, 180)",
-                    borderRadius: "8px",
-                }}
-            >
-                <CardContent>
-                    <Typography
-                        gutterBottom
-                        variant="h5"
-                        component="div"
-                        sx={{ textAlign: "center", fontFamily: "arial" }}
-                    >
-                        Filtros
-                    </Typography>
-                    <TextField
-                        style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                        label="Curso"
-                        onChange={(e) => {
-                            setItems([
-                                {
-                                    columnField: "nombre_curso",
-                                    operatorValue: "contains",
-                                    value: e.target.value,
-                                },
-                            ]);
-                        }}
-                    ></TextField>
-                    <TextField
-                        style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                        label="Nivel"
-                        onChange={(e) => {
-                            setItems([
-                                {
-                                    columnField: "nivel",
-                                    operatorValue: "contains",
-                                    value: e.target.value,
-                                },
-                            ]);
-                        }}
-                    ></TextField>
-                    <TextField
-                        style={{ paddingBottom: "15px", fontFamily: "arial" }}
-                        label="Profesor"
-                        onChange={(e) => {
-                            setItems([
-                                {
-                                    columnField: "matriculaProfesor",
-                                    operatorValue: "contains",
-                                    value: e.target.value,
-                                },
-                            ]);
-                        }}
-                    ></TextField>
-                </CardContent>
-            </Card>
+        }}
+      >
+        <Select
+          options={dataPeriodo.map((sup) => ({
+            label: sup.clave,
+            value: sup._id,
+          }))}
+          onChange={handleSelectChange}
+        />
+      </Box>
+      <Card
+        sx={{
+          width: 1140,
+          position: "absolute",
+          textAlign: "left",
+          marginLeft: "50px",
+          marginTop: "120px",
+          bgcolor: "grey.200",
+          borderRadius: "8px",
+        }}
+      >
+        <CardContent>
+          <Typography
+            gutterBottom
+            variant="h5"
+            component="div"
+            sx={{ textAlign: "left", fontFamily: "arial", marginLeft:"15px" }}
+          >
+            Filtros
+          </Typography>
 
-            <Box
-                sx={{
-                    width: "740px",
-                    padding: "15px",
-                    height: "450px",
-                    position: "absolute",
-                    marginLeft: "265px",
-                }}
-            >
-                <Typography
-                    variant="h3"
-                    component="h3"
-                    sx={{ textAlign: "left", mt: 3, mb: 3, fontFamily: "arial" }}
-                >
-                    Clases
-                    <div
-                        style={{
-                            display: "flex",
-                            width: "50%",
-                            justifyContent: "space-evenly",
-                        }}
-                    >
-                        <Button
-                            variant="contained"
-                            color="success"
-                            onClick={() => addClass()}
-                        >
-                            {<AddCircleOutlineIcon />} Crear
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="info"
-                            onClick={() => importFile()}
-                        >
-                            <InsertDriveFile /> Importar CSV
-                        </Button>
-                    </div>
-                </Typography>
+          <TextField
+            style={{ paddingBottom: "5px", fontFamily: "arial", marginLeft:"10px" , width:330}}
+            label="Curso"
+            onChange={(e) => {
+              setItems([
+                {
+                  columnField: "nombre_curso",
+                  operatorValue: "contains",
+                  value: e.target.value,
+                },
+              ]);
+            }}
+          ></TextField>
 
-                <Box sx={{ height: "75vh", width: "64vw" }}>
+          <TextField
+            style={{ paddingBottom: "5px", fontFamily: "arial" , marginLeft:"54px" , width:330}}
+            label="Nivel"
+            onChange={(e) => {
+              setItems([
+                {
+                  columnField: "niveles",
+                  operatorValue: "contains",
+                  value: e.target.value,
+                },
+              ]);
+            }}
+          ></TextField>
+
+          <TextField
+            style={{ paddingBottom: "5px", fontFamily: "arial", marginLeft:"40px"  , width:330}}
+            label="Profesor"
+            onChange={(e) => {
+              setItems([
+                {
+                  columnField: "nombreCompleto",
+                  operatorValue: "contains",
+                  value: e.target.value,
+                },
+              ]);
+            }}
+          ></TextField>
+
+        </CardContent>
+      </Card>
+
+      <Box
+        sx={{
+          width: "740px",
+          padding: "15px",
+          height: "100px",
+          position: "absolute",
+          marginLeft: "40px",
+        }}
+      >
+        <Typography
+          variant="h3"
+          component="h3"
+          sx={{ textAlign: "left", mt: 3, mb: 3, fontFamily: "arial" }}
+        >
+          Clases
+          </Typography>
+
+          </Box>
+            <Button
+              variant="contained"
+              color="success"
+              onClick={() => addClass()}
+              sx={{
+                position:"absolute",
+                marginTop:"52px",
+                marginLeft:"570px",
+
+              }}
+            >
+              {<AddCircleOutlineIcon />} Crear
+            </Button>
+            <Button
+              variant="contained"
+              color="info"
+              onClick={() => importFile()}
+              sx={{
+                position:"absolute",
+                marginTop:"52px",
+                marginLeft:"700px",
+                marginRight:"30px"
+              }}
+            >
+              <InsertDriveFile /> Importar CSV
+            </Button>
+
+                <Box sx={{
+                   position:"absolute",
+                   height: "60vh",
+                   width: "1140px" ,
+                   marginTop:"280px",
+                   marginLeft:"50px"
+                     }}>
                     <DataGrid
                         columns={columns}
                         rows={data}
@@ -1224,13 +1186,14 @@ export default function ShowClass() {
                 <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
                     {bodyInsertar}
                 </Modal>
-                <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
-                    {bodyInsertar}
-                </Modal>
+
 
                 <Modal open={modalEditar} onClose={() => abrirCerrarModalEditar()}>
                     {bodyEditar}
                 </Modal>
+                <Modal open={modalEliminar} onClose={abrirCerrarModalEliminar}>
+                    {bodyEliminar}
+                 </Modal>
                 <Modal
                     open={openWaitList}
                     onClose={() => setOpenWaitList(!openWaitList)}
@@ -1244,7 +1207,7 @@ export default function ShowClass() {
                         <WaitList clase={currentClase} waitList={currentWaitList} />
                     </>
                 </Modal>
-            </Box>
-        </div>
+
+    </div>
     );
 }

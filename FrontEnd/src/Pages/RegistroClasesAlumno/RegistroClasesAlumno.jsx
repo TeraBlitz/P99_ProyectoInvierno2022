@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import React, { useState, useEffect, useContext } from 'react'
 import Clase from '../../Components/Clase/Clase'
 import CircularProgress from '@mui/material/CircularProgress'
-import { Alert, Button, Link } from '@mui/material'
+import { Alert, Button, Link, AlertTitle } from '@mui/material'
 import Snackbar from '@mui/material/Snackbar'
 import Autocomplete from '@mui/material/Autocomplete'
 import { Card, CardContent, Typography, TextField, MenuItem } from '@mui/material'
@@ -26,7 +26,7 @@ function RegistroClasesAlumnos({changeContent}) {
     const [items, setItems] = useState([]);
     const [students, setStudents] = useState(null);
     const [currentStudent, setCurrentStudent] = useState(null);
-    const [error, setError] = useState('none');
+    const [error, setError] = useState(false);
     const [clases, setClases] = useState(null);
     const [classNames, setClassNames] = useState([]);
     const [claseRegistrada, setClaseRegistrada] = useState([]); // esto se obtendria de la base de datos
@@ -37,13 +37,14 @@ function RegistroClasesAlumnos({changeContent}) {
     const [nameFilter, setNameFilter] = useState('');
     const [filteredClasses, setFilteredClasses] = useState(null);
     const [dialogAction, setDialogAction] = useState('')
+    const [errorMsg, setErrorMsg] = useState('');
+
     
     const userValues = useContext(userContext)
 
     useEffect(() => {
         const getUserStudents = () =>{
-             getStudents().then(
-                 (data) => {
+             getStudents().then(response=>response.json()).then((data) => {
                      const students = data.filter(student => student.idUser === userValues._id);
                      setStudents(students);
                      //console.log(students)
@@ -55,18 +56,17 @@ function RegistroClasesAlumnos({changeContent}) {
      useEffect(() => {
         const getStudentClasses = () =>{
             let allClassNames = []
-            getClasses().then(
-                (data) => {
-                    for (let i = 0; i < data.length; i++) {
-                        allClassNames.push(data[i].nombre_curso);
+            getClasses().then(response=>response.json()).then((result) => {
+                    for (let i = 0; i < result.length; i++) {
+                        allClassNames.push(result[i].nombre_curso);
                         setClassNames([...new Set(allClassNames)]);
                     }
-                    setClases(data);
-                    setFilteredClasses(data);
+                    setClases(result);
+                    setFilteredClasses(result);
                 });
             }
         getStudentClasses();
-        console.log(clases)
+        //console.log(clases)
      }, []);
 
     // Funcion para calcular edad 
@@ -102,7 +102,7 @@ function RegistroClasesAlumnos({changeContent}) {
     }
 
     const getCupo = (params) => {
-        return `${(Number(params.row.cupo_actual) / Number(params.row.cupo_maximo) * 100).toString()}%`
+        return `${(Number(params.row.cupo_actual) / Number(params.row.cupo_maximo) * 100).toFixed()}%`
     }
 
     const columns = [
@@ -222,7 +222,7 @@ function RegistroClasesAlumnos({changeContent}) {
         filter.map((aClass) => {
             aClass.status = '';
         })
-        getWaitList().then((data) => {
+        getWaitList().then(response=>response.json()).then((data) => {
             waitList = data.filter(lista => lista.idAlumno === student._id);
         })
         .then(() => {
@@ -234,7 +234,7 @@ function RegistroClasesAlumnos({changeContent}) {
                 }
             })
         })
-        getClassStudent().then((data) => {
+        getClassStudent().then(response=>response.json()).then((data) => {
             myClasses = data.filter(clase =>  clase.idAlumno === student._id);
         })
         .then(() => {
@@ -261,15 +261,15 @@ function RegistroClasesAlumnos({changeContent}) {
 
     const handleListaEspera = (clase) =>{   
         let lista = [];   
-        getWaitList().then((data) => {
+        getWaitList().then(response=>response.json()).then((data) => {
             lista = data.filter(lista => lista.idAlumno === currentStudent._id);
         }).then(() => {
-            createWaitList(new URLSearchParams({
+            createWaitList({
                 'idAlumno': currentStudent._id,
                 'idClase': clase._id,
                 'time_stamp':  new Date().toISOString(),
                 'status': 'Espera'
-            }));
+            });
             clase.status = 'ListaEspera';
             handleCloseDialog();
         })
@@ -278,17 +278,17 @@ function RegistroClasesAlumnos({changeContent}) {
     const handleSalirListaEspera = (clase) => {
         let periodo = [];
         let myWaitList = [];
-        findTerm(new URLSearchParams({ 'clave' : clase.clavePeriodo}))
-        .then((data) => {
+        findTerm({ 'clave' : clase.clavePeriodo})
+        .then(response=>response.json()).then((data) => {
             periodo = data;
         })
         .then(() => {
-            getWaitList().then((data) => {
+            getWaitList().then(response=>response.json()).then((data) => {
                 myWaitList = data.filter( aWList =>
                     aWList.idClase === clase._id && aWList.idAlumno === currentStudent._id && aWList.idPeriodo === periodo[0]._id); 
             })  
             .then(() => {
-                deleteWaitList(new URLSearchParams({'_id' : myWaitList[0]._id}));
+                deleteWaitList({'_id' : myWaitList[0]._id});
                 clase.status = '';
                 handleCloseDialog();
             })
@@ -297,44 +297,47 @@ function RegistroClasesAlumnos({changeContent}) {
 
     const handleClaseRegistrada = (clase) => { 
         // Hacer validación de numero de clases disponibles por inscribir
-        if (claseRegistrada[0]) {
-            setError('block')
-        } else {
-            let periodo = []
-            findTerm(new URLSearchParams({ 'clave' : clase.clavePeriodo}))
-            .then((data) => {
-                periodo = data
-            })
-            .then(() => {
-                createClassStudent(new URLSearchParams({
-                    'idClase' : clase._id,
-                    'idAlumno' : currentStudent._id,
-                    'idPeriodo' : periodo[0]._id
-                })).then((data) => {
+        let periodo = []
+        findTerm({ 'clave' : clase.clavePeriodo})
+        .then(response=>response.json()).then((data) => {
+            periodo = data
+        })
+        .then(() => {
+            createClassStudent({
+                'idClase' : clase._id,
+                'idAlumno' : currentStudent._id,
+                'idPeriodo' : periodo[0]._id
+            }).then(response=>response.json()).then((data) => {
+                if (data.msg.includes('Un documento fue insertado con el ID')) {                        
                     clase.status = 'Inscrito'
                     handleCloseDialog();
-                }).catch((error) => {
-                    console.log(error);
-                    alert(error);
-                })
+                }
+                else{
+                    handleCloseDialog();
+                    setErrorMsg(data.msg)
+                    setError(true)
+                }
+            }).catch((error) => {
+                //console.log(error);
+                alert(error);
             })
-        }
+        })
     }
 
     const handleCancelarClaseRegistrada = (clase) => {
         let periodo = []
         let myClassStudent = []
-        findTerm(new URLSearchParams({ 'clave' : clase.clavePeriodo}))
-        .then((data) => {
-            periodo = data
+        findTerm({ 'clave' : clase.clavePeriodo})
+        .then(response=>response.json()).then((result) => {
+            periodo = result
         })
         .then(() => {
-            getClassStudent().then((data) => {
-                myClassStudent = data.filter( aClass =>
+            getClassStudent().then(response=>response.json()).then((result) => {
+                myClassStudent = result.filter( aClass =>
                     aClass.idClase === clase._id && aClass.idAlumno === currentStudent._id && aClass.idPeriodo === periodo[0]._id) 
             })  
             .then(() => {
-                deleteClassStudent(new URLSearchParams({'_id' : myClassStudent[0]._id}))
+                deleteClassStudent({'_id' : myClassStudent[0]._id})
                 clase.status = ''
                 handleCloseDialog();
             })
@@ -367,6 +370,7 @@ function RegistroClasesAlumnos({changeContent}) {
         return(
             <Box sx={{ height: '100vh', display: 'flex',
                 alignContent: 'center', justifyContent: 'center', flexWrap: 'wrap'}}>
+				<Typography variant="h3" sx={{ mb: 2, color: '#004a98' }}>Registro clases (Inscripción)</Typography>
                 <Typography variant='h3' component='div' textAlign='center'>
                     No tienes alumnos registrados, ve a  
                      <Link
@@ -385,6 +389,7 @@ function RegistroClasesAlumnos({changeContent}) {
     return (
         <>
         <Box>
+            <Typography variant="h3" sx={{ m: 2, color: '#004a98' }}>Registro clases (Inscripción)</Typography>
             <Box sx={{m: 2, position: 'sticky', top: '10px'}}>
                 <FormControl fullWidth>
                     <InputLabel>Estudiantes</InputLabel>
@@ -537,6 +542,30 @@ function RegistroClasesAlumnos({changeContent}) {
                     Selecciona un alumno para inscribir clases o entrar a la lista de espera
                 </Alert>
             </Snackbar>
+
+            <Modal
+                open={error}
+                onClose={() => setError(!error)}
+                sx={{overflow: 'scroll'}}
+            >
+                <>                
+                <Box                 
+                sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap',
+                borderRadius: 3, m: 2, p: 2}}
+                >
+                <Alert sx={{
+                   textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between'
+                }} severity="error">
+                    <AlertTitle>Error</AlertTitle>
+                    {errorMsg}
+                    <br/>
+                    <Button onClick={() => setError(!error)} sx={{ color: 'error.dark' }}>
+                        Cerrar
+                    </Button>
+                </Alert >
+                </Box>
+                </>
+            </Modal>
         </Box>
         </>
     )
