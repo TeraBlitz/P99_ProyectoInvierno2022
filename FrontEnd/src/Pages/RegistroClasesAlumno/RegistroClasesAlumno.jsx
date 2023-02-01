@@ -367,6 +367,7 @@ function RegistroClasesAlumnos({changeContent}) {
         return(
             <Box sx={{ height: '100vh', display: 'flex',
                 alignContent: 'center', justifyContent: 'center', flexWrap: 'wrap'}}>
+				<Typography variant="h3" sx={{ mb: 2, color: '#004a98' }}>Mis clases</Typography>
                 <Typography variant='h3' component='div' textAlign='center'>
                     No tienes alumnos registrados, ve a  
                      <Link
@@ -385,6 +386,7 @@ function RegistroClasesAlumnos({changeContent}) {
     return (
         <>
         <Box>
+            <Typography variant="h3" sx={{ m: 2, color: '#004a98' }}>Registro clases (Inscripción)</Typography>
             <Box sx={{m: 2, position: 'sticky', top: '10px'}}>
                 <FormControl fullWidth>
                     <InputLabel>Estudiantes</InputLabel>

@@ -80,8 +80,6 @@ function App() {
 
         Inicio: <Inicio />,
 
-        ControlPanel: <ControlPanel changeContent={changeContent} />,
-        Registro: <ShowClass />
     }
 
     const createUser = async (user) => {
