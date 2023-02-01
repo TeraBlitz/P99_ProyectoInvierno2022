@@ -8,7 +8,7 @@ async function getAllProfesor(req, res) {
         const database = clientConnect.db(mongodbInf.database);
         const collection = database.collection(COLLECTION_NAME);
         const result = await collection.find().toArray();
-        console.log(JSON.stringify(result))
+        console.log(result)
         res.send(result);
     } catch (err) {
         res.send(`ERROR: ${err}`);
@@ -57,19 +57,19 @@ async function updateProfesor(req, res) {
 
         // Crear el documento actualizado
         const idDoc = {
-        _id: new mongodb.ObjectId(req.body._id),
+            _id: new mongodb.ObjectId(req.body._id),
         };
         const doc = {
-        $set: {
-            nombre: req.body.nombre,
-            apellidos: req.body.apellidos,
-            matricula: req.body.matricula,
-            correo: req.body.correo,
-            fecha_de_nacimiento: req.body.fecha_de_nacimiento,
-            num_telefono: req.body.num_telefono,
-            num_cursos_impartidos: req.body.num_cursos_impartidos,
-            idUser: req.body.idUser
-        },
+            $set: {
+                nombre: req.body.nombre,
+                apellidos: req.body.apellidos,
+                matricula: req.body.matricula,
+                correo: req.body.correo,
+                fecha_de_nacimiento: req.body.fecha_de_nacimiento,
+                num_telefono: req.body.num_telefono,
+                num_cursos_impartidos: req.body.num_cursos_impartidos,
+                idUser: req.body.idUser
+            },
         };
 
         const result = await collection.findOneAndUpdate(idDoc, doc);
@@ -91,7 +91,7 @@ async function deleteProfesor(req, res) {
 
         // ID documento a eliminar
         const idDoc = {
-        _id: new mongodb.ObjectId(req.body._id),
+            _id: new mongodb.ObjectId(req.body._id),
         };
 
         const result = await collection.deleteMany(idDoc);

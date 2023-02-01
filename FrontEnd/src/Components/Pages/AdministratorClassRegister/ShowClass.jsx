@@ -16,45 +16,46 @@ import Actions from "./Actions";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import MenuItem from "@mui/material/MenuItem";
-import axios from "axios";
 import { InsertDriveFile } from "@mui/icons-material";
 import Select from "react-select";
 import WaitList from "./WaitList";
 import { getWaitList } from '../../../api/waitList'
 import { getStudents } from "../../../api/students";
+import { getPeriodos } from '../../../api/Periodos';
+import { getProfesors } from '../../../api/profesors.js'
+import { createClass, deleteClasses, getClasses , updateClass} from '../../../api/classes.js'
+import { subirClases, subirProfes } from "../../../api/csv";
 
 export default function ShowClass() {
 
-  let array = [];
-  let array2 = [];
-  let array3 = [];
-  // Selector de periodos
-  let id = "";
-  const [dataPeriodo, setDataPeriodo] = useState([]);
+    let array = [];
+    let array2 = [];
+    let array3 = [];
+    // Selector de periodos
+    let id = "";
+    const [dataPeriodo, setDataPeriodo] = useState([]);
 
-    const getPeriodos = async () => {
-        const res = await axios.get("http://p99test.fly.dev/v1/periodos");
-        setDataPeriodo(res.data);
+    const getAllPeriodos = async () => {
+        getPeriodos().then(response=>response.json()).then(result => {
+            setDataPeriodo(result)
+        })
     };
 
-    const [claseResp, setClaseResp] = useState([]);
-
-    const getClaseResp = async () => {
-        const res = await axios.get("https://p99test.fly.dev/v1/clases");
-        setClaseResp(res.data);
-    };
 
     const handleSelectChange = (event) => {
         array = [];
         array2 = [];
 
+
         array2.push(data.filter((data) => data.clavePeriodo === event.label));
+
 
         for (let i = 0; i < array2.length; i++) {
             for (let j = 0; j < array2[i].length; j++) {
                 array.push(array2[i][j]);
             }
         }
+
 
         if (array.length > 0) {
             setData(array);
@@ -132,41 +133,29 @@ export default function ShowClass() {
     const [nuevaClase, setNuevaClase] = useState(classTemplate);
 
     const getOptions = async () => {
-        await fetch("https://p99test.fly.dev/v1/profesores", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-        })
-            .then((e) => {
-                return e.json();
-            })
-            .then((e) => {
-                // setProfesorList([])
-                let newProfList = [];
-                e.forEach((profesor) => {
-                    profesor.nombreCompleto = profesor.nombre + " " + profesor.apellidos;
-                    newProfList.push(profesor);
-                });
-                setProfesorList(newProfList);
+        await getProfesors().then(response=>response.json()).then((result) => {
+            console.log(result)
+            let newProfList = [];
+            result.forEach((profesor) => {
+                profesor.nombreCompleto = profesor.nombre + " " + profesor.apellidos;
+                newProfList.push(profesor);
             });
+            setProfesorList(newProfList);
+        });
     };
 
     //Funcion click para abrir el modal
     const abrirCerrarModalInsertar = () => {
         setModalInsertar(!modalInsertar);
     };
+
     const resetClases = async () => {
         let dataList = [];
-        await fetch("https://p99test.fly.dev/v1/clases", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-        })
-            .then((response) => response.json())
+        await getClasses()
+            .then(response =>{
+                return response.json()
+            })
             .then((result) => {
-                console.log(result)
                 for (let i = 0; i < result.length; i++) {
                     let fechas = "";
                     let edades = "";
@@ -187,7 +176,7 @@ export default function ShowClass() {
                     result[i].nivel == "3" ? (niveles = "intermedio") : "";
                     result[i].nivel == "4" ? (niveles = "avanzado") : "";
 
-                    dataList.push({
+                    dataList = [...dataList, {
                         _id: result[i]._id,
                         clave: result[i].clave,
                         nombre_curso: result[i].nombre_curso,
@@ -213,14 +202,15 @@ export default function ShowClass() {
                         apellidosProfesor: result[i].apellidosProfesor,
                         nombreCompleto:
                             result[i].nombreProfesor + " " + result[i].apellidosProfesor,
-                    });
+                    }];
                 }
+                console.log(dataList)
+                setData(dataList)
             });
-        setData(dataList)
         getOptions();
     };
     useEffect(() => {
-        resetClases(), getClaseResp();
+        resetClases();
     }, []);
 
     const handleClose = () => {
@@ -254,13 +244,7 @@ export default function ShowClass() {
         }
         delete nuevaClase.niveles;
 
-        await fetch("https://p99test.fly.dev/v1/clases/create", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: new URLSearchParams(nuevaClase),
-        }).then(() => {
+        createClass(nuevaClase).then(() => {
             abrirCerrarModalInsertar();
             resetClases();
         });
@@ -303,7 +287,7 @@ export default function ShowClass() {
     //Funcion que guarda informacion del modal
     useEffect(() => {
         setClase(claseActual);
-        getPeriodos();
+        getAllPeriodos();
     }, [claseActual]);
 
     //Estado que guarda el array modificado
@@ -316,6 +300,7 @@ export default function ShowClass() {
     };
 
     const handleChange2 = (e) => {
+
 
         const { name, value } = e.target;
         setNuevaClase({ ...nuevaClase, [name]: value });
@@ -408,43 +393,32 @@ export default function ShowClass() {
             }
         }
 
-
+        console.log(profesoresJson)
+        await subirProfes({
+            profesoresJson: JSON.stringify(profesoresJson),
+        });
 
         //
-        await fetch("https://p99test.fly.dev/v1/csv/subirClases", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: new URLSearchParams({
-                clasesJson: JSON.stringify(clasesJson),
-            }),
-        })
-            .then((response) => response.json())
-            .then((result) => {
+        await subirClases({
+            clasesJson: JSON.stringify(clasesJson),
+        }).then(() => {
                 resetClases();
             })
-            .catch((error) => console.log("Error(ShowClass): ", error));
 
         //
-        await fetch("https://p99test.fly.dev/v1/csv/subirProfesores", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: new URLSearchParams({
-                profesoresJson: JSON.stringify(profesoresJson),
-            }),
-        });
+
     };
+
+
+
 
 
     //Funciones que actualiza los datos con las modificacioness
     const handleClick2 = (e) => {
         e.preventDefault();
-        updateClass(clase);
+        updateClase(clase);
     };
-    const updateClass = (nuevaClase) => {
+    const updateClase = (nuevaClase) => {
         delete nuevaClase.fechas;
         delete nuevaClase.edades;
         nuevaClase.nombreProfesor = currentProfesor.nombre;
@@ -462,14 +436,8 @@ export default function ShowClass() {
             nuevaClase.nivel = "4";
         }
         delete nuevaClase.niveles;
-        fetch("https://p99test.fly.dev/v1/clases/update", {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: new URLSearchParams(nuevaClase),
-        }).then((e) => {
-
+        updateClass(nuevaClase)
+        .then((e) => {
             abrirCerrarModalEditar();
             resetClases();
         })
@@ -477,7 +445,7 @@ export default function ShowClass() {
   //------------------------------------Eliminar-------------------------------------
   // Se agrego un componente de dialogo para confirmar la eliminacion de una clase
 
-  
+
   let seleccionarConsola = (consola, caso) => {
     setNuevaClase(consola)
     array3 = consola
@@ -489,69 +457,63 @@ export default function ShowClass() {
       abrirCerrarModalEliminar();
     }
   };
-  
+
   const [modalEliminar, setModalEliminar] = useState(false);
 
-  const abrirCerrarModalEliminar = () => {
-    setModalEliminar(!modalEliminar);
-  };
+    const abrirCerrarModalEliminar = () => {
+        setModalEliminar(!modalEliminar);
+    };
 
-  const postDelete = async (e) => {
-    console.log(array3._id)
-    try {
-      await fetch("https://p99test.fly.dev/v1/clases/delete", {
-        method: "Delete",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams({
-          _id: nuevaClase._id,
-        }),
-      });
-      abrirCerrarModalEliminar();
-      resetClases();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    const postDelete = async (e) => {
+        console.log(array3._id)
+        try {
+            await deleteClasses({
+                    _id: nuevaClase._id,
+                })
+            abrirCerrarModalEliminar();
+            resetClases();
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
-  const bodyEliminar = (
-    <div
-      style={{
-        position: "absolute",
-        width: 260,
-        height: 220,
-        backgroundColor: "#fefefd",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        border: "4px solid  rgb(165, 165, 180)",
-        margin: "auto",
-        borderRadius: "10px",
-        padding: "20px",
-      }}
-    >
-      <h3
-        style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" }}
-        align="center"
-      >
-        Eliminar alumno
-      </h3>
-      <Typography style={{ align: "justify", fontFamily: "arial" }}>
-      Esta clase  y toda su información relacionada a ella va a ser eliminada
-      </Typography>
-      <br />
-      <br />
-      <div align="center">
-        <Button color="error" onClick={postDelete}>
-          Confirmar
-        </Button>
-        <Button onClick={() => abrirCerrarModalEliminar()} color="primary">
-          Cancelar
-        </Button>
-      </div>
-    </div>
-  );
+    const bodyEliminar = (
+        <div
+            style={{
+                position: "absolute",
+                width: 260,
+                height: 220,
+                backgroundColor: "#fefefd",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                border: "4px solid  rgb(165, 165, 180)",
+                margin: "auto",
+                borderRadius: "10px",
+                padding: "20px",
+            }}
+        >
+            <h3
+                style={{ paddingBottom: "15px", marginTop: "5px", fontFamily: "arial" }}
+                align="center"
+            >
+                Eliminar alumno
+            </h3>
+            <Typography style={{ align: "justify", fontFamily: "arial" }}>
+                Esta clase  y toda su información relacionada a ella va a ser eliminada
+            </Typography>
+            <br />
+            <br />
+            <div align="center">
+                <Button color="error" onClick={postDelete}>
+                    Confirmar
+                </Button>
+                <Button onClick={() => abrirCerrarModalEliminar()} color="primary">
+                    Cancelar
+                </Button>
+            </div>
+        </div>
+    );
 
     const addClass = () => {
         setCurrentProfesor({
@@ -567,7 +529,7 @@ export default function ShowClass() {
     //------------------------------------Eliminar-------------------------------------
     // Se agrego un componente de dialogo para confirmar la eliminacion de una clase
 
-    
+
 
     //-------------------------------Datos de ventanas modales---------------
     const bodyInsertar = (
@@ -608,7 +570,7 @@ export default function ShowClass() {
                         paddingBottom: "15px",
                         fontFamily: "arial",
                         marginRight: 10,
-                            width:'40%'
+                        width: '40%'
                     }}
                     label={atribute.value}
                     onChange={(e) => {
@@ -686,7 +648,7 @@ export default function ShowClass() {
                             paddingBottom: "15px",
                             fontFamily: "arial",
                             marginRight: 10,
-                            width:'40%'
+                            width: '40%'
                         }}
                         label={atribute.value}
                         onChange={(e) => {

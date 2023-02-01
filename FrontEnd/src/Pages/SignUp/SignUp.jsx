@@ -5,7 +5,7 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
-import OutlinedInput from '@mui/material/OutlinedInput';
+import FilledInput from '@mui/material/FilledInput';
 import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
@@ -50,77 +50,29 @@ const SignUp = ({createUser, changeHasAccount}) => {
         sx={{ height: '100vh', display: 'flex',
         alignContent: 'center', justifyContent: 'center', flexWrap: 'wrap'}}
         >
-            <Card sx={{px: 3, py:2, backgroundColor: '#3A4856', borderRadius: 2}}>
+            <Card sx={{px: 3, py:2, backgroundColor: '#004a98', borderRadius: 2}}>
                 <Box component='form' sx={{mx: 3, display: 'flex', flexDirection: 'column'}} onSubmit={handleSubmit}>
+                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                        <img src='../../public/logo_p99.png' style={{width: '100px'}}></img>
+                    </div>
                     <Typography component='h1' variant="h4" sx={{color: '#E6F4F1', mb: 1, fontWeight: '400', textAlign: 'center', width: '100%'}}>
-                        Crea una cuenta
+                        Crear una cuenta
                     </Typography>
                         <Typography sx={{display: showMessage ? 'flex' : 'none', color: 'red'}}>
                             Las contraseñas no coinciden, intenta de nuevo
                         </Typography>
                         <SignUpInput name={'user_name'} label={'Usuario'} value={userInfo.user_name} handleChange={handleChange} helperTextContent={'Crea tu usuario'}/>
                         <SignUpInput name={'correo'} label={'Correo'} value={userInfo.correo} handleChange={handleChange} helperTextContent={''} type={'email'}/>
-                        <FormControl
-                            required 
-                            sx={{input: {color: 'white'}, my: 1}} variant="outlined"
-                            >
-                            <InputLabel htmlFor="input-contraseña" sx={{color: '#E6F4F1'}}>Contraseña</InputLabel>
-                            <OutlinedInput
-                                name='password'
-                                type={showPassword ? 'text' : 'password'}
-                                endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                    aria-label="toggle password visibility"
-                                    onClick={handleClickShowPassword}
-                                    onMouseDown={handleMouseDownPassword}
-                                    edge="end"
-                                    color='primary'
-                                    >
-                                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                                    </IconButton>
-                                </InputAdornment>
-                                }
-                                label="Contraseña"
-                                onChange={handleChange} fullWidth
-                                onInvalid={e => e.target.setCustomValidity(`Crea tu contraseña`)} 
-                                onInput={e => e.target.setCustomValidity('')}
-                            />
-                        </FormControl>
-                        <FormControl
-                            required 
-                            sx={{input: {color: 'white'}, my: 1}} variant="outlined"
-                            >
-                            <InputLabel htmlFor="input-contraseña" sx={{color: '#E6F4F1'}}>Confirmar contraseña</InputLabel>
-                            <OutlinedInput
-                                name='verify_password'
-                                type={showPassword ? 'text' : 'password'}
-                                endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                    aria-label="toggle password visibility"
-                                    onClick={handleClickShowPassword}
-                                    onMouseDown={handleMouseDownPassword}
-                                    edge="end"
-                                    color='primary'
-                                    >
-                                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                                    </IconButton>
-                                </InputAdornment>
-                                }
-                                label="Verificar Contraseña"
-                                onChange={handleChange} fullWidth
-                                onInvalid={e => e.target.setCustomValidity(`Vuelve a escribir tu contraseña`)} 
-                                onInput={e => e.target.setCustomValidity('')}
-                            />
-                        </FormControl>
+                        <SignUpInput name={'password'} label={'Contraseña'} value={userInfo.password} handleChange={handleChange} helperTextContent={''} type={'password'}/>
+                        <SignUpInput name={'verify_password'} label={'Confirmar Contraseña'} value={userInfo.verify_password} handleChange={handleChange} helperTextContent={''} type={'password'}/>
                     <Box sx={{my: 1}}>
-                        <Button fullWidth type='submit' sx={{backgroundColor: '#4472C4', color: 'white'}}>Crear cuenta</Button>
+                        <Button fullWidth type='submit' sx={{backgroundColor: '#57a1f1', color: 'white', textTransform: 'none', fontSize:'18px'}}>Crear</Button>
                     </Box>
-                    <Box>
+                    <Box sx={{textAlign: 'center'}}>
                         <Typography variant="body1" sx={{color: '#E6F4F1'}}>
                         ¿Ya tienes una cuenta? 
-                        <Link sx={{pl: 1, color: '#0099DF'}} underline="hover" onClick={changeHasAccount}>Inicia sesión!</Link>
+                        <br/>
+                        <Link sx={{pl: 1, color: '#0099DF'}} underline="hover" onClick={changeHasAccount}>¡Inicia sesión!</Link>
                         </Typography>
                     </Box>
                 </Box>
