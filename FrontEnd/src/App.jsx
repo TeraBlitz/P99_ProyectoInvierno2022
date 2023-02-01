@@ -65,6 +65,8 @@ function App() {
         MisClasesProfesor: <MisClasesProfesor />,
 
         Profile: <Profile />,
+        
+        ControlPanel: <ControlPanel changeContent={changeContent} />,
 
         MisClases: <MisClases changeContent={changeContent} />,
 
