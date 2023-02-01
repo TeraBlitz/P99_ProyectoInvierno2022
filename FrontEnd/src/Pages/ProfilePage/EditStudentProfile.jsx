@@ -36,43 +36,52 @@ const nivel_escolaridad = [
 
 const EditStudentProfile = ({
     openEditModal, setOpenEditModal, studentInfo, isEditing, setIsEditing,
-    setStudents, setSuccessOpen, setErrorOpen, setAlertMessage}) =>{
+    setStudents, setSuccessOpen, setErrorOpen, setAlertMessage, setInfoOpen}) =>{
 
     const [studentData, setStudentInfo] = useState(studentInfo)
     const [newStudentInfo, setNewStudentInfo] = useState(studentInfo);
     const [userStateInput, setUserStateInput] = useState(studentInfo.estado);
-    const [userState, setUserState] = useState(studentInfo.estado);
+    const [userState, setUserState] = useState(estados[estados.indexOf(studentInfo.estado)]);
     const [userEducationInput, setUserEducationInput] = useState(studentInfo.escolaridad);
-    const [userEducation, setUserEducation] = useState(studentInfo.escolaridad);
+    const [userEducation, setUserEducation] = useState(nivel_escolaridad[nivel_escolaridad.indexOf(studentInfo.escolaridad)]);
 
     const handleChange = e => setStudentInfo(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
 
     const handleSubmit = (e) => {
         // Enviar esta informacion a bd
         e.preventDefault();
+        studentData.escolaridad = userEducation;
+        studentData.estado = userState; 
+        studentData.curp === null ? delete studentData.curp : studentData.curp; 
         setNewStudentInfo(studentData);
         //console.log(studentData);
-        setOpenEditModal(!openEditModal)
-        setIsEditing(!isEditing);
-        updateStudent(new URLSearchParams(studentData)).then((data) => {
-            //console.log(data);
-        })
-        .catch((error) => {
-            
-            if (error.message.includes('Documento')){
-                setAlertMessage('Información del estudiante actualizada correctamente.');
-                setSuccessOpen(true);
-            }
-            else{
+        if (studentData.num_telefono.length < 10 || studentData.tutor_num_telefono.length < 10) {
+            setAlertMessage('Los numeros telefonicos deben tener al menos 10 digitos')
+            setInfoOpen(true);
+            return
+        }
+        if (studentData.codigo_postal.length < 5 ) {
+            setAlertMessage('El codigo postal contiene 5 digitos')
+            setInfoOpen(true);
+            return
+        }
+        updateStudent(studentData).then((data) => {
+            if(data.status === 400){
                 setAlertMessage('Se produjo un error al actualizar al estudiante.');
                 setErrorOpen(true);
+                return
             }
-            getStudents().then(
-                (data) => {
-                    const students = data.filter(student => student.idUsuario === studentInfo.idUsuario);
-                    setStudents(students);
+
+            setAlertMessage('Información del estudiante actualizada correctamente.');
+            setSuccessOpen(true);
+            getStudents().then(response=>response.json()).then((data) => {
+                const students = data.filter(student => student.idUser === studentInfo.idUser);
+                setStudents(students);
             });
-        });
+            setIsEditing(!isEditing);
+            setOpenEditModal(!openEditModal)
+            
+        })
     };
 
     const handleCancel = () => {
@@ -133,7 +142,7 @@ const EditStudentProfile = ({
                 </FormControl>
                 {
                     studentData.pais === "Mexico" ?
-                    <TextField name="curp" label="CURP" value={studentData.curp || ''} InputProps={{readOnly: !isEditing}} onChange={handleChange} required
+                    <TextField name="curp" label="CURP" value={studentData.curp ? studentData.curp :  ''} InputProps={{readOnly: !isEditing}} onChange={handleChange} required
                         helperText={
                             <Link href="https://www.gob.mx/curp/" underline="hover" target="_blank">
                                     &#9432; Obten tu CURP
@@ -147,13 +156,10 @@ const EditStudentProfile = ({
                     value={userEducation || ''}
                     onChange={(e, newValue) => {
                         setUserEducation(newValue)
-                        studentInfo['escolaridad'] = newValue;
-
                     }}
                     inputValue={userEducationInput}
                     onInputChange={(event, newInputValue) => {
                         setUserEducationInput(newInputValue);
-                        studentInfo['escolaridad'] = newInputValue;
                     }}
                     options={nivel_escolaridad}
                     renderInput={(params) => <TextField {...params} name='escolaridad' label="Escolaridad" InputProps={{readOnly: !isEditing}} helperText="Escolaridad o equivalente" required/>}
@@ -165,13 +171,12 @@ const EditStudentProfile = ({
                     inputValue={userStateInput}
                     onInputChange={(event, newInputValue) => {
                         setUserStateInput(newInputValue);
-                        studentInfo['estado'] = newInputValue;
                     }}
                     options={estados}
                     renderInput={(params) => <TextField {...params} InputProps={{readOnly: !isEditing}} name='estado' label="Estado" helperText=" " required/>}
                 />
                 <TextField name="ciudad" label="Ciudad" InputProps={{readOnly: !isEditing}} value={studentData.ciudad || ''} onChange={handleChange}  helperText=" "required/>        
-                <TextField name="codigo_postal" label="Codigo Postal" type="number" InputProps={{readOnly: !isEditing}} value={studentData.codigo_postal || ''}  onChange={handleChange}  helperText=" "/>
+                <TextField name="codigo_postal" label="Codigo Postal" type="number" InputProps={{readOnly: !isEditing}} value={studentData.codigo_postal || ''}  onChange={handleChange}  helperText=" " required/>
                 <TextField name="colonia" label="Colonia" InputProps={{readOnly: !isEditing}} value={studentData.colonia || ''} onChange={handleChange}  helperText=" " required/>
                 <ParentInfo studentData={studentData} handleChange={handleChange} underage={calculate_age(studentData.fecha_de_nacimiento) < 18}/> 
                 <Box sx={{width: '100%' }}></Box>

@@ -8,8 +8,22 @@ import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import { width } from "@mui/system";
+
 export default function Periodos() {
+
+  useEffect(() => {
+    console.log('empieza use efect')
+
+     getPeriodos();
+     getClase();
+
+     console.log('Periodos: ',data)
+   }, []);
+
+
+
+
+
 
   //funciones para cambiar el display de fechas
   function traducirDate(raw){
@@ -43,17 +57,10 @@ export default function Periodos() {
   //----------------------Obtencion de datos de la base de datos
 
   const  getPeriodos = async () => {
-    const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
+    const res = await axios.get("https://p99test.fly.dev/v1/periodos");
     setData(res.data);
-  };
 
-//Profesores
-
-  const [dataProfesor, setDataProfesor] = useState([]);
-  
-  const  getProfesor  = async () => {
-    const res = await axios.get("http://127.0.0.1:3000/v1/profesores");
-    setDataProfesor(res.data);
+    console.log('fetch datos',res.data)
   };
 
   //Clases
@@ -61,26 +68,71 @@ export default function Periodos() {
   const [dataClase, setDataClase] = useState([]);
 
   const  getClase  = async () => {
-    const res = await axios.get("http://127.0.0.1:3000/v1/clases");
+    const res = await axios.get("https://p99test.fly.dev/v1/clases");
     setDataClase(res.data);
   };
 
-   //Alumnos
+  // funciones para sacar asociar datos a periodos
 
-   const [dataAlumno, setDataAlumno] = useState([]);
 
-   const  getAlumno  = async () => {
-    const res = await axios.get("http://127.0.0.1:3000/v1/alumnos");
-    setDataAlumno(res.data);
+
+  function encontrarProfes(clave){
+    let listaProfes = []
+    dataClase.forEach(element =>{
+
+
+      if (element.clavePeriodo === clave){
+
+        console.log(element)
+        if(listaProfes.includes(element.matriculaProfesor)){
+
+        }else{
+            listaProfes.push(element.matriculaProfesor)
+        }
+
+      }
+
+  });
+    return(listaProfes.length)
+  }
+
+  function encontrarAlumnos(clave){
+    let alumnosInscritos = 0
+    dataClase.forEach(element =>{
+
+
+      if (element.clavePeriodo === clave){
+
+        alumnosInscritos = alumnosInscritos + Number(element.cupo_actual)
+      }
+
+
+    });
+    return(alumnosInscritos)
+  }
+
+  function encontrarClases(clave){
+    let clasesInscritas = 0
+    dataClase.forEach(element =>{
+      if (element.clavePeriodo === clave){
+
+        clasesInscritas = clasesInscritas +1
+      }
+
+
+    });
+
+    return(clasesInscritas)
+  }
+
+
+  const [dataAlumnoClase, setDataAlumnoClase] = useState([]);
+
+  const getAlumnoClase = async () => {
+    const res = await axios.get("https://p99test.fly.dev/v1/alumnoClases");
+    setDataAlumnoClase(res.data);
   };
 
-   useEffect(() => {
-    console.log('empieza use efect')
-     getAlumno();
-     getPeriodos();
-     getClase();
-     getProfesor();
-   }, []);
 
   // Variables para agregar tarjeta
   const [modalInsertar, setModalInsertar] = useState(false);
@@ -109,7 +161,7 @@ export default function Periodos() {
   const postCrea = async (e) => {
     e.preventDefault();
     try {
-      await fetch("http://127.0.0.1:3000/v1/periodos/create", {
+      await fetch("https://p99test.fly.dev/v1/periodos/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -146,6 +198,7 @@ export default function Periodos() {
     } catch (error) {
       console.log(error);
     }
+    console.log('Datos Posteados: ',data)
   };
 
   const [modalEditar, setModalEditar] = useState(false);
@@ -187,7 +240,7 @@ export default function Periodos() {
   // Procedimiento para eliminar
   const postDelete = async (e) => {
     try {
-      await fetch("http://127.0.0.1:3000/v1/periodos/delete", {
+      await fetch("https://p99test.fly.dev/v1/periodos/delete", {
         method: "Delete",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -285,7 +338,7 @@ export default function Periodos() {
   const postEditar = async (e) => {
     e.preventDefault();
     try {
-      await fetch("http://127.0.0.1:3000/v1/periodos/update", {
+      await fetch("https://p99test.fly.dev/v1/periodos/update", {
         method: "Put",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -313,13 +366,18 @@ export default function Periodos() {
     }
   };
 
-    console.log('data: ',data)
+
+  console.log('data: ',data)
   return (
 
-    <div className="container">
-      <h1>Periodos</h1>
+    <div >
+      <h1 className="tittle">Periodos</h1>
 
-      <Button variant="contained" onClick={() => abrirCerrarModalInsertar()}>
+      <Button variant="contained" onClick={() => abrirCerrarModalInsertar()} sx={{
+
+        marginTop:'-15px'
+
+      }}>
         Nuevo Periodo
       </Button>
       <Modal
@@ -481,6 +539,7 @@ export default function Periodos() {
 
       <div className="card-grid">
         {Array.isArray(data) ? data.map((item) => (
+
           <Card key={item._id} sx={{ minWidth: 275, bgcolor: "grey.200" }}>
             <CardContent>
               <Typography variant="h5" component="div">
@@ -557,17 +616,21 @@ export default function Periodos() {
 
               <h5 className="leyendaFaltas">Profesores inscritos: </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {dataProfesor.length}
+
+                {encontrarProfes(item.clave)}
               </Typography>
 
               <h5 className="leyendaFaltas">Alumnos inscritos: </h5>
+
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {dataAlumno.length}
+                {encontrarAlumnos(item.clave)}
+
               </Typography>
 
               <h5 className="leyendaFaltas">Clases inscritas: </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {dataClase.length}
+
+                {encontrarClases(item.clave)}
               </Typography>
 
             </CardContent>
@@ -813,7 +876,7 @@ export default function Periodos() {
                     </Button>
                     <Button
                       variant="contained"
-                      onClick={() => abrirCerrarModalInsertar()}
+                      onClick={() => abrirCerrarModalEditar()}
                       color="error"
                     >
                       Cancelar

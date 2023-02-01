@@ -1,13 +1,14 @@
 const clasesSchema = {
     type: "object",
     properties: {
+        _id: {type: "string"},
         clave: {type: "string"},
         area: {type: "string"},
         modalidad: {type: "string"},
         nombre_curso: {type: "string"},
         nivel: {type: "string"},
-        matriculaMaestro: {type: "string"},
-        clavePeriodo: {type: "string"},
+        cupo_maximo: {type: "string",pattern: "^([0-9])*$"},
+        cupo_actual: {type: "string",pattern: "^([0-9])*$"},
         edad_minima: {type: "string", minLength:1, maxLength:2,pattern: "^([0-9])*$"},
         edad_maxima: {type: "string", minLength:1, maxLength:2,pattern: "^([0-9])*$"},
         lunes: {type: "string"},
@@ -16,8 +17,10 @@ const clasesSchema = {
         jueves: {type: "string"},
         viernes: {type: "string"},
         sabado: {type: "string"},
-        cupo_maximo: {type: "string",pattern: "^([0-9])*$"},
-        cupo_actual: {type: "string",pattern: "^([0-9])*$"}
+        clavePeriodo: {type: "string"},
+        nombreProfesor: {type: "string"},
+        apellidosProfesor: {type: "string"},
+        matriculaProfesor: {type: "string"},
     },
     required: [
         "clave",
@@ -25,8 +28,7 @@ const clasesSchema = {
         "modalidad",
         "nombre_curso",
         "nivel",
-        "matriculaMaestro",
-        "clavePeriodo",
+        "cupo_maximo",
         "edad_minima",
         "edad_maxima",
         "lunes",
@@ -35,9 +37,10 @@ const clasesSchema = {
         "jueves",
         "viernes",
         "sabado",
-        "cupo_maximo",
-        "cupo_actual"
-
+        "clavePeriodo",
+        "nombreProfesor",
+        "apellidosProfesor",
+        "matriculaProfesor",
     ],
     additionalProperties: true,
     errorMessage: {

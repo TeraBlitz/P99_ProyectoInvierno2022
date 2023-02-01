@@ -3,6 +3,7 @@ import Box from '@mui/material/Box'
 import { Drawer, List } from '@mui/material'
 import SidebarButton from '../Sidebar_button/SidebarButton'
 import SignOutButton from '../SignOut/SignOutButton'
+import ContactUsButton from '../Contact/ContactUsButton'
 import {userContext} from './../../App.jsx'
 
 function Sidebar(props) {
@@ -12,6 +13,12 @@ function Sidebar(props) {
     // content: nombre del componente renderizado en PagesToRender (app.jsx)
     const userValues = useContext(userContext)
     const options = [
+        {
+            key: 0,
+            title: 'Inicio',
+            content: 'Inicio',
+            rol: 'any'
+        },
         {
             key: 1,
             title: 'Perfil',
@@ -25,12 +32,6 @@ function Sidebar(props) {
             rol: 'estudiante'
         },
         {
-            key: 3,
-            title: 'Registro clases de Administrador',
-            content: 'Registro',
-            rol: 'admin'
-        },
-        {
             key: 4,
             title: 'Mis Clases (Profesor)',
             content: 'MisClasesProfesor',
@@ -38,7 +39,7 @@ function Sidebar(props) {
         },
         {
             key: 5,
-            title: 'Mis Clases (Estudiantes)',
+            title: 'Mis Clases',
             content: 'MisClases',
             rol: 'estudiante'
         },
@@ -51,19 +52,29 @@ function Sidebar(props) {
         },
         {
             key: 7,
+            title: <ContactUsButton />,
+            content: '',
+            rol: 'estudiante'
+        },
+        {
+            key: 8,
             title: <SignOutButton handleSignOut={props.handleSignOut} />,
             content: '',
             rol: 'any'
         },
 
+
     ]
 
     const listItems = (
-        <List sx={{ bgcolor: 'info.main', width: '240px', height: '100vh', spacingY: '10px' }}>
+        <List sx={{ bgcolor: '#004a98', width: '240px', height: '100vh', spacingY: '10px' }}>
+            <div style={{display: 'flex', justifyContent: 'center'}}>
+                <img src='../../../public/logo_p99.png' style={{width: '100px'}}></img>
+            </div>
             {options.map(e => {
                 if (userValues.rol == e.rol || e.rol=='any') {
                     return (
-                        <SidebarButton key={e.key} content={e.content} title={e.title} setOpen={props.setOpen} changeContent={props.changeContent} changeDrawerState={props.changeDrawerState} />
+                        <SidebarButton key={e.key} order={e.key} content={e.content} title={e.title} setOpen={props.setOpen} changeContent={props.changeContent} changeDrawerState={props.changeDrawerState} />
                     )
                 }
             }

@@ -6,8 +6,7 @@ import {
   Modal,
   TextField,
   Box,
-  Typography,
-  MenuItem
+  Typography
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { grey } from "@mui/material/colors";
@@ -17,35 +16,51 @@ import Actions from "./ActProfes";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import axios from "axios";
-import {CSVLink} from 'react-csv'
-
+import Select from "react-select";
 
 export default function Profesores() {
   //------------------------------------Obtener info----------------
+  let array = []
+  let array2 = []
+  let array3 = []
   const [data, setData] = useState([]);
-  const [periodo, setPeriodo] = useState("");
+  const [guardaData, setGuardaData] = useState([]);
   const [dataPeriodo, setDataPeriodo] = useState([]);
+  const [dataClase, setDataClase] = useState([]);
 
   const  getProfesores  = async () => {
-    const res = await axios.get("http://127.0.0.1:3000/v1/profesores");
+    const res = await axios.get("https://p99test.fly.dev/v1/profesores");
     setData(res.data);
   };
 
+  const  getClases= async () => {
+    const res = await axios.get("https://p99test.fly.dev/v1/clases");
+    setDataClase(res.data);
+  };
+
+  const  getProfesores2  = async () => {
+    const res = await axios.get("https://p99test.fly.dev/v1/profesores");
+    setGuardaData(res.data);
+  };
+
   const  getPeriodos = async () => {
-    const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
+    const res = await axios.get("https://p99test.fly.dev/v1/periodos");
     setDataPeriodo(res.data);
   };
 
   useEffect(() => {
     getProfesores();
+    getProfesores2();
     getPeriodos();
+    getClases();
   }, []);
 
   //----------------------Estados para el cud
   const [modalInsertar, setModalInsertar] = useState(false);
   const [nombre, setNombre] = useState("");
-  const [apellido_paterno, setApellido_paterno] = useState("");
-  const [apellido_materno, setApellido_materno] = useState("");
+  const [apellidos, setApellidos] = useState("");
+  const [matricula, setMatricula] = useState("");
+  const [correo, setCorreo] = useState("");
   const [fecha_de_nacimiento, setFecha_de_nacimiento] = useState("");
   const [num_telefono, setNum_telefono] = useState("");
   const [num_cursos_impartidos, setNum_cursos_impartidos] = useState("");
@@ -55,8 +70,9 @@ export default function Profesores() {
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
     _id: "",
     nombre: "",
-    apellido_paterno: "",
-    apellido_materno: "",
+    apellidos: "",
+    matricula: "",
+    correo: "",
     fecha_de_nacimiento: "",
     num_telefono: "",
     num_cursos_impartidos: "",
@@ -81,15 +97,16 @@ export default function Profesores() {
   const postCrea = async (e) => {
     e.preventDefault();
     try {
-      await fetch("http://127.0.0.1:3000/v1/profesores/create", {
+      await fetch("https://p99test.fly.dev/v1/profesores/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
         body: new URLSearchParams({
           nombre: nombre,
-          apellido_paterno: apellido_paterno,
-          apellido_materno: apellido_materno,
+          apellidos: apellidos,
+          matricula: matricula,
+          correo: correo,
           fecha_de_nacimiento: fecha_de_nacimiento,
           num_telefono: num_telefono,
           num_cursos_impartidos: num_cursos_impartidos,
@@ -99,8 +116,9 @@ export default function Profesores() {
       abrirCerrarModalInsertar();
       getProfesores();
       setNombre("");
-      setApellido_paterno("");
-      setApellido_materno("");
+      setApellidos("");
+      setMatricula("");
+      setCorreo("");
       setFecha_de_nacimiento("");
       setNum_telefono("");
       setNum_cursos_impartidos("");
@@ -116,7 +134,7 @@ export default function Profesores() {
       style={{
         position: "absolute",
         width: 260,
-        height: 560,
+        height: 620,
         backgroundColor: "#fefefd",
         top: "48%",
         left: "50%",
@@ -143,16 +161,23 @@ export default function Profesores() {
       <br />
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
-        label="Apellido paterno"
-        onChange={(e) => setApellido_paterno(e.target.value)}
-        value={apellido_paterno}
+        label="Apellidos"
+        onChange={(e) => setApellidos(e.target.value)}
+        value={apellidos}
       />
       <br />
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
-        label="Apellido materno"
-        onChange={(e) => setApellido_materno(e.target.value)}
-        value={apellido_materno}
+        label="Matricula"
+        onChange={(e) => setMatricula(e.target.value)}
+        value={matricula}
+      />
+      <br />
+      <TextField
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
+        label="Correo"
+        onChange={(e) => setCorreo(e.target.value)}
+        value={correo}
       />
       <br />
       <TextField
@@ -213,7 +238,7 @@ export default function Profesores() {
   const postEditar = async (e) => {
     e.preventDefault();
     try {
-      await fetch("http://127.0.0.1:3000/v1/profesores/update", {
+      await fetch("https://p99test.fly.dev/v1/profesores/update", {
         method: "Put",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -221,8 +246,9 @@ export default function Profesores() {
         body: new URLSearchParams({
           _id: consolaSeleccionada._id,
           nombre: consolaSeleccionada.nombre,
-          apellido_paterno: consolaSeleccionada.apellido_paterno,
-          apellido_materno: consolaSeleccionada.apellido_materno,
+          apellidos: consolaSeleccionada.apellidos,
+          matricula: consolaSeleccionada.matricula,
+          correo: consolaSeleccionada.correo,
           fecha_de_nacimiento: consolaSeleccionada.fecha_de_nacimiento,
           num_telefono: consolaSeleccionada.num_telefono,
           num_cursos_impartidos: consolaSeleccionada.num_cursos_impartidos,
@@ -243,7 +269,7 @@ export default function Profesores() {
         style={{
           position: "absolute",
           width: 260,
-          height: 580,
+          height: 620,
           backgroundColor: "#fefefd",
           top: "48%",
           left: "50%",
@@ -271,18 +297,26 @@ export default function Profesores() {
       <br />
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
-        label="Apellido paterno"
+        label="Apellidos"
         onChange={handleChange}
-        value={consolaSeleccionada && consolaSeleccionada.apellido_paterno}
-        name="apellido_paterno"
+        value={consolaSeleccionada && consolaSeleccionada.apellidos}
+        name="apellidos"
       />
       <br />
       <TextField
         style={{ paddingBottom: "15px", fontFamily: "arial" }}
-        label="Apellido materno"
+        label="Matricula"
         onChange={handleChange}
-        value={consolaSeleccionada && consolaSeleccionada.apellido_materno}
-        name="apellido_materno"
+        value={consolaSeleccionada && consolaSeleccionada.matricula}
+        name="matricula"
+      />
+      <br />
+      <TextField
+        style={{ paddingBottom: "15px", fontFamily: "arial" }}
+        label="Correo"
+        onChange={handleChange}
+        value={consolaSeleccionada && consolaSeleccionada.correo}
+        name="correo"
       />
       <br />
       <TextField
@@ -324,7 +358,7 @@ export default function Profesores() {
 
 const postDelete = async (e) => {
   try {
-    await fetch("http://127.0.0.1:3000/v1/profesores/delete", {
+    await fetch("https://p99test.fly.dev/v1/profesores/delete", {
       method: "Delete",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -385,8 +419,9 @@ const bodyEliminar = (
     () => [
       { field: "_id", headerName: "Id", width: 54, hide: true },
       { field: "nombre", headerName: "Nombre", width: 120 },
-      { field: "apellido_paterno", headerName: "Apellido Paterno", width: 180 },
-      { field: "apellido_materno", headerName: "Apellido Materno", width: 180 },
+      { field: "apellidos", headerName: "Apellidos", width: 180 },
+      { field: "matricula", headerName: "Matricula", width: 180 },
+      { field: "correo", headerName: "Correo", width: 180 },
       { field: "num_telefono", headerName: "Telefono", width: 120 },
       { field: "fecha_de_nacimiento", headerName: "Nacimiento", width: 100 },
       {
@@ -407,17 +442,45 @@ const bodyEliminar = (
     [data]
   );
 
+  const handleSelectChange = (event) => {
+
+    array = []
+    array2 = []
+    array3 = []
+    console.log(guardaData)
+    console.log(event);
+    array2.push(dataClase.filter(data => data.clavePeriodo === event.label));
+    console.log(array2[0])
+    for (let i=0; i< array2.length;i++){
+      for (let j=0; j< array2[i].length;j++){
+        array.push(guardaData.filter(data => data.matricula === array2[i][j].matriculaProfesor))
+      }
+    }
+    console.log(array)
+    for (let i=0; i< array.length;i++){
+      array3.push(array[i][0])
+    }
+    console.log(array3)
+    if( array3.length > 0){
+      setData(array3)
+    }else{
+      getProfesores()
+    }
+
+  };
+
+
   //---------------------------------------Filter---------------------------
   const [items, setItems] = useState([]);
   return (
     <div>
       <Card
         sx={{
-          width: 970,
+          width: 1120,
           position: "absolute",
           textAlign: "left",
           marginLeft: "65px",
-          marginTop: "120px",
+          marginTop: "125px",
           bgcolor: "grey.200",
           borderRadius: "8px",
         }}
@@ -432,7 +495,7 @@ const bodyEliminar = (
             Filtro
           </Typography>
            <TextField
-            style={{ paddingBottom: "10px", fontFamily: "arial" , width:920, marginLeft:7}}
+            style={{ paddingBottom: "10px", fontFamily: "arial" , width:1070, marginLeft:7}}
             label="Ingrese un nombre para buscar"
             onChange={(e) => {
               setItems([
@@ -446,40 +509,33 @@ const bodyEliminar = (
           ></TextField>
         </CardContent>
       </Card>
-
-      <Card sx={{
+      
+      <Box
+        sx={{
           width: 250,
           position: "absolute",
           textAlign: "left",
-          marginLeft: "95px",
-          marginTop: "270px",
-          bgcolor: "grey.200",
+          marginLeft: "930px",
+          marginTop: "67px",
+          fontFamily:'arial',
           borderRadius: "8px",
-        }}>
-        <CardContent>
-          <TextField
-            style={{
-              paddingBottom: "15px",
-              width: "24ch",
-              fontFamily: "arial",
-            }}
-            label="Periodo"
-            onChange={(e) => setPeriodo(e.target.value)}
-            value={periodo}
-            select
-            id="filled-select-currency"
-          >
-            {dataPeriodo.map((e) => {
-                return (
-                  <MenuItem key={e._id} value={e.clave}>
-                    {e.clave}
-                  </MenuItem>
-                );
-            })}
-          </TextField>
-        </CardContent>
-      </Card>
-      
+
+        }}
+      >
+
+          <Select
+          sx={{
+            fontFamily: 'default',
+          }}
+            options={dataPeriodo.map((sup) => ({
+              label: sup.clave,
+              value: sup._id,
+            }))}
+            onChange={handleSelectChange}
+          />
+
+      </Box>
+
       <Box
         sx={{
           width: "1000px",
@@ -487,6 +543,7 @@ const bodyEliminar = (
           height: "150px",
           position: "absolute",
           marginLeft: "50px",
+          marginTop: '15px'
         }}
       >
         <Typography
@@ -497,7 +554,7 @@ const bodyEliminar = (
           Profesores
 
           <Button
-            sx={{ marginLeft: "535px" }}
+            sx={{ marginLeft: "400px" }}
             variant="contained"
             color="success"
             onClick={() => abrirCerrarModalInsertar()}
@@ -505,18 +562,18 @@ const bodyEliminar = (
             {<AddCircleOutlineIcon />} Agregar Profesor
           </Button>
         </Typography>
-        
+
 
         </Box>
 
         <Box
         sx={{
-          width: "1000px",
+          width: "1150px",
           padding: "15px",
-          height: "450px",
+          height: "430px",
           position: "absolute",
           marginLeft: "50px",
-          marginTop: "300px"
+          marginTop: "270px"
         }}>
 
         <DataGrid

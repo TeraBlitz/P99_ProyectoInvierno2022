@@ -1,24 +1,65 @@
-import { ButtonGroup, Typography, Button } from '@mui/material'
+import { Typography, Button, CardContent} from '@mui/material'
 import React from 'react'
 import Box from '@mui/material/Box'
+import Card from '@mui/material/Card'
+import CardActions from '@mui/material/CardActions'
+import Divider from '@mui/material/Divider';
 
-function Clase(props) {
+
+function Clase({handleClick, handleMoreInfo, clase}) {
+
+    const nivelDict = {
+        '1' : 'Desde cero',
+        '2' : 'Con bases',
+        '3' : 'Intermedio',
+        '4' : 'Avanzado'
+    }
+
     return (
-        <Box sx={{ marginTop: '20px' }}>
-            <Box sx={{ bgcolor: 'lightgray', paddingX: '10px', borderTopRightRadius: '10px', borderTopLeftRadius: '10px' }}>
-                <Typography variant="h6">{props.title}</Typography>
+        <Card sx={{ my: 2, '& .MuiTypography-root': { mb: 1 }}}>
+            <CardContent>
+                <Typography variant="h6">{clase.clave}. {clase.nombre_curso}</Typography>
                 <br />
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Typography>Periodo: {props.periodo}</Typography>
-                    <Typography>Edades: {props.rango_edades}</Typography>
-                        <Typography sx={{ color: props.cupo / props.cupoMax >= 1 ? "red" : "black" }}>{props.cupo/props.cupoMax >=1?"Lleno" :  (props.cupoMax - props.cupo).toString() +" puestos"}</Typography>
+                {
+                    clase.status === "Inscrito" ? 
+                        <Typography variant='body2'><i>Ya estas inscrito</i></Typography>
+                    :
+                        null
+                }
+                {
+                    clase.status === "ListaEspera" ? 
+                        <Typography variant='body2'><i>Estas en lista de espera</i></Typography>
+                    :
+                        null
+                }
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column'}}>
+                    <Typography variant='body1'><strong>Periodo:</strong>  {clase.clavePeriodo}</Typography>
+                    <Typography variant='body1'><strong>Modalidad:</strong> {clase.modalidad}</Typography>
+                    <Typography variant='body1'><strong>Nivel:</strong> {nivelDict[clase.nivel]}</Typography>
+                        <Typography sx={{ color: clase.cupo_actual / clase.cupo_maximo >= 1 ? "red" : "black" }} variant='body1'>
+                            { Number(clase.cupo_actual) / Number(clase.cupo_maximo)  >=1 ? <strong>Lleno</strong>
+                                : <strong>¡Curso  {(Number(clase.cupo_actual) / Number(clase.cupo_maximo) * 100).toString()}% lleno!</strong> 
+                            }
+                        </Typography>
                 </Box>
-            </Box>
-            <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{ width: '100%' }}>
-                <Button sx={{ width: '50%', borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>Mas Informacion</Button>
-                <Button onClick={() => props.changeClaseRegistrada(props.title)} sx={{ width: '50%', borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>{props.cupo / props.cupoMax >= 1 ? "Lista de Espera" : "Registrarse"}</Button>
-            </ButtonGroup>
-        </Box>
+            </CardContent>
+            <CardActions sx={{backgroundColor: 'e8f0fe'}}>
+                <Button size='small' onClick={() => handleMoreInfo(clase)}
+                    sx={{ width: '50%'}}
+                >
+                    Detalle
+                </Button>
+                { Number(clase.cupo_actual) < Number(clase.cupo_maximo) ?
+                <Button size='small' onClick={() => handleClick(clase)}>
+                    {clase.status === "Inscrito" && clase.status !== 'ListaEspera'
+                        ? 'Cancelar Registro' : 'Inscribir'}
+                </Button>  :
+                <Button size='small' onClick={() => handleClick(clase)}>
+                    {clase.status === "ListaEspera" && clase.status !== 'Inscrito'
+                        ? 'Salir de Lista' : 'Lista Espera'}
+                </Button> }
+            </CardActions>
+        </Card>
     )
 }
 

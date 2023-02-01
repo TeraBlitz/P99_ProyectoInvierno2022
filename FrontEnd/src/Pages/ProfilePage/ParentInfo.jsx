@@ -19,7 +19,7 @@ const ParentInfo = ({studentData, handleChange, underage}) =>{
             <TextField name="tutor_apellido_paterno" label="Primer Apellido" value={studentData.tutor_apellido_paterno || ''} onChange={handleChange} helperText=" " required/>        
             <TextField name="tutor_apellido_materno" label="Segundo Apellido" value={studentData.tutor_apellido_materno || ''} onChange={handleChange} helperText=" " required/>        
             <TextField name="tutor_correo" label="Correo" type='email' value={studentData.tutor_correo || ''} onChange={handleChange} helperText=" " required/>   
-            <TextField name="tutor_num_telefono" label="Núm. Telefonico" value={studentData.tutor_num_telefono || ''} onChange={handleChange} helperText=" " required/>
+            <TextField name="tutor_num_telefono" label="Núm. Telefonico" value={studentData.tutor_num_telefono || ''} onChange={handleChange} helperText="LADA + 10 Digitos" required/>
         </>
     )
 }

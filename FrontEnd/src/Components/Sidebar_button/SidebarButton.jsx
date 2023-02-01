@@ -1,7 +1,6 @@
 import React from 'react'
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import { Divider } from '@mui/material';
 
 function SidebarButton(props) {
     const handleClick = () => {
@@ -10,11 +9,14 @@ function SidebarButton(props) {
 
     }
 
-    return (
-        <ListItemButton onClick={() => handleClick()}>
+    return props.order === 7 || props.order === 8 ?
+        <ListItemButton onClick={() => handleClick()} sx={{position: 'absolute', bottom: props.order === 7 ? '170px' : '100px'}}>
             <ListItemText>{props.title}</ListItemText>
         </ListItemButton>
-    )
+    :
+        <ListItemButton onClick={() => handleClick()} sx={{fontSize: '18px'}}>
+            <ListItemText sx={{color: 'white', '& .MuiTypography-root': { fontSize: '1.4rem'}}}>{props.title}</ListItemText>
+        </ListItemButton>
 }
 
 export default SidebarButton

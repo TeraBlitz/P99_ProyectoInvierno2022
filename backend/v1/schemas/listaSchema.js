@@ -1,15 +1,16 @@
 const listaSchema = {
     type: "object",
     properties: {
+        _id: {type: "string"},
         idAlumno: {type: "string"},
         idClase: {type: "string"},
-        lugar_de_espera: {type: "string", pattern: "^([0-9])*$"},
+        time_stamp: {type: "string", format:"date-time"},
         status: {type: "string"}
     },
     required: [
         "idAlumno",
         "idClase",
-        "lugar_de_espera",
+        "time_stamp",
         "status"
     ],
     additionalProperties: true,

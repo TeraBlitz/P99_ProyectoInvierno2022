@@ -3,6 +3,8 @@ import Fab from '@mui/material/Fab';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
 import CircularProgress from '@mui/material/CircularProgress';
 import MuiAlert from '@mui/material/Alert';
@@ -19,7 +21,7 @@ import { userContext } from './../../App.jsx'
 
 const studentInfo = {
     'nombre': '', 'apellido_paterno': '', 'apellido_materno': '',
-    'num_telefono': '', 'curp': '', 'fecha_de_nacimiento':'',
+    'num_telefono': '', 'fecha_de_nacimiento':'',
     'escolaridad': '', 'ultima_escuela':'','estado':'', 'ciudad':'', 'colonia': '',
     'codigo_postal':'', 'pais': '', 'tutor_nombre': '', 'tutor_apellido_paterno': '',
     'tutor_apellido_materno': '', 'tutor_correo': '', 'tutor_num_telefono': ''
@@ -42,6 +44,7 @@ const Profile = () =>{
     const [openEditModal, setOpenEditModal] = useState(false);
     const [currentStudent, setCurrentStudent] = useState(studentInfo)
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [infoOpen, setInfoOpen] = useState(false); 
 
     const handleOpenDialog = () => {
       setOpenDeleteDialog(true);
@@ -54,45 +57,21 @@ const Profile = () =>{
     const userValues = useContext(userContext)
 
     useEffect(() => {
-        const getUserInfo = () =>{
-            getUser().then(
-                (data) => {
-                    const currentUser = data.find(user => user._id === userValues._id);
-                    setUserInfo(currentUser);
-                    //console.log(currentUser)
-                });
-        }
+        const getUserInfo =  () =>{
+            getUser().then(response=>response.json()).then((result) => {
+                const currentUser = result.find(user => user._id === userValues._id);
+                setUserInfo(currentUser);
+                //console.log(currentUser)
+                })
+            }
         getUserInfo();
     }, []);
 
-    useEffect(() => {
-        const getUserStudents = () =>{
-            fetch(`http://127.0.0.1:3000/v1/alumnos/find`,
-            {
-                method: 'POST',
-                redirect: 'follow',
-                body: new URLSearchParams(
-                    {
-                        idUsuario : userValues._id
-                    }
-                )
-            })
-            .then(response => response.json())
-            .then(result => {
-                setStudents(result);
-            })
-            .catch(error => {
-                console.log(error);
-            })
-        }
-        getUserStudents();
-    }, []);
 
     useEffect(() => {
        const getUserStudents = () =>{
-            getStudents().then(
-                (data) => {
-                    const students = data.filter(student => student.idUsuario === userValues._id);
+            getStudents().then(response=>response.json()).then((result) => {
+                    const students = result.filter(student => student.idUser === userValues._id);
                     setStudents(students);
                     //console.log(students)
             });
@@ -108,25 +87,21 @@ const Profile = () =>{
 
     const deleteCurrentStudent = () => {
         handleCloseDialog();
-        deleteStudent(new URLSearchParams({'_id': currentStudent._id})).then((data) => {
+        deleteStudent({'_id': currentStudent._id}).then((data) => {
             console.log(data)
-        })
-        .catch((error) => {
-            console.log(error.message);
-            if (error.message.includes('Documen')){
-                setAlertMessage('Estudiante eliminado correctamente.')
-                setSuccessOpen(true);
-            }
-            else{
+            if(data.status === 400){
                 setAlertMessage('Se produjo un error al eliminar al estudiante.')
                 setErrorOpen(true);
             }
+            else{
+                setAlertMessage('Estudiante eliminado correctamente.')
+                setSuccessOpen(true);
+            }
         })
         .finally(() => {
-            findStudents(new URLSearchParams({'idUsuario': userValues._id})).then(
-                (data) => {
-                    console.log(data);
-                    setStudents(data);
+            findStudents({'idUser': userValues._id}).then(response=>response.json()).then((data) => {
+                console.log(data);
+                setStudents(data);
             });
         })
 
@@ -140,6 +115,7 @@ const Profile = () =>{
         }
         setSuccessOpen(false);
         setErrorOpen(false);
+        setInfoOpen(false);
     };
 
     if (!userInfo || !students) {
@@ -153,14 +129,14 @@ const Profile = () =>{
     
     return (
         <Box sx={{p: 1, ml: 1}}>
-            <Box sx={{ fontFamily: 'default', fontSize: 'h3.fontSize', py: 2, display:'flex' }}>
+            <Box sx={{ fontFamily: 'default', fontSize: 'h3.fontSize', py: 2, display:'flex', color: '#004a98'}}>
                 <Box>
                     Mi perfil
                 </Box>
                 {
                     userValues.rol === 'estudiante' ?
-                    <Box sx={{ display: 'flex', flexDirection: 'column', position: 'absolute',  bottom: 16,  right: 16}}>
-                        <Fab color="primary" aria-label="add" sx={{ display: addStudent ? 'none' : ''}} 
+                    <Box sx={{ display: {xs: 'flex', md: 'none'}, flexDirection: 'column', position: 'absolute',  bottom: 16,  right: 16}}>
+                        <Fab color="primary" aria-label="add" sx={{ display: addStudent ? 'none' : '', backgroundColor: '#57a1f1'}} 
                                 onClick={() => { setAddStudent(!addStudent); }}>
                             <AddIcon />
                         </Fab>
@@ -168,7 +144,7 @@ const Profile = () =>{
                     : null
                 }
             </Box>
-            <Box sx={{ typography: 'subtitle2', fontWeight: 'light', fontFamily: 'default' }}>
+            <Box sx={{ typography: 'h6', fontFamily: 'default' }}>
                 Datos Usuario
             </Box> 
             <Box sx={{'& .MuiTextField-root': { m: 1, width: '35ch' }, display: 'flex', alignItems: 'center',  flexWrap: 'wrap' }}>
@@ -176,9 +152,8 @@ const Profile = () =>{
                 <TextField name="correo" label="Correo" InputProps={{readOnly: true}} value={userInfo.correo || ''}/>
             </Box>
 
-            <Box sx={{ fontFamily: 'default', fontSize: 'h6.fontSize', py: 2,
-                     display: userValues.rol === 'estudiante' ? 'flex' : 'none' }}>
-                Estudiante(s)
+            <Box sx={{ pt: 2, display: userValues.rol === 'estudiante' ? 'flex' : 'none', justifyContent: 'space-between', mt: 2}}>
+                <Typography variant='h6'>Estudiante(s)</Typography> 
             </Box>
    
             <Box>
@@ -201,7 +176,10 @@ const Profile = () =>{
                             setIsEditing={setIsEditing}
                         />    
                     )
-                } 
+                }
+                <Box sx={{display: {xs: 'none', md: 'flex', justifyContent: 'flex-end'}}}>
+                    <Button sx={{textTransform: 'none', backgroundColor: '#57a1f1', fontSize: '18px'}} onClick={() => { setAddStudent(!addStudent); }} variant="contained"  endIcon={<AddIcon/>}>Agregar estudiante </Button>
+                </Box>
             </Box>
             <Modal
                 open={addStudent}
@@ -218,6 +196,7 @@ const Profile = () =>{
                         setSuccessOpen={setSuccessOpen}
                         setErrorOpen={setErrorOpen}
                         setAlertMessage={setAlertMessage}
+                        setInfoOpen={setInfoOpen}
                     />
                 </>
             </Modal>
@@ -237,6 +216,7 @@ const Profile = () =>{
                         setSuccessOpen={setSuccessOpen}
                         setErrorOpen={setErrorOpen}
                         setAlertMessage={setAlertMessage}
+                        setInfoOpen={setInfoOpen}
                     />
                 </>
             </Modal>
@@ -248,6 +228,11 @@ const Profile = () =>{
             </Snackbar>
             <Snackbar open={errorOpen} autoHideDuration={4000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+                    {alertMessage}
+                </Alert>
+            </Snackbar>
+            <Snackbar open={infoOpen} autoHideDuration={4000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="info" sx={{ width: '100%' }}>
                     {alertMessage}
                 </Alert>
             </Snackbar>

@@ -6,7 +6,6 @@ import {
   TextField,
   Box,
   Typography,
-  MenuItem,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { grey } from "@mui/material/colors";
@@ -18,28 +17,66 @@ import CardContent from "@mui/material/CardContent";
 import axios from "axios";
 import { CSVLink } from "react-csv";
 
+import Select from "react-select";
 
 export default function Alumnos() {
+
+
+
   //Encargado de guardar la data
   const [data, setData] = useState([]);
-
-  const [periodo, setPeriodo] = useState("");
+  const [guardaData, setGuardaData] = useState([]);
   const [dataPeriodo, setDataPeriodo] = useState([]);
+  const [dataAlumnoClase, setDataAlumnoClase] = useState([]);
+  let array = []
+  let array2 = []
+  let array3 = []
+
 
   const getAlumnos = async () => {
-    const res = await axios.get("http://127.0.0.1:3000/v1/alumnos");
+    const res = await axios.get("https://p99test.fly.dev/v1/alumnos");
     setData(res.data);
+
   };
 
-  const  getPeriodos = async () => {
-    const res = await axios.get("http://127.0.0.1:3000/v1/periodos");
-    setDataPeriodo(res.data);
+  const getAlumnos2 = async () => {
+    const res = await axios.get("https://p99test.fly.dev/v1/alumnos");
+    setGuardaData(res.data);
+
   };
+
+  const getPeriodos = async () => {
+    const res = await axios.get("https://p99test.fly.dev/v1/periodos");
+    setDataPeriodo(res.data);
+
+  };
+
+  const getAlumnoClase = async () => {
+    const res = await axios.get("https://p99test.fly.dev/v1/alumnoClases");
+    setDataAlumnoClase(res.data);
+  };
+
+
 
   useEffect(() => {
+    console.log("Empieza UseEfect")
     getAlumnos();
+    getAlumnos2();
     getPeriodos();
+    getAlumnoClase();
   }, []);
+
+  const [periodo, setPeriodo] = useState("");
+
+  //const [periodoReciente, setPeriodoReciente] = useState("")
+  //----------------------------------Funcion para ver periodo mas reciente
+
+  function traducirDate(raw){
+
+    const date = raw.split("T",2);
+    return(date[0])
+
+}
 
   // ------------Editar---------------
   const [modalMas, setModalMas] = useState(false);
@@ -106,7 +143,7 @@ export default function Alumnos() {
   const postEditar = async (e) => {
     e.preventDefault();
     try {
-      await fetch("http://127.0.0.1:3000/v1/alumnos/update", {
+      await fetch("https://p99test.fly.dev/v1/alumnos/update", {
         method: "Put",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -145,7 +182,7 @@ export default function Alumnos() {
   // Procedimiento para eliminar
   const postDelete = async (e) => {
     try {
-      await fetch("http://127.0.0.1:3000/v1/alumnos/delete", {
+      await fetch("https://p99test.fly.dev/v1/alumnos/delete", {
         method: "Delete",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -811,10 +848,43 @@ export default function Alumnos() {
     [data]
   );
 
+  const handleSelectChange = (event) => {
+
+    array = []
+    array2 = []
+    array3 = []
+    console.log(guardaData)
+    console.log(event.value);
+
+    array2.push(dataAlumnoClase.filter(data => data.idPeriodo === event.value));
+    console.log(array2[0])
+    for (let i=0; i< array2.length;i++){
+      for (let j=0; j< array2[i].length;j++){
+        array.push(guardaData.filter(data => data._id === array2[i][j].idAlumno))
+      }
+    }
+    console.log(array)
+    for (let i=0; i< array.length;i++){
+      array3.push(array[i][0])
+    }
+    console.log(array3)
+    if( array3.length > 0){
+      setData(array3)
+    }else{
+      getAlumnos()
+    }
+
+  };
+
   //---------------------------------------Filter---------------------------
+
   const [items, setItems] = useState([]);
+
   return (
+
     <div>
+
+
       <Box
         sx={{
           width: 1100,
@@ -842,12 +912,36 @@ export default function Alumnos() {
           <Button
             color="primary"
             variant="contained"
-            sx={{ marginLeft: "950px", marginTop: "-120px" }}
+            sx={{ marginLeft: "680px", marginTop: "-120px" }}
           >
             Exportar a CSV
           </Button>
         </CSVLink>
       </Box>
+
+      <Box
+        sx={{
+          width: 250,
+          position: "absolute",
+          textAlign: "left",
+          marginLeft: "910px",
+          marginTop: "50px",
+          fontFamily:'arial',
+          borderRadius: "8px",
+
+        }}
+      >
+
+          <Select
+            options={dataPeriodo.map((sup) => ({
+              label: sup.clave,
+              value: sup._id,
+            }))}
+            onChange={handleSelectChange}
+          />
+
+      </Box>
+
 
       <Card
         sx={{
@@ -890,39 +984,6 @@ export default function Alumnos() {
         </CardContent>
       </Card>
 
-      <Card sx={{
-          width: 250,
-          position: "absolute",
-          textAlign: "left",
-          marginLeft: "65px",
-          marginTop: "270px",
-          bgcolor: "grey.200",
-          borderRadius: "8px",
-        }}>
-        <CardContent>
-          <TextField
-            style={{
-              paddingBottom: "15px",
-              width: "24ch",
-              fontFamily: "arial",
-            }}
-            label="Periodo"
-            onChange={(e) => setPeriodo(e.target.value)}
-            value={periodo}
-            select
-            id="filled-select-currency"
-          >
-            {dataPeriodo.map((e) => {
-                return (
-                  <MenuItem key={e._id} value={e.clave}>
-                    {e.clave}
-                  </MenuItem>
-                );
-            })}
-          </TextField>
-        </CardContent>
-      </Card>
-      
       <Box
         sx={{
           width: "1130px",
@@ -930,12 +991,13 @@ export default function Alumnos() {
           height: "450px",
           position: "absolute",
           marginLeft: "50px",
-          marginTop: "400px",
+          marginTop: "270px",
         }}
       >
         <DataGrid
           columns={columns}
           rows={data}
+
           getRowId={(row) => row._id}
           rowsPerPageOptions={[5, 10]}
           pageSize={pageSize}

@@ -6,10 +6,15 @@ async function validarCampos(req, res, next){
 
     // En caso de que existan errores
     if(!errors.isEmpty()){
-        return res.status(400).json(errors)
+        return res.status(400).json({
+            msg: 'Error al validar los campos.',
+            errors: errors
+        })
     }
 
     next()
 }
 
-module.exports = {validarCampos}
+module.exports = {
+    validarCampos
+}

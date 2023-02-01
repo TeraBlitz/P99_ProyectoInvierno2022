@@ -3,17 +3,24 @@ import React, { useState, useEffect, useContext } from 'react'
 import Clase from '../../Components/Clase/Clase'
 import CircularProgress from '@mui/material/CircularProgress'
 import { Alert, Button, Link } from '@mui/material'
-import { AlertTitle } from '@mui/material'
+import Snackbar from '@mui/material/Snackbar'
+import Autocomplete from '@mui/material/Autocomplete'
 import { Card, CardContent, Typography, TextField, MenuItem } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import Modal from '@mui/material/Modal'
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import SearchIcon from '@mui/icons-material/Search';
 import { getStudents } from '../../api/students'
 import { getClasses } from '../../api/classes'
 import { userContext } from './../../App.jsx'
+import { createClassStudent, getClassStudent, deleteClassStudent } from '../../api/classStudent'
+import { createWaitList, getWaitList, deleteWaitList } from '../../api/waitList'
+import { findTerm } from '../../api/term'
 import ConfirmationDialog from '../../Components/Dialog/ConfirmationDialog'
+import ClaseModal from '../../Components/Clase/ClaseModal'
+import MiRegistro from '../../Components/Registro/MiRegistro'
 
 function RegistroClasesAlumnos({changeContent}) {
     const [items, setItems] = useState([]);
@@ -21,69 +28,22 @@ function RegistroClasesAlumnos({changeContent}) {
     const [currentStudent, setCurrentStudent] = useState(null);
     const [error, setError] = useState('none');
     const [clases, setClases] = useState(null);
+    const [classNames, setClassNames] = useState([]);
     const [claseRegistrada, setClaseRegistrada] = useState([]); // esto se obtendria de la base de datos
     const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+    const [openMoreInfo, setOpenMoreInfo] = useState(false);
+    const [currentClase, setCurrentClase] = useState(); 
+    const [selectAlertOpen, setSelectAlertOpen] = useState(false);
+    const [nameFilter, setNameFilter] = useState('');
+    const [filteredClasses, setFilteredClasses] = useState(null);
+    const [dialogAction, setDialogAction] = useState('')
     
     const userValues = useContext(userContext)
 
-    const columns = [
-        { field: 'clave', headerName: 'Clave', width: 110 },
-        {
-            field: 'nombre_curso',
-            headerName: 'Curso',
-            width: 190,
-            editable: false,
-        },
-        {
-            field: 'clavePeriodo',
-            headerName: 'Periodo',
-            width: 180,
-            editable: false,
-
-        },
-        {
-            field: 'cupo_maximo',
-            headerName: 'Cupo Maximo',
-            width: 180,
-            editable: 'false'
-        },
-        {
-            field: 'nivel',
-            headerName: 'Nivel',
-            width: 180,
-            editable: false
-        },
-        {
-            field: "actions",
-            headerName: "Incripción",
-            type: "actions",
-            width: 115,
-            renderCell: (params) => (
-                <Button onClick={() => handleOpenDialog(params.row)} variant="contained">Inscribir</Button>
-            ),
-
-        }
-
-    ];
-    
-    const changeClaseRegistrada = (classId) => {
-        if (claseRegistrada[0]) {
-            setError('block')
-        } else {
-            setClaseRegistrada([classId])
-            handleCloseDialog();
-        }
-    }
-
-    const handleChange = (e) => {
-        setCurrentStudent(e.target.value);
-    }
-
     useEffect(() => {
         const getUserStudents = () =>{
-             getStudents().then(
-                 (data) => {
-                     const students = data.filter(student => student.idUsuario === userValues._id);
+             getStudents().then(response=>response.json()).then((data) => {
+                     const students = data.filter(student => student.idUser === userValues._id);
                      setStudents(students);
                      //console.log(students)
              });
@@ -93,15 +53,291 @@ function RegistroClasesAlumnos({changeContent}) {
 
      useEffect(() => {
         const getStudentClasses = () =>{
-             getClasses().then(
-                 (data) => {
-                     setClases(data);
-             });
-         }
-         getStudentClasses();
-         console.log(clases)
+            let allClassNames = []
+            getClasses().then(response=>response.json()).then((result) => {
+                    for (let i = 0; i < result.length; i++) {
+                        allClassNames.push(result[i].nombre_curso);
+                        setClassNames([...new Set(allClassNames)]);
+                    }
+                    setClases(result);
+                    setFilteredClasses(result);
+                });
+            }
+        getStudentClasses();
+        console.log(clases)
      }, []);
 
+    // Funcion para calcular edad 
+    const calculate_age = (dateString) => {
+        var birthday = +new Date(dateString);
+        // The magic number: 31557600000 is 24 * 3600 * 365.25 * 1000, which is the length of a year
+        const magic_number = 31557600000;
+        return ~~((Date.now() - birthday) / (magic_number));
+    }
+
+    const nivelDict = {
+        '1' : 'Desde cero',
+        '2' : 'Con bases',
+        '3' : 'Intermedio',
+        '4' : 'Avanzado'
+    }
+
+    const getNivel = (params) => {
+        return  nivelDict[params.row.nivel]
+    }
+
+    const getHorario = (params) => {
+        return `${params.row.lunes ? `Lun: ${params.row.lunes}` : ''}
+                ${params.row.martes ? `Mar: ${params.row.martes}` : ''}
+                ${params.row.miercoles ? `Mierc: ${params.row.miercoles}` : ''}
+                ${params.row.jueves ? `Juev: ${params.row.jueves}` : ''}
+                ${params.row.viernes ? `Vier: ${params.row.viernes}` : ''}
+                ${params.row.sabado ? `Sab: ${params.row.sabado}` : ''}`
+    }
+
+    const getProfesor = (params) => {
+        return `${params.row.nombreProfesor} ${params.row.apellidosProfesor}`
+    }
+
+    const getCupo = (params) => {
+        return `${(Number(params.row.cupo_actual) / Number(params.row.cupo_maximo) * 100).toString()}%`
+    }
+
+    const columns = [
+        {
+            field: 'clavePeriodo',
+            headerName: 'Periodo',
+            width: 110,
+            editable: false,
+
+        },
+        { 
+            field: 'clave',
+            headerName: 'Clave',
+            width: 90 
+        },
+        {
+            field: 'nombre_curso',
+            headerName: 'Curso',
+            width: 90,
+            editable: false,
+        },
+        {
+            field: 'nivel',
+            headerName: 'Nivel',
+            width: 100,
+            editable: false,
+            valueGetter: getNivel,
+        },
+        {
+            field: 'area',
+            headerName: 'Area',
+            width: 110,
+            editable: false
+        },
+        {
+            field: 'modalidad',
+            headerName: 'Modalidad',
+            width: 110,
+            editable: false
+        },
+        {
+            field: 'horario',
+            headerName: 'Horario',
+            width: 150,
+            editable: false,
+            valueGetter: getHorario,
+        },
+        {
+            field: 'profesor',
+            headerName: 'Profesor',
+            width: 140,
+            editable: 'false',
+            valueGetter: getProfesor,
+        },
+        ,
+        {
+            field: 'cupos',
+            headerName: '% curso lleno',
+            width: 100,
+            editable: 'false',
+            valueGetter: getCupo,
+        },
+        {
+            field: "actions",
+            headerName: "Incripción",
+            type: "actions",
+            width: 115,
+            renderCell: (params) => (
+                Number(params.row.cupo_actual) < Number(params.row.cupo_maximo) ?
+                <Button size='small' onClick={() => handleClick(params.row)} variant="outlined">
+                    {params.row.status === "Inscrito" && params.row.status !== 'ListaEspera'
+                        ? 'Cancelar Registro' : 'Inscribir'}
+                </Button>  :
+                <Button size='small' onClick={() => handleClick(params.row)} variant="outlined">
+                    {params.row.status === "ListaEspera" && params.row.status !== 'Inscrito'
+                        ? 'Salir de Lista' : 'Lista Espera'}
+                </Button> 
+            ),
+
+        }
+
+    ];
+
+    const handleClick = (clase) => {
+        if (currentStudent == null) {
+            setSelectAlertOpen(true);
+            return
+        }  
+        switch (clase.status) {
+            case 'Inscrito':
+                setDialogAction('CancelarInscripcion')
+                handleOpenDialog(clase);
+                break;
+            case 'ListaEspera':
+                setDialogAction('SalirLista')
+                handleOpenDialog(clase);
+                break;
+            case '':
+                Number(clase.cupo_actual) < Number(clase.cupo_maximo) ?
+                    setDialogAction('Registrar')
+                :
+                    setDialogAction('ListaEspera')
+                handleOpenDialog(clase);
+        }
+    }
+
+    const handleMoreInfo = (clase) => {
+        setCurrentClase(clase);
+        setOpenMoreInfo(!openMoreInfo);
+    };
+    
+    const filterClasses = (student) => {
+        const age = calculate_age(student.fecha_de_nacimiento);
+        let waitList = [];   
+        let myClasses = [];
+        const filter = clases.filter(clase => Number(clase.edad_minima) < age && age < (clase.edad_maxima ? Number(clase.edad_maxima) : 99));
+        filter.map((aClass) => {
+            aClass.status = '';
+        })
+        getWaitList().then(response=>response.json()).then((data) => {
+            waitList = data.filter(lista => lista.idAlumno === student._id);
+        })
+        .then(() => {
+            waitList.map((inWaitList) =>{
+                for (let i = 0; i < filter.length; i++) {
+                    if (inWaitList.idClase === filter[i]._id) {
+                        filter[i].status = 'ListaEspera';
+                    }
+                }
+            })
+        })
+        getClassStudent().then(response=>response.json()).then((data) => {
+            myClasses = data.filter(clase =>  clase.idAlumno === student._id);
+        })
+        .then(() => {
+            myClasses.map((myClass) => {
+                for (let i = 0; i < filter.length; i++) {
+                    if (myClass.idClase === filter[i]._id) {
+                        filter[i].status = 'Inscrito';
+                    }
+                }
+            })
+            setFilteredClasses(filter);
+        })
+    }
+
+    const handleChange = (e) => {
+        if (e.target.value === ""){
+            setFilteredClasses(clases);
+            setCurrentStudent(null);
+            return
+        }
+        setCurrentStudent(e.target.value);
+        filterClasses(e.target.value);
+    }
+
+    const handleListaEspera = (clase) =>{   
+        let lista = [];   
+        getWaitList().then(response=>response.json()).then((data) => {
+            lista = data.filter(lista => lista.idAlumno === currentStudent._id);
+        }).then(() => {
+            createWaitList({
+                'idAlumno': currentStudent._id,
+                'idClase': clase._id,
+                'time_stamp':  new Date().toISOString(),
+                'status': 'Espera'
+            });
+            clase.status = 'ListaEspera';
+            handleCloseDialog();
+        })
+    }
+
+    const handleSalirListaEspera = (clase) => {
+        let periodo = [];
+        let myWaitList = [];
+        findTerm({ 'clave' : clase.clavePeriodo})
+        .then(response=>response.json()).then((data) => {
+            periodo = data;
+        })
+        .then(() => {
+            getWaitList().then(response=>response.json()).then((data) => {
+                myWaitList = data.filter( aWList =>
+                    aWList.idClase === clase._id && aWList.idAlumno === currentStudent._id && aWList.idPeriodo === periodo[0]._id); 
+            })  
+            .then(() => {
+                deleteWaitList({'_id' : myWaitList[0]._id});
+                clase.status = '';
+                handleCloseDialog();
+            })
+        })
+    }
+
+    const handleClaseRegistrada = (clase) => { 
+        // Hacer validación de numero de clases disponibles por inscribir
+        if (claseRegistrada[0]) {
+            setError('block')
+        } else {
+            let periodo = []
+            findTerm({ 'clave' : clase.clavePeriodo})
+            .then(response=>response.json()).then((data) => {
+                periodo = data
+            })
+            .then(() => {
+                createClassStudent({
+                    'idClase' : clase._id,
+                    'idAlumno' : currentStudent._id,
+                    'idPeriodo' : periodo[0]._id
+                }).then((data) => {
+                    clase.status = 'Inscrito'
+                    handleCloseDialog();
+                }).catch((error) => {
+                    console.log(error);
+                    alert(error);
+                })
+            })
+        }
+    }
+
+    const handleCancelarClaseRegistrada = (clase) => {
+        let periodo = []
+        let myClassStudent = []
+        findTerm({ 'clave' : clase.clavePeriodo})
+        .then(response=>response.json()).then((result) => {
+            periodo = result
+        })
+        .then(() => {
+            getClassStudent().then(response=>response.json()).then((result) => {
+                myClassStudent = result.filter( aClass =>
+                    aClass.idClase === clase._id && aClass.idAlumno === currentStudent._id && aClass.idPeriodo === periodo[0]._id) 
+            })  
+            .then(() => {
+                deleteClassStudent({'_id' : myClassStudent[0]._id})
+                clase.status = ''
+                handleCloseDialog();
+            })
+        })
+    }
      
     const handleOpenDialog = (clase) => {
         setClaseRegistrada(clase);
@@ -112,6 +348,11 @@ function RegistroClasesAlumnos({changeContent}) {
         setOpenConfirmationDialog(false);
     };
 
+    const handleNameFilter = (value) => {
+        //setNameFilter(value);
+        const filteredClasses = clases.filter(clase => clase.nombre_curso.toLowerCase().includes(value.trim().toLowerCase()));
+        setFilteredClasses(filteredClasses);
+    }
 
     if (!students || !clases) {
         return(
@@ -124,6 +365,7 @@ function RegistroClasesAlumnos({changeContent}) {
         return(
             <Box sx={{ height: '100vh', display: 'flex',
                 alignContent: 'center', justifyContent: 'center', flexWrap: 'wrap'}}>
+				<Typography variant="h3" sx={{ mb: 2, color: '#004a98' }}>Mis clases</Typography>
                 <Typography variant='h3' component='div' textAlign='center'>
                     No tienes alumnos registrados, ve a  
                      <Link
@@ -141,124 +383,161 @@ function RegistroClasesAlumnos({changeContent}) {
     }
     return (
         <>
-            <Box sx={{m: 2}}>
+        <Box>
+            <Typography variant="h3" sx={{ m: 2, color: '#004a98' }}>Registro clases (Inscripción)</Typography>
+            <Box sx={{m: 2, position: 'sticky', top: '10px'}}>
                 <FormControl fullWidth>
                     <InputLabel>Estudiantes</InputLabel>
                     <Select
                         value={currentStudent || ''}
                         label="Estudiantes"
                         onChange={handleChange}
-                    >
+                        >
+                        <MenuItem value="">
+                            <em>Estudiante</em>
+                        </MenuItem>
                         {students.map((student) => (
                             <MenuItem
-                                key={student._id}
-                                value={student}
+                            key={student._id}
+                            value={student}
                             >
                                 {student.nombre} {student.apellido_paterno} {student.apellido_materno}
                             </MenuItem>
                         ))}
                     </Select>
                 </FormControl>
+                
+                <Autocomplete
+                    disablePortal
+                    options={classNames}
+                    onChange={(e, newvalue) =>  handleNameFilter(newvalue)}
+                    onInputChange={(e, newvalue) => handleNameFilter(newvalue)}
+                    sx={{display: {xs: 'flex', md: 'none'}, mt: 1 }} fullWidth
+                    renderInput={(params) => <TextField {...params} label="Curso" helperText='Busca tu curso'/>}
+                />
             </Box>
-            <Box sx={{ display: error, bgcolor: 'rgba(50, 50, 50, 0.60)', zIndex: '1000', width: { xs: '100vw', sm: '86vw' }, position: 'absolute', top: 0, left: 0, bottom: 0, right: 0 }}>
-                <Alert sx={{
-                    position: 'absolute', top: '50vh', left: '50%', transform: 'translate(-50%,-50%)', zIndex: '1000', width: '50%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between'
-                }} severity="error">
-                    <AlertTitle> Error</AlertTitle>
-                    Solo puedes Tener <strong>una</strong> clase Registrada
-                    <br />
-                    <Button onClick={() => setError("none")} sx={{ color: 'error.dark' }}>
-                        Cancelar
-                    </Button>
-                    <Button onClick={() => { setClaseRegistrada([]); setError('none') }} sx={{ color: 'error.dark' }}>
-                        Anular Registro
-                    </Button>
-                </Alert >
-            </Box>
-            <Box sx={{ textAlign: 'center', width: '100%', paddingX: '20px', height: '100%', paddingBottom: '10px', overflowY: 'scroll', display: { xs: 'block', sm: 'none' } }}>
+            <Box sx={{ textAlign: 'center', width: '100%', paddingX: '20px', paddingBottom: '10px', overflowY: 'scroll', display: { xs: 'block', md: 'none' } }}>
                 {
-                    clases.length !== 0 ?    
-                        clases.map(e => (
-                            <Clase changeClaseRegistrada={changeClaseRegistrada} key={e._id} title={e.nombre_curso} periodo={e.clavePeriodo} cupo={e.cupo_actual} cupoMax={e.cupo_maximo} rango_edades={e.rango_edades} />
+                    filteredClasses.length !== 0 ?    
+                    filteredClasses.map(e => (
+                        <Clase handleClick={handleClick} handleMoreInfo={handleMoreInfo} key={e._id} clase={e} />
                         ))
-                    :
+                        :
                         <Box sx={{ height: '100vh', display: 'flex',
-                            alignContent: 'center', justifyContent: 'center', flexWrap: 'wrap'}}>
+                        alignContent: 'center', justifyContent: 'center', flexWrap: 'wrap'}}>
                             <Typography variant='h3' component='div' textAlign='center'>
                                 No hay clases disponibles por el momento.
                             </Typography>
                         </Box>
                 }
             </Box >
-            <Box sx={{ width: '100%', visibility: { xs: 'hidden', sm: 'visible' }, display: 'flex', height: '100%', justifyContent: 'space-around', alignItems: 'center', flexWrap: 'wrap' }}>
-                <Card
+            <Box 
+                sx={{ display: {xs: 'none', md: 'flex'},
+                justifyContent: 'center', alignItems: 'center',
+                flexDirection:'column' }}
+            >
+                <Box sx={{display: 'flex'}}>
+                    <Card
+                        sx={{
+                            textAlign: "center", ml: 1, my: 2,
+                            display: 'flex'
+                        }}
+                    >
+                        <SearchIcon color='primary' width='2em' height='2em' sx={{alignSelf: 'center', ml: 0.5}}/>
+                        <CardContent 
+                            sx={{ display: 'flex', flexDirection: 'row',
+                            flexWrap: 'wrap', alignItems: 'center',
+                            '& .MuiTextField-root': { m: 1, width: '25ch' }, p: 1}}
+                        >
+                            <Autocomplete
+                            disablePortal
+                            options={classNames}
+                            onChange={(e, newvalue) => { setItems([{ columnField: 'nombre_curso', operatorValue: 'contains', value: newvalue }]) }}
+                            onInputChange={(e, newvalue) => { setItems([{ columnField: 'nombre_curso', operatorValue: 'contains', value: newvalue }]) }}
+                            renderInput={(params) => <TextField {...params} label="Curso" />}
+                            />
+                            <TextField
+                                style={{ fontFamily: 'arial' }}
+                                label="Nivel"
+                                onChange={e => { setItems([{ columnField: 'nivel', operatorValue: 'contains', value: e.target.value }]) }}
+                                select
+                                >
+                                {["", "Desde cero", "Con bases", "Intermedio", "Avanzado"].map(e => (
+                                    <MenuItem value={e} key={e}>
+                                        {e}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                            <TextField
+                                style={{ fontFamily: 'arial'}}
+                                label="Periodo"
+                                onChange={e => { setItems([{ columnField: 'clavePeriodo', operatorValue: 'contains', value: e.target.value }]) }}
+                                >
+                            </TextField>
+                            <TextField
+                                style={{ fontFamily: 'arial'}}
+                                label="Modalidad"
+                                onChange={e => { setItems([{ columnField: 'modalidad', operatorValue: 'contains', value: e.target.value }]) }}
+                                >
+                            </TextField>
+                        </CardContent>
+                    </Card>
+                    <MiRegistro/>
+                </Box>
+                <Box
                     sx={{
-                        textAlign: "left",
-                        marginLeft: "5px",
-                        border: "2px solid  rgb(165, 165, 180)",
-                        borderRadius: "8px",
-                        width: { lg: '30%', sm: '40%' },
-                        height: '40%',
-                        minHeight: '293px',
-                        minWidth: '340px',
-                        overflowY: 'scroll'
+                        m: 2,
+                        display: 'flex',
+                        width: '90%',
+                        height: 600,
+                        minWidth: '548px',
+                        '& .theme--ListaEspera': {
+                            bgcolor: 'lightyellow'
+                        },
+                        '& .theme--Inscrito': {
+                            bgcolor: 'lightgreen'
+                        }
                     }}
-                >
-                    <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <Typography
-                            gutterBottom
-                            variant="h5"
-                            component="div"
-                            sx={{ textAlign: "center", fontFamily: 'arial' }}
-                        >
-                            Busqueda
-                        </Typography>
-                        <TextField
-                            style={{ paddingBottom: "15px", fontFamily: 'arial', width: '25ch' }}
-                            label="Curso"
-                            onChange={e => { setItems([{ columnField: 'nombre_curso', operatorValue: 'contains', value: e.target.value }]) }}></TextField>
-                        <TextField
-                            style={{ paddingBottom: "15px", width: "25ch", fontFamily: 'arial' }}
-                            label="Nivel"
-                            id="filled-select-currency"
-                            onChange={e => { setItems([{ columnField: 'nivel', operatorValue: 'contains', value: e.target.value }]) }}
-                            select
-                        >
-                            {["Principiante", "Intermedio", "Avanzado"].map(e => (
-                                <MenuItem value={e} key={e}>
-
-                                    {e}
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                        <TextField
-                            style={{ paddingBottom: "15px", width: "25ch", fontFamily: 'arial' }}
-                            label="Periodo"
-                            id="filled-select-currency"
-                            onChange={e => { setItems([{ columnField: 'clavePeriodo', operatorValue: 'contains', value: e.target.value }]) }}
-                        >
-                        </TextField>
-                        <TextField
-                            style={{ paddingBottom: "15px", width: "25ch", fontFamily: 'arial' }}
-                            label="Cupo Maximo"
-                            id="filled-select-currency"
-                            onChange={e => { setItems([{ columnField: 'cupo_maximo', operatorValue: 'contains', value: e.target.value }]) }}
-                        >
-                        </TextField>
-                    </CardContent>
-                </Card>
-                <Box sx={{ width: { lg: '60%', sm: '90%' }, height: { lg: '95%', sm: '50%' }, maxHeight: '100vh', minWidth: '548px' }}>
-                    <DataGrid rows={clases} columns={columns} disableSelectionOnClick={true} getRowId={(row) => row._id}
+                    >
+                    <DataGrid 
+                        sx={{flexGrow: 1}}
+                        rows={filteredClasses} columns={columns} 
+                        disableSelectionOnClick={true}
+                        getRowId={(row) => row._id}
+                        getRowHeight={() => 'auto'}
                         filterModel={{
                             items: items
-                        }
-                        }
-
-                    />
-                </Box>
+                        }}
+                        getRowClassName={(params) => `theme--${params.row.status}`}
+                        
+                        />
+                </Box>          
+                <Modal
+                    open={openMoreInfo}
+                    onClose={() => setOpenMoreInfo(!openMoreInfo)}
+                    sx={{overflowY: 'scroll'}}
+                    >
+                    <>                
+                        <ClaseModal clase={currentClase} />
+                    </>
+                </Modal>
             </Box>
-            <ConfirmationDialog clase={claseRegistrada} handleClose={handleCloseDialog} open={openConfirmationDialog} changeClaseRegistrada={changeClaseRegistrada}/>
-
+            <ConfirmationDialog 
+                action={dialogAction}
+                clase={claseRegistrada} 
+                handleClose={handleCloseDialog} 
+                open={openConfirmationDialog}
+                handleClaseRegistrada={handleClaseRegistrada} 
+                handleCancelarClaseRegistrada={handleCancelarClaseRegistrada}
+                handleListaEspera={handleListaEspera}
+                handleSalirListaEspera={handleSalirListaEspera}
+            /> 
+            <Snackbar open={selectAlertOpen} autoHideDuration={8000} onClose={() => setSelectAlertOpen(false)}>
+                <Alert severity='info'>
+                    Selecciona un alumno para inscribir clases o entrar a la lista de espera
+                </Alert>
+            </Snackbar>
+        </Box>
         </>
     )
 }

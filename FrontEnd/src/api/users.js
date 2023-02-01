@@ -1,13 +1,13 @@
 import { postData, getData } from '../utils/requestUtils'
 
 export const createUser = (user) => {
-    //getUsers('http://127.0.0.1:3000/v1/users')
-    postData('http://127.0.0.1:3000/v1/users/create', {user})
+    //getUsers('https://p99test.fly.dev/v1/users')
+    postData('/v1/users/create', {user})
     .then((data) => {
     console.log(data); // JSON data parsed by `data.json()` call
     });
 }
 
 export const getUser = () => {
-    return getData(`http://127.0.0.1:3000/v1/users/`)
+    return getData(`/v1/users/`)
 }
