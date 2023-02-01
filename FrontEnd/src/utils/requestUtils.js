@@ -1,5 +1,5 @@
 
-const host = "http://localhost:8080"
+const host = "https://p99test.fly.dev"
 
 export const login = async (data = {}) => {
     console.log(data)
