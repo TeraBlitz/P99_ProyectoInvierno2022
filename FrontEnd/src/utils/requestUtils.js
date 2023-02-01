@@ -1,5 +1,17 @@
 
-const host = "https://p99test.fly.dev"
+const host = "http://localhost:8080"
+
+export const login = async (data = {}) => {
+    console.log(data)
+    const response = await fetch(host +"/v1/auth/login", {
+        method: 'POST', 
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        },
+        body: new URLSearchParams(data)
+    });
+    return response.json();
+}
 
 export const postData = async (url = '', data = {}) => {
     const response = await fetch(host+url, {
@@ -7,9 +19,9 @@ export const postData = async (url = '', data = {}) => {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
         },
-        body: data
+        body: new URLSearchParams(data)
     });
-    return response.json();
+    return response
 }
 
 export const putData = async (url = '', data = {}) => {
@@ -18,9 +30,9 @@ export const putData = async (url = '', data = {}) => {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
         },
-        body: data
+        body: new URLSearchParams(data)
     });
-    return response.json();
+    return response
 }
 
 export const getData = async (url = '') => {
@@ -30,7 +42,7 @@ export const getData = async (url = '') => {
             'Content-Type': 'application/json'
         }
     });
-    return response.json();
+    return response
 }
 
 export const deleteData = async (url = '', data = {}) => {
@@ -39,7 +51,7 @@ export const deleteData = async (url = '', data = {}) => {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
         },
-        body: data
+        body: new URLSearchParams(data)
     });
-    return response.json();
+    return response
 }
