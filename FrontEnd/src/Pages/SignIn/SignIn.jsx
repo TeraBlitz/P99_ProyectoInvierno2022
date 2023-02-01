@@ -39,7 +39,7 @@ const SignIn = ({isSignedIn, handleSignIn  , handleUser , loginError , changeHas
                     onInvalid={e => e.target.setCustomValidity('Ingresa tu usuario')} 
                     onInput={e => e.target.setCustomValidity('')}
                      />
-                    <TextField name='contraseña' required
+                    <TextField name='password' required
                     fullWidth label='Contraseña' type='password'
                     sx={{my: 1, input: {color: 'white'}}}
                     InputLabelProps={{style: {color: '#E6F4F1'}}}
