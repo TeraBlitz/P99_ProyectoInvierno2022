@@ -322,7 +322,7 @@ function RegistroClasesAlumnos({changeContent}) {
     const handleCancelarClaseRegistrada = (clase) => {
         let periodo = []
         let myClassStudent = []
-        findTerm(new URLSearchParams({ 'clave' : clase.clavePeriodo}))
+        findTerm({ 'clave' : clase.clavePeriodo})
         .then(response=>response.json()).then((result) => {
             periodo = result
         })
@@ -332,7 +332,7 @@ function RegistroClasesAlumnos({changeContent}) {
                     aClass.idClase === clase._id && aClass.idAlumno === currentStudent._id && aClass.idPeriodo === periodo[0]._id) 
             })  
             .then(() => {
-                deleteClassStudent(new URLSearchParams({'_id' : myClassStudent[0]._id}))
+                deleteClassStudent({'_id' : myClassStudent[0]._id})
                 clase.status = ''
                 handleCloseDialog();
             })

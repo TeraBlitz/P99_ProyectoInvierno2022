@@ -87,25 +87,21 @@ const Profile = () =>{
 
     const deleteCurrentStudent = () => {
         handleCloseDialog();
-        deleteStudent(new URLSearchParams({'_id': currentStudent._id})).then((data) => {
+        deleteStudent({'_id': currentStudent._id}).then((data) => {
             console.log(data)
-        })
-        .catch((error) => {
-            console.log(error.message);
-            if (error.message.includes('Documen')){
-                setAlertMessage('Estudiante eliminado correctamente.')
-                setSuccessOpen(true);
-            }
-            else{
+            if(data.status === 400){
                 setAlertMessage('Se produjo un error al eliminar al estudiante.')
                 setErrorOpen(true);
             }
+            else{
+                setAlertMessage('Estudiante eliminado correctamente.')
+                setSuccessOpen(true);
+            }
         })
         .finally(() => {
-            findStudents(new URLSearchParams({'idUser': userValues._id})).then(
-                (data) => {
-                    console.log(data);
-                    setStudents(data);
+            findStudents({'idUser': userValues._id}).then(response=>response.json()).then((data) => {
+                console.log(data);
+                setStudents(data);
             });
         })
 
