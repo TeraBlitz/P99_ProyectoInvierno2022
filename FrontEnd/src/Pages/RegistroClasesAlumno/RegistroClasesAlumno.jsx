@@ -42,8 +42,7 @@ function RegistroClasesAlumnos({changeContent}) {
 
     useEffect(() => {
         const getUserStudents = () =>{
-             getStudents().then(
-                 (data) => {
+             getStudents().then(response=>response.json()).then((data) => {
                      const students = data.filter(student => student.idUser === userValues._id);
                      setStudents(students);
                      //console.log(students)
@@ -55,14 +54,13 @@ function RegistroClasesAlumnos({changeContent}) {
      useEffect(() => {
         const getStudentClasses = () =>{
             let allClassNames = []
-            getClasses().then(
-                (data) => {
-                    for (let i = 0; i < data.length; i++) {
-                        allClassNames.push(data[i].nombre_curso);
+            getClasses().then(response=>response.json()).then((result) => {
+                    for (let i = 0; i < result.length; i++) {
+                        allClassNames.push(result[i].nombre_curso);
                         setClassNames([...new Set(allClassNames)]);
                     }
-                    setClases(data);
-                    setFilteredClasses(data);
+                    setClases(result);
+                    setFilteredClasses(result);
                 });
             }
         getStudentClasses();
@@ -222,7 +220,7 @@ function RegistroClasesAlumnos({changeContent}) {
         filter.map((aClass) => {
             aClass.status = '';
         })
-        getWaitList().then((data) => {
+        getWaitList().then(response=>response.json()).then((data) => {
             waitList = data.filter(lista => lista.idAlumno === student._id);
         })
         .then(() => {
@@ -234,7 +232,7 @@ function RegistroClasesAlumnos({changeContent}) {
                 }
             })
         })
-        getClassStudent().then((data) => {
+        getClassStudent().then(response=>response.json()).then((data) => {
             myClasses = data.filter(clase =>  clase.idAlumno === student._id);
         })
         .then(() => {
@@ -261,15 +259,15 @@ function RegistroClasesAlumnos({changeContent}) {
 
     const handleListaEspera = (clase) =>{   
         let lista = [];   
-        getWaitList().then((data) => {
+        getWaitList().then(response=>response.json()).then((data) => {
             lista = data.filter(lista => lista.idAlumno === currentStudent._id);
         }).then(() => {
-            createWaitList(new URLSearchParams({
+            createWaitList({
                 'idAlumno': currentStudent._id,
                 'idClase': clase._id,
                 'time_stamp':  new Date().toISOString(),
                 'status': 'Espera'
-            }));
+            });
             clase.status = 'ListaEspera';
             handleCloseDialog();
         })
@@ -278,17 +276,17 @@ function RegistroClasesAlumnos({changeContent}) {
     const handleSalirListaEspera = (clase) => {
         let periodo = [];
         let myWaitList = [];
-        findTerm(new URLSearchParams({ 'clave' : clase.clavePeriodo}))
-        .then((data) => {
+        findTerm({ 'clave' : clase.clavePeriodo})
+        .then(response=>response.json()).then((data) => {
             periodo = data;
         })
         .then(() => {
-            getWaitList().then((data) => {
+            getWaitList().then(response=>response.json()).then((data) => {
                 myWaitList = data.filter( aWList =>
                     aWList.idClase === clase._id && aWList.idAlumno === currentStudent._id && aWList.idPeriodo === periodo[0]._id); 
             })  
             .then(() => {
-                deleteWaitList(new URLSearchParams({'_id' : myWaitList[0]._id}));
+                deleteWaitList({'_id' : myWaitList[0]._id});
                 clase.status = '';
                 handleCloseDialog();
             })
@@ -301,16 +299,16 @@ function RegistroClasesAlumnos({changeContent}) {
             setError('block')
         } else {
             let periodo = []
-            findTerm(new URLSearchParams({ 'clave' : clase.clavePeriodo}))
-            .then((data) => {
+            findTerm({ 'clave' : clase.clavePeriodo})
+            .then(response=>response.json()).then((data) => {
                 periodo = data
             })
             .then(() => {
-                createClassStudent(new URLSearchParams({
+                createClassStudent({
                     'idClase' : clase._id,
                     'idAlumno' : currentStudent._id,
                     'idPeriodo' : periodo[0]._id
-                })).then((data) => {
+                }).then((data) => {
                     clase.status = 'Inscrito'
                     handleCloseDialog();
                 }).catch((error) => {
@@ -324,17 +322,17 @@ function RegistroClasesAlumnos({changeContent}) {
     const handleCancelarClaseRegistrada = (clase) => {
         let periodo = []
         let myClassStudent = []
-        findTerm(new URLSearchParams({ 'clave' : clase.clavePeriodo}))
-        .then((data) => {
-            periodo = data
+        findTerm({ 'clave' : clase.clavePeriodo})
+        .then(response=>response.json()).then((result) => {
+            periodo = result
         })
         .then(() => {
-            getClassStudent().then((data) => {
-                myClassStudent = data.filter( aClass =>
+            getClassStudent().then(response=>response.json()).then((result) => {
+                myClassStudent = result.filter( aClass =>
                     aClass.idClase === clase._id && aClass.idAlumno === currentStudent._id && aClass.idPeriodo === periodo[0]._id) 
             })  
             .then(() => {
-                deleteClassStudent(new URLSearchParams({'_id' : myClassStudent[0]._id}))
+                deleteClassStudent({'_id' : myClassStudent[0]._id})
                 clase.status = ''
                 handleCloseDialog();
             })

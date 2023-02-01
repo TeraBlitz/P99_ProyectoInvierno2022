@@ -938,10 +938,10 @@ export default function ShowClass() {
         let waitList = [];
         let students = [];
         let result = [];
-        getStudents().then((data) => {
+        getStudents().then(response=>response.json()).then((data) => {
             students = data;
         }).then(() => {
-            getWaitList().then((data) => {
+            getWaitList().then(response=>response.json()).then((data) => {
                 waitList = data.filter(lista => lista.idClase === clase._id);
                 waitList.map((inWaitList) => {
                     for (let i = 0; i < students.length; i++) {

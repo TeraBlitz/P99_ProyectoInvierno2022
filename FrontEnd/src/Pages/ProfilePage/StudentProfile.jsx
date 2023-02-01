@@ -63,25 +63,19 @@ const StudentProfile = ({studentInfo, setAddStudent, addStudent, userID, setStud
             setInfoOpen(true);
             return
         }
-        createStudent(new URLSearchParams(studentData)).then((data) => {
-            //console.log(data);
-        })
-        .catch((error) => {
-            //console.log(error.message);
-            if (error.message.includes('Un documen')){
-                setAlertMessage('Estudiante agregado correctamente.')
-                setAddStudent(!addStudent);
-                setSuccessOpen(true);
-            }
-            else{
-                setAlertMessage('Se produjo un error al agregar al estudiante.')
+        createStudent(studentData).then((data) => {
+            if(data.status === 400){
+                setAlertMessage('Se produjo un error al agregar al estudiante. Asegurate que el CURP sea valido')
                 setErrorOpen(true);
+                return
             }
-            getStudents().then(
-                (data) => {
-                    const students = data.filter(student => student.idUser === userID);
-                    setStudents(students);
-            });
+            setAlertMessage('Estudiante agregado correctamente.')
+            setSuccessOpen(true);
+            getStudents().then(response=>response.json()).then((data) => {
+                const students = data.filter(student => student.idUser === userID);
+                setStudents(students);
+            })
+            setAddStudent(!addStudent);
         });
     };
 

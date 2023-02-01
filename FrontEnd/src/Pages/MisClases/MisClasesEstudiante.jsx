@@ -31,8 +31,7 @@ const MisClasesEstudiante = ({changeContent}) => {
 
 	useEffect(() => {
         const getUserStudents = () =>{
-             getStudents().then(
-                 (data) => {
+             getStudents().then(response=>response.json()).then((data) => {
                      const students = data.filter(student => student.idUser === userValues._id);
                      setStudents(students);
                      //console.log(students)
@@ -43,18 +42,17 @@ const MisClasesEstudiante = ({changeContent}) => {
 
 	useEffect(() => {
 		const getStudentClasses = () =>{
-			getClasses().then(
-				(data) => {
-					setAllClases(data);
-				});
-			}
+			getClasses().then(response=>response.json()).then((data) => {
+				setAllClases(data);
+			});
+		}
 		getStudentClasses();
 	}, []);
 
 	const getMyClasses = (student) => {
         let myClasses = [];
 		let studentClasses = [];
-		getClassStudent().then((data) => {
+		getClassStudent().then(response=>response.json()).then((data) => {
             myClasses = data.filter(clase => clase.idAlumno === student._id);
 			if(myClasses.length === 0){
 				setClases(studentClasses)
