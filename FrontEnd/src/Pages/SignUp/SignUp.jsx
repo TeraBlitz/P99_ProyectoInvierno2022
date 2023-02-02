@@ -53,7 +53,7 @@ const SignUp = ({createUser, changeHasAccount}) => {
             <Card sx={{px: 3, py:2, backgroundColor: '#004a98', borderRadius: 2}}>
                 <Box component='form' sx={{mx: 3, display: 'flex', flexDirection: 'column'}} onSubmit={handleSubmit}>
                     <div style={{display: 'flex', justifyContent: 'center'}}>
-                        <img src="../../../imagenes/logo_p99.png"style={{width: '100px'}}></img>
+                        <img src='/logo_p99.png'style={{width: '100px'}}></img>
                     </div>
                     <Typography component='h1' variant="h4" sx={{color: '#E6F4F1', mb: 1, fontWeight: '400', textAlign: 'center', width: '100%'}}>
                         Crear una cuenta

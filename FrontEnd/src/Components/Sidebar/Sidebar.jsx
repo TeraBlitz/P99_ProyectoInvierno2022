@@ -69,7 +69,7 @@ function Sidebar(props) {
     const listItems = (
         <List sx={{ bgcolor: '#004a98', width: '240px', height: '100vh', spacingY: '10px' }}>
             <div style={{display: 'flex', justifyContent: 'center'}}>
-                <img src="../../../imagenes/logo_p99.png"  style={{width: '100px'}}></img>
+                <img src="/logo_p99.png"  style={{width: '100px'}}></img>
             </div>
             {options.map(e => {
                 if (userValues.rol == e.rol || e.rol=='any') {
