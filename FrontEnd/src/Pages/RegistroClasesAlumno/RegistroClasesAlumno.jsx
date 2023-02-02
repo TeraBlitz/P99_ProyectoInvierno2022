@@ -167,7 +167,7 @@ function RegistroClasesAlumnos({changeContent}) {
         },
         {
             field: "actions",
-            headerName: "Incripción",
+            headerName: "Inscripción",
             type: "actions",
             width: 115,
             renderCell: (params) => (

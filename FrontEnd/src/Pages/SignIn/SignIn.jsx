@@ -68,7 +68,7 @@ const SignIn = ({
             variant="h7"
             sx={{ color: "red", display: loginError, textAlign: "center" }}
           >
-            usuario o contraseña incorrecta
+            Usuario o contraseña incorrecta
           </Typography>
           <TextField
             name="correo"
@@ -104,7 +104,7 @@ const SignIn = ({
             <FormControlLabel
               label={
                 <Typography variant="body1" sx={{ color: "#E6F4F1" }}>
-                  Recuerdame
+                  Recuérdame
                 </Typography>
               }
               color="white"
@@ -161,7 +161,7 @@ const SignIn = ({
                 underline="hover"
                 onClick={() => changeHasAccount()}
               >
-                ¡Registrate!
+                ¡Regístrate!
               </Link>
             </Typography>
           </Box>

@@ -38,7 +38,7 @@ const cards = [
     {
         'id': '4',
         'title': 'Periodos',
-        'body': 'Administrar el periodo escolar actual y proximos periodos.',
+        'body': 'Administrar el periodo escolar actual y próximos periodos.',
         'color': '#b2cbf5',
         'link':'Periodos'
     }
