@@ -1,20 +1,29 @@
+const { clientConnect } = require('../connection.js')
+const { mongodbInf } = require('../config.js')
+const mongodb = require("mongodb")
+
 async function validarRolAdmin(req, res, next){
-    
-    const { rol } = req.body
-    console.log(rol)
+    const database = clientConnect.db(mongodbInf.database);
+    const collection = database.collection("users");
 
     try {
-        if(rol == "admin"){
-            next()
-        }else{
+        // Obtener datos del usuario.
+        const query = {_id: new mongodb.ObjectId(req.udi)}
+        const result = await collection.find(query).toArray();
+        usuario = result[0]
+
+        // Validar rol del usuario.
+        if(usuario.rol !== 'admin'){
             return res.status(400).json({
-                msg: 'Error: El Rol no es "admin".',
+                msg: `ERROR: El usuario no es administrador.`
             })
         }
-    }catch(err){
-        console.log(err)
-        return res.status(500).json({
-            msg: 'Ha ocurrido un error inesperado, hable con el administrador.'
+
+        next()
+    }catch(error) {
+        console.log(error)
+        return res.status(400).json({
+            msg: `ERROR: validarRolAdmin.`
         })
     }
 }

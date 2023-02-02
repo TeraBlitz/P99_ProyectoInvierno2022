@@ -1,10 +1,11 @@
+require('dotenv').config()
 const cors = require('cors')
 const express = require('express')
 const path = require("path")
 const { connection } = require('./v1/connection.js')
 const bodyParser = require('body-parser')
 const app = express()
-const port = 8080
+const port = process.env.PORT
 
 // Rutas Autentificaciones
 const auth = require('./v1/routes/auth')

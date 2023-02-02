@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken")
 
 async function validarJWT(req, res, next){
-
-    const token = req.header('p99-auth-token')
+    // Verificar token en header correcto.
+    const token = req.header(process.env.TOKENHEADER)
     // console.log(token)
 
     // Si no existe el token.
@@ -14,9 +14,11 @@ async function validarJWT(req, res, next){
 
     try {
         // Se verifica el token y extraen datos.
-        const { uid } = jwt.verify(token, process.env.SECRETORPRIVATEKEY)
+        let decoded = JSON.parse(JSON.stringify(jwt.verify(token, process.env.SECRETORPRIVATEKEY)))
+
         // Se guardan los datos en el req.
-        req.udi = uid
+        req.udi = decoded.uid
+        // console.log(`req.udi:${req.udi} | decoded.uid:${decoded.uid}`)
 
         next()
     }catch(error) {

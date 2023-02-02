@@ -1,6 +1,7 @@
 const { response } = require('express')
 const { clientConnect } = require('../connection.js')
 const { mongodbInf } = require('../config.js')
+const mongodb = require("mongodb")
 const bcryptjs = require('bcryptjs')
 const { generateJWT } = require('../helpers/generar-jwt')
 const COLLECTION_NAME = "users"
@@ -56,11 +57,16 @@ async function login(req, res = response) {
         }
 
         // Generar JWT.
-        const token = await generateJWT(usuario.id)
+        const token = await generateJWT(usuario._id)
 
         res.json({
             msg: 'Login OK',
-            data_user: usuario,
+            data_user: {
+                uid: usuario._id,
+                user_name: usuario.user_name,
+                correo: usuario.correo,
+                rol: usuario.rol,
+            },
             token: token
         })
 
@@ -72,6 +78,39 @@ async function login(req, res = response) {
     }
 }
 
+async function reload(req, res = response) {
+    try{
+        // Conexion a DB y coleccion.
+        const database = clientConnect.db(mongodbInf.database);
+        const collection = database.collection(COLLECTION_NAME);
+
+        // Obtener datos del usuario.
+        const query = {_id: new mongodb.ObjectId(req.udi)}
+        const result = await collection.find(query).toArray();
+        usuario = result[0]
+
+        // Generar JWT.
+        const token = await generateJWT(usuario._id)
+
+        res.json({
+            msg: 'Reload OK',
+            data_user: {
+                uid: usuario._id,
+                user_name: usuario.user_name,
+                correo: usuario.correo,
+                rol: usuario.rol,
+            },
+            token: token
+        })
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({
+            msg: 'Ha ocurrido un error inesperado, hable con el administrador.'
+        })
+    }
+}
+
 module.exports = {
-    login
+    login,
+    reload
 };
