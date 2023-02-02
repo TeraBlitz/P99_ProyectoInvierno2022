@@ -25,6 +25,7 @@ import { getPeriodos } from '../../../api/Periodos';
 import { getProfesors } from '../../../api/profesors.js'
 import { createClass, deleteClasses, getClasses , updateClass} from '../../../api/classes.js'
 import { subirClases, subirProfes } from "../../../api/csv";
+import { CSVLink } from "react-csv";
 
 export default function ShowClass() {
 
@@ -1114,6 +1115,8 @@ export default function ShowClass() {
           marginLeft: "40px",
         }}
       >
+
+
         <Typography
           variant="h3"
           component="h3"
@@ -1122,7 +1125,17 @@ export default function ShowClass() {
           Clases
           </Typography>
 
+
           </Box>
+            <CSVLink data={data} filename="alumnos.csv">
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        sx={{ position:'absolute', marginLeft: "400px", marginTop: "52px" }}
+                    >
+                        Exportar a CSV
+                    </Button>
+                </CSVLink>
             <Button
               variant="contained"
               color="success"
@@ -1130,7 +1143,7 @@ export default function ShowClass() {
               sx={{
                 position:"absolute",
                 marginTop:"52px",
-                marginLeft:"570px",
+                marginLeft:"580px",
 
               }}
             >
@@ -1149,6 +1162,9 @@ export default function ShowClass() {
             >
               <InsertDriveFile /> Importar CSV
             </Button>
+
+
+
 
                 <Box sx={{
                    position:"absolute",
