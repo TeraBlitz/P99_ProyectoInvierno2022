@@ -1,6 +1,7 @@
 body {
   height: 100%;
   overflow-y: hidden;
+  overflow-x: none;
 }
 a{
   color: #d5a419;

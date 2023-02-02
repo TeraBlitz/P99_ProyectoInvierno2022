@@ -27,8 +27,8 @@ const SignUp = ({changeHasAccount}) => {
     const [userInfo, setUserInfo] = useState(userData);
     const [showPassword, setShowPassword] = useState(false);
     const [showMessage, setShowMessage] = useState(false);
-    
-    const handleChange = (e) => setUserInfo(prevState => ({ ...prevState, [e.target.name]: e.target.value })); 
+
+    const handleChange = (e) => setUserInfo(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -52,10 +52,11 @@ const SignUp = ({changeHasAccount}) => {
             'rol': 'estudiante'
         })
         changeHasAccount();
+        alert("El usuario se creo proceda a iniciar sesión ")
     };
-    
+
     return (
-        <Container   
+        <Container
         sx={{ height: '100vh', display: 'flex',
         alignContent: 'center', justifyContent: 'center', flexWrap: 'wrap'}}
         >
@@ -79,7 +80,7 @@ const SignUp = ({changeHasAccount}) => {
                     </Box>
                     <Box sx={{textAlign: 'center'}}>
                         <Typography variant="body1" sx={{color: '#E6F4F1'}}>
-                        ¿Ya tienes una cuenta? 
+                        ¿Ya tienes una cuenta?
                         <br/>
                         <Link sx={{pl: 1, color: '#0099DF'}} underline="hover" onClick={changeHasAccount}>¡Inicia sesión!</Link>
                         </Typography>

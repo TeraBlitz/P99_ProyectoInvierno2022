@@ -853,7 +853,7 @@ export default function Periodos() {
                                             variant="contained"
                                             onClick={postEditar}
                                         >
-                                            Editar
+                                            Guardar Cambios
                                         </Button>
                                         <Button
                                             variant="contained"
