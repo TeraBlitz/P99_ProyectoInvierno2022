@@ -119,7 +119,7 @@ export default function TarjetaMisC({ clase }){
                 >
                     <Card sx={{m: 1, p: 2, height: '250px'}}>
                         <Typography variant="h5" component="div" gutterBottom>
-                            Informacion Adicional
+                            Información Adicional
                         </Typography>
                         <h5 className="leyendaFaltas">Maestro: </h5>
                         <Typography sx={{ mb: 1.5 }} color="text.secondary">
@@ -132,7 +132,7 @@ export default function TarjetaMisC({ clase }){
 						<h5 className="leyendaFaltas">Contacto: </h5>
 						<Typography sx={{ mb: 1.5 }} color="text.secondary">
 							<Button variant="contained" startIcon={<FacebookIcon />} sx={{mt: 1}}
-									href="https://es-la.facebook.com/" target='_blank'> 
+									href="https://www.facebook.com/proyecto99mty" target='_blank'> 
 								Contactanos
 							</Button>
 						</Typography>
