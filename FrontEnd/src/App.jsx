@@ -37,7 +37,6 @@ function App() {
 
     const handleToken = () =>{
         const token = sessionStorage.getItem("p99-auth-token");
-        console.log(token)
         if (token != null){
             Reload().then(response=>response.json()).then(result=>{
                 console.log(result)

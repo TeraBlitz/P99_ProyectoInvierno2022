@@ -38,7 +38,6 @@ export const putData = async (url = '', data = {}) => {
 }
 
 export const getData = async (url = '') => {
-    console.log(sessionStorage.getItem("p99-auth-token"))
     const response = await fetch(host+url, {
         method: 'GET', 
         headers: {
