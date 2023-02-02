@@ -101,7 +101,7 @@ function App() {
         Login(user)
             .then(result => {
                 if (result.msg == "Login OK") {
-                    console.log(result.data_user)
+                    sessionStorage.setItem("p99-auth-token", result.token);
                     handleUser(result.data_user)
                     handleStudent(result.data_user)
                     setIsSignedIn(true)
@@ -132,7 +132,7 @@ function App() {
                             <MenuIcon />
                         </IconButton>
                         <div style={{ width: 'calc(100vw-240px)', height: '100vh' }}>
-                            {PagesToRender[content]}
+        {PagesToRender[content]}
                             <Snackbar open={snack}>
                                 <Alert severity='warning'>
                                     No has creado tu Alumno aun
