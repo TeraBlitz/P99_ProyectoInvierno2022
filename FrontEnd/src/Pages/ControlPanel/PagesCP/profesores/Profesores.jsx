@@ -411,14 +411,14 @@ export default function Profesores() {
             { field: "_id", headerName: "Id", width: 54, hide: true },
             { field: "nombre", headerName: "Nombre", width: 120 },
             { field: "apellidos", headerName: "Apellidos", width: 180 },
-            { field: "matricula", headerName: "Matricula", width: 180 },
+            { field: "matricula", headerName: "Matricula", width: 140 },
             { field: "correo", headerName: "Correo", width: 180 },
             { field: "num_telefono", headerName: "Telefono", width: 120 },
             { field: "fecha_de_nacimiento", headerName: "Nacimiento", width: 100 },
             {
                 field: "num_cursos_impartidos",
                 headerName: "Cursos Impartidos",
-                width: 120,
+                width: 140,
             },
             { field: "idUser", headerName: "Usuario", width: 250, hide: true },
 
@@ -570,7 +570,7 @@ export default function Profesores() {
                 sx={{
                     width: "1150px",
                     padding: "15px",
-                    height: "430px",
+                    height: "450px",
                     position: "absolute",
                     marginLeft: "50px",
                     marginTop: "270px"
