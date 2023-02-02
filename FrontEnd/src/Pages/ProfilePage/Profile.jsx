@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
+import PasswordIcon from '@mui/icons-material/Password';
 import CircularProgress from '@mui/material/CircularProgress';
 import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
@@ -13,6 +14,7 @@ import StudentItem from '../../Components/Profile/StudentItem';
 import StudentProfile from './StudentProfile';
 import EditStudentProfile from './EditStudentProfile';
 import DeleteDialog from '../../Components/Profile/DeleteDialog';
+import ChangePassModal from './ChangePassModal';
 import { getUser } from '../../api/users';
 import { getStudents, deleteStudent, findStudents } from '../../api/students';
 import { postData } from '../../utils/requestUtils';
@@ -45,6 +47,7 @@ const Profile = () =>{
     const [currentStudent, setCurrentStudent] = useState(studentInfo)
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [infoOpen, setInfoOpen] = useState(false); 
+    const [openChangePassModal, setOpenChangePassModal] = useState(false);
 
     const handleOpenDialog = () => {
       setOpenDeleteDialog(true);
@@ -150,6 +153,10 @@ const Profile = () =>{
             <Box sx={{'& .MuiTextField-root': { m: 1, width: '35ch' }, display: 'flex', alignItems: 'center',  flexWrap: 'wrap' }}>
                 <TextField name="user_name" label="Usuario" InputProps={{readOnly: true}} value={userInfo.user_name || ''} />
                 <TextField name="correo" label="Correo" InputProps={{readOnly: true}} value={userInfo.correo || ''}/>
+                <Button onClick={() => setOpenChangePassModal(!openChangePassModal) } variant='contained'
+                    sx={{textTransform: 'none', backgroundColor: '#57a1f1', fontSize: '18px', ml: 2}} endIcon={<PasswordIcon/>}>
+                    Cambiar contraseña
+                </Button>
             </Box>
 
             <Box sx={{ pt: 2, display: userValues.rol === 'estudiante' ? 'flex' : 'none', justifyContent: 'space-between', mt: 2}}>
@@ -217,6 +224,22 @@ const Profile = () =>{
                         setErrorOpen={setErrorOpen}
                         setAlertMessage={setAlertMessage}
                         setInfoOpen={setInfoOpen}
+                    />
+                </>
+            </Modal>
+            <Modal
+                open={openChangePassModal}
+                onClose={() => setOpenChangePassModal(!openChangePassModal)}
+                sx={{overflow: 'scroll', display: 'flex',justifyContent: 'center', }}
+            >
+                <>                
+                    <ChangePassModal 
+                        openChangePassModal={openChangePassModal}
+                        setOpenChangePassModal={setOpenChangePassModal}
+                        userInfo={userValues}
+                        setSuccessOpen={setSuccessOpen}
+                        setErrorOpen={setErrorOpen}
+                        setAlertMessage={setAlertMessage}
                     />
                 </>
             </Modal>

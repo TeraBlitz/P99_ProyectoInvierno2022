@@ -70,6 +70,9 @@ async function updateUser(req, res) {
         const idDoc = {
             _id: new mongodb.ObjectId(req.body._id),
         };
+
+        req.body.password = bcryptjs.hashSync(req.body.password, 12)
+
         const doc = {
             $set: {
                 user_name: req.body.user_name,
@@ -80,7 +83,7 @@ async function updateUser(req, res) {
             },
         };
 
-        const result = await collection.findAndUpdate(idDoc, doc);
+        const result = await collection.findOneAndUpdate(idDoc, doc);
         res.send(
             `Documento con _id: ${result.value._id} actualizado con exito. Status: ${result.ok}.`
         );
