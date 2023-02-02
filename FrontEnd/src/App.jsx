@@ -21,7 +21,7 @@ import { Password } from '@mui/icons-material'
 import Inicio from './Pages/Inicio/Inicio'
 import CloseIcon from '@mui/icons-material/Close'
 import { getStudents } from './api/students.js'
-import { Login } from './api/Login.js'
+import { Login, Reload } from './api/Login.js'
 
 
 
@@ -35,6 +35,25 @@ function App() {
     const [hasAccount, sethasAccount] = useState(true);
     const [snack, setSnack] = useState(false)
 
+    const handleToken = () =>{
+        const token = sessionStorage.getItem("p99-auth-token");
+        if (token != null){
+            Reload().then(response=>response.json()).then(result=>{
+                console.log(result)
+                if (result.msg=="Reload OK"){
+                    setUser(result.data_user)
+                    setIsSignedIn(true)
+                    sethasAccount(true)
+                }
+                sessionStorage.setItem("p99-auth-token" , result.token)
+            })
+        }
+
+    }
+    useEffect(()=>{
+        handleToken();
+
+    }, [])
     const handleUser = (params) => {
         setUser(params)
     }
@@ -93,7 +112,7 @@ function App() {
         Login(user)
             .then(result => {
                 if (result.msg == "Login OK") {
-                    console.log(result.data_user)
+                    sessionStorage.setItem("p99-auth-token", result.token);
                     handleUser(result.data_user)
                     handleStudent(result.data_user)
                     setIsSignedIn(true)
@@ -124,7 +143,7 @@ function App() {
                             <MenuIcon />
                         </IconButton>
                         <div style={{ width: 'calc(100vw-240px)', height: '100vh' }}>
-                            {PagesToRender[content]}
+        {PagesToRender[content]}
                             <Snackbar open={snack}>
                                 <Alert severity='warning'>
                                     No has creado tu Alumno aun
