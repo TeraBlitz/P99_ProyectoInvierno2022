@@ -42,7 +42,7 @@ const SignIn = ({
       <Card sx={{ px: 3, py: 2, backgroundColor: "#004a98", borderRadius: 2 }}>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <img
-            src="../../../imagenes/logo_p99.png"
+            src='/logo_p99.png'
             style={{ width: "100px" }}
           ></img>
         </div>
