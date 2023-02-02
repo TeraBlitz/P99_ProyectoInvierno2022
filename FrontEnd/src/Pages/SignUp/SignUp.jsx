@@ -13,6 +13,8 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import SignUpInput from '../../Components/SignUp/SignUpInput';
+import { convertLength } from '@mui/material/styles/cssUtils';
+import { createUser } from '../../api/users';
 
 const userData = {
     'user_name': '',
@@ -21,7 +23,7 @@ const userData = {
     'verify_password': ''
 };
 
-const SignUp = ({createUser, changeHasAccount}) => {
+const SignUp = ({changeHasAccount}) => {
     const [userInfo, setUserInfo] = useState(userData);
     const [showPassword, setShowPassword] = useState(false);
     const [showMessage, setShowMessage] = useState(false);
@@ -42,7 +44,14 @@ const SignUp = ({createUser, changeHasAccount}) => {
             setShowMessage(true);
             return
         }
-        createUser(userInfo); 
+        createUser({
+            'user_name': userInfo.user_name,
+            'correo': userInfo.correo,
+            'password': userInfo.password,
+            'status': '10',
+            'rol': 'estudiante'
+        })
+        changeHasAccount();
     };
     
     return (
