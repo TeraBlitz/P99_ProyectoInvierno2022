@@ -1,8 +1,8 @@
 
-const host = "http://localhost:8080"
+const host = "https://p99test.fly.dev"
 
 export const login = async (data = {}) => {
-    console.log(data)
+    
     const response = await fetch(host +"/v1/auth/login", {
         method: 'POST', 
         headers: {
@@ -38,6 +38,7 @@ export const putData = async (url = '', data = {}) => {
 }
 
 export const getData = async (url = '') => {
+    console.log(sessionStorage.getItem("p99-auth-token"))
     const response = await fetch(host+url, {
         method: 'GET', 
         headers: {

@@ -21,7 +21,7 @@ import { Password } from '@mui/icons-material'
 import Inicio from './Pages/Inicio/Inicio'
 import CloseIcon from '@mui/icons-material/Close'
 import { getStudents } from './api/students.js'
-import { Login } from './api/Login.js'
+import { Login, Reload } from './api/Login.js'
 
 
 
@@ -35,6 +35,26 @@ function App() {
     const [hasAccount, sethasAccount] = useState(true);
     const [snack, setSnack] = useState(false)
 
+    const handleToken = () =>{
+        const token = sessionStorage.getItem("p99-auth-token");
+        console.log(token)
+        if (token != null){
+            Reload().then(response=>response.json()).then(result=>{
+                console.log(result)
+                if (result.msg=="Reload OK"){
+                    setUser(result.data_user)
+                    setIsSignedIn(true)
+                    sethasAccount(true)
+                }
+                sessionStorage.setItem("p99-auth-token" , result.token)
+            })
+        }
+
+    }
+    useEffect(()=>{
+        handleToken();
+
+    }, [])
     const handleUser = (params) => {
         setUser(params)
     }
