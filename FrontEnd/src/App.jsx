@@ -82,14 +82,6 @@ function App() {
 
     }
 
-    const createUsers = async (user) => {
-        user.status = "10"
-        user.rol = "estudiante"
-        console.log(user)
-        createUser().then(e => {
-            changeHasAccount()
-        })
-    }
 
     const handleSignOut = () => {
         setIsSignedIn(false);
@@ -116,7 +108,7 @@ function App() {
     return !isSignedIn && hasAccount ?
         <SignIn handleSignIn={handleSignIn} handleUser={handleUser} loginError={loginError} changeHasAccount={changeHasAccount} /> 
         : !isSignedIn && !hasAccount ?
-            <SignUp createUser={createUsers} changeHasAccount={changeHasAccount} />
+            <SignUp changeHasAccount={changeHasAccount} />
             :
             <userContext.Provider value={user}>
                 <Box id="main" sx={{ display: 'flex' }}>
