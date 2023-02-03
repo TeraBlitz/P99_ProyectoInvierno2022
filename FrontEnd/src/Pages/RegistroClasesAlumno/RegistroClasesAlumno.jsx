@@ -17,7 +17,7 @@ import { getClasses } from '../../api/classes'
 import { userContext } from './../../App.jsx'
 import { createClassStudent, getClassStudent, deleteClassStudent } from '../../api/classStudent'
 import { createWaitList, getWaitList, deleteWaitList } from '../../api/waitList'
-import { findTerm } from '../../api/term'
+import { findTerm, getPeriodos } from '../../api/term'
 import ConfirmationDialog from '../../Components/Dialog/ConfirmationDialog'
 import ClaseModal from '../../Components/Clase/ClaseModal'
 import MiRegistro from '../../Components/Registro/MiRegistro'
@@ -38,6 +38,9 @@ function RegistroClasesAlumnos({changeContent}) {
     const [filteredClasses, setFilteredClasses] = useState(null);
     const [dialogAction, setDialogAction] = useState('')
     const [errorMsg, setErrorMsg] = useState('');
+    const [inRegistrationTime, setInRegistrationTime] = useState(false);
+    const [periodos, setPeriodos] = useState([]);
+    const [currentTerm, setCurrentTerm] = useState(null);
 
     
     const userValues = useContext(userContext)
@@ -55,19 +58,55 @@ function RegistroClasesAlumnos({changeContent}) {
 
      useEffect(() => {
         const getStudentClasses = () =>{
-            let allClassNames = []
-            getClasses().then(response=>response.json()).then((result) => {
+            let allClassNames = [];
+            let clases = [];
+            getPeriodos()
+            .then(response=>response.json()).then((data) => {
+                const periodo = compararFecha(data);
+                setPeriodos(data);
+                getClasses().then(response=>response.json()).then((result) => {
                     for (let i = 0; i < result.length; i++) {
                         allClassNames.push(result[i].nombre_curso);
                         setClassNames([...new Set(allClassNames)]);
+                        if(periodo.clave === result[i].clave){
+                            clases.push(result[i]); 
+                        }
                     }
-                    setClases(result);
-                    setFilteredClasses(result);
+                    setClases(clases);
+                    setFilteredClasses(clases);
                 });
-            }
+            })
+        }
         getStudentClasses();
         //console.log(clases)
      }, []);
+
+
+    function traducirDate(raw){
+        const date = raw.split("T",2);
+        return(date[0])
+    }
+    
+    function compararFecha(data){
+        let periodos=[]
+        for (const element of data){
+            let fecha = traducirDate(element.fecha_inicio);
+            let separado = fecha.split('-',3);
+            let valorA = Number(separado[0])
+            let valorM = Number(separado[1])/100
+            let valorD = Number(separado[2])/10000
+            let valorT = valorA+valorM+valorD
+            var obj ={
+                id: element.clave,
+                fecha:valorT
+            }
+            periodos.push(obj)
+        }
+    
+        periodos.sort((a,b)=>b.fecha-a.fecha)
+        let clave = String(periodos[0].id)
+        return(clave)
+    }
 
     // Funcion para calcular edad 
     const calculate_age = (dateString) => {
