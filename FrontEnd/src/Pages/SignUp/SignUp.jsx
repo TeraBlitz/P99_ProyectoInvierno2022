@@ -43,6 +43,7 @@ const SignUp = ({createUser, changeHasAccount}) => {
             return
         }
         createUser(userInfo); 
+        alert("Se creo el usuario")
     };
     
     return (

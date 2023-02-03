@@ -853,25 +853,25 @@ export default function Alumnos() {
     array = []
     array2 = []
     array3 = []
-    console.log(guardaData)
-    console.log(event.value);
+    console.log(guardaData)// Guarda toda la info
+    console.log(event.value); // idPeriodo
 
-    array2.push(dataAlumnoClase.filter(data => data.idPeriodo === event.value));
+    array2.push(dataAlumnoClase.filter(data => data.idPeriodo === event.value)); // idAlumno
     console.log(array2[0])
     for (let i=0; i< array2.length;i++){
       for (let j=0; j< array2[i].length;j++){
-        array.push(guardaData.filter(data => data._id === array2[i][j].idAlumno))
+        array.push(guardaData.filter(data => data._id === array2[i][j].idAlumno)) // idAlumno me los guardas
       }
     }
     console.log(array)
     for (let i=0; i< array.length;i++){
-      array3.push(array[i][0])
+      array3.push(array[i][0])// [[]] => []
     }
     console.log(array3)
     if( array3.length > 0){
-      setData(array3)
+      setData(array3) // Datos actualizo filtrados
     }else{
-      getAlumnos()
+      getAlumnos() // todos los datos
     }
 
   };
