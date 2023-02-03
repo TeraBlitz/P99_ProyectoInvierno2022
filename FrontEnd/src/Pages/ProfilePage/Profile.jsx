@@ -184,8 +184,12 @@ const Profile = () =>{
                         />    
                     )
                 }
-                <Box sx={{display: {xs: 'none', md: 'flex', justifyContent: 'flex-end'}}}>
-                    <Button sx={{textTransform: 'none', backgroundColor: '#57a1f1', fontSize: '18px'}} onClick={() => { setAddStudent(!addStudent); }} variant="contained"  endIcon={<AddIcon/>}>Agregar estudiante </Button>
+                <Box sx={{display: {xs: 'none', md:  userValues.rol === 'estudiante' ? 'flex' : 'none', justifyContent: 'flex-end'}}}>
+                    <Button 
+                        sx={{textTransform: 'none', backgroundColor: '#57a1f1', fontSize: '18px'}}
+                        onClick={() => { setAddStudent(!addStudent); }} variant="contained"  endIcon={<AddIcon/>}>
+                        Agregar estudiante
+                    </Button>
                 </Box>
             </Box>
             <Modal

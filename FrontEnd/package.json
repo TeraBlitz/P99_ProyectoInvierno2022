@@ -16,6 +16,8 @@
     "@mui/x-data-grid": "^5.17.18",
     "axios": "^1.2.3",
     "install": "^0.13.0",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.40",
     "navigate": "^0.3.6",
     "react": "^18.2.0",
     "react-csv": "^2.2.2",
