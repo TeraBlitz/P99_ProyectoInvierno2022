@@ -37,6 +37,7 @@ export default function Alumnos() {
 
     const getAlumnos = async () => {
         await getStudents().then(response => response.json()).then(result => {
+            console.log(result)
             setData(result);
         })
 
@@ -44,6 +45,7 @@ export default function Alumnos() {
 
     const getAlumnos2 = async () => {
         await getStudents().then(response => response.json()).then(result => {
+            console.log(result)
             setGuardaData(result);
         })
 
@@ -51,6 +53,7 @@ export default function Alumnos() {
 
     const getAllPeriodos = async () => {
         await getPeriodos().then(response => response.json()).then(result => {
+            console.log(result)
             setDataPeriodo(result);
         })
 
@@ -58,6 +61,7 @@ export default function Alumnos() {
 
     const getAlumnoClase = async () => {
         await getClassStudent().then(response => response.json()).then(result => {
+            console.log(result)
             setDataAlumnoClase(result);
         })
     };
@@ -862,11 +866,11 @@ export default function Alumnos() {
             array3.push(array[i][0])
         }
         console.log(array3)
-        if (array3.length > 0) {
-            setData(array3)
-        } else {
-            getAlumnos()
-        }
+        // if (array3.length > 0) {
+        //     setData(array3)
+        // } else {
+        //     getAlumnos()
+        // }
 
     };
 
