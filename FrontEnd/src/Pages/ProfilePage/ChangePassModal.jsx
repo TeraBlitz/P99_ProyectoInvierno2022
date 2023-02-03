@@ -48,18 +48,17 @@ const ChangePassModal = ({
     }).then((result) => {
       if (result.msg == "Login OK") {
         userInfo.password = newUserInfo.new_password;
-        console.log(userInfo);
         updateUser(
           {
             _id: userInfo.uid,
             user_name: userInfo.user_name,
             correo: userInfo.correo,
-            rol: "estudiante",
+            rol: userInfo.rol,
             password: userInfo.password,
+            status: "10",
           },
           userInfo.uid
         ).then((data) => {
-          console.log(data);
           if (data.status === 400 || data.status === 404) {
             setAlertMessage("Se produjo un error al actualizar la contraseña.");
             setErrorOpen(true);
@@ -103,7 +102,7 @@ const ChangePassModal = ({
           textAlign: "center",
         }}
       >
-        Las contraseñas no coinciden, intenta de nuevo
+        Las contraseñas no coinciden, intenta de nuevo.
       </Typography>
       <Typography
         sx={{
@@ -112,7 +111,7 @@ const ChangePassModal = ({
           textAlign: "center",
         }}
       >
-        Contraseña actual incorrecta, intenta de nuevo
+        Contraseña actual incorrecta, intenta de nuevo.
       </Typography>
       <TextField
         name='password'

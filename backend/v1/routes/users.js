@@ -21,7 +21,6 @@ router.post('/create', [
 ], userController.createUser)
 router.put('/update/:id', [
     validarJWT,
-    validarRolAdmin,
     validateUser, // Schema
 ], userController.updateUser)
 router.delete('/delete/:id', [
