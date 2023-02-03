@@ -73,7 +73,7 @@ const Profile = () => {
         .then((response) => response.json())
         .then((result) => {
           const students = result.filter(
-            (student) => student.idUser === userValues._id
+            (student) => student.idUser === userValues.uid
           );
           setStudents(students);
           //console.log(students)
@@ -101,7 +101,7 @@ const Profile = () => {
         }
       })
       .finally(() => {
-        findStudents({ idUser: userValues._id })
+        findStudents({ idUser: userValues.uid })
           .then((response) => response.json())
           .then((data) => {
             console.log(data);
@@ -287,7 +287,7 @@ const Profile = () => {
         <>
           <StudentProfile
             studentInfo={studentInfo}
-            userID={userValues._id}
+            userID={userValues.uid}
             setAddStudent={setAddStudent}
             addStudent={addStudent}
             setStudents={setStudents}
