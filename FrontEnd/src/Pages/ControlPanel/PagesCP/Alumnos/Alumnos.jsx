@@ -18,7 +18,7 @@ import { CSVLink } from "react-csv";
 
 import Select from "react-select";
 import { deleteStudent, getStudents, updateStudent } from "../../../../api/students";
-import { getPeriodos } from "../../../../api/Periodos";
+import { findPeriodos, getPeriodos } from "../../../../api/Periodos";
 import { getClassStudent } from "../../../../api/classStudent";
 
 export default function Alumnos() {
@@ -187,8 +187,8 @@ export default function Alumnos() {
     const postDelete = async (e) => {
         try {
             await deleteStudent({
-                    _id: consolaSeleccionada._id,
-                })
+                _id: consolaSeleccionada._id,
+            })
             abrirCerrarModalEliminar();
             getAlumnos();
         } catch (error) {
@@ -846,31 +846,31 @@ export default function Alumnos() {
         [data]
     );
 
-    const handleSelectChange = (event) => {
+    const handleSelectChange = async (event) => {
 
         array = []
         array2 = []
         array3 = []
-        console.log(guardaData)
-        console.log(event.value);
-
+        let arrayrepeated = []
         array2.push(dataAlumnoClase.filter(data => data.idPeriodo === event.value));
+        array2 = array2.filter(data => data != undefined)
         console.log(array2[0])
         for (let i = 0; i < array2.length; i++) {
             for (let j = 0; j < array2[i].length; j++) {
-                array.push(guardaData.filter(data => data._id === array2[i][j].idAlumno))
+                array.push(guardaData.filter(data => data._id === array2[i][j].idAlumno && !arrayrepeated.includes(array2[i][j].idAlumno)))
+                arrayrepeated.push(array2[i][j].idAlumno)
             }
         }
-        console.log(array)
+        array = array.filter(data => data != [])
         for (let i = 0; i < array.length; i++) {
-            array3.push(array[i][0])
+                array3.push(array[i][0])
         }
-        console.log(array3)
-        // if (array3.length > 0) {
-        //     setData(array3)
-        // } else {
-        //     getAlumnos()
-        // }
+        array3 = array3.filter(data => data != undefined)
+        if (array3.length > 0) {
+            setData(array3)
+        } else {
+            getAlumnos()
+        }
 
     };
 
