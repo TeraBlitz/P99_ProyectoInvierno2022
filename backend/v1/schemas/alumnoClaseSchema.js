@@ -3,12 +3,10 @@ const alumnoClaseSchema = {
     properties: {
       idAlumno: { type: "string" },
       idClase: { type: "string" },
-      idPeriodo: { type: "string" },
     },
     required: [
       "idAlumno",
       "idClase",
-      "idPeriodo",
     ],
     additionalProperties: true,
     errorMessage: {

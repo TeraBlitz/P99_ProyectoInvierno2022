@@ -4,6 +4,8 @@ const router = express.Router()
 const alumnoClaseController = require('../controllers/alumnoClases')
 // Validadores
 const { validateAlumnoClase } = require('../validators/validateAlumnoClases')
+const { validarJWT } = require('../helpers/validar-jwt')
+const { validarRolAdmin } = require('../helpers/validarRolAdmin')
 const { 
     alumnoExiste, 
     claseExiste, 
@@ -15,8 +17,12 @@ const {
 } = require('../helpers/dbValidators')
 
 
-router.get('/', alumnoClaseController.getAllAlumnoClases)
+router.get('/', [
+    validarJWT,
+    validarRolAdmin,
+], alumnoClaseController.getAllAlumnoClases)
 router.post('/create', [
+    validarJWT,
     validateAlumnoClase, // Schema
     alumnoExiste,
     claseExiste,
@@ -26,7 +32,15 @@ router.post('/create', [
     alumnoNoExcedeIdiomas,
     claseTieneCupo
 ], alumnoClaseController.createAlumnoClases)
-router.put('/update', validateAlumnoClase, alumnoClaseController.updateAlumnoClases)
-router.delete('/delete', alumnoClaseController.deleteAlumnoClases)
+router.put('/update', [
+    validarJWT,
+    validateAlumnoClase, // Schema
+], alumnoClaseController.updateAlumnoClases)
+router.delete('/delete', [
+    validarJWT,
+], alumnoClaseController.deleteAlumnoClases)
+router.post('/find', [
+    validarJWT,
+], alumnoClaseController.findAlumnoClases)
 
 module.exports = router

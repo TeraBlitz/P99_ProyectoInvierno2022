@@ -146,8 +146,11 @@ async function claseExiste(req, res, next){
             })
         }
 
-        // Obtenemos el area a contrabase y lo agregamos.
+        // Obtenemos datos a contrabase y lo agregamos.
         req.body.areaClase = validator[0].area
+        req.body.claveClase = validator[0].clave
+        req.body.nombre_cursoClase = validator[0].nombre_curso
+        req.body.idPeriodo = validator[0].idPeriodo
 
         next()
 
@@ -176,6 +179,10 @@ async function periodoExiste(req, res, next){
                 msg: 'Error: No existe el periodo.',
             })
         }
+
+        // Obtenemos datos a contrabase y lo agregamos.
+        req.body.clavePeriodo = validator[0].clave
+        req.body.statusPeriodo = validator[0].status
 
         next()
 
@@ -275,6 +282,7 @@ async function alumnoNoExcedeIdiomas(req, res, next){
         query = {
             idAlumno: new mongodb.ObjectId(req.body.idAlumno),
             idPeriodo: new mongodb.ObjectId(req.body.idPeriodo),
+            areaClase: "idiomas",
         }
         validator = await collectionAC.find(query).toArray();
         numIdiomasAlumno = validator.length // Cursos del alumno en el periodo.
@@ -288,7 +296,7 @@ async function alumnoNoExcedeIdiomas(req, res, next){
         numIdiomasMax = validator[0].idiomas_max_por_alumno // Cursos del alumno en el periodo.
 
         // Validar correo no diplicado.
-        if(numIdiomasAlumno >= numIdiomasMax) {
+        if(numIdiomasAlumno >= numIdiomasMax && req.body.areaClase == 'idiomas') {
             return res.status(400).json({
                 msg: `Error: El alumno tiene el maximo de idiomas permitidos para el periodo.
                 Periodo: ${validator[0].clave}

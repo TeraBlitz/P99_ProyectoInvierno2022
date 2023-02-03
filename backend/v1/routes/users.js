@@ -7,12 +7,19 @@ const { validateUser } = require('../validators/validateUser')
 const { correoNoExiste, userNameNoExiste } = require('../helpers/dbValidators')
 const { validarJWT } = require('../helpers/validar-jwt')
 const { validarRolAdmin } = require('../helpers/validarRolAdmin')
+const { rolInsertarNoEsAdmin } = require('../helpers/rolInsertarNoEsAdmin')
 
 router.get('/', [
     validarJWT,
-    validarRolAdmin
+    validarRolAdmin,
 ], userController.getAllUser)
 router.post('/create', [
+    validateUser, // Schema
+    correoNoExiste,
+    userNameNoExiste,
+    rolInsertarNoEsAdmin,
+], userController.createUser)
+router.post('/createAdmin', [
     validarJWT,
     validarRolAdmin,
     validateUser, // Schema
