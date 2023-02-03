@@ -31,8 +31,12 @@ async function createAlumnoClases(req, res) {
             {
                 idAlumno: new mongodb.ObjectId(req.body.idAlumno),
                 idClase: new mongodb.ObjectId(req.body.idClase),
+                areaClase: req.body.areaClase,
+                claveClase: req.body.claveClase,
+                nombre_cursoClase: req.body.nombre_cursoClase,
                 idPeriodo: new mongodb.ObjectId(req.body.idPeriodo),
-                areaClase: req.body.areaClase
+                clavePeriodo: req.body.clavePeriodo,
+                statusPeriodo: req.body.statusPeriodo,
             },
         ];
 
@@ -64,7 +68,12 @@ async function updateAlumnoClases(req, res) {
             $set: {
                 idAlumno: new mongodb.ObjectId(req.body.idAlumno),
                 idClase: new mongodb.ObjectId(req.body.idClase),
+                areaClase: req.body.areaClase,
+                claveClase: req.body.claveClase,
+                nombre_cursoClase: req.body.nombre_cursoClase,
                 idPeriodo: new mongodb.ObjectId(req.body.idPeriodo),
+                clavePeriodo: req.body.clavePeriodo,
+                statusPeriodo: req.body.statusPeriodo,
             },
         };
 
@@ -114,9 +123,53 @@ async function deleteAlumnoClases(req, res) {
 // deleteAlumnoClases().catch(console.dir);
 
 
+// Find
+async function findAlumnoClases(req, res) {
+    try {
+        const database = clientConnect.db(mongodbInf.database);
+        const collection = database.collection(COLLECTION_NAME);
+
+        // Variables.
+        let query = "";
+        let key = "";
+        let value = "";
+
+        if (req.body.idPeriodo) {
+            key = "idPeriodo";
+            value = req.body.idPeriodo;
+            query = { idPeriodo: new mongodb.ObjectId(value) };
+        } else if (req.body.idAlumno) {
+            key = "idAlumno";
+            value = req.body.idAlumno;
+            query = { idAlumno: new mongodb.ObjectId(value) };
+        } else if (req.body.idClase) {
+            key = "idClase";
+            value = req.body.idClase;
+            query = { idClase: new mongodb.ObjectId(value) };
+        } else {
+            return res.status(400).json({
+                msg: `ERROR: No se mandaron parametros validos. Consulte con un Administrador.`
+            });
+        }
+
+        const result = await collection.find(query).toArray();
+        if (result == "") {
+            res.send(`Ninguna documento encontrado con ${key} : ${value}`);
+        } else {
+            res.send(result);
+        }
+    } catch (err) {
+        return res.status(500).json({
+            msg: `ERROR: ${err}`
+        });
+    }
+}
+
+
 module.exports = {
     getAllAlumnoClases,
     createAlumnoClases,
     updateAlumnoClases,
     deleteAlumnoClases,
+    findAlumnoClases,
 };
