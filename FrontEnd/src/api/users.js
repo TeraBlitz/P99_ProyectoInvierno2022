@@ -9,6 +9,6 @@ export const getUser = () => {
     return getData(`/v1/users/`)
 }
 
-export const updateUser = (user) => {
-    return putData('/v1/users/update/', user)
+export const updateUser = (user, userID) => {
+    return putData(`/v1/users/update/${userID}`, user)
 }
