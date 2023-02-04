@@ -5,14 +5,9 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import FilledInput from "@mui/material/FilledInput";
-import InputLabel from "@mui/material/InputLabel";
-import InputAdornment from "@mui/material/InputAdornment";
-import FormControl from "@mui/material/FormControl";
-import IconButton from "@mui/material/IconButton";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import SignUpInput from "../../Components/SignUp/SignUpInput";
+import MuiAlert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
 import { convertLength } from "@mui/material/styles/cssUtils";
 import { createUser } from "../../api/users";
 
@@ -23,12 +18,17 @@ const userData = {
   verify_password: "",
 };
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
+});
+
 const SignUp = ({ changeHasAccount }) => {
   const [userInfo, setUserInfo] = useState(userData);
   const [showPassword, setShowPassword] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [showMailErrorMessage, setShowMailErrorMessage] = useState(false);
   const [showUserErrorMessage, setShowUserErrorMessage] = useState(false);
+  const [successOpen, setSuccessOpen] = useState(false);
 
   const handleChange = (e) =>
     setUserInfo((prevState) => ({
@@ -36,10 +36,11 @@ const SignUp = ({ changeHasAccount }) => {
       [e.target.name]: e.target.value,
     }));
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-  const handleMouseDownPassword = (e) => {
-    e.preventDefault();
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSuccessOpen(false);
   };
 
   const handleSubmit = (e) => {
@@ -59,8 +60,24 @@ const SignUp = ({ changeHasAccount }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        changeHasAccount();
+        console.log(data.msg);
+        if (data.msg === "Error: Username en uso.") {
+          setShowUserErrorMessage(true);
+          return;
+        }
+        if (data.msg === "Error: Correo en uso.") {
+          setShowMailErrorMessage(true);
+          return;
+        }
+      })
+      .catch((error) => {
+        if (error.message.includes("Un documen")) {
+          //setAlertMessage("Usuario agregado correctamente.");
+          setSuccessOpen(true);
+          setTimeout(() => {
+            changeHasAccount();
+          }, 2000);
+        }
       });
   };
 
@@ -104,6 +121,7 @@ const SignUp = ({ changeHasAccount }) => {
           <Typography
             sx={{
               display: showMailErrorMessage ? "flex" : "none",
+              textAlign: "center",
               color: "red",
             }}
           >
@@ -112,6 +130,7 @@ const SignUp = ({ changeHasAccount }) => {
           <Typography
             sx={{
               display: showUserErrorMessage ? "flex" : "none",
+              textAlign: "center",
               color: "red",
             }}
           >
@@ -177,6 +196,15 @@ const SignUp = ({ changeHasAccount }) => {
           </Box>
         </Box>
       </Card>
+      <Snackbar
+        open={successOpen}
+        autoHideDuration={4000}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity='success' sx={{ width: "100%" }}>
+          Usuario creado exitosamente
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
