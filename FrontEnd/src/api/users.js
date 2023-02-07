@@ -2,7 +2,7 @@ import { postData, getData, putData } from '../utils/requestUtils'
 
 export const createUser = (user) => {
     //getUsers('https://p99test.fly.dev/v1/users')
-    postData('/v1/users/create', user)
+    return postData('/v1/users/create', user)
 }
 
 export const getUser = () => {
