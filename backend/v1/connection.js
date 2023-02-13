@@ -1,9 +1,12 @@
 import { MongoClient } from "mongodb";
 import { mongodbInf } from './config.js'
+import * as dotenv from 'dotenv'
 
 // Connection URI.
 // mongodb://localhost:27017
-const uri = `mongodb+srv://p99admin:vJU8eB6ZpnTogDLV@p99test.qowivyb.mongodb.net/?retryWrites=true&w=majority`
+dotenv.config()
+const uri = process.env.URI_ATLAS
+console.log(uri)
 // const uri = `mongodb://${mongodbInf.host}:${mongodbInf.port}/${mongodbInf.database}`
 
 // Crear un nuevo MongoClient
