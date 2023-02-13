@@ -104,5 +104,6 @@ dist
 nosubir.txt
 
 .backend/build/
-
 .backend/.env
+
+.env
