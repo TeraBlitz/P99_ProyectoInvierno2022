@@ -1,15 +1,14 @@
-const express = require('express')
+import express from 'express'
+import { getAllAsistencia, createAsistencia, findAsistencia, updateAsistencia, deleteAsistencia } from '../controllers/asistencias.js'
+import { validateAsistencia } from '../validators/validateAsistencia.js'
+
 const router = express.Router()
-// Controladores
-const asistenciaController = require('../controllers/asistencias')
-// Validadores
-const validateAsistencia = require('../validators/validateAsistencia')
 
 
-router.get('/', asistenciaController.getAllAsistencia)
-router.post('/create', validateAsistencia.validateAsistencia, asistenciaController.createAsistencia)
-router.post('/find',  asistenciaController.findAsistencia)
-router.put('/update', validateAsistencia.validateAsistencia, asistenciaController.updateAsistencia)
-router.delete('/delete', asistenciaController.deleteAsistencia)
+router.get('/', getAllAsistencia)
+router.post('/create', validateAsistencia, createAsistencia)
+router.post('/find',  findAsistencia)
+router.put('/update', validateAsistencia, updateAsistencia)
+router.delete('/delete', deleteAsistencia)
 
-module.exports = router
+export default router

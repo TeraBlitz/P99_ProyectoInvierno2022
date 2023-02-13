@@ -1,6 +1,8 @@
-const { clientConnect } = require("../connection.js");
-const { mongodbInf } = require("../config.js");
-const mongodb = require("mongodb");
+import { clientConnect } from "../connection.js"
+import { mongodbInf } from "../config.js"
+import mongodb from "mongodb"
+
+
 const COLLECTION_NAME = "alumnos"
 
 async function getAllAlumno(req, res) {
@@ -219,7 +221,7 @@ async function findAlumno(req, res) {
         }
         const result = await collection.find(query).toArray();
         if (result == "") {
-        res.send(`Ninguna clase encontrada con ${key} : ${value}`);
+        res.send([]);
         } else {
         res.send(result);
         }
@@ -228,7 +230,7 @@ async function findAlumno(req, res) {
     }
 }
 
-module.exports = {
+export {
     getAllAlumno,
     createAlumno,
     updateAlumno,

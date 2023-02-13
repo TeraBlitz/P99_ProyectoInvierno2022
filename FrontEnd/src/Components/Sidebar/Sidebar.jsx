@@ -5,12 +5,15 @@ import SidebarButton from '../Sidebar_button/SidebarButton'
 import SignOutButton from '../SignOut/SignOutButton'
 import ContactUsButton from '../Contact/ContactUsButton'
 import {userContext} from './../../App.jsx'
+import { useAuth0 } from "@auth0/auth0-react";
 
 function Sidebar(props) {
     // agregar un componente a la sidebar :
     // key: identificador unico (Math.random())
     // title: como va a aparecer en el boton de la sidebar
     // content: nombre del componente renderizado en PagesToRender (app.jsx)
+    const { user } = useAuth0();
+    const role = user?.p99roles ? user?.p99roles[0] == "admin" ? "admin" :  "estudiante" : ""
     const userValues = useContext(userContext)
     const options = [
         {
@@ -72,7 +75,7 @@ function Sidebar(props) {
                 <img src="/logo_p99.png"  style={{width: '100px'}}></img>
             </div>
             {options.map(e => {
-                if (userValues.rol == e.rol || e.rol=='any') {
+                if (role == e.rol || e.rol=='any') {
                     return (
                         <SidebarButton key={e.key} order={e.key} content={e.content} title={e.title} setOpen={props.setOpen} changeContent={props.changeContent} changeDrawerState={props.changeDrawerState} />
                     )

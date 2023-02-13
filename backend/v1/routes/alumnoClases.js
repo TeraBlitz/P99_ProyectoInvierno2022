@@ -1,21 +1,11 @@
-const express = require('express')
+import express from 'express'
+import { getAllAlumnoClases, createAlumnoClases, updateAlumnoClases, deleteAlumnoClases } from '../controllers/alumnoClases.js'
+import { validateAlumnoClase } from '../validators/validateAlumnoClases.js'
+import { alumnoExiste, claseExiste, periodoExiste, alumnoClaseNoExiste, alumnoNoExcedeCursos, alumnoNoExcedeIdiomas, claseTieneCupo } from '../helpers/dbValidators.js'
+
 const router = express.Router()
-// Controladores
-const alumnoClaseController = require('../controllers/alumnoClases')
-// Validadores
-const { validateAlumnoClase } = require('../validators/validateAlumnoClases')
-const { 
-    alumnoExiste, 
-    claseExiste, 
-    periodoExiste, 
-    alumnoClaseNoExiste, 
-    alumnoNoExcedeCursos,
-    alumnoNoExcedeIdiomas,
-    claseTieneCupo
-} = require('../helpers/dbValidators')
 
-
-router.get('/', alumnoClaseController.getAllAlumnoClases)
+router.get('/', getAllAlumnoClases)
 router.post('/create', [
     validateAlumnoClase, // Schema
     alumnoExiste,
@@ -25,8 +15,8 @@ router.post('/create', [
     alumnoNoExcedeCursos,
     alumnoNoExcedeIdiomas,
     claseTieneCupo
-], alumnoClaseController.createAlumnoClases)
-router.put('/update', validateAlumnoClase, alumnoClaseController.updateAlumnoClases)
-router.delete('/delete', alumnoClaseController.deleteAlumnoClases)
+], createAlumnoClases)
+router.put('/update', validateAlumnoClase, updateAlumnoClases)
+router.delete('/delete', deleteAlumnoClases)
 
-module.exports = router
+export default router

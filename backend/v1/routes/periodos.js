@@ -1,15 +1,13 @@
-const express = require('express')
+import express from 'express'
+import { getAllPeriodo, createPeriodo, findPeriodo, updatePeriodo, deletePeriodo } from '../controllers/periodo.js'
+import { validatePeriodo } from '../validators/validatePeriodo.js'
+
 const router = express.Router()
-// Controladores
-const periodoController = require('../controllers/periodo')
-// Validadores
-const validatePeriodo = require('../validators/validatePeriodo')
 
+router.get('/', getAllPeriodo)
+router.post('/create', validatePeriodo, createPeriodo)
+router.post('/find', findPeriodo)
+router.put('/update', validatePeriodo, updatePeriodo)
+router.delete('/delete', deletePeriodo)
 
-router.get('/', periodoController.getAllPeriodo)
-router.post('/create', validatePeriodo.validatePeriodo, periodoController.createPeriodo)
-router.post('/find', periodoController.findPeriodo)
-router.put('/update', validatePeriodo.validatePeriodo, periodoController.updatePeriodo)
-router.delete('/delete', periodoController.deletePeriodo)
-
-module.exports = router
+export default router

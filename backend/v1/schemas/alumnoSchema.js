@@ -43,4 +43,6 @@ const alumnoSchema = {
   },
 };
 
-module.exports = { alumnoSchema };
+export {
+  alumnoSchema
+};

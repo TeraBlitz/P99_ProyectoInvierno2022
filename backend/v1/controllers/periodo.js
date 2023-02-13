@@ -1,6 +1,8 @@
-const { clientConnect } = require("../connection.js");
-const { mongodbInf } = require("../config.js");
-const mongodb = require("mongodb");
+import { clientConnect } from "../connection.js"
+import { mongodbInf } from "../config.js"
+import mongodb from "mongodb"
+
+
 const COLLECTION_NAME = "periodos"
 
 async function getAllPeriodo(req, res) {
@@ -183,7 +185,7 @@ async function findPeriodo(req, res) {
     }
 }
 
-module.exports = {
+export {
     getAllPeriodo,
     createPeriodo,
     updatePeriodo,

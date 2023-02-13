@@ -19,6 +19,7 @@ import { getUser } from "../../api/users";
 import { getStudents, deleteStudent, findStudents } from "../../api/students";
 import { postData } from "../../utils/requestUtils";
 import { userContext } from "./../../App.jsx";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const studentInfo = {
   nombre: "",
@@ -45,12 +46,12 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 const Profile = () => {
-  const userValues = useContext(userContext);
+  const { user } = useAuth0();
   const [successOpen, setSuccessOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-  const [userInfo, setUserInfo] = useState(userValues);
+  const [userInfo, setUserInfo] = useState(user);
   const [addStudent, setAddStudent] = useState(false);
   const [students, setStudents] = useState(null);
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -69,15 +70,11 @@ const Profile = () => {
 
   useEffect(() => {
     const getUserStudents = () => {
-      getStudents()
-        .then((response) => response.json())
-        .then((result) => {
-          const students = result.filter(
-            (student) => student.idUser === userValues.uid
-          );
-          setStudents(students);
-          //console.log(students)
-        });
+      findStudents({ idUser: user.sub })
+      .then((response) => response.json())
+      .then((data) => {
+        setStudents(data);
+      });
     };
     getUserStudents();
   }, []);
@@ -101,7 +98,7 @@ const Profile = () => {
         }
       })
       .finally(() => {
-        findStudents({ idUser: userValues.uid })
+        findStudents({ idUser: user.sub })
           .then((response) => response.json())
           .then((data) => {
             console.log(data);
@@ -139,7 +136,7 @@ const Profile = () => {
       </Box>
     );
   }
-
+    console.log(user?.p99roles.length)
   return (
     <Box sx={{ p: 1, ml: 1 }}>
       <Box
@@ -152,7 +149,7 @@ const Profile = () => {
         }}
       >
         <Box>Mi perfil</Box>
-        {userValues.rol === "estudiante" ? (
+        {user?.p99roles.length == 0 ? (
           <Box
             sx={{
               display: { xs: "flex", md: "none" },
@@ -217,7 +214,7 @@ const Profile = () => {
       <Box
         sx={{
           pt: 2,
-          display: userValues.rol === "estudiante" ? "flex" : "none",
+          display: user?.p99roles.length == 0 ? "flex" : "none",
           justifyContent: "space-between",
           mt: 2,
         }}
@@ -228,7 +225,7 @@ const Profile = () => {
       <Box>
         {students !== null &&
         students.length === 0 &&
-        userValues.rol === "estudiante" ? (
+        user?.p99roles.length == 0 ? (
           <Box
             sx={{
               fontFamily: "default",
@@ -258,7 +255,7 @@ const Profile = () => {
           sx={{
             display: {
               xs: "none",
-              md: userValues.rol === "estudiante" ? "flex" : "none",
+              md: user?.p99roles.length == 0 ? "flex" : "none",
               justifyContent: "flex-end",
             },
           }}
@@ -287,7 +284,7 @@ const Profile = () => {
         <>
           <StudentProfile
             studentInfo={studentInfo}
-            userID={userValues.uid}
+            userID={user.sub}
             setAddStudent={setAddStudent}
             addStudent={addStudent}
             setStudents={setStudents}
@@ -327,7 +324,7 @@ const Profile = () => {
           <ChangePassModal
             openChangePassModal={openChangePassModal}
             setOpenChangePassModal={setOpenChangePassModal}
-            userInfo={userValues}
+            userInfo={user}
             setSuccessOpen={setSuccessOpen}
             setErrorOpen={setErrorOpen}
             setAlertMessage={setAlertMessage}

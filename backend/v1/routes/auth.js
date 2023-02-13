@@ -1,11 +1,12 @@
-const express = require('express')
+import express from 'express'
+import { check } from 'express-validator'
+import { login, reload } from '../controllers/auth.js'
+import { validarCampos } from '../validators/validateCampos.js'
+import { validarJWT } from '../helpers/validar-jwt'
+
 const router = express.Router()
-const { check } = require('express-validator')
 // Controladores
-const { login, reload } = require('../controllers/auth')
 // Validadores
-const { validarCampos } = require('../validators/validateCampos')
-const { validarJWT } = require('../helpers/validar-jwt')
 
 router.post('/login', [
     check('password', 'El password es obligatorio.').not().isEmpty(),

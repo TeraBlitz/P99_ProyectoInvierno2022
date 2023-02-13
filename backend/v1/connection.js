@@ -1,9 +1,9 @@
-const { MongoClient } = require("mongodb");
-const { mongodbInf } = require('./config.js')
+import { MongoClient } from "mongodb";
+import { mongodbInf } from './config.js'
 
 // Connection URI.
 // mongodb://localhost:27017
-const uri = `mongodb+srv://p99admin:jajaxsxsxs@p99test.qowivyb.mongodb.net/?retryWrites=true&w=majority`
+const uri = `mongodb+srv://p99admin:vJU8eB6ZpnTogDLV@p99test.qowivyb.mongodb.net/?retryWrites=true&w=majority`
 // const uri = `mongodb://${mongodbInf.host}:${mongodbInf.port}/${mongodbInf.database}`
 
 // Crear un nuevo MongoClient
@@ -45,7 +45,7 @@ async function checkTest_db(client){
     })
 }
 
-module.exports = {
+export {
     connection, 
     clientCon,
     clientConnect

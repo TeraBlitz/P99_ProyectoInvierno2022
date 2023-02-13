@@ -11,3 +11,8 @@ Adrian Eduardo Treviño Peña (eduardotrevinop@yahoo.com.mx)
 Nicolás Herrera Hernandez (a01114972@tec.mx)  
 Bernardo de la Sierra Rábago (bdelasierrar@gmail.com)  
 Carlos Martinez (carlosh.mtz@hotmail.com)  
+
+
+### Repo fixed by TeraBlitz(Raul Flores)
+Todo:
+fix all ajv

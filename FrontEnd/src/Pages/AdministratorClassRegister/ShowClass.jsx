@@ -19,12 +19,12 @@ import MenuItem from "@mui/material/MenuItem";
 import { InsertDriveFile } from "@mui/icons-material";
 import Select from "react-select";
 import WaitList from "./WaitList";
-import { getWaitList } from '../../../api/waitList'
-import { getStudents } from "../../../api/students";
-import { getPeriodos } from '../../../api/Periodos';
-import { getProfesors } from '../../../api/profesors.js'
-import { createClass, deleteClasses, getClasses , updateClass} from '../../../api/classes.js'
-import { subirClases, subirProfes } from "../../../api/csv";
+import { getWaitList } from '../../api/waitList'
+import { getStudents } from "../../api/students";
+import { getPeriodos } from '../../api/Periodos';
+import { getProfesors } from '../../api/profesors.js'
+import { createClass, deleteClasses, getClasses , updateClass} from '../../api/classes.js'
+import { subirClases, subirProfes } from "../../api/csv";
 import { CSVLink } from "react-csv";
 
 export default function ShowClass() {

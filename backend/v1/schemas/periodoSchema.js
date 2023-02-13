@@ -38,4 +38,6 @@ type: "object",
     },
 }
 
-module.exports = {periodoSchema}
+export {
+    periodoSchema
+}

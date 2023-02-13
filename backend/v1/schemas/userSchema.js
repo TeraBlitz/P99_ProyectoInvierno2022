@@ -20,4 +20,6 @@ const userSchema = {
     },
 }
 
-module.exports = {userSchema}
+export {
+    userSchema
+}

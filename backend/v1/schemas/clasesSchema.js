@@ -48,4 +48,6 @@ const clasesSchema = {
     },
 }
 
-module.exports = {clasesSchema}
+export {
+    clasesSchema
+}

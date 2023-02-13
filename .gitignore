@@ -99,3 +99,8 @@ dist
 
 # TernJS port file
 .tern-port
+
+.nosubir.txt
+nosubir.txt
+
+.backend/build/

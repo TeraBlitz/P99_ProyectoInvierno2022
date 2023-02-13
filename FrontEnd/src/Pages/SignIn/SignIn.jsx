@@ -2,31 +2,20 @@ import React, { createContext, useState } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
+import { useAuth0 } from "@auth0/auth0-react";
+import CircularProgress from '@mui/material/CircularProgress';
 
-const SignIn = ({
-  isSignedIn,
-  handleSignIn,
-  handleUser,
-  loginError,
-  changeHasAccount,
-}) => {
-  const [checked, setChecked] = useState([true, false]);
+const SignIn = () => {
+  const { loginWithRedirect, isLoading } = useAuth0();
 
   const handleChange = (e) => {
     handleUser((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
-  };
-
-  const handleChangeCheckBox = (e) => {
-    setChecked([e.target.checked, e.target.checked]);
   };
 
   return (
@@ -48,8 +37,7 @@ const SignIn = ({
         </div>
         <Box
           component="form"
-          sx={{ mx: 3, display: "flex", flexDirection: "column" }}
-          onSubmit={handleSignIn}
+          sx={{ mx: 3, display: "flex", flexDirection: "column", alignItems: "center" }}
         >
           <Typography
             component="h1"
@@ -64,79 +52,20 @@ const SignIn = ({
           >
             INICIAR SESIÓN
           </Typography>
-          <Typography
-            variant="h7"
-            sx={{ color: "red", display: loginError, textAlign: "center" }}
-          >
-            Usuario o contraseña incorrecta
-          </Typography>
-          <TextField
-            name="correo"
-            required
-            fullWidth
-            label="Correo"
-            variant="filled"
-            sx={{input: {color: 'black', backgroundColor: 'white', borderRadius: 1} }}
-            InputLabelProps={{ style: { color: "gray" } }}
-            onChange={handleChange}
-            onInvalid={(e) =>
-              e.target.setCustomValidity("Ingresa tu usuario o correo")
-            }
-            onInput={(e) => e.target.setCustomValidity("")}
-          />
-          <br />
-          <TextField
-            name="password"
-            required
-            fullWidth
-            label="Contraseña"
-            type="password"
-            variant="filled"
-            sx={{input: {color: 'black', backgroundColor: 'white', borderRadius: 1} }}
-            InputLabelProps={{ style: { color: "gray" } }}
-            onChange={handleChange}
-            onInvalid={(e) =>
-              e.target.setCustomValidity("Ingresa tu contraseña")
-            }
-            onInput={(e) => e.target.setCustomValidity("")}
-          />
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <FormControlLabel
-              label={
-                <Typography variant="body1" sx={{ color: "#E6F4F1" }}>
-                  Recuérdame
-                </Typography>
-              }
-              color="white"
-              control={
-                <Checkbox
-                style ={{
-                    color: "#E6F4F1" ,
-                  }}
-                  checked={checked[1]}
-                  onChange={handleChangeCheckBox}
-                />
-              }
-            />
-          </Box>
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <Link
-              variant="body1"
-              underline="hover"
-              sx={{ alignSelf: "center", color: "#55afc6"  }}
-            >
-              ¿Olvidaste tu contraseña?
-            </Link>
-          </Box>
-          <Box sx={{ my: 1 }}>
+          {
+            isLoading ?
+            <CircularProgress />
+            :
             <Button
               fullWidth
               type="submit"
               sx={{ backgroundColor: '#57a1f1', color: "white" }}
+              onClick={() => loginWithRedirect()}
             >
               Entrar
             </Button>
-          </Box>
+            }
+          
           <Box>
             <Typography
               variant="body1"
@@ -146,7 +75,7 @@ const SignIn = ({
                 justifyContent: "center",
               }}
             >
-              ¿No tienes una cuenta?
+              ¿No Sabes como usar la plataforma?
             </Typography>
           </Box>
           <Box>
@@ -161,7 +90,7 @@ const SignIn = ({
                 underline="hover"
                 onClick={() => changeHasAccount()}
               >
-                ¡Regístrate!
+                ¡Sige esta guia para aprender!
               </Link>
             </Typography>
           </Box>
