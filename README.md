@@ -1,18 +1,8 @@
-# P99_ProyectoInvierno2022
-### Juntas:
-Daily meeting Medio dia(12:00AM)  
-Weekly show of progress (viernes 6PM a discutir con el cliente)  
-Retrospectiva de la semana (Despues de la junta con el cliente)  
-Sprint planing (despues de la retrospectiva)
-### Miembros: 
-Raul Flores (terablitz@hotmail.com)  
-Jorge Tato (jorgetato1999@gmail.com)  
-Adrian Eduardo Treviño Peña (eduardotrevinop@yahoo.com.mx)  
-Nicolás Herrera Hernandez (a01114972@tec.mx)  
-Bernardo de la Sierra Rábago (bdelasierrar@gmail.com)  
-Carlos Martinez (carlosh.mtz@hotmail.com)  
+##Proyecto 99 Class registration system 
 
+Originaly done as a class proyect by students and superviced/guided by me the original proyect is finished but i have decided to clean up and finish the proyect. 
 
-### Repo fixed by TeraBlitz(Raul Flores)
-Todo:
-fix all ajv
+The goal of this website is to help Proyecto 99 have a smoother registration process for its students.
+Original work done by: @NicolasHerreraHdez, @Bdelas777, @CarlosMtz1281, @AdrianETP, @JorgeTato99
+Project currently owned and mantained by @TeraBlitz.
+
