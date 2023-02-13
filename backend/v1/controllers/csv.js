@@ -1,6 +1,6 @@
-const { clientConnect } = require("../connection.js");
-const { mongodbInf } = require("../config.js");
-const mongodb = require("mongodb");
+import { clientConnect } from "../connection.js";
+import { mongodbInf } from "../config.js";
+import mongodb from "mongodb";
 
 async function subirAlumnos(req, res) {
     try {
@@ -202,7 +202,7 @@ async function subirPeriodos(req, res) {
     }
 }
 
-module.exports = {
+export {
     subirAlumnos,
     subirClases,
     subirProfesores,

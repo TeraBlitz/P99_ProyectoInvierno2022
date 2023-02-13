@@ -19,4 +19,6 @@ const listaSchema = {
     },
 }
 
-module.exports = {listaSchema}
+export {
+    listaSchema
+}

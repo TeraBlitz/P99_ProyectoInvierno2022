@@ -1,6 +1,8 @@
-const { clientConnect } = require("../connection.js");
-const { mongodbInf } = require("../config.js");
-const mongodb = require("mongodb");
+import { clientConnect } from "../connection.js"
+import { mongodbInf } from "../config.js"
+import mongodb from "mongodb"
+
+
 const COLLECTION_NAME = "alumnoClases"
 
 async function getAllAlumnoClases(req, res) {
@@ -114,7 +116,7 @@ async function deleteAlumnoClases(req, res) {
 // deleteAlumnoClases().catch(console.dir);
 
 
-module.exports = {
+export {
     getAllAlumnoClases,
     createAlumnoClases,
     updateAlumnoClases,

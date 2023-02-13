@@ -1,6 +1,8 @@
-const { clientConnect } = require("../connection.js");
-const { mongodbInf } = require("../config.js");
-const mongodb = require("mongodb");
+import { clientConnect } from "../connection.js"
+import { mongodbInf } from "../config.js"
+import mongodb from "mongodb"
+
+
 const COLLECTION_NAME = "asistencias"
 
 async function getAllAsistencia(req, res) {
@@ -142,7 +144,7 @@ async function findAsistencia(req, res) {
     }
 }
 
-module.exports = {
+export {
     getAllAsistencia,
     createAsistencia,
     updateAsistencia,

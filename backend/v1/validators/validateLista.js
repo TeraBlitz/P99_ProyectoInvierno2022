@@ -1,11 +1,14 @@
-const Ajv = require("ajv")
-const addFormats = require("ajv-formats")
-const ajv = new Ajv({allErrors: true}) // Ajv option allErrors is required
-const localize_es = require('ajv-i18n/localize/es')
+import Ajv from "ajv"
+import ajvErrors from "ajv-errors"
+import addFormats from "ajv-formats"
+import localize_es from 'ajv-i18n/localize/es/index.js'
+import { listaSchema } from '../schemas/listaSchema.js'
+
+const ajv = new Ajv({allErrors: true, strict:false}) // Ajv option allErrors is required
+
+ajvErrors(ajv)
 addFormats(ajv)
-require("ajv-errors")(ajv)
 // Schema
-const {listaSchema} = require('../schemas/listaSchema')
 
 const validate = ajv.compile(listaSchema)
 
@@ -23,4 +26,6 @@ async function validateLista(req, res, next){
 
 }
 
-module.exports = {validateLista}
+export {
+	validateLista
+}

@@ -1,12 +1,12 @@
-const express = require('express')
+import express from 'express'
+import { subirClases, subirProfesores } from '../controllers/csv.js'
+
+
 const router = express.Router()
+
 // Controladores
-const csvController = require('../controllers/csv')
-
-router.post('/subirClases', csvController.subirClases)
-router.post('/subirProfesores', csvController.subirProfesores)
+router.post('/subirClases', subirClases)
+router.post('/subirProfesores', subirProfesores)
 
 
-module.exports = router
-
-// ?
+export default router

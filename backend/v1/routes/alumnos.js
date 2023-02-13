@@ -1,14 +1,13 @@
-const express = require('express')
+import express from 'express'
+import { validateAlumno } from '../validators/validateAlumno.js'
+import { getAllAlumno, createAlumno, updateAlumno, deleteAlumno, findAlumno } from '../controllers/alumnos.js'
+
 const router = express.Router()
-// Controladores
-const alumnoController = require('../controllers/alumnos')
-// Validadores
-const validateAlumno = require('../validators/validateAlumno')
 
-router.get('/', alumnoController.getAllAlumno)
-router.post('/create', validateAlumno.validateAlumno, alumnoController.createAlumno)
-router.post('/find', alumnoController.findAlumno)
-router.put('/update', validateAlumno.validateAlumno, alumnoController.updateAlumno)
-router.delete('/delete', alumnoController.deleteAlumno)
+router.get('/', getAllAlumno)
+router.post('/create', validateAlumno, createAlumno)
+router.post('/find', findAlumno)
+router.put('/update', validateAlumno, updateAlumno)
+router.delete('/delete', deleteAlumno)
 
-module.exports = router
+export default router

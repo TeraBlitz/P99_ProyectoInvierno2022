@@ -1,20 +1,19 @@
-const express = require('express')
-const router = express.Router()
-// Controladores
-const profesorController = require('../controllers/profesores')
-// Validadores
-const { validateProfesor } = require('../validators/validateProfesor')
-const { correoProfesorNoExiste, matriculaProfesorNoExiste, numeroProfesorNoExiste, idUserExiste } = require('../helpers/dbValidators')
+import express from 'express'
+import { getAllProfesor, createProfesor, updateProfesor, deleteProfesor} from '../controllers/profesores.js'
+import { validateProfesor } from '../validators/validateProfesor.js'
+import { correoProfesorNoExiste, matriculaProfesorNoExiste, numeroProfesorNoExiste, idUserExiste } from '../helpers/dbValidators.js'
 
-router.get('/', profesorController.getAllProfesor)
+const router = express.Router()
+
+router.get('/', getAllProfesor)
 router.post('/create', [
     validateProfesor, // Schema
     correoProfesorNoExiste,
     matriculaProfesorNoExiste,
     numeroProfesorNoExiste,
     idUserExiste,
-], profesorController.createProfesor)
-router.put('/update', validateProfesor, profesorController.updateProfesor)
-router.delete('/delete', profesorController.deleteProfesor)
+], createProfesor)
+router.put('/update', validateProfesor, updateProfesor)
+router.delete('/delete', deleteProfesor)
 
-module.exports = router
+export default router

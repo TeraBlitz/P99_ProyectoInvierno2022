@@ -1,27 +1,15 @@
-require('dotenv').config()
-const cors = require('cors')
-const express = require('express')
-const path = require("path")
-const { connection } = require('./v1/connection.js')
-const bodyParser = require('body-parser')
+import cors from 'cors'
+import express from 'express'
+import path from "path"
+import { connection } from './v1/connection.js'
+import bodyParser from 'body-parser'
+import * as dotenv from 'dotenv'
+import { fileURLToPath } from 'url';
+import v1 from './v1/v1.js'
+
+dotenv.config()
 const app = express()
 const port = process.env.PORT
-
-// Rutas Autentificaciones
-const auth = require('./v1/routes/auth')
-// Ruta para Excels
-const csv = require('./v1/routes/csv')
-// Rutas de los modelos
-const user = require('./v1/routes/users')
-const clase = require('./v1/routes/clases')
-const periodo = require('./v1/routes/periodos')
-const asistencia = require('./v1/routes/asistencias')
-const alumno = require('./v1/routes/alumnos')
-const lista = require('./v1/routes/listas')
-const profesor = require('./v1/routes/profesores')
-
-const alumnoClase = require('./v1/routes/alumnoClases')
-
 
 // Testeo de la Conexion
 connection().catch(console.error);
@@ -29,36 +17,20 @@ connection().catch(console.error);
 // create application/x-www-form-urlencoded parser
 let urlencodedParser = bodyParser.urlencoded({ extended: false })
 
-app.get('/v1', (req, res)=>{
-    res.send('Bienvenido | v1')
-})
-
 // Utilerias
 app.use(cors());
 app.use(urlencodedParser);
+app.use('/v1', v1);
 
-// Autentificaciones
-app.use('/v1/auth', auth)
+const __filename = fileURLToPath(import.meta.url);
 
-// Rutas Excels
-app.use('/v1/csv', csv)
+const __dirname = path.dirname(__filename);
 
-// Rutas Modelos
-app.use('/v1/users', user)
-app.use('/v1/clases', clase)
-app.use('/v1/periodos', periodo)
-app.use('/v1/asistencias', asistencia)
-app.use('/v1/alumnos', alumno)
-app.use('/v1/listas', lista)
-app.use('/v1/profesores', profesor)
-app.use('/v1/alumnoClases', alumnoClase)
-
-app.use(express.static(path.join(__dirname, "build")));
-
-app.get("/*", (req, res) => {
+app.get("/", (req, res) => {
     res.status(200).sendFile(path.join(__dirname, "build", "index.html"));
 });
 
+app.use(express.static(path.join(__dirname, "build")));
 
 app.listen(port, ()=>{
     console.log(`Aplicacion corriendo | Puerto:${port}`)

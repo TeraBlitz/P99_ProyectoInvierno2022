@@ -20,7 +20,7 @@ import Select from "@mui/material/Select";
 import SearchIcon from "@mui/icons-material/Search";
 import { getStudents } from "../../api/students";
 import { getClasses } from "../../api/classes";
-import { userContext } from "./../../App.jsx";
+import { useAuth0 } from "@auth0/auth0-react";
 import {
   createClassStudent,
   getClassStudent,
@@ -57,7 +57,7 @@ function RegistroClasesAlumnos({ changeContent }) {
   const [periodos, setPeriodos] = useState([]);
   const [currentTerm, setCurrentTerm] = useState(null);
 
-  const userValues = useContext(userContext);
+  const { user } = useAuth0();
 
   useEffect(() => {
     const getUserStudents = () => {
@@ -65,7 +65,7 @@ function RegistroClasesAlumnos({ changeContent }) {
         .then((response) => response.json())
         .then((data) => {
           const students = data.filter(
-            (student) => student.idUser === userValues.uid
+            (student) => student.idUser === user.sub
           );
           setStudents(students);
           //console.log(students)

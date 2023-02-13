@@ -16,7 +16,7 @@ import ClaseModal from "../../Components/Clase/ClaseModal";
 import { getClasses } from "../../api/classes";
 import { getStudents } from "../../api/students";
 import { getClassStudent } from "./../../api/classStudent.js";
-import { userContext } from "../../App";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const MisClasesEstudiante = ({ changeContent }) => {
   const [students, setStudents] = useState(null);
@@ -24,8 +24,7 @@ const MisClasesEstudiante = ({ changeContent }) => {
   const [clases, setClases] = useState(null);
   const [currentStudent, setCurrentStudent] = useState(null);
   const [currentClase, setCurrentClase] = useState(null);
-
-  const userValues = useContext(userContext);
+  const { user } = useAuth0();
 
   useEffect(() => {
     const getUserStudents = () => {
@@ -33,7 +32,7 @@ const MisClasesEstudiante = ({ changeContent }) => {
         .then((response) => response.json())
         .then((data) => {
           const students = data.filter(
-            (student) => student.idUser === userValues.uid
+            (student) => student.idUser === user.sub
           );
           setStudents(students);
           //console.log(students)

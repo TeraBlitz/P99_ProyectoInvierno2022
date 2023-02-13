@@ -22,4 +22,6 @@ const profesoroSchema = {
     },
   };
   
-  module.exports = { profesoroSchema };
+export {
+  profesoroSchema
+};

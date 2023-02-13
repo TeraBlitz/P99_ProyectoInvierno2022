@@ -1,11 +1,14 @@
-const { clientConnect } = require('../connection.js')
-const { mongodbInf } = require('../config.js')
-const mongodb = require("mongodb")
-const bcryptjs = require('bcryptjs')
+import { clientConnect } from '../connection.js'
+import { mongodbInf } from '../config.js'
+import mongodb from "mongodb"
+import bcryptjs from 'bcryptjs'
+
 const COLLECTION_NAME = "users"
 
 async function getAllUser(req, res) {
     try {
+        // console.log(req.body)
+        // console.log(req.locals)
         const database = clientConnect.db(mongodbInf.database);
         const collection = database.collection(COLLECTION_NAME);
 
@@ -158,7 +161,7 @@ async function findUser(req, res) {
 // Test getAllUser
 // getAllUser().catch(console.dir);
 
-module.exports = {
+export {
     getAllUser, 
     createUser, 
     updateUser, 

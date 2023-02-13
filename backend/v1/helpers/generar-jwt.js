@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken')
+import jwt from 'jsonwebtoken'
 
 // Generar los JWT.
 async function generateJWT(uid = ''){
@@ -22,6 +22,6 @@ async function generateJWT(uid = ''){
     })
 }
 
-module.exports = {
+export {
     generateJWT
 }

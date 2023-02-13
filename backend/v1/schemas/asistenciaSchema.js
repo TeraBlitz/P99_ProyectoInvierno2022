@@ -15,4 +15,6 @@ const asistenciaSchema = {
     },
 }
 
-module.exports = {asistenciaSchema}
+export {
+    asistenciaSchema
+}

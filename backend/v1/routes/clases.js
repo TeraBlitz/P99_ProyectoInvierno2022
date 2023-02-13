@@ -1,21 +1,23 @@
-const express = require('express')
+import express from 'express'
+import {getAllClase, createClase, updateClase, deleteClase, findClase} from '../controllers/clases.js'
+import { validateClase } from '../validators/validateClases.js'
+import { claseNoExiste, clavePeriodoExiste, matriculaProfesorExiste} from '../helpers/dbValidators.js'
+
+
 const router = express.Router()
 // Controladores
-const claseController = require('../controllers/clases')
 // Validadores
-const { validateClase } = require('../validators/validateClases')
-const { claseNoExiste, clavePeriodoExiste, matriculaProfesorExiste} = require('../helpers/dbValidators')
 
 
-router.get('/', claseController.getAllClase)
+router.get('/', getAllClase)
 router.post('/create', [
     validateClase, // Schema
     claseNoExiste,
     clavePeriodoExiste,
     matriculaProfesorExiste,
-], claseController.createClase)
-router.put('/update', validateClase, claseController.updateClase)
-router.delete('/delete', claseController.deleteClase)
-router.post('/find', claseController.findClase)
+], createClase)
+router.put('/update', validateClase, updateClase)
+router.delete('/delete', deleteClase)
+router.post('/find', findClase)
 
-module.exports = router
+export default router

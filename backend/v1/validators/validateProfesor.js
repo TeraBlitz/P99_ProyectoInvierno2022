@@ -1,11 +1,13 @@
-const Ajv = require("ajv")
-const addFormats = require("ajv-formats")
-const ajv = new Ajv({allErrors: true}) // Ajv option allErrors is required
-const localize_es = require('ajv-i18n/localize/es')
+import Ajv from "ajv"
+import ajvErrors from "ajv-errors"
+import addFormats from "ajv-formats"
+import localize_es from 'ajv-i18n/localize/es/index.js'
+import { profesoroSchema } from '../schemas/profesorSchema.js'
+
+const ajv = new Ajv({allErrors: true, strict:false}) // Ajv option allErrors is required
 addFormats(ajv)
-require("ajv-errors")(ajv)
+ajvErrors(ajv)
 // Schema
-const {profesoroSchema} = require('../schemas/profesorSchema')
 
 const validate = ajv.compile(profesoroSchema)
 
@@ -23,4 +25,6 @@ async function validateProfesor(req, res, next){
 
 }
 
-module.exports = {validateProfesor}
+export {
+	validateProfesor
+}

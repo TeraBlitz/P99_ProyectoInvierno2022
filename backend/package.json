@@ -1,5 +1,6 @@
 {
   "name": "backend",
+  "type":"module",
   "version": "1.0.0",
   "description": "Backend del sistema",
   "main": "index.js",
@@ -20,6 +21,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "express-oauth2-jwt-bearer": "^1.3.0",
     "express-validator": "^6.14.3",
     "jsonwebtoken": "^9.0.0",
     "mongodb": "^4.13.0"
