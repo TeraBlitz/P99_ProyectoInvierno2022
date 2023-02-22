@@ -20,12 +20,8 @@ function StudentSection({
   const [isEditing, setIsEditing] = useState(false);
   const [addStudent, setAddStudent] = useState(false);
 
-  const handleOpenDialog = () => {
-    setOpenDeleteDialog(true);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDeleteDialog(false);
+  const handleOpenDeleteDialogState = () => {
+    setOpenDeleteDialog(!openDeleteDialog);
   };
 
   const handleEditStudent = (student) => {
@@ -34,7 +30,7 @@ function StudentSection({
   };
 
   const handleDeleteCurrentStudent = () => {
-    handleCloseDialog();
+    handleOpenDeleteDialogState();
     deleteStudent({ _id: currentStudent._id })
       .then((data) => {
         console.log(data);
@@ -92,7 +88,7 @@ function StudentSection({
                 second_lastname={student.apellido_materno}
                 editStudent={handleEditStudent}
                 setCurrentStudent={setCurrentStudent}
-                handleOpenDialog={handleOpenDialog}
+                handleOpenDialog={handleOpenDeleteDialogState}
                 setIsEditing={setIsEditing}
               />
             ))
@@ -166,7 +162,7 @@ function StudentSection({
 
       <DeleteDialog
         deleteStudent={handleDeleteCurrentStudent}
-        handleClose={handleCloseDialog}
+        handleClose={handleOpenDeleteDialogState}
         open={openDeleteDialog}
         student={currentStudent}
       />
