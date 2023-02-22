@@ -144,7 +144,9 @@ function EditStudentProfile({
                 }
       <TextField name="fecha_de_nacimiento" label="Fecha de nacimiento" type="date" InputProps={{ readOnly: !isEditing }} InputLabelProps={{ shrink: true }} value={studentData.fecha_de_nacimiento || ''} onChange={handleChange} helperText=" " required />
       <Autocomplete
+        readOnly={!isEditing}
         value={userEducation || ''}
+        name="escolaridad"
         onChange={(e, newValue) => {
           setUserEducation(newValue);
         }}
@@ -153,7 +155,7 @@ function EditStudentProfile({
           setUserEducationInput(newInputValue);
         }}
         options={nivelEscolaridad}
-        renderInput={(params) => <TextField {...params} name="escolaridad" label="Escolaridad" InputProps={{ readOnly: !isEditing }} helperText="Escolaridad o equivalente" required />}
+        renderInput={(params) => <TextField {...params} name="escolaridad" label="Escolaridad"  helperText="Escolaridad o equivalente" required />}
       />
       <TextField name="ultima_escuela" label="Ultima Escuela" InputProps={{ readOnly: !isEditing }} value={studentData.ultima_escuela || ''} onChange={handleChange} helperText=" " required />
       <Autocomplete
