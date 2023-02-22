@@ -52,14 +52,14 @@ function StudentSection({
       });
   };
 
-  const emptyStudentList = user?.p99roles.length === 0;
+  const canAddStudents = user?.p99roles.length === 0;
 
   return (
     <>
       <Box
         sx={{
           pt: 2,
-          display: emptyStudentList? 'flex' : 'none',
+          display: canAddStudents? 'flex' : 'none',
           justifyContent: 'space-between',
           mt: 2,
         }}
@@ -69,7 +69,7 @@ function StudentSection({
       <Box>
         {students !== null
         && students.length === 0
-        && emptyStudentList? (
+        && canAddStudents? (
           <Box
             sx={{
               fontFamily: 'default',
@@ -99,7 +99,7 @@ function StudentSection({
           sx={{
             display: {
               xs: 'none',
-              md: emptyStudentList? 'flex' : 'none',
+              md: canAddStudents? 'flex' : 'none',
               justifyContent: 'flex-end',
             },
           }}
