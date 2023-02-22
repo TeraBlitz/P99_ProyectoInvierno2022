@@ -8,3 +8,9 @@ Original work done by: @NicolasHerreraHdez, @Bdelas777, @CarlosMtz1281, @AdrianE
 Project currently owned and mantained by @TeraBlitz.
 
 website live: https://p99test.fly.dev/
+
+### Development Guide
+
+You can run eslint with the following command, it is useful to find potential errors and lints your code:
+
+`eslint --fix <Path_To_Your_File>`
