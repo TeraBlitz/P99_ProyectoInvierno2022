@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
 import StudentItem from './StudentItem';
-import StudentProfile from '../../Pages/ProfilePage/StudentProfile';
+import StudentProfile from '../../Pages/ProfilePage/StudentProfileC';
 import EditStudentProfile from '../../Pages/ProfilePage/EditStudentProfile';
 import DeleteDialog from './DeleteDialog';
 import { deleteStudent, findStudents } from '../../api/students';
@@ -112,6 +112,7 @@ function StudentSection({
             }}
             onClick={() => {
               setAddStudent(!addStudent);
+              setIsEditing(!isEditing);
             }}
             variant="contained"
             endIcon={<AddIcon />}
@@ -129,14 +130,16 @@ function StudentSection({
         <>
           <StudentProfile
             studentInfo={defaultStudentInfo}
-            setAddStudent={setAddStudent}
-            addStudent={addStudent}
+            setOpenStudentModal={setAddStudent}
+            openStudentModal={addStudent}
             userID={user.sub}
             setStudents={setStudents}
             setSuccessOpen={setSuccessOpen}
             setErrorOpen={setErrorOpen}
             setAlertMessage={setAlertMessage}
             setInfoOpen={setInfoOpen}
+            isEditing={isEditing}
+            setIsEditing={setIsEditing}
           />
         </>
       </Modal>
