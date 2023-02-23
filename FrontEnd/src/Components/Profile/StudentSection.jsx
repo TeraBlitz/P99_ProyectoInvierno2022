@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
 import StudentItem from './StudentItem';
-import StudentProfile from '../../Pages/ProfilePage/StudentProfile';
+import StudentProfile from '../../Pages/ProfilePage/StudentProfileFul';
 import EditStudentProfile from '../../Pages/ProfilePage/EditStudentProfile';
 import DeleteDialog from './DeleteDialog';
 import { deleteStudent, findStudents } from '../../api/students';
@@ -130,10 +130,12 @@ function StudentSection({
         <>
           <StudentProfile
             studentInfo={defaultStudentInfo}
-            setAddStudent={setAddStudent}
-            addStudent={addStudent}
+            setOpenStudentProfile={setAddStudent}
+            openStudentProfile={addStudent}
             userID={user.sub}
             setStudents={setStudents}
+            isEditing={true}
+            setIsEditing={() => {}}
             setSuccessOpen={setSuccessOpen}
             setErrorOpen={setErrorOpen}
             setAlertMessage={setAlertMessage}
@@ -148,9 +150,9 @@ function StudentSection({
         sx={{ overflow: 'scroll' }}
       >
         <>
-          <EditStudentProfile
-            openEditModal={openEditModal}
-            setOpenEditModal={setOpenEditModal}
+          <StudentProfile
+            openStudentProfile={openEditModal}
+            setOpenStudentProfile={setOpenEditModal}
             studentInfo={currentStudent}
             setIsEditing={setIsEditing}
             isEditing={isEditing}
