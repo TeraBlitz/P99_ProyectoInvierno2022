@@ -18,6 +18,7 @@ function StudentSection({
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [addStudent, setAddStudent] = useState(false);
+  const canAddStudents = user?.p99roles.length === 0;
 
   const handleOpenDeleteDialogState = () => {
     setOpenDeleteDialog(!openDeleteDialog);
@@ -56,8 +57,6 @@ function StudentSection({
       setIsEditing(false);
     }
   };
-
-  const canAddStudents = user?.p99roles.length === 0;
 
   return (
     <>
