@@ -146,7 +146,7 @@ function StudentSection({
 
       <Modal
         open={openEditModal}
-        onClose={() => setOpenEditModal(!openEditModal)}
+        onClose={() => {setOpenEditModal(!openEditModal); setIsEditing(false);}}
         sx={{ overflow: 'scroll' }}
       >
         <>

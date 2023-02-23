@@ -23,7 +23,6 @@ function StudentProfile({
 }) {
   const isNewStudent = userID !== undefined;
   if (isNewStudent) studentInfo.idUser = userID;
-  studentInfo.idUser = userID;
   const [studentData, setStudentInfo] = useState(studentInfo);
   const [newStudentInfo, setNewStudentInfo] = useState(studentInfo);
   const [userStateInput, setUserStateInput] = useState('');
@@ -39,7 +38,6 @@ function StudentProfile({
     );
   
   const handleChange = (e) => setStudentInfo((prevState) => ({ ...prevState, [e.target.name]: e.target.value }));
-
   const handleSubmit = (e) => {
     // Enviar esta informacion a bd
     e.preventDefault();
@@ -197,7 +195,7 @@ function StudentProfile({
         name="estado"
         onChange={(e, newValue) => { setUserState(newValue); }}
         inputValue={userStateInput}
-        onInputChange={(event, newInputValue) => {
+        onInputChange={(_event, newInputValue) => {
           setUserStateInput(newInputValue);
         }}
         options={estadosMexico}
