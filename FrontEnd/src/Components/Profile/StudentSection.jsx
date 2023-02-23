@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
 import StudentItem from './StudentItem';
-import StudentProfile from '../../Pages/ProfilePage/StudentProfile';
+import StudentProfile from './StudentProfile';
 import DeleteDialog from './DeleteDialog';
 import { deleteStudent, findStudents } from '../../api/students';
 import { defaultStudentInfo } from '../../utils/constants';
