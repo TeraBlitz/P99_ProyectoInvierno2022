@@ -55,7 +55,7 @@ function StudentSection({
       setOpenEditModal(!openEditModal);
       setIsEditing(false);
     }
-  }
+  };
 
   const canAddStudents = user?.p99roles.length === 0;
 
@@ -132,19 +132,21 @@ function StudentSection({
         onClose={handleCloseStudentModal}
         sx={{ overflow: 'scroll' }}
       >
-        <StudentProfile
-          studentInfo={(addStudent ? defaultStudentInfo : currentStudent)}
-          openStudentProfile={(addStudent || openEditModal)}
-          setOpenStudentProfile={(addStudent ? setAddStudent : setOpenEditModal)}
-          userID={(addStudent ? user.sub : undefined)}
-          setStudents={setStudents}
-          isEditing={(addStudent ? true : isEditing)}
-          setIsEditing={(addStudent ? () => {} : setIsEditing)}
-          setSuccessOpen={setSuccessOpen}
-          setErrorOpen={setErrorOpen}
-          setAlertMessage={setAlertMessage}
-          setInfoOpen={setInfoOpen}
-        />
+        <>
+          <StudentProfile
+            studentInfo={(addStudent ? defaultStudentInfo : currentStudent)}
+            openStudentProfile={(addStudent || openEditModal)}
+            setOpenStudentProfile={(addStudent ? setAddStudent : setOpenEditModal)}
+            userID={(addStudent ? user.sub : undefined)}
+            setStudents={setStudents}
+            isEditing={(addStudent ? true : isEditing)}
+            setIsEditing={(addStudent ? () => {} : setIsEditing)}
+            setSuccessOpen={setSuccessOpen}
+            setErrorOpen={setErrorOpen}
+            setAlertMessage={setAlertMessage}
+            setInfoOpen={setInfoOpen}
+          />
+        </>
       </Modal>
 
       <DeleteDialog

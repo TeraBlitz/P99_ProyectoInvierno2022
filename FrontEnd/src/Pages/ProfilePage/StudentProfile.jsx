@@ -14,7 +14,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 import { createStudent, updateStudent, getStudents } from '../../api/students';
 import ParentInfo from './ParentInfo';
 import { estadosMexico, nivelEscolaridad } from '../../utils/constants';
-import { calculate_age } from '../../utils/utilFunctions';
+import { calculateAge } from '../../utils/utilFunctions';
 
 function StudentProfile({
   studentInfo, openStudentProfile, setOpenStudentProfile, userID, 
@@ -22,28 +22,32 @@ function StudentProfile({
   setSuccessOpen, setErrorOpen, setAlertMessage, setInfoOpen,
 }) {
   const isNewStudent = userID !== undefined;
-  if (isNewStudent) studentInfo.idUser = userID;
   const [studentData, setStudentInfo] = useState(studentInfo);
   const [newStudentInfo, setNewStudentInfo] = useState(studentInfo);
   const [userStateInput, setUserStateInput] = useState('');
-  const [userState, setUserState] = 
-    useState(isNewStudent? estadosMexico[0] : studentInfo.estado);
-  const [userEducationInput, setUserEducationInput] = 
-    useState(isNewStudent? '' : estadosMexico[estadosMexico.indexOf(studentInfo.estado)]);
-  const [userEducation, setUserEducation] = 
-    useState(
-      isNewStudent? 
-      nivelEscolaridad[0] : 
-      nivelEscolaridad[nivelEscolaridad.indexOf(studentInfo.escolaridad)]
-    );
-  
-  const handleChange = (e) => setStudentInfo((prevState) => ({ ...prevState, [e.target.name]: e.target.value }));
+  const [userState, setUserState] = useState(isNewStudent ? estadosMexico[0] : studentInfo.estado);
+  const [userEducationInput, setUserEducationInput] = useState(
+    isNewStudent
+      ? '' : estadosMexico[estadosMexico.indexOf(studentInfo.estado)],
+  );
+  const [userEducation, setUserEducation] = useState(
+    isNewStudent
+      ? nivelEscolaridad[0]
+      : nivelEscolaridad[nivelEscolaridad.indexOf(studentInfo.escolaridad)],
+  );
+
+  const handleChange = (e) => setStudentInfo(
+    (prevState) => ({ ...prevState, [e.target.name]: e.target.value }),
+  );
+
   const handleSubmit = (e) => {
     // Enviar esta informacion a bd
     e.preventDefault();
     studentData.escolaridad = userEducation;
     studentData.estado = userState;
-    studentData.curp === null ? delete studentData.curp : studentData.curp;
+    if (studentData.curp === null) delete studentData.curp;
+    if (isNewStudent) studentData.idUser = userID;
+
     setNewStudentInfo(studentData);
 
     if (studentData.num_telefono.length < 10 || studentData.tutor_num_telefono.length < 10) {
@@ -80,7 +84,7 @@ function StudentProfile({
           setErrorOpen(true);
           return;
         }
-  
+
         setAlertMessage('Información del estudiante actualizada correctamente.');
         setSuccessOpen(true);
         getStudents().then((response) => response.json()).then((data) => {
@@ -130,16 +134,50 @@ function StudentProfile({
       >
         Datos Estudiante
         {
-          !isNewStudent && 
+          !isNewStudent
+          && (
           <IconButton aria-label="edit" color="primary" onClick={() => { setIsEditing(!isEditing); }}>
             <EditIcon />
           </IconButton>
+          )
         }
       </Box>
-      <TextField name="nombre" label="Nombre(s)" InputProps={{ readOnly: !isEditing }} value={studentData.nombre || ''} onChange={handleChange} helperText=" " required />
-      <TextField name="apellido_paterno" label="Primer Apellido" InputProps={{ readOnly: !isEditing }} value={studentData.apellido_paterno || ''} onChange={handleChange} helperText=" " required />
-      <TextField name="apellido_materno" label="Segundo Apellido" InputProps={{ readOnly: !isEditing }} value={studentData.apellido_materno || ''} onChange={handleChange} helperText=" " required />
-      <TextField name="num_telefono" label="Núm. Telefonico" InputProps={{ readOnly: !isEditing }} value={studentData.num_telefono || ''} onChange={handleChange} helperText=" " required />
+      <TextField
+        name="nombre"
+        label="Nombre(s)"
+        InputProps={{ readOnly: !isEditing }}
+        value={studentData.nombre || ''}
+        onChange={handleChange}
+        helperText=" "
+        required
+      />
+      <TextField
+        name="apellido_paterno"
+        label="Primer Apellido"
+        InputProps={{ readOnly: !isEditing }}
+        value={studentData.apellido_paterno || ''}
+        onChange={handleChange}
+        helperText=" "
+        required
+      />
+      <TextField
+        name="apellido_materno"
+        label="Segundo Apellido"
+        InputProps={{ readOnly: !isEditing }}
+        value={studentData.apellido_materno || ''}
+        onChange={handleChange}
+        helperText=" "
+        required
+      />
+      <TextField
+        name="num_telefono"
+        label="Núm. Telefonico"
+        InputProps={{ readOnly: !isEditing }}
+        value={studentData.num_telefono || ''}
+        onChange={handleChange}
+        helperText=" "
+        required
+      />
       <FormControl sx={{ m: 1, width: '35ch' }} required>
         <InputLabel>Nacionalidad</InputLabel>
         <Select
@@ -173,7 +211,17 @@ function StudentProfile({
           />
         ) : null
       }
-      <TextField name="fecha_de_nacimiento" label="Fecha de nacimiento" type="date" InputProps={{ readOnly: !isEditing }} InputLabelProps={{ shrink: true }} value={studentData.fecha_de_nacimiento || ''} onChange={handleChange} helperText=" " required />
+      <TextField
+        name="fecha_de_nacimiento"
+        label="Fecha de nacimiento"
+        type="date"
+        InputProps={{ readOnly: !isEditing }}
+        InputLabelProps={{ shrink: true }}
+        value={studentData.fecha_de_nacimiento || ''}
+        onChange={handleChange}
+        helperText=" "
+        required
+      />
       <Autocomplete
         readOnly={!isEditing}
         value={userEducation || ''}
@@ -186,9 +234,17 @@ function StudentProfile({
           setUserEducationInput(newInputValue);
         }}
         options={nivelEscolaridad}
-        renderInput={(params) => <TextField {...params} name="escolaridad" label="Escolaridad"  helperText="Escolaridad o equivalente" required />}
+        renderInput={(params) => <TextField {...params} name="escolaridad" label="Escolaridad" helperText="Escolaridad o equivalente" required />}
       />
-      <TextField name="ultima_escuela" label="Ultima Escuela" InputProps={{ readOnly: !isEditing }} value={studentData.ultima_escuela || ''} onChange={handleChange} helperText=" " required />
+      <TextField
+        name="ultima_escuela"
+        label="Ultima Escuela"
+        InputProps={{ readOnly: !isEditing }}
+        value={studentData.ultima_escuela || ''}
+        onChange={handleChange}
+        helperText=" "
+        required
+      />
       <Autocomplete
         readOnly={!isEditing}
         value={userState || ''}
@@ -201,10 +257,39 @@ function StudentProfile({
         options={estadosMexico}
         renderInput={(params) => <TextField {...params} name="estado" label="Estado" helperText=" " required />}
       />
-      <TextField name="ciudad" label="Ciudad" InputProps={{ readOnly: !isEditing }} value={studentData.ciudad || ''} onChange={handleChange} helperText=" " required />
-      <TextField name="codigo_postal" label="Codigo Postal" type="number" InputProps={{ readOnly: !isEditing }} value={studentData.codigo_postal || ''} onChange={handleChange} helperText=" " required />
-      <TextField name="colonia" label="Colonia" InputProps={{ readOnly: !isEditing }} value={studentData.colonia || ''} onChange={handleChange} helperText=" " required />
-      <ParentInfo studentData={studentData} handleChange={handleChange} underage={calculate_age(studentData.fecha_de_nacimiento) < 18} />
+      <TextField
+        name="ciudad"
+        label="Ciudad"
+        InputProps={{ readOnly: !isEditing }}
+        value={studentData.ciudad || ''}
+        onChange={handleChange}
+        helperText=" "
+        required
+      />
+      <TextField
+        name="codigo_postal"
+        label="Codigo Postal"
+        type="number"
+        InputProps={{ readOnly: !isEditing }}
+        value={studentData.codigo_postal || ''}
+        onChange={handleChange}
+        helperText=" "
+        required
+      />
+      <TextField
+        name="colonia"
+        label="Colonia"
+        InputProps={{ readOnly: !isEditing }}
+        value={studentData.colonia || ''}
+        onChange={handleChange}
+        helperText=" "
+        required
+      />
+      <ParentInfo
+        studentData={studentData}
+        handleChange={handleChange}
+        underage={calculateAge(studentData.fecha_de_nacimiento) < 18}
+      />
       <Box sx={{ width: '100%' }} />
 
       <Box sx={{
@@ -225,6 +310,6 @@ function StudentProfile({
       </Box>
     </Box>
   );
-};
+}
 
 export default StudentProfile;

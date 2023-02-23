@@ -50,7 +50,6 @@ const Profile = () => {
       </Box>
     );
   }
-    console.log(user?.p99roles.length)
   return (
     <Box sx={{ p: 1, ml: 1 }}>
       <Box
