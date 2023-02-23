@@ -17,8 +17,8 @@ import { estadosMexico, nivelEscolaridad } from '../../utils/constants';
 import { calculateAge } from '../../utils/utilFunctions';
 
 function StudentProfile({
-  studentInfo, openStudentProfile, setOpenStudentProfile, userID, 
-  isEditing, setIsEditing, setStudents, 
+  studentInfo, openStudentProfile, setOpenStudentProfile, userID,
+  isEditing, setIsEditing, setStudents,
   setSuccessOpen, setErrorOpen, setAlertMessage, setInfoOpen,
 }) {
   const isNewStudent = userID !== undefined;
@@ -226,11 +226,11 @@ function StudentProfile({
         readOnly={!isEditing}
         value={userEducation || ''}
         name="escolaridad"
-        onChange={(e, newValue) => {
+        onChange={(_e, newValue) => {
           setUserEducation(newValue);
         }}
         inputValue={userEducationInput}
-        onInputChange={(event, newInputValue) => {
+        onInputChange={(_event, newInputValue) => {
           setUserEducationInput(newInputValue);
         }}
         options={nivelEscolaridad}
@@ -249,7 +249,7 @@ function StudentProfile({
         readOnly={!isEditing}
         value={userState || ''}
         name="estado"
-        onChange={(e, newValue) => { setUserState(newValue); }}
+        onChange={(_e, newValue) => { setUserState(newValue); }}
         inputValue={userStateInput}
         onInputChange={(_event, newInputValue) => {
           setUserStateInput(newInputValue);

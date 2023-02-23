@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-function ParentInfo({ studentData, handleChange, underage }) {
+function StudentInfo({ studentData, handleChange, underage }) {
   return (
     <>
       <Box sx={{ fontFamily: 'default', width: '100%', mt: 2 }}>
@@ -59,4 +59,4 @@ function ParentInfo({ studentData, handleChange, underage }) {
   );
 }
 
-export default ParentInfo;
+export default StudentInfo;
