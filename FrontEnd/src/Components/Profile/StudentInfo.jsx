@@ -7,10 +7,13 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormHelperText from '@mui/material/FormHelperText';
 import Link from '@mui/material/Link';
-import { estadosMexico, nivelEscolaridad } from '../../utils/constants';
 import Autocomplete from '@mui/material/Autocomplete';
+import { estadosMexico, nivelEscolaridad } from '../../utils/constants';
 
-function StudentInfo({ userState, setUserState, userEducation, setUserEducation, studentData, isNewStudent, isEditing, handleChange }) {
+function StudentInfo({
+  userState, setUserState, userEducation, setUserEducation,
+  studentData, isNewStudent, isEditing, handleChange,
+}) {
   const [userEducationInput, setUserEducationInput] = useState(
     isNewStudent
       ? '' : nivelEscolaridad[nivelEscolaridad.indexOf(userEducation)],
@@ -19,7 +22,7 @@ function StudentInfo({ userState, setUserState, userEducation, setUserEducation,
 
   return (
     <>
-     <Box
+      <Box
         sx={{
           typography: 'subtitle2',
           fontWeight: 'light',
@@ -32,7 +35,7 @@ function StudentInfo({ userState, setUserState, userEducation, setUserEducation,
       >
         Datos Estudiante
       </Box>
-        <TextField
+      <TextField
         name="nombre"
         label="Nombre(s)"
         InputProps={{ readOnly: !isEditing }}

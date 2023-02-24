@@ -105,13 +105,13 @@ function StudentProfile({
         borderRadius: 3,
         m: 2,
         p: 2,
-        position: 'relative'
+        position: 'relative',
       }}
       autoComplete="off"
       onSubmit={handleSubmit}
     >
       <Box sx={{ position: 'absolute', right: '0.5ch', top: '0.5ch' }}>
-      {
+        {
         !isNewStudent
         && (
         <IconButton aria-label="edit" color="primary" onClick={() => { setIsEditing(!isEditing); }}>
