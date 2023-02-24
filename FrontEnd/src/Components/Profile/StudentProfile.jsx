@@ -17,7 +17,8 @@ function StudentProfile({
   const isNewStudent = userID !== undefined;
   const [studentData, setStudentInfo] = useState(studentInfo);
   const [newStudentInfo, setNewStudentInfo] = useState(studentInfo);
-  const [userState, setUserState] = useState(isNewStudent ? estadosMexico[0] : studentInfo.estado);
+  const [userOriginState, setUserOriginState] = 
+    useState(isNewStudent ? estadosMexico[0] : studentInfo.estado);
   const [userEducation, setUserEducation] = useState(
     isNewStudent
       ? nivelEscolaridad[0]
@@ -32,7 +33,7 @@ function StudentProfile({
     // Enviar esta informacion a bd
     e.preventDefault();
     studentData.escolaridad = userEducation;
-    studentData.estado = userState;
+    studentData.estado = userOriginState;
     if (studentData.curp === null) delete studentData.curp;
     if (isNewStudent) studentData.idUser = userID;
 
@@ -128,8 +129,8 @@ function StudentProfile({
         handleChange={handleChange}
         userEducation={userEducation}
         setUserEducation={setUserEducation}
-        userState={userState}
-        setUserState={setUserState}
+        userOriginState={userOriginState}
+        setUserOriginState={setUserOriginState}
       />
       <ParentInfo
         studentData={studentData}

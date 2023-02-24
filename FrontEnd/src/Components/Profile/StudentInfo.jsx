@@ -11,14 +11,14 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { estadosMexico, nivelEscolaridad } from '../../utils/constants';
 
 function StudentInfo({
-  userState, setUserState, userEducation, setUserEducation,
+  userOriginState, setUserOriginState, userEducation, setUserEducation,
   studentData, isNewStudent, isEditing, handleChange,
 }) {
   const [userEducationInput, setUserEducationInput] = useState(
     isNewStudent
       ? '' : nivelEscolaridad[nivelEscolaridad.indexOf(userEducation)],
   );
-  const [userStateInput, setUserStateInput] = useState('');
+  const [userOriginStateInput, setUserOriginStateInput] = useState('');
 
   return (
     <>
@@ -140,12 +140,12 @@ function StudentInfo({
       />
       <Autocomplete
         readOnly={!isEditing}
-        value={userState || ''}
+        value={userOriginState || ''}
         name="estado"
-        onChange={(_e, newValue) => { setUserState(newValue); }}
-        inputValue={userStateInput}
+        onChange={(_e, newValue) => { setUserOriginState(newValue); }}
+        inputValue={userOriginStateInput}
         onInputChange={(_event, newInputValue) => {
-          setUserStateInput(newInputValue);
+          setUserOriginStateInput(newInputValue);
         }}
         options={estadosMexico}
         renderInput={(params) => <TextField {...params} name="estado" label="Estado" helperText=" " required />}
