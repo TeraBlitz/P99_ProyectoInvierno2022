@@ -1,58 +1,178 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormHelperText from '@mui/material/FormHelperText';
+import Link from '@mui/material/Link';
+import { estadosMexico, nivelEscolaridad } from '../../utils/constants';
+import Autocomplete from '@mui/material/Autocomplete';
 
-function StudentInfo({ studentData, handleChange, underage }) {
+function StudentInfo({ userState, setUserState, userEducation, setUserEducation, studentData, isNewStudent, isEditing, handleChange }) {
+  const [userEducationInput, setUserEducationInput] = useState(
+    isNewStudent
+      ? '' : nivelEscolaridad[nivelEscolaridad.indexOf(userEducation)],
+  );
+  const [userStateInput, setUserStateInput] = useState('');
+
   return (
     <>
-      <Box sx={{ fontFamily: 'default', width: '100%', mt: 2 }}>
-        <Typography sx={{ display: underage ? '' : 'none', typography: 'subtitle2', fontWeight: 'light' }}>
-          Datos Tutor
-        </Typography>
-        <Typography sx={{ display: !underage ? '' : 'none', typography: 'subtitle2', fontWeight: 'light' }}>
-          Contacto Emergencia
-        </Typography>
+     <Box
+        sx={{
+          typography: 'subtitle2',
+          fontWeight: 'light',
+          fontFamily: 'default',
+          width: '100%',
+          mt: 2,
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
+      >
+        Datos Estudiante
       </Box>
-      <TextField
-        name="tutor_nombre"
+        <TextField
+        name="nombre"
         label="Nombre(s)"
-        value={studentData.tutor_nombre || ''}
+        InputProps={{ readOnly: !isEditing }}
+        value={studentData.nombre || ''}
         onChange={handleChange}
         helperText=" "
         required
       />
       <TextField
-        name="tutor_apellido_paterno"
+        name="apellido_paterno"
         label="Primer Apellido"
-        value={studentData.tutor_apellido_paterno || ''}
+        InputProps={{ readOnly: !isEditing }}
+        value={studentData.apellido_paterno || ''}
         onChange={handleChange}
         helperText=" "
         required
       />
       <TextField
-        name="tutor_apellido_materno"
+        name="apellido_materno"
         label="Segundo Apellido"
-        value={studentData.tutor_apellido_materno || ''}
+        InputProps={{ readOnly: !isEditing }}
+        value={studentData.apellido_materno || ''}
         onChange={handleChange}
         helperText=" "
         required
       />
       <TextField
-        name="tutor_correo"
-        label="Correo"
-        type="email"
-        value={studentData.tutor_correo || ''}
-        onChange={handleChange}
-        helperText=" "
-        required
-      />
-      <TextField
-        name="tutor_num_telefono"
+        name="num_telefono"
         label="Núm. Telefonico"
-        value={studentData.tutor_num_telefono || ''}
+        InputProps={{ readOnly: !isEditing }}
+        value={studentData.num_telefono || ''}
         onChange={handleChange}
-        helperText="LADA + 10 Digitos"
+        helperText=" "
+        required
+      />
+      <FormControl sx={{ m: 1, width: '35ch' }} required>
+        <InputLabel>Nacionalidad</InputLabel>
+        <Select
+          value={studentData.pais}
+          label="Nacionalidad"
+          onChange={handleChange}
+          name="pais"
+        >
+          <MenuItem value="">
+            <em>N/A</em>
+          </MenuItem>
+          <MenuItem value="Mexico">Mexicana</MenuItem>
+          <MenuItem value="Otro">Otro</MenuItem>
+        </Select>
+        <FormHelperText> </FormHelperText>
+      </FormControl>
+      {
+        studentData.pais === 'Mexico' ? (
+          <TextField
+            name="curp"
+            label="CURP"
+            value={studentData.curp ? studentData.curp : ''}
+            InputProps={{ readOnly: !isEditing }}
+            onChange={handleChange}
+            required
+            helperText={(
+              <Link href="https://www.gob.mx/curp/" underline="hover" target="_blank">
+                &#9432; Obten tu CURP
+              </Link>
+              )}
+          />
+        ) : null
+      }
+      <TextField
+        name="fecha_de_nacimiento"
+        label="Fecha de nacimiento"
+        type="date"
+        InputProps={{ readOnly: !isEditing }}
+        InputLabelProps={{ shrink: true }}
+        value={studentData.fecha_de_nacimiento || ''}
+        onChange={handleChange}
+        helperText=" "
+        required
+      />
+      <Autocomplete
+        readOnly={!isEditing}
+        value={userEducation || ''}
+        name="escolaridad"
+        onChange={(_e, newValue) => {
+          setUserEducation(newValue);
+        }}
+        inputValue={userEducationInput}
+        onInputChange={(_event, newInputValue) => {
+          setUserEducationInput(newInputValue);
+        }}
+        options={nivelEscolaridad}
+        renderInput={(params) => <TextField {...params} name="escolaridad" label="Escolaridad" helperText="Escolaridad o equivalente" required />}
+      />
+      <TextField
+        name="ultima_escuela"
+        label="Ultima Escuela"
+        InputProps={{ readOnly: !isEditing }}
+        value={studentData.ultima_escuela || ''}
+        onChange={handleChange}
+        helperText=" "
+        required
+      />
+      <Autocomplete
+        readOnly={!isEditing}
+        value={userState || ''}
+        name="estado"
+        onChange={(_e, newValue) => { setUserState(newValue); }}
+        inputValue={userStateInput}
+        onInputChange={(_event, newInputValue) => {
+          setUserStateInput(newInputValue);
+        }}
+        options={estadosMexico}
+        renderInput={(params) => <TextField {...params} name="estado" label="Estado" helperText=" " required />}
+      />
+      <TextField
+        name="ciudad"
+        label="Ciudad"
+        InputProps={{ readOnly: !isEditing }}
+        value={studentData.ciudad || ''}
+        onChange={handleChange}
+        helperText=" "
+        required
+      />
+      <TextField
+        name="codigo_postal"
+        label="Codigo Postal"
+        type="number"
+        InputProps={{ readOnly: !isEditing }}
+        value={studentData.codigo_postal || ''}
+        onChange={handleChange}
+        helperText=" "
+        required
+      />
+      <TextField
+        name="colonia"
+        label="Colonia"
+        InputProps={{ readOnly: !isEditing }}
+        value={studentData.colonia || ''}
+        onChange={handleChange}
+        helperText=" "
         required
       />
     </>
