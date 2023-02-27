@@ -5,8 +5,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
 import StudentItem from './StudentItem';
-import StudentProfile from '../../Pages/ProfilePage/StudentProfile';
-import EditStudentProfile from '../../Pages/ProfilePage/EditStudentProfile';
+import StudentProfile from './StudentProfile';
 import DeleteDialog from './DeleteDialog';
 import { deleteStudent, findStudents } from '../../api/students';
 import { defaultStudentInfo } from '../../utils/constants';
@@ -19,6 +18,7 @@ function StudentSection({
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [addStudent, setAddStudent] = useState(false);
+  const canAddStudents = user?.p99roles.length === 0;
 
   const handleOpenDeleteDialogState = () => {
     setOpenDeleteDialog(!openDeleteDialog);
@@ -33,7 +33,6 @@ function StudentSection({
     handleOpenDeleteDialogState();
     deleteStudent({ _id: currentStudent._id })
       .then((data) => {
-        console.log(data);
         if (data.status === 400) {
           setAlertMessage('Se produjo un error al eliminar al estudiante.');
           setErrorOpen(true);
@@ -46,20 +45,25 @@ function StudentSection({
         findStudents({ idUser: user.sub })
           .then((response) => response.json())
           .then((data) => {
-            console.log(data);
             setStudents(data);
           });
       });
   };
 
-  const canAddStudents = user?.p99roles.length === 0;
+  const handleCloseStudentModal = () => {
+    if (addStudent) setAddStudent(!addStudent);
+    else {
+      setOpenEditModal(!openEditModal);
+      setIsEditing(false);
+    }
+  };
 
   return (
     <>
       <Box
         sx={{
           pt: 2,
-          display: canAddStudents? 'flex' : 'none',
+          display: canAddStudents ? 'flex' : 'none',
           justifyContent: 'space-between',
           mt: 2,
         }}
@@ -69,7 +73,7 @@ function StudentSection({
       <Box>
         {students !== null
         && students.length === 0
-        && canAddStudents? (
+        && canAddStudents ? (
           <Box
             sx={{
               fontFamily: 'default',
@@ -99,7 +103,7 @@ function StudentSection({
           sx={{
             display: {
               xs: 'none',
-              md: canAddStudents? 'flex' : 'none',
+              md: canAddStudents ? 'flex' : 'none',
               justifyContent: 'flex-end',
             },
           }}
@@ -112,6 +116,7 @@ function StudentSection({
             }}
             onClick={() => {
               setAddStudent(!addStudent);
+              setIsEditing(!isEditing);
             }}
             variant="contained"
             endIcon={<AddIcon />}
@@ -122,38 +127,19 @@ function StudentSection({
       </Box>
 
       <Modal
-        open={addStudent}
-        onClose={() => setAddStudent(!addStudent)}
+        open={addStudent || openEditModal}
+        onClose={handleCloseStudentModal}
         sx={{ overflow: 'scroll' }}
       >
         <>
           <StudentProfile
-            studentInfo={defaultStudentInfo}
-            setAddStudent={setAddStudent}
-            addStudent={addStudent}
-            userID={user.sub}
+            studentInfo={(addStudent ? defaultStudentInfo : currentStudent)}
+            openStudentProfile={(addStudent || openEditModal)}
+            setOpenStudentProfile={(addStudent ? setAddStudent : setOpenEditModal)}
+            userID={(addStudent ? user.sub : undefined)}
             setStudents={setStudents}
-            setSuccessOpen={setSuccessOpen}
-            setErrorOpen={setErrorOpen}
-            setAlertMessage={setAlertMessage}
-            setInfoOpen={setInfoOpen}
-          />
-        </>
-      </Modal>
-
-      <Modal
-        open={openEditModal}
-        onClose={() => setOpenEditModal(!openEditModal)}
-        sx={{ overflow: 'scroll' }}
-      >
-        <>
-          <EditStudentProfile
-            openEditModal={openEditModal}
-            setOpenEditModal={setOpenEditModal}
-            studentInfo={currentStudent}
-            setIsEditing={setIsEditing}
-            isEditing={isEditing}
-            setStudents={setStudents}
+            isEditing={(addStudent ? true : isEditing)}
+            setIsEditing={(addStudent ? () => {} : setIsEditing)}
             setSuccessOpen={setSuccessOpen}
             setErrorOpen={setErrorOpen}
             setAlertMessage={setAlertMessage}

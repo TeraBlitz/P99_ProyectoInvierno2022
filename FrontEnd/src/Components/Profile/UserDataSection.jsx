@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
 import PasswordIcon from '@mui/icons-material/Password';
-import ChangePassModal from '../../Pages/ProfilePage/ChangePassModal';
+import ChangePassModal from './../../Components/Profile/ChangePassModal';
 
 function UserDataSection({
   userInfo, setSuccessOpen, setErrorOpen, setAlertMessage,
