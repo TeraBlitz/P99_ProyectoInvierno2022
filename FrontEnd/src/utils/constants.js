@@ -37,3 +37,34 @@ export const nivelEscolaridad = [
   'Especialidad o Maestria',
   'Doctorado'
 ]
+
+export const controlPanelCards = [
+  {
+    id: '1',
+    title: 'Inscripción',
+    body: 'Acceder a sistema de inscripciones. Crea, actualiza y elimina los cursos.',
+    color: '#366ac3',
+    link: 'inscripcion',
+  },
+  {
+    id: '2',
+    title: 'Profesores',
+    body: 'Administrar los profesores y visualizar su información.',
+    color: '#5F8AD4',
+    link: 'Profesores',
+  },
+  {
+    id: '3',
+    title: 'Alumnos',
+    body: 'Administrar los alumnos y visualizar su información.',
+    color: '#89ABE4',
+    link: 'Alumnos',
+  },
+  {
+    id: '4',
+    title: 'Periodos',
+    body: 'Administrar el periodo escolar actual y próximos periodos.',
+    color: '#b2cbf5',
+    link: 'Periodos',
+  },
+];
