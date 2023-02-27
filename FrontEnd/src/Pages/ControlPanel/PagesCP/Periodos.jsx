@@ -12,6 +12,7 @@ import {
   createPeriodo, deletePeriodos, getPeriodos, updatePeriodo,
 } from '../../../api/Periodos';
 import { getClasses } from '../../../api/classes';
+import { traducirDate, traducirTime } from './../../../utils/utilFunctions'
 
 export default function Periodos() {
   useEffect(() => {
@@ -22,15 +23,6 @@ export default function Periodos() {
 
     console.log('Periodos: ', data);
   }, []);
-  // funciones para cambiar el display de fechas
-  function traducirDate(raw) {
-    const date = raw.split('T', 2);
-    return (date[0]);
-  }
-  function traducirTime(raw) {
-    const date = raw.split('T', 2);
-    return (date[1]);
-  }
 
   // config de modal estilo
   const style = {
@@ -74,9 +66,7 @@ export default function Periodos() {
     dataClase.forEach((element) => {
       if (element.clavePeriodo === clave) {
         console.log(element);
-        if (listaProfes.includes(element.matriculaProfesor)) {
-
-        } else {
+        if (!listaProfes.includes(element.matriculaProfesor)) {
           listaProfes.push(element.matriculaProfesor);
         }
       }
@@ -116,16 +106,16 @@ export default function Periodos() {
   const [modalInsertar, setModalInsertar] = useState(false);
   const [clave, setClave] = useState('');
   const [status, setStatus] = useState('');
-  const [fecha_inicio, setFecha_inicio] = useState('');
-  const [fecha_fin, setFecha_fin] = useState('');
-  const [fecha_inicio_insc_talleres, setFecha_inicio_insc_talleres] = useState('');
-  const [fecha_fin_insc_talleres, setFecha_fin_insc_talleres] = useState('');
-  const [fecha_inicio_insc_idiomas, setFecha_inicio_insc_idiomas] = useState('');
-  const [fecha_fin_insc_idiomas, setFecha_fin_insc_idiomas] = useState('');
-  const [fecha_inicio_insc_asesorias, setFecha_inicio_insc_asesorias] = useState('');
-  const [fecha_fin_insc_asesorias, setFecha_fin_insc_asesorias] = useState('');
-  const [cursos_max_por_alumno, setCursos_max_por_alumno] = useState('');
-  const [idiomas_max_por_alumno, setidiomas_max_por_alumno] = useState('');
+  const [fechaInicio, setFechaInicio] = useState('');
+  const [fechaFin, setFechaFin] = useState('');
+  const [fechaInicioInscTalleres, setFechaInicioInscTalleres] = useState('');
+  const [fechaFinInscTalleres, setFechaFinInscTalleres] = useState('');
+  const [fechaInicioInscIdiomas, setFechaInicioInscIdiomas] = useState('');
+  const [fechaFinInscIdiomas, setFechaFinInscIdiomas] = useState('');
+  const [fechaInicioInscAsesorias, setFechaInicioInscAsesorias] = useState('');
+  const [fechaFinInscAsesorias, setFechaFinInscAsesorias] = useState('');
+  const [cursosMaxPorAlumno, setCursosMaxPorAlumno] = useState('');
+  const [idiomasMaxPorAlumno, setIdiomasMaxPorAlumno] = useState('');
 
   // Modal abrir y cerrar
   const abrirCerrarModalInsertar = () => {
@@ -139,31 +129,31 @@ export default function Periodos() {
       await createPeriodo({
         clave,
         status,
-        fecha_inicio: `${fecha_inicio}:00`,
-        fecha_fin: `${fecha_fin}:00`,
-        fecha_inicio_insc_talleres: `${fecha_inicio_insc_talleres}:00`,
-        fecha_fin_insc_talleres: `${fecha_fin_insc_talleres}:00`,
-        fecha_inicio_insc_idiomas: `${fecha_inicio_insc_idiomas}:00`,
-        fecha_fin_insc_idiomas: `${fecha_fin_insc_idiomas}:00`,
-        fecha_inicio_insc_asesorias: `${fecha_inicio_insc_asesorias}:00`,
-        fecha_fin_insc_asesorias: `${fecha_fin_insc_asesorias}:00`,
-        cursos_max_por_alumno,
-        idiomas_max_por_alumno,
+        fecha_inicio: `${fechaInicio}:00`,
+        fecha_fin: `${fechaFin}:00`,
+        fecha_inicio_insc_talleres: `${fechaInicioInscTalleres}:00`,
+        fecha_fin_insc_talleres: `${fechaFinInscTalleres}:00`,
+        fecha_inicio_insc_idiomas: `${fechaInicioInscIdiomas}:00`,
+        fecha_fin_insc_idiomas: `${fechaFinInscIdiomas}:00`,
+        fecha_inicio_insc_asesorias: `${fechaInicioInscAsesorias}:00`,
+        fecha_fin_insc_asesorias: `${fechaFinInscAsesorias}:00`,
+        cursos_max_por_alumno: cursosMaxPorAlumno,
+        idiomas_max_por_alumno: idiomasMaxPorAlumno,
       });
       abrirCerrarModalInsertar();
       getAllPeriodos();
       setClave('');
       setStatus('');
-      setFecha_inicio('');
-      setFecha_fin('');
-      setFecha_inicio_insc_talleres('');
-      setFecha_fin_insc_talleres('');
-      setFecha_inicio_insc_idiomas('');
-      setFecha_fin_insc_idiomas('');
-      setFecha_inicio_insc_asesorias('');
-      setFecha_fin_insc_asesorias('');
-      setCursos_max_por_alumno('');
-      setidiomas_max_por_alumno('');
+      setFechaInicio('');
+      setFechaFin('');
+      setFechaInicioInscTalleres('');
+      setFechaFinInscTalleres('');
+      setFechaInicioInscIdiomas('');
+      setFechaFinInscIdiomas('');
+      setFechaInicioInscAsesorias('');
+      setFechaFinInscAsesorias('');
+      setCursosMaxPorAlumno('');
+      setIdiomasMaxPorAlumno('');
     } catch (error) {
       console.log(error);
     }
@@ -207,7 +197,7 @@ export default function Periodos() {
   };
 
   // Procedimiento para eliminar
-  const postDelete = async (e) => {
+  const postDelete = async () => {
     try {
       await deletePeriodos({
         _id: consolaSeleccionada._id,
@@ -295,7 +285,8 @@ export default function Periodos() {
     }
     console.log(consolaSeleccionada.fecha_inicio);
   };
-    // Editar
+  
+  // Editar
   const postEditar = async (e) => {
     e.preventDefault();
     try {
@@ -323,10 +314,8 @@ export default function Periodos() {
 
   console.log('data: ', data);
   return (
-
     <div>
       <h1 className="tittle">Periodos</h1>
-
       <Button
         variant="contained"
         onClick={() => abrirCerrarModalInsertar()}
@@ -384,7 +373,7 @@ export default function Periodos() {
               InputLabelProps={{
                 shrink: true,
               }}
-              onChange={(e) => setFecha_inicio(e.target.value)}
+              onChange={(e) => setFechaInicio(e.target.value)}
             />
             <TextField
               style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
@@ -395,7 +384,7 @@ export default function Periodos() {
               InputLabelProps={{
                 shrink: true,
               }}
-              onChange={(e) => setFecha_fin(e.target.value)}
+              onChange={(e) => setFechaFin(e.target.value)}
             />
             <TextField
               style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
@@ -406,7 +395,7 @@ export default function Periodos() {
               InputLabelProps={{
                 shrink: true,
               }}
-              onChange={(e) => setFecha_inicio_insc_talleres(e.target.value)}
+              onChange={(e) => setFechaInicioInscTalleres(e.target.value)}
             />
             <TextField
               style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
@@ -417,9 +406,8 @@ export default function Periodos() {
               InputLabelProps={{
                 shrink: true,
               }}
-              onChange={(e) => setFecha_fin_insc_talleres(e.target.value)}
+              onChange={(e) => setFechaFinInscTalleres(e.target.value)}
             />
-
             <TextField
               style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
               label="Fecha de inicio de incripciones de idiomas"
@@ -429,7 +417,7 @@ export default function Periodos() {
               InputLabelProps={{
                 shrink: true,
               }}
-              onChange={(e) => setFecha_inicio_insc_idiomas(e.target.value)}
+              onChange={(e) => setFechaInicioInscIdiomas(e.target.value)}
             />
             <TextField
               style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
@@ -440,9 +428,8 @@ export default function Periodos() {
               InputLabelProps={{
                 shrink: true,
               }}
-              onChange={(e) => setFecha_fin_insc_idiomas(e.target.value)}
+              onChange={(e) => setFechaFinInscIdiomas(e.target.value)}
             />
-
             <TextField
               style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
               label="Fecha de inicio de incripciones de asesorias"
@@ -452,7 +439,7 @@ export default function Periodos() {
               InputLabelProps={{
                 shrink: true,
               }}
-              onChange={(e) => setFecha_inicio_insc_asesorias(e.target.value)}
+              onChange={(e) => setFechaInicioInscAsesorias(e.target.value)}
             />
             <TextField
               style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
@@ -463,28 +450,26 @@ export default function Periodos() {
               InputLabelProps={{
                 shrink: true,
               }}
-              onChange={(e) => setFecha_fin_insc_asesorias(e.target.value)}
+              onChange={(e) => setFechaFinInscAsesorias(e.target.value)}
             />
-
             <TextField
               style={{ paddingBottom: '15px', fontFamily: 'arial' }}
               label="Cursos Maximos por Alumno"
               name="cursos_max_por_alumno"
-              onChange={(e) => setCursos_max_por_alumno(e.target.value)}
+              onChange={(e) => setCursosMaxPorAlumno(e.target.value)}
               autoFocus
             />
             <TextField
               style={{ paddingBottom: '15px', fontFamily: 'arial' }}
               label="Idiomas Max"
               name="idiomas_max_por_alumno"
-              onChange={(e) => setidiomas_max_por_alumno(e.target.value)}
+              onChange={(e) => setIdiomasMaxPorAlumno(e.target.value)}
               autoFocus
             />
             <br />
             <Button color="primary" variant="contained" onClick={postCrea}>
               Insertar
             </Button>
-
             <Button
               variant="contained"
               onClick={() => abrirCerrarModalInsertar()}
@@ -517,7 +502,6 @@ export default function Periodos() {
                 {' '}
                 {traducirTime(item.fecha_inicio)}
               </Typography>
-
               <h5 className="leyendaFaltas">Fecha de cierre: </h5>
               <Typography sx={{ mb: 1.5 }} color="text.secondary">
                 Fecha:
@@ -713,9 +697,7 @@ export default function Periodos() {
                     <TextField
                       style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
                       label="Clave"
-                      defaultValue={
-                                                consolaSeleccionada && consolaSeleccionada.clave
-                                            }
+                      defaultValue={consolaSeleccionada && consolaSeleccionada.clave}
                       name="clave"
                       onChange={handleChange}
                       autoFocus
@@ -723,9 +705,7 @@ export default function Periodos() {
                     <TextField
                       style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
                       label="Status"
-                      defaultValue={
-                                                consolaSeleccionada && consolaSeleccionada.status
-                                            }
+                      defaultValue={consolaSeleccionada && consolaSeleccionada.status}
                       name="status"
                       onChange={handleChange}
                     />
@@ -734,9 +714,7 @@ export default function Periodos() {
                       label="Fecha de inicio"
                       name="fecha_inicio"
                       onChange={handleChange}
-                      defaultValue={
-                                                consolaSeleccionada && consolaSeleccionada.fecha_inicio
-                                            }
+                      defaultValue={consolaSeleccionada && consolaSeleccionada.fecha_inicio}
                       id="datetime-local"
                       type="datetime-local"
                       InputLabelProps={{
@@ -746,9 +724,7 @@ export default function Periodos() {
                     <TextField
                       style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
                       label="fecha de Fin"
-                      defaultValue={
-                                                consolaSeleccionada && consolaSeleccionada.fecha_fin
-                                            }
+                      defaultValue={consolaSeleccionada && consolaSeleccionada.fecha_fin}
                       id="datetime-local"
                       type="datetime-local"
                       InputLabelProps={{
@@ -760,10 +736,8 @@ export default function Periodos() {
                     <TextField
                       style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
                       label="Fecha de inicio de incripciones de talleres"
-                      defaultValue={
-                                                consolaSeleccionada
-                                                && consolaSeleccionada.fecha_inicio_insc_talleres
-                                            }
+                      defaultValue={consolaSeleccionada
+                        && consolaSeleccionada.fecha_inicio_insc_talleres}
                       id="datetime-local"
                       type="datetime-local"
                       InputLabelProps={{
@@ -775,10 +749,8 @@ export default function Periodos() {
                     <TextField
                       style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
                       label="Fecha de fin de inscripciones de talleres"
-                      defaultValue={
-                                                consolaSeleccionada
-                                                && consolaSeleccionada.fecha_fin_insc_talleres
-                                            }
+                      defaultValue={consolaSeleccionada
+                        && consolaSeleccionada.fecha_fin_insc_talleres}
                       id="datetime-local"
                       type="datetime-local"
                       InputLabelProps={{
@@ -791,10 +763,8 @@ export default function Periodos() {
                     <TextField
                       style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
                       label="Fecha de inicio de incripciones de idiomas"
-                      defaultValue={
-                                                consolaSeleccionada
-                                                && consolaSeleccionada.fecha_inicio_insc_idiomas
-                                            }
+                      defaultValue={consolaSeleccionada
+                        && consolaSeleccionada.fecha_inicio_insc_idiomas}
                       id="datetime-local"
                       type="datetime-local"
                       InputLabelProps={{
@@ -807,8 +777,8 @@ export default function Periodos() {
                       style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
                       label="Fecha de fin de inscripciones de idiomas"
                       defaultValue={
-                                                consolaSeleccionada
-                                                && consolaSeleccionada.fecha_fin_insc_idiomas
+                        consolaSeleccionada
+                          && consolaSeleccionada.fecha_fin_insc_idiomas
                                             }
                       id="datetime-local"
                       type="datetime-local"
@@ -823,8 +793,8 @@ export default function Periodos() {
                       style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
                       label="Fecha de inicio de incripciones de asesorias"
                       defaultValue={
-                                                consolaSeleccionada
-                                                && consolaSeleccionada.fecha_inicio_insc_asesorias
+                        consolaSeleccionada
+                          && consolaSeleccionada.fecha_inicio_insc_asesorias
                                             }
                       id="datetime-local"
                       type="datetime-local"
@@ -838,8 +808,8 @@ export default function Periodos() {
                       style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
                       label="Fecha de fin de inscripciones de asesorias"
                       defaultValue={
-                                                consolaSeleccionada
-                                                && consolaSeleccionada.fecha_fin_insc_asesorias
+                        consolaSeleccionada
+                          && consolaSeleccionada.fecha_fin_insc_asesorias
                                             }
                       id="datetime-local"
                       type="datetime-local"
@@ -854,8 +824,8 @@ export default function Periodos() {
                       style={{ paddingBottom: '15px', fontFamily: 'arial' }}
                       label="Cursos Maximos por Alumno"
                       defaultValue={
-                                                consolaSeleccionada
-                                                && consolaSeleccionada.cursos_max_por_alumno
+                        consolaSeleccionada
+                          && consolaSeleccionada.cursos_max_por_alumno
                                             }
                       name="cursos_max_por_alumno"
                       onChange={handleChange}
@@ -864,8 +834,8 @@ export default function Periodos() {
                       style={{ paddingBottom: '15px', fontFamily: 'arial' }}
                       label="Idiomas Max"
                       defaultValue={
-                                                consolaSeleccionada
-                                                && consolaSeleccionada.idiomas_max_por_alumno
+                        consolaSeleccionada
+                        && consolaSeleccionada.idiomas_max_por_alumno
                                             }
                       name="idiomas_max_por_alumno"
                       onChange={handleChange}

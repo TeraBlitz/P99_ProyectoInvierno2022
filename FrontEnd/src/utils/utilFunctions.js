@@ -8,9 +8,14 @@ export const calculateAge = (dateString) => {
 }
 
 // ----------------------------------Funcion para ver periodo mas reciente
-function traducirDate(raw) {
+export const traducirDate = (raw) => {
   const date = raw.split('T', 2);
   return (date[0]);
+}
+
+export const traducirTime = (raw) => {
+  const date = raw.split('T', 2);
+  return (date[1]);
 }
 
 export const compararFecha = (data) => {
