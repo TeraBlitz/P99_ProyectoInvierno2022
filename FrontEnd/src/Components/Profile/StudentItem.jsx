@@ -8,17 +8,22 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import CardActionArea  from '@mui/material/CardActionArea';
 
-const StudentItem = ({studentInfo, name, first_lastname, second_lastname, editStudent, setCurrentStudent, handleOpenDialog}) => {
+const StudentItem = ({studentInfo, name, first_lastname, second_lastname, editStudent, setCurrentStudent, handleOpenDialog, setIsEditing}) => {
 
   const openDelete = () => {
     setCurrentStudent(studentInfo);
     handleOpenDialog();
   }
 
+  const openEdit = () => {
+    setIsEditing(true); 
+    editStudent(studentInfo);
+  }
+
   return (
     <Card sx={{ my: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
       <Box>
-        <CardActionArea onClick={() =>  editStudent(studentInfo)}>
+        <CardActionArea onClick={() => editStudent(studentInfo)}>
           <CardContent>
             <Typography variant="body2" component="div">
               {name} {first_lastname} {second_lastname} 
@@ -27,7 +32,7 @@ const StudentItem = ({studentInfo, name, first_lastname, second_lastname, editSt
         </CardActionArea>
       </Box>
       <Box>
-        <IconButton aria-label="edit" color="primary" onClick={() =>  editStudent(studentInfo)}>
+        <IconButton aria-label="edit" color="primary" onClick={() => openEdit()}>
           <EditIcon />
         </IconButton>
         <IconButton aria-label="delete" color="error" onClick={() => openDelete()}>
