@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 
-function EditModalPeriodo({
+function ModalPeriodo({
   periodoActual, openModal, setOpenModal, handleChange, onSubmit, operation,
 }) {
   const fields = [
@@ -50,7 +50,7 @@ function EditModalPeriodo({
         </Typography>
         <div className="spacer" />
         <div>
-          {!operation === 'Eliminar' && fields.map((field) => (
+          {operation !== 'Eliminar' && fields.map((field) => (
             <TextField
               key={field.name}
               style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
@@ -84,4 +84,4 @@ function EditModalPeriodo({
   );
 }
 
-export default EditModalPeriodo;
+export default ModalPeriodo;

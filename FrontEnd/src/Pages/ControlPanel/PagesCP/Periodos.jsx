@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './periodos.css';
 import axios from 'axios';
 import Button from '@mui/material/Button';
-import EditModalPeriodo from '../../../Components/ControlPanel/EditModalPeriodo';
+import ModalPeriodo from '../../../Components/ControlPanel/ModalPeriodo';
 import PeriodoCard from '../../../Components/ControlPanel/PeriodoCard';
 import {
   createPeriodo, deletePeriodos, getPeriodos, updatePeriodo,
@@ -144,7 +144,7 @@ export default function Periodos() {
             seleccionarConsola={seleccionarConsola}
           />
         )) : null}
-        <EditModalPeriodo
+        <ModalPeriodo
           periodoActual={consolaSeleccionada}
           openModal={openModal}
           setOpenModal={abrirCerrarModal}
