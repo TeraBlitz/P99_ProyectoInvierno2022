@@ -81,3 +81,37 @@ export const contarAlumnos = (datos) => {
   });
   return (alumnos);
 }
+
+// funciones para sacar asociar datos a periodos
+export const encontrarProfes = (dataClase, clave) => {
+  const listaProfes = [];
+  dataClase.forEach((element) => {
+    if (element.clavePeriodo === clave) {
+      if (!listaProfes.includes(element.matriculaProfesor)) {
+        listaProfes.push(element.matriculaProfesor);
+      }
+    }
+  });
+  return (listaProfes.length);
+}
+
+export const encontrarAlumnos = (dataClase, clave) => {
+  let alumnosInscritos = 0;
+  dataClase.forEach((element) => {
+    if (element.clavePeriodo === clave) {
+      alumnosInscritos += Number(element.cupo_actual);
+    }
+  });
+  return (alumnosInscritos);
+}
+
+export const encontrarClases = (dataClase, clave) => {
+  let clasesInscritas = 0;
+  dataClase.forEach((element) => {
+    if (element.clavePeriodo === clave) {
+      clasesInscritas += 1;
+    }
+  });
+
+  return (clasesInscritas);
+}
