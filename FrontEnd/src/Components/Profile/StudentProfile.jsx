@@ -123,7 +123,6 @@ function StudentProfile({
       </Box>
       <StudentInfo
         isNewStudent={isNewStudent}
-        setIsEditing={setIsEditing}
         isEditing={isEditing}
         studentData={studentData}
         handleChange={handleChange}
@@ -136,6 +135,7 @@ function StudentProfile({
         studentData={studentData}
         handleChange={handleChange}
         underage={calculateAge(studentData.fecha_de_nacimiento) < 18}
+        isEditing={isEditing}
       />
       <Box sx={{ width: '100%' }} />
       <Box sx={{
