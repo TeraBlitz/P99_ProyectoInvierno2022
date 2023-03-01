@@ -8,9 +8,14 @@ export const calculateAge = (dateString) => {
 }
 
 // ----------------------------------Funcion para ver periodo mas reciente
-function traducirDate(raw) {
+export const traducirDate = (raw) => {
   const date = raw.split('T', 2);
   return (date[0]);
+}
+
+export const traducirTime = (raw) => {
+  const date = raw.split('T', 2);
+  return (date[1]);
 }
 
 export const compararFecha = (data) => {
@@ -75,4 +80,38 @@ export const contarAlumnos = (datos) => {
     }
   });
   return (alumnos);
+}
+
+// funciones para sacar asociar datos a periodos
+export const encontrarProfes = (dataClase, clave) => {
+  const listaProfes = [];
+  dataClase.forEach((element) => {
+    if (element.clavePeriodo === clave) {
+      if (!listaProfes.includes(element.matriculaProfesor)) {
+        listaProfes.push(element.matriculaProfesor);
+      }
+    }
+  });
+  return (listaProfes.length);
+}
+
+export const encontrarAlumnos = (dataClase, clave) => {
+  let alumnosInscritos = 0;
+  dataClase.forEach((element) => {
+    if (element.clavePeriodo === clave) {
+      alumnosInscritos += Number(element.cupo_actual);
+    }
+  });
+  return (alumnosInscritos);
+}
+
+export const encontrarClases = (dataClase, clave) => {
+  let clasesInscritas = 0;
+  dataClase.forEach((element) => {
+    if (element.clavePeriodo === clave) {
+      clasesInscritas += 1;
+    }
+  });
+
+  return (clasesInscritas);
 }
