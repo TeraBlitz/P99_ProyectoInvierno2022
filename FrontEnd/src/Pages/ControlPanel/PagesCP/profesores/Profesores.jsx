@@ -108,31 +108,18 @@ function Profesores() {
     getProfesores();
   };
 
-  let array = [];
-  let array2 = [];
-  let array3 = [];
-
   const handleSelectChange = (event) => {
-    array = [];
-    array2 = [];
-    array3 = [];
-    array2.push(dataClase.filter((data) => data.clavePeriodo === event.label));
-    for (let i = 0; i < array2.length; i++) {
-      for (let j = 0; j < array2[i].length; j++) {
-        array.push(originalProfesorData.filter(
-          (data) => data.matricula === array2[i][j].matriculaProfesor,
-        ));
-      }
-    }
-    for (let i = 0; i < array.length; i++) {
-      array3.push(array[i][0]);
-    }
-    if (array3.length > 0) {
-      setProfesorData(array3);
-    } else {
-      getProfesores();
-    }
+    const filteredClases = [dataClase.filter((data) => data.clavePeriodo === event.label)];
+    const profesoresClases = filteredClases.flatMap((data) =>
+        data.map((clase) =>
+            originalProfesorData.filter((profesor) => profesor.matricula === clase.matriculaProfesor)
+        )
+    );
+    const listaProfesores = profesoresClases.map((profesor) => profesor[0]);
+
+    listaProfesores.length > 0?  setProfesorData(listaProfesores) : getProfesores();
   };
+  
 
   return (
     <div>
