@@ -19,6 +19,7 @@ import {
 } from '../../../../api/profesors';
 import { getClasses } from '../../../../api/classes';
 import { getPeriodos } from '../../../../api/Periodos';
+import HeaderProfesores from '../../../../Components/ControlPanel/Profesores/HeaderProfesores';
 
 export default function Profesores() {
   let array = [];
@@ -443,67 +444,12 @@ export default function Profesores() {
   const [items, setItems] = useState([]);
   return (
     <div>
-      <Box
-        sx={{
-          width: '1000px',
-          padding: '15px',
-          height: '150px',
-          position: 'absolute',
-          marginLeft: '50px',
-          marginTop: '15px',
-        }}
-      >
-        <Typography
-          variant="h3"
-          component="h3"
-          sx={{
-            textAlign: 'left', mt: 3, mb: 3, fontFamily: 'arial',
-          }}
-        >
-          Profesores
-          <Button
-            sx={{ marginLeft: '400px' }}
-            variant="contained"
-            color="success"
-            onClick={() => abrirCerrarModalInsertar()}
-          >
-            <AddCircleOutlineIcon />
-            {' Agregar Profesor'}
-          </Button>
-        </Typography>
-        <CSVLink data={data} filename="alumnos.csv">
-          <Button
-            color="primary"
-            variant="contained"
-            sx={{ marginLeft: '445px', marginTop: '-115px' }}
-          >
-            Exportar a CSV
-          </Button>
-        </CSVLink>
-      </Box>
-      <Box
-        sx={{
-          width: 250,
-          position: 'absolute',
-          textAlign: 'left',
-          marginLeft: '930px',
-          marginTop: '67px',
-          fontFamily: 'arial',
-          borderRadius: '8px',
-
-        }}
-      >
-        <Select
-          sx={{
-            fontFamily: 'default',
-          }}
-          options={dataPeriodo.map((sup) => ({
-            label: sup.clave,
-            value: sup._id,
-          }))}
-          onChange={handleSelectChange}
-        />
-      </Box>
+      <HeaderProfesores 
+        data={data}
+        setOpenModal={abrirCerrarModalInsertar}
+        dataPeriodo={dataPeriodo}
+        handleSelectChange={handleSelectChange}
+      />
       <Card
         sx={{
           width: 1120,
