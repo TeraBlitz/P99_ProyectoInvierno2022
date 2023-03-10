@@ -6,6 +6,16 @@ import {
   Typography,
 } from '@mui/material';
 
+const campos = [
+  { label: 'Nombre', name: 'nombre' },
+  { label: 'Apellidos', name: 'apellidos' },
+  { label: 'Matricula', name: 'matricula' },
+  { label: 'Correo', name: 'correo' },
+  { label: 'Fecha de nacimiento', name: 'fecha_de_nacimiento' },
+  { label: 'Telefono', name: 'num_telefono' },
+  { label: 'Cursos impartidos', name: 'num_cursos_impartidos' },
+];
+
 function ModalProfesor({
   consolaSeleccionada, onSubmit, handleChange, openModal, abrirCerrarModal, operation,
 }) {
@@ -45,68 +55,20 @@ function ModalProfesor({
         )}
         {
           operation !== 'Eliminar'
-          && (
-          <>
-            <TextField
-              style={{ paddingBottom: '15px', fontFamily: 'arial' }}
-              label="Nombre"
-              onChange={handleChange}
-              value={consolaSeleccionada?.nombre}
-              name="nombre"
-              autoFocus
-            />
-            <br />
-            <TextField
-              style={{ paddingBottom: '15px', fontFamily: 'arial' }}
-              label="Apellidos"
-              onChange={handleChange}
-              value={consolaSeleccionada?.apellidos}
-              name="apellidos"
-            />
-            <br />
-            <TextField
-              style={{ paddingBottom: '15px', fontFamily: 'arial' }}
-              label="Matricula"
-              onChange={handleChange}
-              value={consolaSeleccionada?.matricula}
-              name="matricula"
-            />
-            <br />
-            <TextField
-              style={{ paddingBottom: '15px', fontFamily: 'arial' }}
-              label="Correo"
-              onChange={handleChange}
-              value={consolaSeleccionada?.correo}
-              name="correo"
-            />
-            <br />
-            <TextField
-              style={{ paddingBottom: '15px', fontFamily: 'arial' }}
-              label="Fecha de nacimiento"
-              onChange={handleChange}
-              value={consolaSeleccionada?.fecha_de_nacimiento}
-              name="fecha_de_nacimiento"
-            />
-            <br />
-            <TextField
-              style={{ paddingBottom: '15px', fontFamily: 'arial' }}
-              label="Telefono"
-              onChange={handleChange}
-              value={consolaSeleccionada?.num_telefono}
-              name="num_telefono"
-            />
-            <br />
-            <TextField
-              style={{ paddingBottom: '15px', fontFamily: 'arial' }}
-              label="Cursos impartidos"
-              onChange={handleChange}
-              value={consolaSeleccionada?.num_cursos_impartidos}
-              name="num_cursos_impartidos"
-            />
-          </>
-          )
+          && campos.map((campo) => (
+            <>
+              <TextField
+                key={campo.name}
+                style={{ paddingBottom: '15px', fontFamily: 'arial' }}
+                label={campo.label}
+                onChange={handleChange}
+                value={consolaSeleccionada?.[campo.name]}
+                name={campo.name}
+              />
+              <br />
+            </>
+          ))
         }
-        <br />
         <br />
         <div align="center">
           <Button color={operation === 'Eliminar' ? 'error' : 'primary'} onClick={onSubmit}>

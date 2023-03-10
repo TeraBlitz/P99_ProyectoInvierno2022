@@ -104,16 +104,15 @@ function Profesores() {
 
   const handleSelectChange = (event) => {
     const filteredClases = [dataClase.filter((data) => data.clavePeriodo === event.label)];
-    const profesoresClases = filteredClases.flatMap((data) =>
-        data.map((clase) =>
-            originalProfesorData.filter((profesor) => profesor.matricula === clase.matriculaProfesor)
-        )
-    );
+    const profesoresClases = filteredClases.flatMap((data) => data.map(
+      (clase) => originalProfesorData.filter(
+        (profesor) => profesor.matricula === clase.matriculaProfesor,
+      ),
+    ));
     const listaProfesores = profesoresClases.map((profesor) => profesor[0]);
 
-    listaProfesores.length > 0?  setProfesorData(listaProfesores) : getProfesores();
+    listaProfesores.length > 0 ? setProfesorData(listaProfesores) : getProfesores();
   };
-  
 
   return (
     <div>
