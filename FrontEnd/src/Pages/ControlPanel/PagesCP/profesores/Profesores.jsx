@@ -21,11 +21,6 @@ function Profesores() {
   const getProfesores = async () => {
     await getProfesors().then((response) => response.json()).then((result) => {
       setProfesorData(result);
-    });
-  };
-
-  const getProfesores2 = async () => {
-    await getProfesors().then((response) => response.json()).then((result) => {
       setOriginalProfesorData(result);
     });
   };
@@ -44,7 +39,6 @@ function Profesores() {
 
   useEffect(() => {
     getProfesores();
-    getProfesores2();
     getAllPeriodos();
     getClases();
   }, []);
