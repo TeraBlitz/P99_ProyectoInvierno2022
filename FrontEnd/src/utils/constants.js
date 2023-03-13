@@ -80,3 +80,26 @@ export const profesorVacio = {
   num_cursos_impartidos: '',
   idUser: '',
 };
+
+export const alumnoVacio = {
+  _id: '',
+  clave_unica_identificacion: '',
+  curp: '',
+  nombre: '',
+  apellido_paterno: '',
+  apellido_materno: '',
+  fecha_de_nacimiento: '',
+  tutor_nombre: '',
+  tutor_apellido_paterno: '',
+  tutor_apellido_materno: '',
+  tutor_correo: '',
+  tutor_num_telefono: '',
+  num_telefono: '',
+  pais: '',
+  estado: '',
+  ciudad: '',
+  colonia: '',
+  codigo_postal: '',
+  escolaridad: '',
+  ultima_escuela: '',
+};
