@@ -41,19 +41,19 @@ export default function Alumnos() {
     getAlumnoClase();
   }, []);
 
+  const abrirCerrarModal = () => {
+    if (openModal) {
+      setAlumnoSeleccionado(alumnoVacio);
+    }
+    setOpenModal(!openModal);
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setAlumnoSeleccionado((prevState) => ({
       ...prevState,
       [name]: value,
     }));
-  };
-
-  const abrirCerrarModal = () => {
-    if (openModal) {
-      setAlumnoSeleccionado(alumnoVacio);
-    }
-    setOpenModal(!openModal);
   };
 
   const seleccionarAlumno = (consola, caso) => {
@@ -101,29 +101,27 @@ export default function Alumnos() {
   };
 
   const handleSelectChange = async (event) => {
-    let array = [];
-    let array2 = [];
-    let array3 = [];
+    const currentPeriodStudents = [];
+    const arrayRepeated = [];
+    const periodClassLists = [dataAlumnoClase.filter(
+      (data) => data.idPeriodo === event.value,
+    )].filter((data) => data !== undefined);
 
-    const arrayrepeated = [];
-    array2.push(dataAlumnoClase.filter((data) => data.idPeriodo === event.value));
-    array2 = array2.filter((data) => data !== undefined);
-    for (let i = 0; i < array2.length; i++) {
-      for (let j = 0; j < array2[i].length; j++) {
-        array.push(originalStudentData.filter((data) => data._id === array2[i][j].idAlumno && !arrayrepeated.includes(array2[i][j].idAlumno)));
-        arrayrepeated.push(array2[i][j].idAlumno);
-      }
-    }
-    array = array.filter((data) => data !== []);
-    for (let i = 0; i < array.length; i++) {
-      array3.push(array[i][0]);
-    }
-    array3 = array3.filter((data) => data !== undefined);
-    if (array3.length > 0) {
-      setStudentData(array3);
-    } else {
-      getAlumnos();
-    }
+    periodClassLists.map((classList) => {
+      classList.map((student) => {
+        const filteredData = originalStudentData.filter(
+          (studentData) => studentData._id === student.idAlumno
+          && !arrayRepeated.includes(student.idAlumno),
+        );
+        if (filteredData.length > 0) {
+          currentPeriodStudents.push(filteredData[0]);
+          arrayRepeated.push(student.idAlumno);
+        }
+      });
+    });
+
+    currentPeriodStudents.length > 0
+      ? setStudentData(currentPeriodStudents) : getAlumnos();
   };
 
   return (
