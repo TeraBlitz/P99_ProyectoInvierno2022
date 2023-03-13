@@ -68,3 +68,15 @@ export const controlPanelCards = [
     link: 'Periodos',
   },
 ];
+
+export const profesorVacio = {
+  _id: '',
+  nombre: '',
+  apellidos: '',
+  matricula: '',
+  correo: '',
+  fecha_de_nacimiento: '',
+  num_telefono: '',
+  num_cursos_impartidos: '',
+  idUser: '',
+};
