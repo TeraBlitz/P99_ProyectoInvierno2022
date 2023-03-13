@@ -10,7 +10,7 @@ import { CSVLink } from 'react-csv';
 import Select from 'react-select';
 import Actions from '../../../../Components/ControlPanel/Alumnos/ActAlumnos';
 import { deleteStudent, getStudents, updateStudent } from '../../../../api/students';
-import { findPeriodos, getPeriodos } from '../../../../api/Periodos';
+import { getPeriodos } from '../../../../api/Periodos';
 import { getClassStudent } from '../../../../api/classStudent';
 import { alumnoVacio } from '../../../../utils/constants';
 import MasInformacionAlumno from '../../../../Components/ControlPanel/Alumnos/MasInformacionAlumno';
@@ -20,9 +20,12 @@ export default function Alumnos() {
   const [guardaData, setGuardaData] = useState([]);
   const [dataPeriodo, setDataPeriodo] = useState([]);
   const [dataAlumnoClase, setDataAlumnoClase] = useState([]);
-  let array = [];
-  let array2 = [];
-  let array3 = [];
+  const [items, setItems] = useState([]);
+  const [modalMas, setModalMas] = useState(false);
+  const [modalEditar, setModalEditar] = useState(false);
+  const [modalEliminar, setModalEliminar] = useState(false);
+  const [consolaSeleccionada, setConsolaSeleccionada] = useState(alumnoVacio);
+  const [pageSize, SetPageSize] = useState(5);
 
   const getAlumnos = async () => {
     await getStudents().then((response) => response.json()).then((result) => {
@@ -54,11 +57,6 @@ export default function Alumnos() {
     getAllPeriodos();
     getAlumnoClase();
   }, []);
-
-  const [modalMas, setModalMas] = useState(false);
-  const [modalEditar, setModalEditar] = useState(false);
-  const [modalEliminar, setModalEliminar] = useState(false);
-  const [consolaSeleccionada, setConsolaSeleccionada] = useState(alumnoVacio);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -162,7 +160,7 @@ export default function Alumnos() {
         label="Nombre"
         onChange={handleChange}
         name="nombre"
-        value={consolaSeleccionada && consolaSeleccionada.nombre}
+        value={consolaSeleccionada?.nombre}
         autoFocus
       />
       <br />
@@ -171,14 +169,14 @@ export default function Alumnos() {
         label="Apellido paterno"
         onChange={handleChange}
         name="apellido_paterno"
-        value={consolaSeleccionada && consolaSeleccionada.apellido_paterno}
+        value={consolaSeleccionada?.apellido_paterno}
       />
       <TextField
         style={{ paddingBottom: '15px', fontFamily: 'arial' }}
         label="Apellido materno"
         onChange={handleChange}
         name="apellido_materno"
-        value={consolaSeleccionada && consolaSeleccionada.apellido_materno}
+        value={consolaSeleccionada?.apellido_materno}
       />
       <br />
       <TextField
@@ -186,14 +184,14 @@ export default function Alumnos() {
         label="Estado"
         onChange={handleChange}
         name="estado"
-        value={consolaSeleccionada && consolaSeleccionada.estado}
+        value={consolaSeleccionada?.estado}
       />
       <TextField
         style={{ paddingBottom: '15px', fontFamily: 'arial' }}
         label="Ciudad"
         onChange={handleChange}
         name="ciudad"
-        value={consolaSeleccionada && consolaSeleccionada.ciudad}
+        value={consolaSeleccionada?.ciudad}
       />
       <br />
       <TextField
@@ -201,14 +199,14 @@ export default function Alumnos() {
         label="Escolaridad"
         onChange={handleChange}
         name="escolaridad"
-        value={consolaSeleccionada && consolaSeleccionada.escolaridad}
+        value={consolaSeleccionada?.escolaridad}
       />
       <TextField
         style={{ paddingBottom: '15px', fontFamily: 'arial' }}
         label="Ultima escuela"
         onChange={handleChange}
         name="ultima_escuela"
-        value={consolaSeleccionada && consolaSeleccionada.ultima_escuela}
+        value={consolaSeleccionada?.ultima_escuela}
       />
       <br />
       <br />
@@ -246,13 +244,9 @@ export default function Alumnos() {
         Eliminar alumno
       </h3>
       <Typography style={{ align: 'justify', fontFamily: 'arial' }}>
-        El alumno llamado
-        {' '}
-        {consolaSeleccionada && consolaSeleccionada.nombre}
-        {' '}
-        y
+        {`El alumno llamado ${consolaSeleccionada?.nombre} y
         todo lo relacionado a el se va a eliminar por completo. No vas a poder
-        acceder a estos datos de nuevo.
+        acceder a estos datos de nuevo.`}
       </Typography>
       <br />
       <br />
@@ -266,8 +260,6 @@ export default function Alumnos() {
       </div>
     </div>
   );
-
-  const [pageSize, SetPageSize] = useState(5);
 
   const columns = useMemo(
     () => [
@@ -360,9 +352,10 @@ export default function Alumnos() {
   );
 
   const handleSelectChange = async (event) => {
-    array = [];
-    array2 = [];
-    array3 = [];
+    let array = [];
+    let array2 = [];
+    let array3 = [];
+
     const arrayrepeated = [];
     array2.push(dataAlumnoClase.filter((data) => data.idPeriodo === event.value));
     array2 = array2.filter((data) => data !== undefined);
@@ -383,8 +376,6 @@ export default function Alumnos() {
       getAlumnos();
     }
   };
-
-  const [items, setItems] = useState([]);
 
   return (
     <div>
