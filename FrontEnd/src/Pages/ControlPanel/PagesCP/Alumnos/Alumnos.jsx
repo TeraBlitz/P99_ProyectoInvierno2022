@@ -14,28 +14,24 @@ import { getPeriodos } from '../../../../api/Periodos';
 import { getClassStudent } from '../../../../api/classStudent';
 import { alumnoVacio } from '../../../../utils/constants';
 import MasInformacionAlumno from '../../../../Components/ControlPanel/Alumnos/MasInformacionAlumno';
+import HeaderAlumnos from '../../../../Components/ControlPanel/Alumnos/HeaderAlumnos';
 
 export default function Alumnos() {
-  const [data, setData] = useState([]);
-  const [guardaData, setGuardaData] = useState([]);
+  const [studentData, setStudentData] = useState([]);
+  const [originalStudentData, setOriginalStudentData] = useState([]);
   const [dataPeriodo, setDataPeriodo] = useState([]);
   const [dataAlumnoClase, setDataAlumnoClase] = useState([]);
   const [items, setItems] = useState([]);
-  const [modalMas, setModalMas] = useState(false);
-  const [modalEditar, setModalEditar] = useState(false);
-  const [modalEliminar, setModalEliminar] = useState(false);
-  const [consolaSeleccionada, setConsolaSeleccionada] = useState(alumnoVacio);
+  const [alumnoSeleccionado, setAlumnoSeleccionado] = useState(alumnoVacio);
   const [pageSize, SetPageSize] = useState(5);
+
+  const [openModal, setOpenModal] = useState(false);
+  const [currentOperation, setCurrentOperation] = useState('');
 
   const getAlumnos = async () => {
     await getStudents().then((response) => response.json()).then((result) => {
-      setData(result);
-    });
-  };
-
-  const getAlumnos2 = async () => {
-    await getStudents().then((response) => response.json()).then((result) => {
-      setGuardaData(result);
+      setStudentData(result);
+      setOriginalStudentData(result);
     });
   };
 
@@ -53,84 +49,67 @@ export default function Alumnos() {
 
   useEffect(() => {
     getAlumnos();
-    getAlumnos2();
     getAllPeriodos();
     getAlumnoClase();
   }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setConsolaSeleccionada((prevState) => ({
+    setAlumnoSeleccionado((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
 
-  const abrirCerrarModalMas = () => {
-    setModalMas(!modalMas);
-  };
-
-  const abrirCerrarModalEditar = () => {
-    setModalEditar(!modalEditar);
-  };
-
-  const abrirCerrarModalEliminar = () => {
-    setModalEliminar(!modalEliminar);
+  const abrirCerrarModal = () => {
+    if (openModal) {
+      setAlumnoSeleccionado(alumnoVacio);
+    }
+    setOpenModal(!openModal);
   };
 
   const seleccionarConsola = (consola, caso) => {
-    setConsolaSeleccionada(consola);
-    if (caso === 'Editar') {
-      abrirCerrarModalEditar();
-    } else if (caso === 'MasInfo') {
-      abrirCerrarModalMas();
-    } else {
-      abrirCerrarModalEliminar();
-    }
+    setAlumnoSeleccionado(consola);
+    setCurrentOperation(caso);
+    abrirCerrarModal();
   };
 
-  const postEditar = async (e) => {
+  const modalSubmit = async (e) => {
     e.preventDefault();
     try {
-      await updateStudent({
-        _id: consolaSeleccionada._id,
-        clave_unica_identificacion: consolaSeleccionada.clave_unica_identificacion,
-        curp: consolaSeleccionada.curp,
-        nombre: consolaSeleccionada.nombre,
-        apellido_paterno: consolaSeleccionada.apellido_paterno,
-        apellido_materno: consolaSeleccionada.apellido_materno,
-        fecha_de_nacimiento: consolaSeleccionada.fecha_de_nacimiento,
-        tutor_nombre: consolaSeleccionada.tutor_nombre,
-        tutor_apellido_paterno: consolaSeleccionada.tutor_apellido_paterno,
-        tutor_apellido_materno: consolaSeleccionada.tutor_apellido_materno,
-        tutor_correo: consolaSeleccionada.tutor_correo,
-        tutor_num_telefono: consolaSeleccionada.tutor_num_telefono,
-        num_telefono: consolaSeleccionada.num_telefono,
-        pais: consolaSeleccionada.pais,
-        estado: consolaSeleccionada.estado,
-        ciudad: consolaSeleccionada.ciudad,
-        colonia: consolaSeleccionada.colonia,
-        codigo_postal: consolaSeleccionada.codigo_postal,
-        escolaridad: consolaSeleccionada.escolaridad,
-        ultima_escuela: consolaSeleccionada.ultima_escuela,
-      });
-      abrirCerrarModalEditar();
-      getAlumnos();
+      if (currentOperation === 'Eliminar') {
+        await deleteStudent({
+          _id: alumnoSeleccionado._id,
+        });
+      } else {
+        await updateStudent({
+          _id: alumnoSeleccionado._id,
+          clave_unica_identificacion: alumnoSeleccionado.clave_unica_identificacion,
+          curp: alumnoSeleccionado.curp,
+          nombre: alumnoSeleccionado.nombre,
+          apellido_paterno: alumnoSeleccionado.apellido_paterno,
+          apellido_materno: alumnoSeleccionado.apellido_materno,
+          fecha_de_nacimiento: alumnoSeleccionado.fecha_de_nacimiento,
+          tutor_nombre: alumnoSeleccionado.tutor_nombre,
+          tutor_apellido_paterno: alumnoSeleccionado.tutor_apellido_paterno,
+          tutor_apellido_materno: alumnoSeleccionado.tutor_apellido_materno,
+          tutor_correo: alumnoSeleccionado.tutor_correo,
+          tutor_num_telefono: alumnoSeleccionado.tutor_num_telefono,
+          num_telefono: alumnoSeleccionado.num_telefono,
+          pais: alumnoSeleccionado.pais,
+          estado: alumnoSeleccionado.estado,
+          ciudad: alumnoSeleccionado.ciudad,
+          colonia: alumnoSeleccionado.colonia,
+          codigo_postal: alumnoSeleccionado.codigo_postal,
+          escolaridad: alumnoSeleccionado.escolaridad,
+          ultima_escuela: alumnoSeleccionado.ultima_escuela,
+        });
+      }
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const postDelete = async (e) => {
-    try {
-      await deleteStudent({
-        _id: consolaSeleccionada._id,
-      });
-      abrirCerrarModalEliminar();
-      getAlumnos();
-    } catch (error) {
-      console.log(error);
-    }
+    abrirCerrarModal();
+    getAlumnos();
   };
 
   const bodyEditar = (
@@ -160,7 +139,7 @@ export default function Alumnos() {
         label="Nombre"
         onChange={handleChange}
         name="nombre"
-        value={consolaSeleccionada?.nombre}
+        value={alumnoSeleccionado?.nombre}
         autoFocus
       />
       <br />
@@ -169,14 +148,14 @@ export default function Alumnos() {
         label="Apellido paterno"
         onChange={handleChange}
         name="apellido_paterno"
-        value={consolaSeleccionada?.apellido_paterno}
+        value={alumnoSeleccionado?.apellido_paterno}
       />
       <TextField
         style={{ paddingBottom: '15px', fontFamily: 'arial' }}
         label="Apellido materno"
         onChange={handleChange}
         name="apellido_materno"
-        value={consolaSeleccionada?.apellido_materno}
+        value={alumnoSeleccionado?.apellido_materno}
       />
       <br />
       <TextField
@@ -184,14 +163,14 @@ export default function Alumnos() {
         label="Estado"
         onChange={handleChange}
         name="estado"
-        value={consolaSeleccionada?.estado}
+        value={alumnoSeleccionado?.estado}
       />
       <TextField
         style={{ paddingBottom: '15px', fontFamily: 'arial' }}
         label="Ciudad"
         onChange={handleChange}
         name="ciudad"
-        value={consolaSeleccionada?.ciudad}
+        value={alumnoSeleccionado?.ciudad}
       />
       <br />
       <TextField
@@ -199,22 +178,22 @@ export default function Alumnos() {
         label="Escolaridad"
         onChange={handleChange}
         name="escolaridad"
-        value={consolaSeleccionada?.escolaridad}
+        value={alumnoSeleccionado?.escolaridad}
       />
       <TextField
         style={{ paddingBottom: '15px', fontFamily: 'arial' }}
         label="Ultima escuela"
         onChange={handleChange}
         name="ultima_escuela"
-        value={consolaSeleccionada?.ultima_escuela}
+        value={alumnoSeleccionado?.ultima_escuela}
       />
       <br />
       <br />
       <div align="center">
-        <Button color="primary" onClick={postEditar}>
+        <Button color="primary" onClick={modalSubmit}>
           Editar
         </Button>
-        <Button onClick={() => abrirCerrarModalEditar()} color="error">
+        <Button onClick={abrirCerrarModal} color="error">
           Cancelar
         </Button>
       </div>
@@ -244,17 +223,17 @@ export default function Alumnos() {
         Eliminar alumno
       </h3>
       <Typography style={{ align: 'justify', fontFamily: 'arial' }}>
-        {`El alumno llamado ${consolaSeleccionada?.nombre} y
+        {`El alumno llamado ${alumnoSeleccionado?.nombre} y
         todo lo relacionado a el se va a eliminar por completo. No vas a poder
         acceder a estos datos de nuevo.`}
       </Typography>
       <br />
       <br />
       <div align="center">
-        <Button color="error" onClick={postDelete}>
+        <Button color="error" onClick={modalSubmit}>
           Confirmar
         </Button>
-        <Button onClick={() => abrirCerrarModalEliminar()} color="primary">
+        <Button onClick={abrirCerrarModal} color="primary">
           Cancelar
         </Button>
       </div>
@@ -348,7 +327,7 @@ export default function Alumnos() {
         renderCell: (params) => <Actions {...{ params, seleccionarConsola }} />,
       },
     ],
-    [data],
+    [studentData],
   );
 
   const handleSelectChange = async (event) => {
@@ -361,7 +340,7 @@ export default function Alumnos() {
     array2 = array2.filter((data) => data !== undefined);
     for (let i = 0; i < array2.length; i++) {
       for (let j = 0; j < array2[i].length; j++) {
-        array.push(guardaData.filter((data) => data._id === array2[i][j].idAlumno && !arrayrepeated.includes(array2[i][j].idAlumno)));
+        array.push(originalStudentData.filter((data) => data._id === array2[i][j].idAlumno && !arrayrepeated.includes(array2[i][j].idAlumno)));
         arrayrepeated.push(array2[i][j].idAlumno);
       }
     }
@@ -371,7 +350,7 @@ export default function Alumnos() {
     }
     array3 = array3.filter((data) => data !== undefined);
     if (array3.length > 0) {
-      setData(array3);
+      setStudentData(array3);
     } else {
       getAlumnos();
     }
@@ -379,58 +358,11 @@ export default function Alumnos() {
 
   return (
     <div>
-      <Box
-        sx={{
-          width: 1100,
-          padding: '15px',
-          height: '150px',
-          position: 'absolute',
-          marginLeft: '50px',
-        }}
-      >
-        <Typography
-          variant="h3"
-          component="h3"
-          sx={{
-            textAlign: 'left',
-            mt: 3,
-            mb: 3,
-            fontFamily: 'arial',
-            display: 'flex',
-          }}
-        >
-          Alumnos Inscritos
-        </Typography>
-        <CSVLink data={data} filename="alumnos.csv">
-          <Button
-            color="primary"
-            variant="contained"
-            sx={{ marginLeft: '680px', marginTop: '-120px' }}
-          >
-            Exportar a CSV
-          </Button>
-        </CSVLink>
-      </Box>
-      <Box
-        sx={{
-          width: 250,
-          position: 'absolute',
-          textAlign: 'left',
-          marginLeft: '910px',
-          marginTop: '50px',
-          fontFamily: 'arial',
-          borderRadius: '8px',
-
-        }}
-      >
-        <Select
-          options={dataPeriodo.map((sup) => ({
-            label: sup.clave,
-            value: sup._id,
-          }))}
-          onChange={handleSelectChange}
-        />
-      </Box>
+      <HeaderAlumnos
+      data={studentData}
+      dataPeriodo={dataPeriodo}
+      handleSelectChange={handleSelectChange}
+      />
       <Card
         sx={{
           width: 1100,
@@ -483,8 +415,7 @@ export default function Alumnos() {
       >
         <DataGrid
           columns={columns}
-          rows={data}
-
+          rows={studentData}
           getRowId={(row) => row._id}
           rowsPerPageOptions={[5, 10]}
           pageSize={pageSize}
@@ -504,13 +435,13 @@ export default function Alumnos() {
             items,
           }}
         />
-        <Modal open={modalMas} onClose={() => abrirCerrarModalMas()}>
-          <MasInformacionAlumno consolaSeleccionada={consolaSeleccionada}/>
+        <Modal open={openModal} onClose={abrirCerrarModal}>
+          <MasInformacionAlumno consolaSeleccionada={alumnoSeleccionado} />
         </Modal>
-        <Modal open={modalEditar} onClose={() => abrirCerrarModalEditar()}>
+        <Modal open={openModal} onClose={abrirCerrarModal}>
           {bodyEditar}
         </Modal>
-        <Modal open={modalEliminar} onClose={abrirCerrarModalEliminar}>
+        <Modal open={openModal} onClose={abrirCerrarModal}>
           {bodyEliminar}
         </Modal>
       </Box>
