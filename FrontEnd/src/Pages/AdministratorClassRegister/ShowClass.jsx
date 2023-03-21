@@ -1029,7 +1029,7 @@ export default function ShowClass() {
       <Button
         variant="contained"
         color="success"
-        onClick={() => addClass()}
+        onClick={addClass}
         sx={{
           position: 'absolute',
           marginTop: '52px',
@@ -1043,7 +1043,7 @@ export default function ShowClass() {
       <Button
         variant="contained"
         color="info"
-        onClick={() => importFile()}
+        onClick={importFile}
         sx={{
           position: 'absolute',
           marginTop: '52px',
