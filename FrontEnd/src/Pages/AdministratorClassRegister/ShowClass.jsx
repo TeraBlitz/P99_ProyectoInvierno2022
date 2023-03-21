@@ -37,7 +37,6 @@ export default function ShowClass() {
   const [dataPeriodo, setDataPeriodo] = useState([]);
   const [data, setData] = useState([]);
   const [guardaData, setGuardaData] = useState([]);
-  const [modalInsertar, setModalInsertar] = useState(false);
   const [profesorList, setProfesorList] = useState([
     {
       nombreProfesor: '',
@@ -55,7 +54,6 @@ export default function ShowClass() {
     correo: '',
   });
   const [nuevaClase, setNuevaClase] = useState(classTemplate);
-  const [modalEditar, setModalEditar] = useState(false);
   const [claseActual, setClaseActual] = useState({
     _id: '',
     clave: '',
@@ -71,13 +69,16 @@ export default function ShowClass() {
     nombreProfesor: '',
     apellidoProfesor: '',
   });
-  const [modalEliminar, setModalEliminar] = useState(false);
-  const [openWaitList, setOpenWaitList] = useState(false);
   const [currentClase, setCurrentClase] = useState(null);
   const [currentWaitList, setCurrentWaitList] = useState(null);
   const [pageSize, SetPageSize] = useState(5);
   const [items, setItems] = useState([]);
   const [clase, setClase] = useState(claseActual);
+
+  const [modalInsertar, setModalInsertar] = useState(false);
+  const [modalEditar, setModalEditar] = useState(false);
+  const [modalEliminar, setModalEliminar] = useState(false);
+  const [openWaitList, setOpenWaitList] = useState(false);
 
   const getAllPeriodos = async () => {
     getPeriodos().then((response) => response.json()).then((result) => {
@@ -197,7 +198,7 @@ export default function ShowClass() {
   const handleClick = async (e) => {
     e.preventDefault();
     nuevaClase.nombreProfesor = currentProfesor.nombre;
-    nuevaClase.apellidosProfesor = currentProfesor.apellidos;
+    nuevaClase.apellidoProfesor = currentProfesor.apellidos;
     nuevaClase.matriculaProfesor = currentProfesor.matricula;
     delete nuevaClase.nombreCompleto;
 
@@ -399,44 +400,6 @@ export default function ShowClass() {
     }
   };
 
-  const bodyEliminar = (
-    <div
-      style={{
-        position: 'absolute',
-        width: 260,
-        height: 220,
-        backgroundColor: '#fefefd',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        border: '4px solid  rgb(165, 165, 180)',
-        margin: 'auto',
-        borderRadius: '10px',
-        padding: '20px',
-      }}
-    >
-      <h3
-        style={{ paddingBottom: '15px', marginTop: '5px', fontFamily: 'arial' }}
-        align="center"
-      >
-        Eliminar alumno
-      </h3>
-      <Typography style={{ align: 'justify', fontFamily: 'arial' }}>
-        Esta clase  y toda su información relacionada a ella va a ser eliminada
-      </Typography>
-      <br />
-      <br />
-      <div align="center">
-        <Button color="error" onClick={postDelete}>
-          Confirmar
-        </Button>
-        <Button onClick={abrirCerrarModalEliminar} color="primary">
-          Cancelar
-        </Button>
-      </div>
-    </div>
-  );
-
   const addClass = () => {
     setCurrentProfesor({
       nombre: '',
@@ -447,6 +410,69 @@ export default function ShowClass() {
     });
     abrirCerrarModalInsertar();
   };
+
+  const getClassWaitList = (clase) => {
+    let waitList = [];
+    let students = [];
+    const result = [];
+    getStudents().then((response) => response.json()).then((data) => {
+      students = data;
+    }).then(() => {
+      getWaitList().then((response) => response.json()).then((data) => {
+        waitList = data.filter((lista) => lista.idClase === clase._id);
+        waitList.map((inWaitList) => {
+          for (let i = 0; i < students.length; i++) {
+            if (inWaitList.idAlumno === students[i]._id) {
+              result.push({
+                _id: inWaitList._id,
+                studentName: `${students[i].nombre} ${students[i].apellido_paterno} ${students[i].apellido_materno}`,
+                time_stamp: inWaitList.time_stamp,
+              });
+            }
+          }
+        });
+        result.sort((a, b) => (a > b ? 1 : a < b ? -1 : 0));
+        setCurrentWaitList(result);
+        setCurrentClase(clase);
+        setOpenWaitList(true);
+      });
+    });
+  };
+
+  const columns = useMemo(
+    () => [
+      { field: 'clave', headerName: 'Clave', width: 68 },
+      { field: 'nombre_curso', headerName: 'Curso', width: 80 },
+      { field: 'niveles', headerName: 'Nivel', width: 95 },
+      {
+        field: 'nombreCompleto',
+        headerName: 'Profesor',
+        width: 150,
+        sortable: false,
+      },
+      { field: 'cupo_maximo', headerName: 'Capacidad', width: 90 },
+      { field: 'edades', headerName: 'Edades', width: 70 },
+      { field: 'fechas', headerName: 'Fechas', width: 200 },
+      { field: 'modalidad', headerName: 'Modalidad', width: 88 },
+      {
+        field: 'actions',
+        headerName: 'Acciones',
+        type: 'actions',
+        width: 125,
+        renderCell: (params) => <Actions {...{ params, seleccionarConsola }} />,
+      },
+      {
+        field: 'wait_list',
+        headerName: 'Lista Espera',
+        type: 'actions',
+        width: 150,
+        renderCell: (params) => (
+          <Button size="small" onClick={() => getClassWaitList(params.row)}>Lista Espera</Button>
+        ),
+      },
+    ],
+    [data, profesorList],
+  );
 
   const bodyInsertar = (
     <div
@@ -845,68 +871,42 @@ export default function ShowClass() {
     </div>
   );
 
-  const getClassWaitList = (clase) => {
-    let waitList = [];
-    let students = [];
-    const result = [];
-    getStudents().then((response) => response.json()).then((data) => {
-      students = data;
-    }).then(() => {
-      getWaitList().then((response) => response.json()).then((data) => {
-        waitList = data.filter((lista) => lista.idClase === clase._id);
-        waitList.map((inWaitList) => {
-          for (let i = 0; i < students.length; i++) {
-            if (inWaitList.idAlumno === students[i]._id) {
-              result.push({
-                _id: inWaitList._id,
-                studentName: `${students[i].nombre} ${students[i].apellido_paterno} ${students[i].apellido_materno}`,
-                time_stamp: inWaitList.time_stamp,
-              });
-            }
-          }
-        });
-        result.sort((a, b) => (a > b ? 1 : a < b ? -1 : 0));
-        setCurrentWaitList(result);
-        setCurrentClase(clase);
-        setOpenWaitList(true);
-      });
-    });
-  };
-
-
-  const columns = useMemo(
-    () => [
-      { field: 'clave', headerName: 'Clave', width: 68 },
-      { field: 'nombre_curso', headerName: 'Curso', width: 80 },
-      { field: 'niveles', headerName: 'Nivel', width: 95 },
-      {
-        field: 'nombreCompleto',
-        headerName: 'Profesor',
-        width: 150,
-        sortable: false,
-      },
-      { field: 'cupo_maximo', headerName: 'Capacidad', width: 90 },
-      { field: 'edades', headerName: 'Edades', width: 70 },
-      { field: 'fechas', headerName: 'Fechas', width: 200 },
-      { field: 'modalidad', headerName: 'Modalidad', width: 88 },
-      {
-        field: 'actions',
-        headerName: 'Acciones',
-        type: 'actions',
-        width: 125,
-        renderCell: (params) => <Actions {...{ params, seleccionarConsola }} />,
-      },
-      {
-        field: 'wait_list',
-        headerName: 'Lista Espera',
-        type: 'actions',
-        width: 150,
-        renderCell: (params) => (
-          <Button size="small" onClick={() => getClassWaitList(params.row)}>Lista Espera</Button>
-        ),
-      },
-    ],
-    [data, profesorList],
+  const bodyEliminar = (
+    <div
+      style={{
+        position: 'absolute',
+        width: 260,
+        height: 220,
+        backgroundColor: '#fefefd',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        border: '4px solid  rgb(165, 165, 180)',
+        margin: 'auto',
+        borderRadius: '10px',
+        padding: '20px',
+      }}
+    >
+      <h3
+        style={{ paddingBottom: '15px', marginTop: '5px', fontFamily: 'arial' }}
+        align="center"
+      >
+        Eliminar alumno
+      </h3>
+      <Typography style={{ align: 'justify', fontFamily: 'arial' }}>
+        Esta clase  y toda su información relacionada a ella va a ser eliminada
+      </Typography>
+      <br />
+      <br />
+      <div align="center">
+        <Button color="error" onClick={postDelete}>
+          Confirmar
+        </Button>
+        <Button onClick={abrirCerrarModalEliminar} color="primary">
+          Cancelar
+        </Button>
+      </div>
+    </div>
   );
 
   return (
