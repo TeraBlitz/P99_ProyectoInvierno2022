@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import {
   Button,
@@ -7,16 +7,11 @@ import {
   Box,
   Typography,
 } from '@mui/material';
-import { useState, useEffect } from 'react';
 import { grey } from '@mui/material/colors';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
-import { useMemo } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import MenuItem from '@mui/material/MenuItem';
-import { InsertDriveFile } from '@mui/icons-material';
-import Select from 'react-select';
-import { CSVLink } from 'react-csv';
 import Actions from '../../Components/Clase/Actions';
 import WaitList from '../../Components/Clase/WaitList';
 import { getWaitList } from '../../api/waitList';
@@ -27,7 +22,10 @@ import {
   createClass, deleteClasses, getClasses, updateClass,
 } from '../../api/classes.js';
 import { subirClases, subirProfes } from '../../api/csv';
-import { classAtributes, dayAtributes, niveloptions, classTemplate } from '../../utils/constants';
+import {
+  classAtributes, dayAtributes, niveloptions, classTemplate,
+} from '../../utils/constants';
+import HeaderInscripcionClase from '../../Components/Clase/HeaderInscripcionClase';
 
 export default function ShowClass() {
   let id = '';
@@ -84,8 +82,8 @@ export default function ShowClass() {
   };
 
   const handleSelectChange = (event) => {
-    let array = [];
-    let array2 = [];
+    const array = [];
+    const array2 = [];
 
     array2.push(data.filter((data) => data.clavePeriodo === event.label));
 
@@ -325,7 +323,6 @@ export default function ShowClass() {
     }).then(() => {
       resetClases();
     });
-
   };
 
   const postEditar = (e) => {
@@ -334,7 +331,7 @@ export default function ShowClass() {
   };
 
   const seleccionarConsola = (consola, caso) => {
-    //setNuevaClase(consola);
+    // setNuevaClase(consola);
     id = consola._id;
 
     if (caso === 'Editar') {
@@ -904,26 +901,13 @@ export default function ShowClass() {
 
   return (
     <div>
-      <Box
-        sx={{
-          width: 250,
-          position: 'absolute',
-          textAlign: 'left',
-          marginLeft: '910px',
-          marginTop: '50px',
-          fontFamily: 'arial',
-          borderRadius: '8px',
-
-        }}
-      >
-        <Select
-          options={dataPeriodo.map((sup) => ({
-            label: sup.clave,
-            value: sup._id,
-          }))}
-          onChange={handleSelectChange}
+        <HeaderInscripcionClase 
+            data={data}
+            addClass={addClass}
+            importFile={importFile}
+            dataPeriodo={dataPeriodo}
+            handleSelectChange={handleSelectChange}
         />
-      </Box>
       <Card
         sx={{
           width: 1140,
@@ -991,62 +975,6 @@ export default function ShowClass() {
           />
         </CardContent>
       </Card>
-      <Box
-        sx={{
-          width: '740px',
-          padding: '15px',
-          height: '100px',
-          position: 'absolute',
-          marginLeft: '40px',
-        }}
-      >
-        <Typography
-          variant="h3"
-          component="h3"
-          sx={{
-            textAlign: 'left', mt: 3, mb: 3, fontFamily: 'arial',
-          }}
-        >
-          Clases
-        </Typography>
-      </Box>
-      <CSVLink data={data} filename="alumnos.csv">
-        <Button
-          color="primary"
-          variant="contained"
-          sx={{ position: 'absolute', marginLeft: '400px', marginTop: '52px' }}
-        >
-          Exportar a CSV
-        </Button>
-      </CSVLink>
-      <Button
-        variant="contained"
-        color="success"
-        onClick={addClass}
-        sx={{
-          position: 'absolute',
-          marginTop: '52px',
-          marginLeft: '580px',
-
-        }}
-      >
-        <AddCircleOutlineIcon />
-        Crear
-      </Button>
-      <Button
-        variant="contained"
-        color="info"
-        onClick={importFile}
-        sx={{
-          position: 'absolute',
-          marginTop: '52px',
-          marginLeft: '700px',
-          marginRight: '30px',
-        }}
-      >
-        <InsertDriveFile />
-        Importar CSV
-      </Button>
       <Box sx={{
         position: 'absolute',
         height: '60vh',
