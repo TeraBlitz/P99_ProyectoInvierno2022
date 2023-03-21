@@ -35,6 +35,49 @@ export default function ShowClass() {
   let array3 = [];
   let id = '';
   const [dataPeriodo, setDataPeriodo] = useState([]);
+  const [data, setData] = useState([]);
+  const [guardaData, setGuardaData] = useState([]);
+  const [modalInsertar, setModalInsertar] = useState(false);
+  const [profesorList, setProfesorList] = useState([
+    {
+      nombreProfesor: '',
+      matriculaProfesor: '',
+      apellidoProfesor: '',
+      nombreCompleto: '',
+      correo: '',
+    },
+  ]);
+  const [currentProfesor, setCurrentProfesor] = useState({
+    nombreProfesor: '',
+    matriculaProfesor: '',
+    apellidoProfesor: '',
+    nombreCompleto: '',
+    correo: '',
+  });
+  const [nuevaClase, setNuevaClase] = useState(classTemplate);
+  const [modalEditar, setModalEditar] = useState(false);
+  const [claseActual, setClaseActual] = useState({
+    _id: '',
+    clave: '',
+    nombre_curso: '',
+    nivel: '',
+    matriculaProfesor: '',
+    edades: '',
+    cupo_maximo: '',
+    modalidad: '',
+    fechas: '',
+    niveles: '',
+    nombreCompleto: '',
+    nombreProfesor: '',
+    apellidoProfesor: '',
+  });
+  const [modalEliminar, setModalEliminar] = useState(false);
+  const [openWaitList, setOpenWaitList] = useState(false);
+  const [currentClase, setCurrentClase] = useState(null);
+  const [currentWaitList, setCurrentWaitList] = useState(null);
+  const [pageSize, SetPageSize] = useState(5);
+  const [items, setItems] = useState([]);
+  const [clase, setClase] = useState(claseActual);
 
   const getAllPeriodos = async () => {
     getPeriodos().then((response) => response.json()).then((result) => {
@@ -60,27 +103,6 @@ export default function ShowClass() {
       resetClases();
     }
   };
-
-  const [data, setData] = useState([]);
-  const [guardaData, setGuardaData] = useState([]);
-  const [modalInsertar, setModalInsertar] = useState(false);
-  const [profesorList, setProfesorList] = useState([
-    {
-      nombreProfesor: '',
-      matriculaProfesor: '',
-      apellidoProfesor: '',
-      nombreCompleto: '',
-      correo: '',
-    },
-  ]);
-  const [currentProfesor, setCurrentProfesor] = useState({
-    nombreProfesor: '',
-    matriculaProfesor: '',
-    apellidoProfesor: '',
-    nombreCompleto: '',
-    correo: '',
-  });
-  const [nuevaClase, setNuevaClase] = useState(classTemplate);
 
   const getOptions = async () => {
     await getProfesors().then((response) => response.json()).then((result) => {
@@ -196,23 +218,6 @@ export default function ShowClass() {
     });
   };
 
-  const [modalEditar, setModalEditar] = useState(false);
-  const [claseActual, setClaseActual] = useState({
-    _id: '',
-    clave: '',
-    nombre_curso: '',
-    nivel: '',
-    matriculaProfesor: '',
-    edades: '',
-    cupo_maximo: '',
-    modalidad: '',
-    fechas: '',
-    niveles: '',
-    nombreCompleto: '',
-    nombreProfesor: '',
-    apellidoProfesor: '',
-  });
-
   const abrirCerrarModalEditar = () => {
     setModalEditar(!modalEditar);
   };
@@ -232,8 +237,6 @@ export default function ShowClass() {
     setClase(claseActual);
     getAllPeriodos();
   }, [claseActual]);
-
-  const [clase, setClase] = useState(claseActual);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -379,8 +382,6 @@ export default function ShowClass() {
     }
   };
 
-  const [modalEliminar, setModalEliminar] = useState(false);
-
   const abrirCerrarModalEliminar = () => {
     setModalEliminar(!modalEliminar);
   };
@@ -478,7 +479,6 @@ export default function ShowClass() {
       >
         Crear una nueva clase
       </h3>
-
       {classAtributes.map((atribute) => (
         <TextField
           style={{
@@ -849,10 +849,6 @@ export default function ShowClass() {
     </div>
   );
 
-  const [openWaitList, setOpenWaitList] = useState(false);
-  const [currentClase, setCurrentClase] = useState(null);
-  const [currentWaitList, setCurrentWaitList] = useState(null);
-
   const getClassWaitList = (clase) => {
     let waitList = [];
     let students = [];
@@ -881,7 +877,6 @@ export default function ShowClass() {
     });
   };
 
-  const [pageSize, SetPageSize] = useState(5);
 
   const columns = useMemo(
     () => [
@@ -918,7 +913,6 @@ export default function ShowClass() {
     [data, profesorList],
   );
 
-  const [items, setItems] = useState([]);
   return (
     <div>
       <Box
