@@ -103,3 +103,53 @@ export const alumnoVacio = {
   escolaridad: '',
   ultima_escuela: '',
 };
+
+export const classAtributes = [
+  { key: 'area', value: 'Area' },
+  { key: 'clave', value: 'Clave' },
+  { key: 'nombre_curso', value: 'Curso' },
+  { key: 'edad_minima', value: 'Edad Minima' },
+  { key: 'edad_maxima', value: 'Edad Maxima' },
+  { key: 'cupo_maximo', value: 'Cupo Maximo' },
+  { key: 'cupo_actual', value: 'Cupo Actual' },
+];
+
+export const dayAtributes = [
+  { key: 'lunes', value: 'Lunes' },
+  { key: 'martes', value: 'Martes' },
+  { key: 'miercoles', value: 'Miercoles' },
+  { key: 'jueves', value: 'Jueves' },
+  { key: 'viernes', value: 'Viernes' },
+  { key: 'sabado', value: 'Sabado' },
+];
+
+export const niveloptions = [
+  'desde cero', 
+  'con bases', 
+  'intermedio', 
+  'avanzado'
+];
+
+export const classTemplate = {
+  clave: '',
+  nombre_curso: '',
+  nivel: '',
+  matriculaProfesor: '',
+  nombreProfesor: '',
+  nombreCompleto: '',
+  apellidoProfesor: '',
+  edad_minima: '',
+  edad_maxima: '',
+  cupo_maximo: '',
+  modalidad: '',
+  lunes: '',
+  martes: '',
+  miercoles: '',
+  jueves: '',
+  viernes: '',
+  sabado: '',
+  clavePeriodo: '',
+  area: '',
+  cupo_actual: '',
+  niveles: '',
+};
