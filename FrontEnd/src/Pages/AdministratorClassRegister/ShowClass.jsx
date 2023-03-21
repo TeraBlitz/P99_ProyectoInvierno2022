@@ -20,7 +20,6 @@ import { getProfesors } from '../../api/profesors.js';
 import {
   createClass, deleteClasses, getClasses, updateClass,
 } from '../../api/classes.js';
-import { subirClases, subirProfes } from '../../api/csv';
 import {
   classAtributes, dayAtributes, niveloptions, classTemplate,
 } from '../../utils/constants';
@@ -72,7 +71,7 @@ export default function ShowClass() {
   const [modalInsertar, setModalInsertar] = useState(false);
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
-  const [openWaitList, setOpenWaitList] = useState(false);
+  const [modalWaitList, setOpenModalWaitList] = useState(false);
 
   const getAllPeriodos = async () => {
     getPeriodos().then((response) => response.json()).then((result) => {
@@ -111,62 +110,79 @@ export default function ShowClass() {
   };
 
   const resetClases = async () => {
-    let dataList = [];
-    await getClasses()
-      .then((response) => response.json())
-      .then((result) => {
-        for (let i = 0; i < result.length; i++) {
-          let fechas = '';
-          let edades = '';
-          let niveles = '';
-          result[i].lunes != '' ? (fechas += 'lunes, ') : (fechas += '');
-          result[i].martes != '' ? (fechas += 'martes, ') : (fechas += '');
-          result[i].miercoles != ''
-            ? (fechas += 'miercoles, ')
-            : (fechas += '');
-          result[i].jueves != '' ? (fechas += 'jueves, ') : (fechas += '');
-          result[i].viernes != '' ? (fechas += 'viernes, ') : (fechas += '');
-          result[i].sabado != '' ? (fechas += 'sabado, ') : (fechas += '');
-          result[i].edad_maxima == ''
-            ? (edades = `${result[i].edad_minima} en Adelante`)
-            : (edades = `${result[i].edad_minima}-${result[i].edad_maxima}`);
-          result[i].nivel == '1' ? (niveles = 'desde cero') : '';
-          result[i].nivel == '2' ? (niveles = 'con bases') : '';
-          result[i].nivel == '3' ? (niveles = 'intermedio') : '';
-          result[i].nivel == '4' ? (niveles = 'avanzado') : '';
-
-          dataList = [...dataList, {
-            _id: result[i]._id,
-            clave: result[i].clave,
-            nombre_curso: result[i].nombre_curso,
-            nivel: result[i].nivel,
-            matriculaProfesor: result[i].matriculaProfesor,
-            edades,
-            edad_minima: result[i].edad_minima,
-            edad_maxima: result[i].edad_maxima,
-            cupo_maximo: result[i].cupo_maximo,
-            modalidad: result[i].modalidad,
-            fechas,
-            lunes: result[i].lunes,
-            martes: result[i].martes,
-            miercoles: result[i].miercoles,
-            jueves: result[i].jueves,
-            viernes: result[i].viernes,
-            sabado: result[i].sabado,
-            clavePeriodo: result[i].clavePeriodo,
-            area: result[i].area,
-            cupo_actual: result[i].cupo_actual,
-            niveles,
-            nombreProfesor: result[i].nombreProfesor,
-            apellidosProfesor: result[i].apellidosProfesor,
-            nombreCompleto:
-            `${result[i].nombreProfesor} ${result[i].apellidosProfesor}`,
-          }];
+    try {
+      const response = await getClasses();
+      const result = await response.json();
+  
+      const dataList = result.map((clase) => {
+        let fechas = '';
+        let edades = '';
+        let niveles = '';
+  
+        if (clase.lunes !== '') fechas += 'lunes, ';
+        if (clase.martes !== '') fechas += 'martes, ';
+        if (clase.miercoles !== '') fechas += 'miercoles, ';
+        if (clase.jueves !== '') fechas += 'jueves, ';
+        if (clase.viernes !== '') fechas += 'viernes, ';
+        if (clase.sabado !== '') fechas += 'sabado, ';
+  
+        edades =
+          clase.edad_maxima === ''
+            ? `${clase.edad_minima} en Adelante`
+            : `${clase.edad_minima}-${clase.edad_maxima}`;
+  
+        switch (clase.nivel) {
+          case '1':
+            niveles = 'desde cero';
+            break;
+          case '2':
+            niveles = 'con bases';
+            break;
+          case '3':
+            niveles = 'intermedio';
+            break;
+          case '4':
+            niveles = 'avanzado';
+            break;
+          default:
+            niveles = '';
         }
-        setData(dataList);
+  
+        return {
+          _id: clase._id,
+          clave: clase.clave,
+          nombre_curso: clase.nombre_curso,
+          nivel: clase.nivel,
+          matriculaProfesor: clase.matriculaProfesor,
+          edades,
+          edad_minima: clase.edad_minima,
+          edad_maxima: clase.edad_maxima,
+          cupo_maximo: clase.cupo_maximo,
+          modalidad: clase.modalidad,
+          fechas,
+          lunes: clase.lunes,
+          martes: clase.martes,
+          miercoles: clase.miercoles,
+          jueves: clase.jueves,
+          viernes: clase.viernes,
+          sabado: clase.sabado,
+          clavePeriodo: clase.clavePeriodo,
+          area: clase.area,
+          cupo_actual: clase.cupo_actual,
+          niveles,
+          nombreProfesor: clase.nombreProfesor,
+          apellidosProfesor: clase.apellidosProfesor,
+          nombreCompleto: `${clase.nombreProfesor} ${clase.apellidosProfesor}`,
+        };
       });
-    getOptions();
+  
+      setData(dataList);
+      getOptions();
+    } catch (error) {
+      console.error(error);
+    }
   };
+  
   useEffect(() => {
     resetClases();
   }, []);
@@ -180,30 +196,6 @@ export default function ShowClass() {
       if (e.nombreCompleto == p.target.value) {
         setCurrentProfesor(e);
       }
-    });
-  };
-
-  const postCrea = async (e) => {
-    e.preventDefault();
-    nuevaClase.nombreProfesor = currentProfesor.nombre;
-    nuevaClase.apellidoProfesor = currentProfesor.apellidos;
-    nuevaClase.matriculaProfesor = currentProfesor.matricula;
-    delete nuevaClase.nombreCompleto;
-
-    if (nuevaClase.niveles == 'desde cero') {
-      nuevaClase.nivel = '1';
-    } else if (nuevaClase.niveles == 'con bases') {
-      nuevaClase.nivel = '2';
-    } else if (nuevaClase.niveles == 'intermedio') {
-      nuevaClase.nivel = '3';
-    } else if (nuevaClase.niveles == 'avanzado') {
-      nuevaClase.nivel = '4';
-    }
-    delete nuevaClase.niveles;
-
-    createClass(nuevaClase).then(() => {
-      abrirCerrarModalInsertar();
-      resetClases();
     });
   };
 
@@ -228,112 +220,66 @@ export default function ShowClass() {
     setClase({ ...clase, [name]: value });
   };
 
-  const handleChange2 = (e) => {
-    const { name, value } = e.target;
-    setNuevaClase({ ...nuevaClase, [name]: value });
-  };
-  const importFile = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-
-    input.click();
-
-    input.onchange = (e) => {
-      const { target } = e;
-      if (!target.files) {
-        return;
-      }
-      let file;
-      file = target.files[0];
-
-      const reader = new FileReader();
-      reader.readAsText(file);
-      reader.onload = (e) => {
-        if (file.name.includes('.csv')) {
-          const result = e.target?.result?.toString();
-          result !== undefined ? sendCSV(result) : alert('error');
-        } else {
-          alert('error: el archivo necesita ser tipo markdown o txt');
-        }
-      };
+  const mapNiveles = (clase) => {
+    const nivelesMap = {
+      'desde cero': '1',
+      'con bases': '2',
+      'intermedio': '3',
+      'avanzado': '4',
     };
-  };
-
-  const sendCSV = async (csv) => {
-    const csvArray = csv.split('\n');
-    csvArray.shift();
-    const clasesJson = [];
-    const profesoresJson = [];
-    let iterator;
-    const profesorHash = [];
-
-    const profesorFunc = (i) => {
-      i = i.slice(2);
-      return Number(i);
-    };
-
-    let j = 0;
-    for (let i = 0; i < csvArray.length; i++) {
-      iterator = csvArray[i];
-      const iteratorArray = iterator.split(',');
-      clasesJson[i] = {};
-      clasesJson[i].clave = iteratorArray[0];
-      clasesJson[i].nombre_curso = iteratorArray[1];
-      clasesJson[i].nivel = iteratorArray[2];
-      clasesJson[i].area = iteratorArray[3];
-      clasesJson[i].modalidad = iteratorArray[4];
-      clasesJson[i].clavePeriodo = iteratorArray[5];
-      clasesJson[i].cupo_maximo = iteratorArray[6];
-      clasesJson[i].edad_minima = iteratorArray[7];
-      clasesJson[i].edad_maxima = iteratorArray[8];
-      clasesJson[i].lunes = iteratorArray[9];
-      clasesJson[i].martes = iteratorArray[10];
-      clasesJson[i].miercoles = iteratorArray[11];
-      clasesJson[i].jueves = iteratorArray[12];
-      clasesJson[i].viernes = iteratorArray[13];
-      clasesJson[i].sabado = iteratorArray[14];
-      clasesJson[i].matriculaProfesor = iteratorArray[17];
-      clasesJson[i].cupo_actual = '0';
-      clasesJson[i].nombreProfesor = iteratorArray[15].trim();
-      clasesJson[i].apellidosProfesor = iteratorArray[16].trim();
-
-      if (!profesorHash[profesorFunc(iteratorArray[17])]) {
-        profesoresJson[j] = {};
-        profesoresJson[j].nombre = iteratorArray[15].trim();
-        profesoresJson[j].apellidos = iteratorArray[16].trim();
-        profesoresJson[j].matricula = iteratorArray[17];
-        profesoresJson[j].correo = iteratorArray[18];
-        profesoresJson[j].fecha_de_nacimiento = '';
-        profesoresJson[j].num_telefono = '';
-        profesoresJson[j].num_cursos_impartidos = '0';
-        profesoresJson[j].idUser = '';
-
-        profesorHash[profesorFunc(iteratorArray[17])] = true;
-        j++;
-      }
+  
+    const claseModificada = { ...clase };
+    claseModificada.nombreProfesor = currentProfesor.nombre;
+    claseModificada.matriculaProfesor = currentProfesor.matricula;
+    claseModificada.apellidosProfesor = currentProfesor.apellidos;
+    delete claseModificada.nombreCompleto;
+    delete claseModificada.fechas;
+    delete claseModificada.edades;
+  
+    if (claseModificada.niveles in nivelesMap) {
+      claseModificada.nivel = nivelesMap[claseModificada.niveles];
     }
-
-    await subirProfes({
-      profesoresJson: JSON.stringify(profesoresJson),
+  
+    delete claseModificada.niveles;
+    return claseModificada;
+  };
+  
+  const postCrea = async (e) => {
+    e.preventDefault();
+    const nuevaClase = mapNiveles(nuevaClase);
+    createClass(nuevaClase).then(() => {
+      abrirCerrarModalInsertar();
+      resetClases();
     });
-
-    await subirClases({
-      clasesJson: JSON.stringify(clasesJson),
-    }).then(() => {
+  };
+  
+  const postEditar = (e) => {
+    e.preventDefault();
+    const nuevaClase = mapNiveles(clase);
+    updateClass(nuevaClase).then(() => {
+      abrirCerrarModalEditar();
       resetClases();
     });
   };
 
-  const postEditar = (e) => {
-    e.preventDefault();
-    updateClase(clase);
+  const postDelete = async (e) => {
+    try {
+      await deleteClasses({
+        _id: nuevaClase._id,
+      });
+      abrirCerrarModalEliminar();
+      resetClases();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const seleccionarConsola = (consola, caso) => {
+  const seleccionarClase = (consola, caso) => {
     // setNuevaClase(consola);
     id = consola._id;
-
-    if (caso === 'Editar') {
+    if (caso === 'Crear') {
+        
+    } else if (caso === 'Editar') {
       editClasses(consola);
     } else if (caso === 'Eliminar') {
       abrirCerrarModalEliminar();
@@ -350,43 +296,6 @@ export default function ShowClass() {
 
   const abrirCerrarModalEliminar = () => {
     setModalEliminar(!modalEliminar);
-  };
-
-  const updateClase = (nuevaClase) => {
-    delete nuevaClase.fechas;
-    delete nuevaClase.edades;
-    nuevaClase.nombreProfesor = currentProfesor.nombre;
-    nuevaClase.matriculaProfesor = currentProfesor.matricula;
-    nuevaClase.apellidosProfesor = currentProfesor.apellidos;
-
-    delete nuevaClase.nombreCompleto;
-    if (nuevaClase.niveles == 'desde cero') {
-      nuevaClase.nivel = '1';
-    } else if (nuevaClase.niveles == 'con bases') {
-      nuevaClase.nivel = '2';
-    } else if (nuevaClase.niveles == 'intermedio') {
-      nuevaClase.nivel = '3';
-    } else if (nuevaClase.niveles == 'avanzado') {
-      nuevaClase.nivel = '4';
-    }
-    delete nuevaClase.niveles;
-    updateClass(nuevaClase)
-      .then((e) => {
-        abrirCerrarModalEditar();
-        resetClases();
-      });
-  };
-
-  const postDelete = async (e) => {
-    try {
-      await deleteClasses({
-        _id: nuevaClase._id,
-      });
-      abrirCerrarModalEliminar();
-      resetClases();
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const addClass = () => {
@@ -423,7 +332,7 @@ export default function ShowClass() {
         result.sort((a, b) => (a > b ? 1 : a < b ? -1 : 0));
         setCurrentWaitList(result);
         setCurrentClase(clase);
-        setOpenWaitList(true);
+        setOpenModalWaitList(true);
       });
     });
   };
@@ -448,7 +357,7 @@ export default function ShowClass() {
         headerName: 'Acciones',
         type: 'actions',
         width: 125,
-        renderCell: (params) => <Actions {...{ params, seleccionarConsola }} />,
+        renderCell: (params) => <Actions {...{ params, seleccionarConsola: seleccionarClase }} />,
       },
       {
         field: 'wait_list',
@@ -504,7 +413,7 @@ export default function ShowClass() {
           }}
           label={atribute.value}
           onChange={(e) => {
-            handleChange2(e);
+            handleChange(e);
           }}
           name={atribute.key}
           key={atribute.key}
@@ -523,7 +432,7 @@ export default function ShowClass() {
         value={nuevaClase.modalidad}
         name="modalidad"
         onChange={(e) => {
-          handleChange2(e);
+          handleChange(e);
         }}
         select
       >
@@ -544,7 +453,7 @@ export default function ShowClass() {
         value={nuevaClase.niveles}
         name="niveles"
         onChange={(e) => {
-          handleChange2(e);
+          handleChange(e);
         }}
         select
       >
@@ -579,7 +488,7 @@ export default function ShowClass() {
             }}
             label={atribute.value}
             onChange={(e) => {
-              handleChange2(e);
+              handleChange(e);
             }}
             name={atribute.key}
             key={atribute.key}
@@ -903,7 +812,7 @@ export default function ShowClass() {
         <HeaderInscripcionClase 
             data={data}
             addClass={addClass}
-            importFile={importFile}
+            resetClases={resetClases}
             dataPeriodo={dataPeriodo}
             handleSelectChange={handleSelectChange}
         />
@@ -1015,8 +924,8 @@ export default function ShowClass() {
         {bodyEliminar}
       </Modal>
       <Modal
-        open={openWaitList}
-        onClose={() => setOpenWaitList(!openWaitList)}
+        open={modalWaitList}
+        onClose={() => setOpenModalWaitList(!modalWaitList)}
         sx={{
           height: '100vh',
           display: 'flex',
