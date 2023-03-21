@@ -170,7 +170,7 @@ export default function ShowClass() {
             nombreProfesor: result[i].nombreProfesor,
             apellidosProfesor: result[i].apellidosProfesor,
             nombreCompleto:
-                            `${result[i].nombreProfesor} ${result[i].apellidosProfesor}`,
+            `${result[i].nombreProfesor} ${result[i].apellidosProfesor}`,
           }];
         }
         console.log(dataList);
@@ -430,7 +430,7 @@ export default function ShowClass() {
         <Button color="error" onClick={postDelete}>
           Confirmar
         </Button>
-        <Button onClick={() => abrirCerrarModalEliminar()} color="primary">
+        <Button onClick={abrirCerrarModalEliminar} color="primary">
           Cancelar
         </Button>
       </div>
@@ -552,7 +552,6 @@ export default function ShowClass() {
         <Typography
           sx={{ textAlign: 'center', marginTop: '10px', width: '100%' }}
         >
-          {' '}
           Horarios
         </Typography>
         {dayAtributes.map((atribute) => (
@@ -582,8 +581,7 @@ export default function ShowClass() {
         }}
       >
         <Typography sx={{ textAlign: 'center', marginTop: '10px' }}>
-          {' '}
-          datos del profesor
+          Datos del profesor
         </Typography>
         <br />
         <TextField
@@ -615,7 +613,7 @@ export default function ShowClass() {
             width: '40%',
           }}
           variant="filled"
-          label="matricula"
+          label="Matricula"
           InputProps={{
             readOnly: true,
           }}
@@ -635,14 +633,14 @@ export default function ShowClass() {
           value={currentProfesor.correo}
           defaultValue={currentProfesor.correo}
           variant="filled"
-          label="correo"
+          label="Correo"
         />
       </div>
       <div align="center" style={{ width: '100%' }}>
         <Button color="primary" onClick={handleClick}>
           Insertar
         </Button>
-        <Button onClick={() => abrirCerrarModalInsertar()} color="error">
+        <Button onClick={abrirCerrarModalInsertar} color="error">
           Cancelar
         </Button>
       </div>
@@ -753,7 +751,6 @@ export default function ShowClass() {
         <Typography
           sx={{ textAlign: 'center', marginTop: '10px', width: '100%' }}
         >
-          {' '}
           Horarios
         </Typography>
         {dayAtributes.map((atribute) => (
@@ -782,8 +779,7 @@ export default function ShowClass() {
         }}
       >
         <Typography sx={{ textAlign: 'center', marginTop: '10px' }}>
-          {' '}
-          datos del profesor
+          Datos del profesor
         </Typography>
         <br />
         <TextField
@@ -842,7 +838,7 @@ export default function ShowClass() {
         <Button color="primary" onClick={handleClick2}>
           Editar
         </Button>
-        <Button onClick={() => abrirCerrarModalEditar()} color="error">
+        <Button onClick={abrirCerrarModalEditar} color="error">
           Cancelar
         </Button>
       </div>
@@ -892,7 +888,7 @@ export default function ShowClass() {
       { field: 'cupo_maximo', headerName: 'Capacidad', width: 90 },
       { field: 'edades', headerName: 'Edades', width: 70 },
       { field: 'fechas', headerName: 'Fechas', width: 200 },
-      { field: 'modalidad', headerName: 'modalidad', width: 88 },
+      { field: 'modalidad', headerName: 'Modalidad', width: 88 },
       {
         field: 'actions',
         headerName: 'Acciones',
@@ -1042,7 +1038,6 @@ export default function ShowClass() {
         }}
       >
         <AddCircleOutlineIcon />
-        {' '}
         Crear
       </Button>
       <Button
@@ -1057,7 +1052,6 @@ export default function ShowClass() {
         }}
       >
         <InsertDriveFile />
-        {' '}
         Importar CSV
       </Button>
       <Box sx={{
@@ -1091,10 +1085,10 @@ export default function ShowClass() {
           }}
         />
       </Box>
-      <Modal open={modalInsertar} onClose={() => abrirCerrarModalInsertar()}>
+      <Modal open={modalInsertar} onClose={abrirCerrarModalInsertar}>
         {bodyInsertar}
       </Modal>
-      <Modal open={modalEditar} onClose={() => abrirCerrarModalEditar()}>
+      <Modal open={modalEditar} onClose={abrirCerrarModalEditar}>
         {bodyEditar}
       </Modal>
       <Modal open={modalEliminar} onClose={abrirCerrarModalEliminar}>
@@ -1112,11 +1106,8 @@ export default function ShowClass() {
           overflowY: 'scroll',
         }}
       >
-        <>
-          <WaitList clase={currentClase} waitList={currentWaitList} />
-        </>
+        <WaitList clase={currentClase} waitList={currentWaitList} />
       </Modal>
-
     </div>
   );
 }
