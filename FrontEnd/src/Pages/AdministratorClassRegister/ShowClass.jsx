@@ -17,8 +17,8 @@ import MenuItem from '@mui/material/MenuItem';
 import { InsertDriveFile } from '@mui/icons-material';
 import Select from 'react-select';
 import { CSVLink } from 'react-csv';
-import Actions from './Actions';
-import WaitList from './WaitList';
+import Actions from '../../Components/Clase/Actions';
+import WaitList from '../../Components/Clase/WaitList';
 import { getWaitList } from '../../api/waitList';
 import { getStudents } from '../../api/students';
 import { getPeriodos } from '../../api/Periodos';
@@ -30,9 +30,6 @@ import { subirClases, subirProfes } from '../../api/csv';
 import { classAtributes, dayAtributes, niveloptions, classTemplate } from '../../utils/constants';
 
 export default function ShowClass() {
-  let array = [];
-  let array2 = [];
-  let array3 = [];
   let id = '';
   const [dataPeriodo, setDataPeriodo] = useState([]);
   const [data, setData] = useState([]);
@@ -87,8 +84,8 @@ export default function ShowClass() {
   };
 
   const handleSelectChange = (event) => {
-    array = [];
-    array2 = [];
+    let array = [];
+    let array2 = [];
 
     array2.push(data.filter((data) => data.clavePeriodo === event.label));
 
@@ -107,7 +104,6 @@ export default function ShowClass() {
 
   const getOptions = async () => {
     await getProfesors().then((response) => response.json()).then((result) => {
-      console.log(result);
       const newProfList = [];
       result.forEach((profesor) => {
         profesor.nombreCompleto = `${profesor.nombre} ${profesor.apellidos}`;
@@ -115,10 +111,6 @@ export default function ShowClass() {
       });
       setProfesorList(newProfList);
     });
-  };
-
-  const abrirCerrarModalInsertar = () => {
-    setModalInsertar(!modalInsertar);
   };
 
   const resetClases = async () => {
@@ -174,7 +166,6 @@ export default function ShowClass() {
             `${result[i].nombreProfesor} ${result[i].apellidosProfesor}`,
           }];
         }
-        console.log(dataList);
         setData(dataList);
       });
     getOptions();
@@ -195,7 +186,7 @@ export default function ShowClass() {
     });
   };
 
-  const handleClick = async (e) => {
+  const postCrea = async (e) => {
     e.preventDefault();
     nuevaClase.nombreProfesor = currentProfesor.nombre;
     nuevaClase.apellidoProfesor = currentProfesor.apellidos;
@@ -217,10 +208,6 @@ export default function ShowClass() {
       abrirCerrarModalInsertar();
       resetClases();
     });
-  };
-
-  const abrirCerrarModalEditar = () => {
-    setModalEditar(!modalEditar);
   };
 
   const editClasses = (clase) => {
@@ -329,7 +316,6 @@ export default function ShowClass() {
       }
     }
 
-    console.log(profesoresJson);
     await subirProfes({
       profesoresJson: JSON.stringify(profesoresJson),
     });
@@ -342,10 +328,34 @@ export default function ShowClass() {
 
   };
 
-  const handleClick2 = (e) => {
+  const postEditar = (e) => {
     e.preventDefault();
     updateClase(clase);
   };
+
+  const seleccionarConsola = (consola, caso) => {
+    //setNuevaClase(consola);
+    id = consola._id;
+
+    if (caso === 'Editar') {
+      editClasses(consola);
+    } else if (caso === 'Eliminar') {
+      abrirCerrarModalEliminar();
+    }
+  };
+
+  const abrirCerrarModalInsertar = () => {
+    setModalInsertar(!modalInsertar);
+  };
+
+  const abrirCerrarModalEditar = () => {
+    setModalEditar(!modalEditar);
+  };
+
+  const abrirCerrarModalEliminar = () => {
+    setModalEliminar(!modalEliminar);
+  };
+
   const updateClase = (nuevaClase) => {
     delete nuevaClase.fechas;
     delete nuevaClase.edades;
@@ -371,24 +381,7 @@ export default function ShowClass() {
       });
   };
 
-  const seleccionarConsola = (consola, caso) => {
-    setNuevaClase(consola);
-    array3 = consola;
-    id = array3._id;
-
-    if (caso === 'Editar') {
-      editClasses(consola);
-    } else if (caso === 'Eliminar') {
-      abrirCerrarModalEliminar();
-    }
-  };
-
-  const abrirCerrarModalEliminar = () => {
-    setModalEliminar(!modalEliminar);
-  };
-
   const postDelete = async (e) => {
-    console.log(array3._id);
     try {
       await deleteClasses({
         _id: nuevaClase._id,
@@ -663,7 +656,7 @@ export default function ShowClass() {
         />
       </div>
       <div align="center" style={{ width: '100%' }}>
-        <Button color="primary" onClick={handleClick}>
+        <Button color="primary" onClick={postCrea}>
           Insertar
         </Button>
         <Button onClick={abrirCerrarModalInsertar} color="error">
@@ -861,7 +854,7 @@ export default function ShowClass() {
         />
       </div>
       <div align="center" style={{ width: '100%' }}>
-        <Button color="primary" onClick={handleClick2}>
+        <Button color="primary" onClick={postEditar}>
           Editar
         </Button>
         <Button onClick={abrirCerrarModalEditar} color="error">
