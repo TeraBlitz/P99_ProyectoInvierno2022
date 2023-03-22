@@ -27,7 +27,6 @@ export default function ShowClass() {
   const [data, setData] = useState([]);
   const [profesorList, setProfesorList] = useState([profesorVacioInscripcion]);
   const [currentProfesor, setCurrentProfesor] = useState(profesorVacioInscripcion);
-  const [nuevaClase, setNuevaClase] = useState(classTemplate);
   const [claseActual, setClaseActual] = useState(claseActualDefault);
   const [currentClase, setCurrentClase] = useState(null);
   const [currentWaitList, setCurrentWaitList] = useState(null);
@@ -143,14 +142,14 @@ export default function ShowClass() {
     try {
       if (currentOperation === 'Eliminar') {
         await deleteClasses({
-          _id: nuevaClase._id,
+          _id: clase._id,
         });
       } else if (currentOperation === 'Crear') {
-        const nuevaClase = mapNiveles(nuevaClase);
-        await createClass(nuevaClase);
+        const claseACrear = mapNiveles(classTemplate);
+        await createClass(claseACrear);
       } else if (currentOperation === 'Editar') {
-        const nuevaClase = mapNiveles(clase);
-        await updateClass(nuevaClase);
+        const claseAModificar = mapNiveles(clase);
+        await updateClass(claseAModificar);
       }
     } catch (error) {
       console.log(error);
