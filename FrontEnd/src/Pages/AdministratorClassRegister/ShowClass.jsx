@@ -55,13 +55,8 @@ export default function ShowClass() {
   const [currentClase, setCurrentClase] = useState(null);
   const [currentWaitList, setCurrentWaitList] = useState(null);
   const [clase, setClase] = useState(claseActual);
-
   const [openModal, setOpenModal] = useState(false);
   const [currentOperation, setCurrentOperation] = useState('');
-
-  const [modalInsertar, setModalInsertar] = useState(false);
-  const [modalEditar, setModalEditar] = useState(false);
-  const [modalEliminar, setModalEliminar] = useState(false);
   const [modalWaitList, setOpenModalWaitList] = useState(false);
 
   const getAllPeriodos = async () => {
@@ -519,7 +514,7 @@ export default function ShowClass() {
       </Modal>
       <Modal
         open={modalWaitList}
-        onClose={() => setOpenModalWaitList(!modalWaitList)}
+        onClose={() => setOpenModalWaitList(false)}
         sx={{
           height: '100vh',
           display: 'flex',
