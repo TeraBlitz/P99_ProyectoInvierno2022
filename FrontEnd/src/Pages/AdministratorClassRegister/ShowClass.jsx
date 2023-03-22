@@ -56,6 +56,9 @@ export default function ShowClass() {
   const [currentWaitList, setCurrentWaitList] = useState(null);
   const [clase, setClase] = useState(claseActual);
 
+  const [openModal, setOpenModal] = useState(false);
+  const [currentOperation, setCurrentOperation] = useState('');
+
   const [modalInsertar, setModalInsertar] = useState(false);
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
@@ -179,39 +182,29 @@ export default function ShowClass() {
     setClase({ ...clase, [name]: value });
   };
 
-  const postCrea = async (e) => {
+  const modalSubmit = async (e) => {
     e.preventDefault();
-    const nuevaClase = mapNiveles(nuevaClase);
-    createClass(nuevaClase).then(() => {
-      abrirCerrarModalInsertar();
-      resetClases();
-    });
-  };
-
-  const postEditar = (e) => {
-    e.preventDefault();
-    const nuevaClase = mapNiveles(clase);
-    updateClass(nuevaClase).then(() => {
-      abrirCerrarModalEditar();
-      resetClases();
-    });
-  };
-
-  const postDelete = async (e) => {
     try {
-      await deleteClasses({
-        _id: nuevaClase._id,
-      });
-      abrirCerrarModalEliminar();
-      resetClases();
+        if (currentOperation === 'Eliminar') {
+            await deleteClasses({
+                _id: nuevaClase._id,
+            });
+        } else if (currentOperation === 'Crear') {
+            const nuevaClase = mapNiveles(nuevaClase);
+            await createClass(nuevaClase);
+        } else if (currentOperation === 'Editar') {
+            const nuevaClase = mapNiveles(clase);
+            await updateClass(nuevaClase);
+        }   
     } catch (error) {
       console.log(error);
     }
-  };
+    abrirCerrarModal();
+    resetClases();
+    };
 
   const seleccionarClase = (consola, caso) => {
     if (caso === 'Crear') {
-        setClaseActual(classTemplate);
         setCurrentProfesor({
             nombre: '',
             matricula: '',
@@ -219,7 +212,6 @@ export default function ShowClass() {
             nombreCompleto: '',
             correo: '',
           });
-          abrirCerrarModalEditar();
     } else if (caso === 'Editar') {
         id = consola._id;
         setClaseActual(consola);
@@ -228,24 +220,19 @@ export default function ShowClass() {
             setCurrentProfesor(e);
           }
         });
-        abrirCerrarModalEditar();
     } else if (caso === 'Eliminar') {
         setClaseActual(consola);
         id = consola._id;
-        abrirCerrarModalEliminar();
     }
+    setCurrentOperation(caso);
+    abrirCerrarModal();
   };
 
-  const abrirCerrarModalInsertar = () => {
-    setModalInsertar(!modalInsertar);
-  };
-
-  const abrirCerrarModalEditar = () => {
-    setModalEditar(!modalEditar);
-  };
-
-  const abrirCerrarModalEliminar = () => {
-    setModalEliminar(!modalEliminar);
+  const abrirCerrarModal = () => {
+    if (openModal) {
+        setClaseActual(classTemplate);
+    }
+    setOpenModal(!openModal);
   };
 
   const getClassWaitList = (clase) => {
@@ -464,10 +451,10 @@ export default function ShowClass() {
         />
       </div>
       <div align="center" style={{ width: '100%' }}>
-        <Button color="primary" onClick={postEditar}>
+        <Button color="primary" onClick={modalSubmit}>
           Editar
         </Button>
-        <Button onClick={abrirCerrarModalEditar} color="error">
+        <Button onClick={abrirCerrarModal} color="error">
           Cancelar
         </Button>
       </div>
@@ -502,10 +489,10 @@ export default function ShowClass() {
       <br />
       <br />
       <div align="center">
-        <Button color="error" onClick={postDelete}>
+        <Button color="error" onClick={modalSubmit}>
           Confirmar
         </Button>
-        <Button onClick={abrirCerrarModalEliminar} color="primary">
+        <Button onClick={abrirCerrarModal} color="primary">
           Cancelar
         </Button>
       </div>
@@ -527,11 +514,8 @@ export default function ShowClass() {
         getClassWaitList={getClassWaitList}
         seleccionarClase={seleccionarClase}
       />
-      <Modal open={modalEditar} onClose={abrirCerrarModalEditar}>
-        {bodyEditar}
-      </Modal>
-      <Modal open={modalEliminar} onClose={abrirCerrarModalEliminar}>
-        {bodyEliminar}
+      <Modal open={openModal} onClose={abrirCerrarModal}>
+        {currentOperation === 'Editar' || currentOperation === 'Crear'? bodyEditar : bodyEliminar}
       </Modal>
       <Modal
         open={modalWaitList}
