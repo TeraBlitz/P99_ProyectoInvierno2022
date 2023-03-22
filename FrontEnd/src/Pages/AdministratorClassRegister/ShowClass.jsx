@@ -15,12 +15,11 @@ import {
   createClass, deleteClasses, getClasses, updateClass,
 } from '../../api/classes.js';
 import {
-  classAtributes, dayAtributes, niveloptions, classTemplate, nivelesMapa, claseActualDefault
+  classAtributes, dayAtributes, niveloptions, classTemplate, nivelesMapa, claseActualDefault, profesorVacioInscripcion,
 } from '../../utils/constants';
 import HeaderInscripcionClase from '../../Components/Clase/HeaderInscripcionClase';
 import { mapNiveles } from '../../utils/utilFunctions';
 import BodyInscripcionClase from '../../Components/Clase/BodyInscripcionClase';
-import { profesorVacioInscripcion } from '../../utils/constants';
 
 export default function ShowClass() {
   let id = '';
@@ -35,7 +34,6 @@ export default function ShowClass() {
   const [clase, setClase] = useState(claseActual);
   const [openModal, setOpenModal] = useState(false);
   const [currentOperation, setCurrentOperation] = useState('');
-  const [modalWaitList, setOpenModalWaitList] = useState(false);
 
   const getAllPeriodos = async () => {
     getPeriodos().then((response) => response.json()).then((result) => {
@@ -80,7 +78,7 @@ export default function ShowClass() {
         edades = clase.edad_maxima === ''
           ? `${clase.edad_minima} en Adelante`
           : `${clase.edad_minima}-${clase.edad_maxima}`;
-          
+
         niveles = nivelesMapa[clase.nivel] || '';
 
         return {
@@ -143,38 +141,38 @@ export default function ShowClass() {
   const modalSubmit = async (e) => {
     e.preventDefault();
     try {
-        if (currentOperation === 'Eliminar') {
-            await deleteClasses({
-                _id: nuevaClase._id,
-            });
-        } else if (currentOperation === 'Crear') {
-            const nuevaClase = mapNiveles(nuevaClase);
-            await createClass(nuevaClase);
-        } else if (currentOperation === 'Editar') {
-            const nuevaClase = mapNiveles(clase);
-            await updateClass(nuevaClase);
-        }   
+      if (currentOperation === 'Eliminar') {
+        await deleteClasses({
+          _id: nuevaClase._id,
+        });
+      } else if (currentOperation === 'Crear') {
+        const nuevaClase = mapNiveles(nuevaClase);
+        await createClass(nuevaClase);
+      } else if (currentOperation === 'Editar') {
+        const nuevaClase = mapNiveles(clase);
+        await updateClass(nuevaClase);
+      }
     } catch (error) {
       console.log(error);
     }
     abrirCerrarModal();
     resetClases();
-    };
+  };
 
   const seleccionarClase = (consola, caso) => {
     if (caso === 'Crear') {
-        setCurrentProfesor(profesorVacioInscripcion);
+      setCurrentProfesor(profesorVacioInscripcion);
     } else if (caso === 'Editar') {
-        id = consola._id;
-        setClaseActual(consola);
-        profesorList.forEach((e) => {
-          if (e.nombreCompleto === consola.nombreCompleto) {
-            setCurrentProfesor(e);
-          }
-        });
+      id = consola._id;
+      setClaseActual(consola);
+      profesorList.forEach((e) => {
+        if (e.nombreCompleto === consola.nombreCompleto) {
+          setCurrentProfesor(e);
+        }
+      });
     } else if (caso === 'Eliminar') {
-        setClaseActual(consola);
-        id = consola._id;
+      setClaseActual(consola);
+      id = consola._id;
     }
     setCurrentOperation(caso);
     console.log(caso);
@@ -183,7 +181,7 @@ export default function ShowClass() {
 
   const abrirCerrarModal = () => {
     if (openModal) {
-        setClaseActual(classTemplate);
+      setClaseActual(classTemplate);
     }
     setOpenModal(!openModal);
   };
@@ -211,7 +209,6 @@ export default function ShowClass() {
         result.sort((a, b) => (a > b ? 1 : a < b ? -1 : 0));
         setCurrentWaitList(result);
         setCurrentClase(clase);
-        //setOpenModalWaitList(true);
         seleccionarClase(clase, 'AbrirWaitList');
       });
     });
@@ -438,7 +435,7 @@ export default function ShowClass() {
         Eliminar clase
       </h3>
       <Typography style={{ align: 'justify', fontFamily: 'arial' }}>
-        Esta clase {clase.clave} y toda su información relacionada a ella va a ser eliminada
+        {`Esta clase ${clase.clave} y toda su información relacionada a ella va a ser eliminada`}
       </Typography>
       <br />
       <br />
@@ -457,12 +454,12 @@ export default function ShowClass() {
     <div>
       <HeaderInscripcionClase
         data={data}
-        setOpenModal={() => { seleccionarClase(classTemplate, 'Crear') }}
+        setOpenModal={() => { seleccionarClase(classTemplate, 'Crear'); }}
         resetClases={resetClases}
         dataPeriodo={dataPeriodo}
         handleSelectChange={handleSelectChange}
       />
-      <BodyInscripcionClase 
+      <BodyInscripcionClase
         data={data}
         profesorList={profesorList}
         getClassWaitList={getClassWaitList}
@@ -470,24 +467,9 @@ export default function ShowClass() {
       />
       <Modal open={openModal} onClose={abrirCerrarModal}>
         <div>
-        {currentOperation === 'Editar' || currentOperation === 'Crear'? bodyEditar : (currentOperation === 'AbrirWaitList'? <WaitList clase={currentClase} waitList={currentWaitList} /> : bodyEliminar)}
+          {currentOperation === 'Editar' || currentOperation === 'Crear' ? bodyEditar : (currentOperation === 'AbrirWaitList' ? <WaitList clase={currentClase} waitList={currentWaitList} /> : bodyEliminar)}
         </div>
       </Modal>
-      {/* <Modal
-        open={modalWaitList}
-        // onClose={() => setOpenModalWaitList(false)}
-        onClose={abrirCerrarModal}
-        sx={{
-          height: '100vh',
-          display: 'flex',
-          alignContent: 'center',
-          justifyContent: 'center',
-          flexWrap: 'wrap',
-          overflowY: 'scroll',
-        }}
-      >
-        <WaitList clase={currentClase} waitList={currentWaitList} />
-      </Modal> */}
     </div>
   );
 }
