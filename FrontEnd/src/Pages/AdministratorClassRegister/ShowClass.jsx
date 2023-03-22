@@ -15,7 +15,7 @@ import {
   createClass, deleteClasses, getClasses, updateClass,
 } from '../../api/classes.js';
 import {
-  classAtributes, dayAtributes, niveloptions, classTemplate, nivelesMapa
+  classAtributes, dayAtributes, niveloptions, classTemplate, nivelesMapa, claseActualDefault
 } from '../../utils/constants';
 import HeaderInscripcionClase from '../../Components/Clase/HeaderInscripcionClase';
 import { mapNiveles } from '../../utils/utilFunctions';
@@ -29,21 +29,7 @@ export default function ShowClass() {
   const [profesorList, setProfesorList] = useState([profesorVacioInscripcion]);
   const [currentProfesor, setCurrentProfesor] = useState(profesorVacioInscripcion);
   const [nuevaClase, setNuevaClase] = useState(classTemplate);
-  const [claseActual, setClaseActual] = useState({
-    _id: '',
-    clave: '',
-    nombre_curso: '',
-    nivel: '',
-    matriculaProfesor: '',
-    edades: '',
-    cupo_maximo: '',
-    modalidad: '',
-    fechas: '',
-    niveles: '',
-    nombreCompleto: '',
-    nombreProfesor: '',
-    apellidoProfesor: '',
-  });
+  const [claseActual, setClaseActual] = useState(claseActualDefault);
   const [currentClase, setCurrentClase] = useState(null);
   const [currentWaitList, setCurrentWaitList] = useState(null);
   const [clase, setClase] = useState(claseActual);

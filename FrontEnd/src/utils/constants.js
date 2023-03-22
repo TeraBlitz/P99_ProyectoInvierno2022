@@ -137,6 +137,22 @@ export const nivelesMapa = {
   '4': 'avanzado'
 };
 
+export const claseActualDefault = {
+  _id: '',
+  clave: '',
+  nombre_curso: '',
+  nivel: '',
+  matriculaProfesor: '',
+  edades: '',
+  cupo_maximo: '',
+  modalidad: '',
+  fechas: '',
+  niveles: '',
+  nombreCompleto: '',
+  nombreProfesor: '',
+  apellidoProfesor: '',
+}
+
 export const classTemplate = {
   clave: '',
   nombre_curso: '',
