@@ -137,10 +137,10 @@ export default function ShowClass() {
           _id: clase._id,
         });
       } else if (currentOperation === 'Crear') {
-        const claseACrear = mapNiveles(classTemplate);
+        const claseACrear = mapNiveles(classTemplate, currentProfesor);
         await createClass(claseACrear);
       } else if (currentOperation === 'Editar') {
-        const claseAModificar = mapNiveles(clase);
+        const claseAModificar = mapNiveles(clase, currentProfesor);
         await updateClass(claseAModificar);
       }
     } catch (error) {
@@ -164,7 +164,6 @@ export default function ShowClass() {
       setClaseActual(consola);
     }
     setCurrentOperation(caso);
-    console.log(caso);
     abrirCerrarModal();
   };
 
@@ -228,13 +227,14 @@ export default function ShowClass() {
         currentProfesor={currentProfesor}
         handleChange={handleChange}
         profesorList={profesorList}
-        modalSubmit={modalSubmit}
+        setOpenModal={abrirCerrarModal}
         currentOperation={currentOperation}
         openModal={openModal}
         abrirCerrarModal={abrirCerrarModal}
         currentClase={currentClase}
         currentWaitList={currentWaitList}
         handleChangeProfesor={handleChangeProfesor}
+        modalSubmit={modalSubmit}
       />
     </div>
   );

@@ -13,39 +13,10 @@ import {
 
 function ModalInscripcionClase({
   clase, currentProfesor, handleChange, profesorList, handleChangeProfesor,
-  modalSubmit, currentOperation, openModal, abrirCerrarModal, currentClase, currentWaitList,
+  modalSubmit, currentOperation, openModal, setOpenModal, currentClase, currentWaitList,
 }) {
   const bodyEditar = (
-    <div
-      style={{
-        position: 'absolute',
-        width: 520,
-        height: '95vh',
-        backgroundColor: '#fefefd',
-        top: '48%',
-        left: '50%',
-        transform: 'translate(-48%, -50%)',
-        border: '4px solid  rgb(165, 165, 180)',
-        margin: 'auto',
-        borderRadius: '10px',
-        padding: '20px',
-        display: 'flex',
-        justifyContent: 'center',
-        flexWrap: 'wrap',
-        overflowY: 'scroll',
-      }}
-    >
-      <h3
-        style={{
-          paddingBottom: '15px',
-          marginTop: '5px',
-          fontFamily: 'arial',
-          width: '100%',
-        }}
-        align="center"
-      >
-        Actualizar una clase
-      </h3>
+    <div>
       {classAtributes.map((atribute) => (
         <TextField
           style={{
@@ -202,59 +173,77 @@ function ModalInscripcionClase({
           label="correo"
         />
       </div>
-      <div align="center" style={{ width: '100%' }}>
-        <Button color="primary" onClick={modalSubmit}>
-          Editar
-        </Button>
-        <Button onClick={abrirCerrarModal} color="error">
-          Cancelar
-        </Button>
-      </div>
     </div>
   );
 
-  const bodyEliminar = (
+  const generateActionModalBody = () => (
     <div
       style={{
-        position: 'absolute',
-        width: 260,
-        height: 220,
-        backgroundColor: '#fefefd',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        border: '4px solid  rgb(165, 165, 180)',
-        margin: 'auto',
-        borderRadius: '10px',
-        padding: '20px',
+      position: 'absolute',
+      backgroundColor: '#fefefd',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      border: '4px solid  rgb(165, 165, 180)',
+      margin: 'auto',
+      borderRadius: '10px',
+      padding: '20px',
+      display: 'flex',
+      justifyContent: 'center',
+      flexWrap: 'wrap',
+      overflowY: 'scroll',
+      ...(currentOperation === 'Editar' || currentOperation === 'Crear'
+        ? {
+            width: 520,
+            height: '95vh',
+            top: '48%',
+          }
+        : {
+            width: 260,
+            height: 220,
+          }),
       }}
     >
       <h3
-        style={{ paddingBottom: '15px', marginTop: '5px', fontFamily: 'arial' }}
+        style={{
+          paddingBottom: '15px',
+          marginTop: '5px',
+          fontFamily: 'arial',
+          width: '100%',
+        }}
         align="center"
       >
-        Eliminar clase
+        {currentOperation === 'ELiminar' ? 
+          'Eliminar una clase' : 
+          (currentOperation === 'Editar' ? 
+          'Actualizar una clase' : 'Añadir nueva clase')}
       </h3>
-      <Typography style={{ align: 'justify', fontFamily: 'arial' }}>
-        {`Esta clase ${clase.clave} y toda su información relacionada a ella va a ser eliminada`}
-      </Typography>
+      { 
+        currentOperation === 'Eliminar' && 
+        <Typography style={{ align: 'justify', fontFamily: 'arial' }}>
+          {`Esta clase ${clase.clave} y toda su información relacionada a ella va a ser eliminada`}
+        </Typography> 
+      }
+      {
+        (currentOperation === 'Editar' || currentOperation === 'Crear') && bodyEditar
+      }
       <br />
       <br />
       <div align="center">
-        <Button color="error" onClick={modalSubmit}>
-          Confirmar
+        <Button color={currentOperation === 'Editar' || currentOperation === 'Crear'? 'primary' : 'error'} onClick={modalSubmit}>
+          {currentOperation === 'Crear'? 'Agregar' : 'Confirmar'}
         </Button>
-        <Button onClick={abrirCerrarModal} color="primary">
+        <Button onClick={setOpenModal} color={currentOperation === 'Editar' || currentOperation === 'Crear' ? 'error' : 'primary'}>
           Cancelar
         </Button>
       </div>
     </div>
-  );
+  )
 
   return (
-    <Modal open={openModal} onClose={abrirCerrarModal}>
+    <Modal open={openModal} onClose={setOpenModal}>
       <div>
-        {currentOperation === 'Editar' || currentOperation === 'Crear' ? bodyEditar : (currentOperation === 'AbrirWaitList' ? <WaitList clase={currentClase} waitList={currentWaitList} /> : bodyEliminar)}
+        {currentOperation === 'AbrirWaitList' ? <WaitList clase={currentClase} waitList={currentWaitList} /> : generateActionModalBody() }
       </div>
     </Modal>
   );

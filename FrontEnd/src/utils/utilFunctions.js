@@ -116,7 +116,7 @@ export const encontrarClases = (dataClase, clave) => {
   return (clasesInscritas);
 }
 
-export const mapNiveles = (clase) => {
+export const mapNiveles = (clase, currentProfesor) => {
   const nivelesMap = {
     'desde cero': '1',
     'con bases': '2',
