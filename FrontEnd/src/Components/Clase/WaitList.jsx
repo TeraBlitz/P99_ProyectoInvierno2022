@@ -4,6 +4,13 @@ import Typography from '@mui/material/Typography'
 
 const WaitList = ({clase, waitList}) => {
   return (
+    <div style={{
+      position: 'absolute',
+  left: '50%',
+  top: '50%',
+  transform: 'translate(-25%, -50%)',
+  width: '-webkit-fill-available',
+    }}>
     <Box  
       sx={{'& .MuiTypography-root': { my: 2 }, display: 'flex', 
       alignItems: 'center',  flexWrap: 'wrap', backgroundColor: 'white', 
@@ -31,6 +38,7 @@ const WaitList = ({clase, waitList}) => {
 
         }
     </Box>
+    </div>
   )
 }
 

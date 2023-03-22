@@ -177,6 +177,7 @@ export default function ShowClass() {
         id = consola._id;
     }
     setCurrentOperation(caso);
+    console.log(caso);
     abrirCerrarModal();
   };
 
@@ -210,7 +211,8 @@ export default function ShowClass() {
         result.sort((a, b) => (a > b ? 1 : a < b ? -1 : 0));
         setCurrentWaitList(result);
         setCurrentClase(clase);
-        setOpenModalWaitList(true);
+        //setOpenModalWaitList(true);
+        seleccionarClase(clase, 'AbrirWaitList');
       });
     });
   };
@@ -467,11 +469,14 @@ export default function ShowClass() {
         seleccionarClase={seleccionarClase}
       />
       <Modal open={openModal} onClose={abrirCerrarModal}>
-        {currentOperation === 'Editar' || currentOperation === 'Crear'? bodyEditar : bodyEliminar}
+        <div>
+        {currentOperation === 'Editar' || currentOperation === 'Crear'? bodyEditar : (currentOperation === 'AbrirWaitList'? <WaitList clase={currentClase} waitList={currentWaitList} /> : bodyEliminar)}
+        </div>
       </Modal>
-      <Modal
+      {/* <Modal
         open={modalWaitList}
-        onClose={() => setOpenModalWaitList(false)}
+        // onClose={() => setOpenModalWaitList(false)}
+        onClose={abrirCerrarModal}
         sx={{
           height: '100vh',
           display: 'flex',
@@ -482,7 +487,7 @@ export default function ShowClass() {
         }}
       >
         <WaitList clase={currentClase} waitList={currentWaitList} />
-      </Modal>
+      </Modal> */}
     </div>
   );
 }
