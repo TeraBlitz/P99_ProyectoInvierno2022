@@ -11,7 +11,7 @@ import { CSVLink } from 'react-csv';
 import { subirClases, subirProfes } from '../../api/csv';
 
 function HeaderInscripcionClase({
-  data, addClass, dataPeriodo, handleSelectChange, resetClases
+  data, setOpenModal, dataPeriodo, handleSelectChange, resetClases
 }) {
   const importFile = () => {
     const input = document.createElement('input');
@@ -126,7 +126,7 @@ function HeaderInscripcionClase({
       <Button
         variant="contained"
         color="success"
-        onClick={addClass}
+        onClick={setOpenModal}
         sx={{
           position: 'absolute',
           marginTop: '52px',

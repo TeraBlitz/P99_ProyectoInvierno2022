@@ -165,17 +165,6 @@ export default function ShowClass() {
     });
   };
 
-  const editClasses = (clase) => {
-    setClaseActual(clase);
-    profesorList.forEach((e) => {
-      if (e.nombreCompleto === clase.nombreCompleto) {
-        setCurrentProfesor(e);
-      }
-    });
-
-    abrirCerrarModalEditar();
-  };
-
   useEffect(() => {
     setClase(claseActual);
     getAllPeriodos();
@@ -221,13 +210,29 @@ export default function ShowClass() {
   };
 
   const seleccionarClase = (consola, caso) => {
-    id = consola._id;
     if (caso === 'Crear') {
-
+        setClaseActual(classTemplate);
+        setCurrentProfesor({
+            nombre: '',
+            matricula: '',
+            apellido: '',
+            nombreCompleto: '',
+            correo: '',
+          });
+          abrirCerrarModalEditar();
     } else if (caso === 'Editar') {
-      editClasses(consola);
+        id = consola._id;
+        setClaseActual(consola);
+        profesorList.forEach((e) => {
+          if (e.nombreCompleto === consola.nombreCompleto) {
+            setCurrentProfesor(e);
+          }
+        });
+        abrirCerrarModalEditar();
     } else if (caso === 'Eliminar') {
-      abrirCerrarModalEliminar();
+        setClaseActual(consola);
+        id = consola._id;
+        abrirCerrarModalEliminar();
     }
   };
 
@@ -241,17 +246,6 @@ export default function ShowClass() {
 
   const abrirCerrarModalEliminar = () => {
     setModalEliminar(!modalEliminar);
-  };
-
-  const addClass = () => {
-    setCurrentProfesor({
-      nombre: '',
-      matricula: '',
-      apellido: '',
-      nombreCompleto: '',
-      correo: '',
-    });
-    abrirCerrarModalInsertar();
   };
 
   const getClassWaitList = (clase) => {
@@ -281,205 +275,6 @@ export default function ShowClass() {
       });
     });
   };
-
-  const bodyInsertar = (
-    <div
-      style={{
-        position: 'absolute',
-        width: 520,
-        height: '95vh',
-        backgroundColor: '#fefefd',
-        top: '48%',
-        left: '50%',
-        transform: 'translate(-48%, -50%)',
-        border: '4px solid  rgb(165, 165, 180)',
-        margin: 'auto',
-        borderRadius: '10px',
-        padding: '20px',
-        display: 'flex',
-        justifyContent: 'center',
-        flexWrap: 'wrap',
-        overflowY: 'scroll',
-      }}
-    >
-      <h3
-        style={{
-          paddingBottom: '15px',
-          marginTop: '5px',
-          fontFamily: 'arial',
-          width: '100%',
-        }}
-        align="center"
-      >
-        Crear una nueva clase
-      </h3>
-      {classAtributes.map((atribute) => (
-        <TextField
-          style={{
-            paddingBottom: '15px',
-            fontFamily: 'arial',
-            marginRight: 10,
-            width: '40%',
-          }}
-          label={atribute.value}
-          onChange={(e) => {
-            handleChange(e);
-          }}
-          name={atribute.key}
-          key={atribute.key}
-          value={nuevaClase[atribute.key]}
-          autoFocus
-        />
-      ))}
-      <TextField
-        style={{
-          paddingBottom: '15px',
-          fontFamily: 'arial',
-          marginRight: 10,
-          width: '40%',
-        }}
-        label="Modalidad"
-        value={nuevaClase.modalidad}
-        name="modalidad"
-        onChange={(e) => {
-          handleChange(e);
-        }}
-        select
-      >
-        {['presencial', 'online'].map((e) => (
-          <MenuItem value={e} key={e}>
-            {e}
-          </MenuItem>
-        ))}
-      </TextField>
-      <TextField
-        style={{
-          paddingBottom: '15px',
-          fontFamily: 'arial',
-          marginRight: 10,
-          width: '40%',
-        }}
-        label="Nivel"
-        value={nuevaClase.niveles}
-        name="niveles"
-        onChange={(e) => {
-          handleChange(e);
-        }}
-        select
-      >
-        {niveloptions.map((e) => (
-          <MenuItem value={e} key={e}>
-            {e}
-          </MenuItem>
-        ))}
-      </TextField>
-      <div
-        style={{
-          width: '100%',
-          borderTop: '1px solid gray',
-          paddingTop: '5px',
-          display: 'flex',
-          justifyContent: 'center',
-          flexWrap: 'wrap',
-        }}
-      >
-        <Typography
-          sx={{ textAlign: 'center', marginTop: '10px', width: '100%' }}
-        >
-          Horarios
-        </Typography>
-        {dayAtributes.map((atribute) => (
-          <TextField
-            style={{
-              paddingBottom: '15px',
-              fontFamily: 'arial',
-              marginRight: 10,
-              width: '40%',
-            }}
-            label={atribute.value}
-            onChange={(e) => {
-              handleChange(e);
-            }}
-            name={atribute.key}
-            key={atribute.key}
-            value={nuevaClase[atribute.key]}
-            autoFocus
-          />
-        ))}
-      </div>
-      <div
-        style={{
-          width: '100%',
-          borderTop: '1px solid gray',
-          paddingTop: '5px',
-        }}
-      >
-        <Typography sx={{ textAlign: 'center', marginTop: '10px' }}>
-          Datos del profesor
-        </Typography>
-        <br />
-        <TextField
-          style={{
-            paddingBottom: '15px',
-            fontFamily: 'arial',
-            marginRight: 10,
-            width: '100%',
-          }}
-          label="Profesor"
-          value={currentProfesor.nombreCompleto}
-          name="nombreCompleto"
-          onChange={(e) => {
-            handleChangeProfesor(e);
-          }}
-          select
-        >
-          {profesorList.map((e) => (
-            <MenuItem value={`${e.nombre} ${e.apellidos}`} key={e._id}>
-              {`${e.nombre} ${e.apellidos}`}
-            </MenuItem>
-          ))}
-        </TextField>
-        <TextField
-          style={{
-            paddingBottom: '15px',
-            fontFamily: 'arial',
-            marginRight: 10,
-            width: '40%',
-          }}
-          variant="filled"
-          label="Matricula"
-          InputProps={{
-            readOnly: true,
-          }}
-          value={currentProfesor.matricula}
-          defaultValue={currentProfesor.matricula}
-        />
-        <TextField
-          style={{
-            paddingBottom: '15px',
-            fontFamily: 'arial',
-            marginRight: 10,
-            width: '40%',
-          }}
-          InputProps={{
-            readOnly: true,
-          }}
-          value={currentProfesor.correo}
-          defaultValue={currentProfesor.correo}
-          variant="filled"
-          label="Correo"
-        />
-      </div>
-      <div align="center" style={{ width: '100%' }}>
-        <Button color="primary" onClick={postCrea}>
-          Insertar
-        </Button>
-        <Button onClick={abrirCerrarModalInsertar} color="error">
-          Cancelar
-        </Button>
-      </div>
-    </div>
-  );
 
   const bodyEditar = (
     <div
@@ -699,10 +494,10 @@ export default function ShowClass() {
         style={{ paddingBottom: '15px', marginTop: '5px', fontFamily: 'arial' }}
         align="center"
       >
-        Eliminar alumno
+        Eliminar clase
       </h3>
       <Typography style={{ align: 'justify', fontFamily: 'arial' }}>
-        Esta clase  y toda su información relacionada a ella va a ser eliminada
+        Esta clase {clase.clave} y toda su información relacionada a ella va a ser eliminada
       </Typography>
       <br />
       <br />
@@ -721,7 +516,7 @@ export default function ShowClass() {
     <div>
       <HeaderInscripcionClase
         data={data}
-        addClass={addClass}
+        setOpenModal={() => { seleccionarClase(classTemplate, 'Crear') }}
         resetClases={resetClases}
         dataPeriodo={dataPeriodo}
         handleSelectChange={handleSelectChange}
@@ -732,9 +527,6 @@ export default function ShowClass() {
         getClassWaitList={getClassWaitList}
         seleccionarClase={seleccionarClase}
       />
-      <Modal open={modalInsertar} onClose={abrirCerrarModalInsertar}>
-        {bodyInsertar}
-      </Modal>
       <Modal open={modalEditar} onClose={abrirCerrarModalEditar}>
         {bodyEditar}
       </Modal>
