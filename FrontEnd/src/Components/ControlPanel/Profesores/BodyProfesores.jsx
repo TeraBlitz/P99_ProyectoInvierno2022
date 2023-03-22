@@ -98,7 +98,7 @@ function BodyProfesores({ data, seleccionarConsola }) {
           })}
           sx={{
             [`& .${gridClasses.row}`]: {
-              bgcolor: (theme) => (theme.palette.mode === 'light' ? grey[200] : grey[900]),
+              bgcolor: grey[200],
               fontFamily: 'arial',
             },
           }}

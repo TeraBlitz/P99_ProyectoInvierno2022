@@ -1,17 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Button,
   Modal,
   TextField,
-  Box,
   Typography,
 } from '@mui/material';
-import { grey } from '@mui/material/colors';
-import { DataGrid, gridClasses } from '@mui/x-data-grid';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import MenuItem from '@mui/material/MenuItem';
-import Actions from '../../Components/Clase/Actions';
 import WaitList from '../../Components/Clase/WaitList';
 import { getWaitList } from '../../api/waitList';
 import { getStudents } from '../../api/students';
@@ -24,28 +18,24 @@ import {
   classAtributes, dayAtributes, niveloptions, classTemplate,
 } from '../../utils/constants';
 import HeaderInscripcionClase from '../../Components/Clase/HeaderInscripcionClase';
+import { mapNiveles } from '../../utils/utilFunctions';
+import BodyInscripcionClase from '../../Components/Clase/BodyInscripcionClase';
+
+const profesorVacio = {
+    nombreProfesor: '',
+    matriculaProfesor: '',
+    apellidoProfesor: '',
+    nombreCompleto: '',
+    correo: '',
+};
 
 export default function ShowClass() {
   let id = '';
   const [dataPeriodo, setDataPeriodo] = useState([]);
   const [data, setData] = useState([]);
   const [guardaData, setGuardaData] = useState([]);
-  const [profesorList, setProfesorList] = useState([
-    {
-      nombreProfesor: '',
-      matriculaProfesor: '',
-      apellidoProfesor: '',
-      nombreCompleto: '',
-      correo: '',
-    },
-  ]);
-  const [currentProfesor, setCurrentProfesor] = useState({
-    nombreProfesor: '',
-    matriculaProfesor: '',
-    apellidoProfesor: '',
-    nombreCompleto: '',
-    correo: '',
-  });
+  const [profesorList, setProfesorList] = useState([profesorVacio]);
+  const [currentProfesor, setCurrentProfesor] = useState(profesorVacio);
   const [nuevaClase, setNuevaClase] = useState(classTemplate);
   const [claseActual, setClaseActual] = useState({
     _id: '',
@@ -64,8 +54,6 @@ export default function ShowClass() {
   });
   const [currentClase, setCurrentClase] = useState(null);
   const [currentWaitList, setCurrentWaitList] = useState(null);
-  const [pageSize, SetPageSize] = useState(5);
-  const [items, setItems] = useState([]);
   const [clase, setClase] = useState(claseActual);
 
   const [modalInsertar, setModalInsertar] = useState(false);
@@ -80,22 +68,9 @@ export default function ShowClass() {
   };
 
   const handleSelectChange = (event) => {
-    const array = [];
-    const array2 = [];
+    const filteredData = [data.filter((data) => data.clavePeriodo === event.label)].flat();
 
-    array2.push(data.filter((data) => data.clavePeriodo === event.label));
-
-    for (let i = 0; i < array2.length; i++) {
-      for (let j = 0; j < array2[i].length; j++) {
-        array.push(array2[i][j]);
-      }
-    }
-
-    if (array.length > 0) {
-      setData(array);
-    } else {
-      resetClases();
-    }
+    filteredData.length > 0 ? setData(filteredData) : resetClases();
   };
 
   const getOptions = async () => {
@@ -113,24 +88,23 @@ export default function ShowClass() {
     try {
       const response = await getClasses();
       const result = await response.json();
-  
+
       const dataList = result.map((clase) => {
         let fechas = '';
         let edades = '';
         let niveles = '';
-  
+
         if (clase.lunes !== '') fechas += 'lunes, ';
         if (clase.martes !== '') fechas += 'martes, ';
         if (clase.miercoles !== '') fechas += 'miercoles, ';
         if (clase.jueves !== '') fechas += 'jueves, ';
         if (clase.viernes !== '') fechas += 'viernes, ';
         if (clase.sabado !== '') fechas += 'sabado, ';
-  
-        edades =
-          clase.edad_maxima === ''
-            ? `${clase.edad_minima} en Adelante`
-            : `${clase.edad_minima}-${clase.edad_maxima}`;
-  
+
+        edades = clase.edad_maxima === ''
+          ? `${clase.edad_minima} en Adelante`
+          : `${clase.edad_minima}-${clase.edad_maxima}`;
+
         switch (clase.nivel) {
           case '1':
             niveles = 'desde cero';
@@ -147,7 +121,7 @@ export default function ShowClass() {
           default:
             niveles = '';
         }
-  
+
         return {
           _id: clase._id,
           clave: clase.clave,
@@ -175,25 +149,17 @@ export default function ShowClass() {
           nombreCompleto: `${clase.nombreProfesor} ${clase.apellidosProfesor}`,
         };
       });
-  
+
       setData(dataList);
       getOptions();
     } catch (error) {
       console.error(error);
     }
   };
-  
-  useEffect(() => {
-    resetClases();
-  }, []);
-
-  const handleClose = () => {
-    setOpenDeleteDialog(false);
-  };
 
   const handleChangeProfesor = (p) => {
     profesorList.forEach((e) => {
-      if (e.nombreCompleto == p.target.value) {
+      if (e.nombreCompleto === p.target.value) {
         setCurrentProfesor(e);
       }
     });
@@ -202,7 +168,7 @@ export default function ShowClass() {
   const editClasses = (clase) => {
     setClaseActual(clase);
     profesorList.forEach((e) => {
-      if (e.nombreCompleto == clase.nombreCompleto) {
+      if (e.nombreCompleto === clase.nombreCompleto) {
         setCurrentProfesor(e);
       }
     });
@@ -215,35 +181,15 @@ export default function ShowClass() {
     getAllPeriodos();
   }, [claseActual]);
 
+  useEffect(() => {
+    resetClases();
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setClase({ ...clase, [name]: value });
   };
 
-  const mapNiveles = (clase) => {
-    const nivelesMap = {
-      'desde cero': '1',
-      'con bases': '2',
-      'intermedio': '3',
-      'avanzado': '4',
-    };
-  
-    const claseModificada = { ...clase };
-    claseModificada.nombreProfesor = currentProfesor.nombre;
-    claseModificada.matriculaProfesor = currentProfesor.matricula;
-    claseModificada.apellidosProfesor = currentProfesor.apellidos;
-    delete claseModificada.nombreCompleto;
-    delete claseModificada.fechas;
-    delete claseModificada.edades;
-  
-    if (claseModificada.niveles in nivelesMap) {
-      claseModificada.nivel = nivelesMap[claseModificada.niveles];
-    }
-  
-    delete claseModificada.niveles;
-    return claseModificada;
-  };
-  
   const postCrea = async (e) => {
     e.preventDefault();
     const nuevaClase = mapNiveles(nuevaClase);
@@ -252,7 +198,7 @@ export default function ShowClass() {
       resetClases();
     });
   };
-  
+
   const postEditar = (e) => {
     e.preventDefault();
     const nuevaClase = mapNiveles(clase);
@@ -275,10 +221,9 @@ export default function ShowClass() {
   };
 
   const seleccionarClase = (consola, caso) => {
-    // setNuevaClase(consola);
     id = consola._id;
     if (caso === 'Crear') {
-        
+
     } else if (caso === 'Editar') {
       editClasses(consola);
     } else if (caso === 'Eliminar') {
@@ -336,41 +281,6 @@ export default function ShowClass() {
       });
     });
   };
-
-  const columns = useMemo(
-    () => [
-      { field: 'clave', headerName: 'Clave', width: 68 },
-      { field: 'nombre_curso', headerName: 'Curso', width: 80 },
-      { field: 'niveles', headerName: 'Nivel', width: 95 },
-      {
-        field: 'nombreCompleto',
-        headerName: 'Profesor',
-        width: 150,
-        sortable: false,
-      },
-      { field: 'cupo_maximo', headerName: 'Capacidad', width: 90 },
-      { field: 'edades', headerName: 'Edades', width: 70 },
-      { field: 'fechas', headerName: 'Fechas', width: 200 },
-      { field: 'modalidad', headerName: 'Modalidad', width: 88 },
-      {
-        field: 'actions',
-        headerName: 'Acciones',
-        type: 'actions',
-        width: 125,
-        renderCell: (params) => <Actions {...{ params, seleccionarConsola: seleccionarClase }} />,
-      },
-      {
-        field: 'wait_list',
-        headerName: 'Lista Espera',
-        type: 'actions',
-        width: 150,
-        renderCell: (params) => (
-          <Button size="small" onClick={() => getClassWaitList(params.row)}>Lista Espera</Button>
-        ),
-      },
-    ],
-    [data, profesorList],
-  );
 
   const bodyInsertar = (
     <div
@@ -809,111 +719,19 @@ export default function ShowClass() {
 
   return (
     <div>
-        <HeaderInscripcionClase 
-            data={data}
-            addClass={addClass}
-            resetClases={resetClases}
-            dataPeriodo={dataPeriodo}
-            handleSelectChange={handleSelectChange}
-        />
-      <Card
-        sx={{
-          width: 1140,
-          position: 'absolute',
-          textAlign: 'left',
-          marginLeft: '50px',
-          marginTop: '120px',
-          bgcolor: 'grey.200',
-          borderRadius: '8px',
-        }}
-      >
-        <CardContent>
-          <Typography
-            gutterBottom
-            variant="h5"
-            component="div"
-            sx={{ textAlign: 'left', fontFamily: 'arial', marginLeft: '15px' }}
-          >
-            Filtros
-          </Typography>
-          <TextField
-            style={{
-              paddingBottom: '5px', fontFamily: 'arial', marginLeft: '10px', width: 330,
-            }}
-            label="Curso"
-            onChange={(e) => {
-              setItems([
-                {
-                  columnField: 'nombre_curso',
-                  operatorValue: 'contains',
-                  value: e.target.value,
-                },
-              ]);
-            }}
-          />
-          <TextField
-            style={{
-              paddingBottom: '5px', fontFamily: 'arial', marginLeft: '54px', width: 330,
-            }}
-            label="Nivel"
-            onChange={(e) => {
-              setItems([
-                {
-                  columnField: 'niveles',
-                  operatorValue: 'contains',
-                  value: e.target.value,
-                },
-              ]);
-            }}
-          />
-          <TextField
-            style={{
-              paddingBottom: '5px', fontFamily: 'arial', marginLeft: '40px', width: 330,
-            }}
-            label="Profesor"
-            onChange={(e) => {
-              setItems([
-                {
-                  columnField: 'nombreCompleto',
-                  operatorValue: 'contains',
-                  value: e.target.value,
-                },
-              ]);
-            }}
-          />
-        </CardContent>
-      </Card>
-      <Box sx={{
-        position: 'absolute',
-        height: '60vh',
-        width: '1140px',
-        marginTop: '280px',
-        marginLeft: '50px',
-      }}
-      >
-        <DataGrid
-          columns={columns}
-          rows={data}
-          getRowId={(row) => row._id}
-          rowsPerPageOptions={[5, 10, 20]}
-          pageSize={pageSize}
-          onPageSizeChange={(newPageSize) => SetPageSize(newPageSize)}
-          getRowSpacing={(params) => ({
-            top: params.isFirstVisible ? 0 : 5,
-            bottom: params.isLastVisible ? 0 : 5,
-          })}
-          sx={{
-            [`& .${gridClasses.row}`]: {
-              bgcolor: (theme) => (theme.palette.mode === 'light' ? grey[200] : grey[900]),
-              fontFamily: 'arial',
-            },
-          }}
-          disableSelectionOnClick
-          filterModel={{
-            items,
-          }}
-        />
-      </Box>
+      <HeaderInscripcionClase
+        data={data}
+        addClass={addClass}
+        resetClases={resetClases}
+        dataPeriodo={dataPeriodo}
+        handleSelectChange={handleSelectChange}
+      />
+      <BodyInscripcionClase 
+        data={data}
+        profesorList={profesorList}
+        getClassWaitList={getClassWaitList}
+        seleccionarClase={seleccionarClase}
+      />
       <Modal open={modalInsertar} onClose={abrirCerrarModalInsertar}>
         {bodyInsertar}
       </Modal>
