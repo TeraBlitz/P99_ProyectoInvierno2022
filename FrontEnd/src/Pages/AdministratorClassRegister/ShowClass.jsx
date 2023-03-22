@@ -15,27 +15,19 @@ import {
   createClass, deleteClasses, getClasses, updateClass,
 } from '../../api/classes.js';
 import {
-  classAtributes, dayAtributes, niveloptions, classTemplate,
+  classAtributes, dayAtributes, niveloptions, classTemplate, nivelesMapa
 } from '../../utils/constants';
 import HeaderInscripcionClase from '../../Components/Clase/HeaderInscripcionClase';
 import { mapNiveles } from '../../utils/utilFunctions';
 import BodyInscripcionClase from '../../Components/Clase/BodyInscripcionClase';
-
-const profesorVacio = {
-    nombreProfesor: '',
-    matriculaProfesor: '',
-    apellidoProfesor: '',
-    nombreCompleto: '',
-    correo: '',
-};
+import { profesorVacioInscripcion } from '../../utils/constants';
 
 export default function ShowClass() {
   let id = '';
   const [dataPeriodo, setDataPeriodo] = useState([]);
   const [data, setData] = useState([]);
-  const [guardaData, setGuardaData] = useState([]);
-  const [profesorList, setProfesorList] = useState([profesorVacio]);
-  const [currentProfesor, setCurrentProfesor] = useState(profesorVacio);
+  const [profesorList, setProfesorList] = useState([profesorVacioInscripcion]);
+  const [currentProfesor, setCurrentProfesor] = useState(profesorVacioInscripcion);
   const [nuevaClase, setNuevaClase] = useState(classTemplate);
   const [claseActual, setClaseActual] = useState({
     _id: '',
@@ -102,23 +94,8 @@ export default function ShowClass() {
         edades = clase.edad_maxima === ''
           ? `${clase.edad_minima} en Adelante`
           : `${clase.edad_minima}-${clase.edad_maxima}`;
-
-        switch (clase.nivel) {
-          case '1':
-            niveles = 'desde cero';
-            break;
-          case '2':
-            niveles = 'con bases';
-            break;
-          case '3':
-            niveles = 'intermedio';
-            break;
-          case '4':
-            niveles = 'avanzado';
-            break;
-          default:
-            niveles = '';
-        }
+          
+        niveles = nivelesMapa[clase.nivel] || '';
 
         return {
           _id: clase._id,
@@ -200,13 +177,7 @@ export default function ShowClass() {
 
   const seleccionarClase = (consola, caso) => {
     if (caso === 'Crear') {
-        setCurrentProfesor({
-            nombre: '',
-            matricula: '',
-            apellido: '',
-            nombreCompleto: '',
-            correo: '',
-          });
+        setCurrentProfesor(profesorVacioInscripcion);
     } else if (caso === 'Editar') {
         id = consola._id;
         setClaseActual(consola);

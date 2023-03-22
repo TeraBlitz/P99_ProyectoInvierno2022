@@ -130,6 +130,13 @@ export const niveloptions = [
   'avanzado'
 ];
 
+export const nivelesMapa = {
+  '1': 'desde cero',
+  '2': 'con bases',
+  '3': 'intermedio',
+  '4': 'avanzado'
+};
+
 export const classTemplate = {
   clave: '',
   nombre_curso: '',
@@ -152,4 +159,12 @@ export const classTemplate = {
   area: '',
   cupo_actual: '',
   niveles: '',
+};
+
+export const profesorVacioInscripcion = {
+  nombreProfesor: '',
+  matriculaProfesor: '',
+  apellidoProfesor: '',
+  nombreCompleto: '',
+  correo: '',
 };
