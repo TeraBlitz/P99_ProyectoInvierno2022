@@ -55,7 +55,7 @@ function BodyInscripcionClase({
   const createTextField = (label, columnField, operatorValue, setValue) => (
     <TextField
       style={{
-        paddingBottom: '5px', fontFamily: 'arial', width: 330,
+        paddingBottom: '5px', fontFamily: 'arial', width: 330, marginLeft:"30px"
       }}
       label={label}
       onChange={(e) => {
