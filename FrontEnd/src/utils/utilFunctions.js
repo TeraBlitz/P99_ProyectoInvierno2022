@@ -115,3 +115,27 @@ export const encontrarClases = (dataClase, clave) => {
 
   return (clasesInscritas);
 }
+
+export const mapNiveles = (clase, currentProfesor) => {
+  const nivelesMap = {
+    'desde cero': '1',
+    'con bases': '2',
+    intermedio: '3',
+    avanzado: '4',
+  };
+
+  const claseModificada = { ...clase };
+  claseModificada.nombreProfesor = currentProfesor.nombre;
+  claseModificada.matriculaProfesor = currentProfesor.matricula;
+  claseModificada.apellidosProfesor = currentProfesor.apellidos;
+  delete claseModificada.nombreCompleto;
+  delete claseModificada.fechas;
+  delete claseModificada.edades;
+
+  if (claseModificada.niveles in nivelesMap) {
+    claseModificada.nivel = nivelesMap[claseModificada.niveles];
+  }
+
+  delete claseModificada.niveles;
+  return claseModificada;
+};
