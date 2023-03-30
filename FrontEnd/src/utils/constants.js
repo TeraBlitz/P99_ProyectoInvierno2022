@@ -190,4 +190,4 @@ export const nivelDict = {
   2: 'Con bases',
   3: 'Intermedio',
   4: 'Avanzado',
-};s
+};
