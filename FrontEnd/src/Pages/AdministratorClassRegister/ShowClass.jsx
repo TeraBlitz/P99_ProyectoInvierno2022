@@ -34,7 +34,6 @@ export default function ShowClass() {
 
   const handleSelectChange = (event) => {
     const filteredData = [data.filter((data) => data.clavePeriodo === event.label)].flat();
-
     filteredData.length > 0 ? setData(filteredData) : resetClases();
   };
 
@@ -230,7 +229,6 @@ export default function ShowClass() {
         setOpenModal={abrirCerrarModal}
         currentOperation={currentOperation}
         openModal={openModal}
-        abrirCerrarModal={abrirCerrarModal}
         currentClase={currentClase}
         currentWaitList={currentWaitList}
         handleChangeProfesor={handleChangeProfesor}
