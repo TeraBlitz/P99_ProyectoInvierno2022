@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { getWaitList } from '../../api/waitList';
-import { getStudents } from '../../api/students';
 import { getPeriodos } from '../../api/Periodos';
 import { getProfesors } from '../../api/profesors.js';
 import { getClasses } from '../../api/classes.js';
