@@ -8,9 +8,7 @@ import {
   classTemplate, claseActualDefault, profesorVacioInscripcion,
 } from '../../utils/constants';
 import { mapClaseToData } from '../../utils/utilFunctions';
-import HeaderInscripcionClase from '../../Components/Clase/HeaderInscripcionClase';
-import BodyInscripcionClase from '../../Components/Clase/BodyInscripcionClase';
-import ModalInscripcionClase from '../../Components/Clase/ModalInscripcionClase';
+import InscripcionClase from '../../Components/Clase/InscripcionClase';
 
 export default function ShowClass() {
   const [dataPeriodo, setDataPeriodo] = useState([]);
@@ -18,8 +16,6 @@ export default function ShowClass() {
   const [profesorList, setProfesorList] = useState([profesorVacioInscripcion]);
   const [currentProfesor, setCurrentProfesor] = useState(profesorVacioInscripcion);
   const [claseActual, setClaseActual] = useState(claseActualDefault);
-  const [currentClase, setCurrentClase] = useState(null);
-  const [currentWaitList, setCurrentWaitList] = useState(null);
   const [clase, setClase] = useState(claseActual);
   const [openModal, setOpenModal] = useState(false);
   const [currentOperation, setCurrentOperation] = useState('');
@@ -104,68 +100,22 @@ export default function ShowClass() {
     }
     setOpenModal(!openModal);
   };
-
-  const getClassWaitList = async (clase) => {
-    try {
-      const studentsList = await getStudents();
-      const students = await studentsList.json();
-      const studentsById = students.reduce((obj, student) => {
-        obj[student._id] = student;
-        return obj;
-      }, {});
-  
-      const responseWaitList = await getWaitList();
-      const waitList = await responseWaitList.json();
-      const result = [];
-  
-      waitList.forEach((inWaitList) => {
-        if (inWaitList.idClase === clase._id && studentsById[inWaitList.idAlumno]) {
-          const student = studentsById[inWaitList.idAlumno];
-          result.push({
-            _id: inWaitList._id,
-            studentName: `${student.nombre} ${student.apellido_paterno} ${student.apellido_materno}`,
-            time_stamp: inWaitList.time_stamp,
-          });
-        }
-      });
-  
-      result.sort((a, b) => (a > b ? 1 : a < b ? -1 : 0));
-      setCurrentWaitList(result);
-      setCurrentClase(clase);
-      seleccionarClase(clase, 'AbrirWaitList');
-    } catch (error) {
-      console.error(error);
-    }
-  };
   
   return (
-    <div>
-      <HeaderInscripcionClase
-        data={data}
-        setOpenModal={() => { seleccionarClase(classTemplate, 'Crear'); }}
-        resetClases={resetClases}
-        dataPeriodo={dataPeriodo}
-        handleSelectChange={handleSelectChange}
-      />
-      <BodyInscripcionClase
-        data={data}
-        profesorList={profesorList}
-        getClassWaitList={getClassWaitList}
-        seleccionarClase={seleccionarClase}
-      />
-      <ModalInscripcionClase
-        resetClases={resetClases}
-        clase={clase}
-        currentProfesor={currentProfesor}
-        handleChange={handleChange}
-        profesorList={profesorList}
-        setOpenModal={abrirCerrarModal}
-        currentOperation={currentOperation}
-        openModal={openModal}
-        currentClase={currentClase}
-        currentWaitList={currentWaitList}
-        handleChangeProfesor={handleChangeProfesor}
-      />
-    </div>
+    <InscripcionClase 
+      data={data}
+      abrirCerrarModal={abrirCerrarModal}
+      resetClases={resetClases}
+      dataPeriodo={dataPeriodo}
+      handleSelectChange={handleSelectChange}
+      profesorList={profesorList}
+      seleccionarClase={seleccionarClase}
+      clase={clase}
+      currentProfesor={currentProfesor}
+      handleChange={handleChange}
+      handleChangeProfesor={handleChangeProfesor}
+      currentOperation={currentOperation}
+      openModal={openModal}
+    />
   );
 }
