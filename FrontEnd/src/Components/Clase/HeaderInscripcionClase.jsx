@@ -12,7 +12,7 @@ import { subirClases, subirProfes } from '../../api/csv';
 import { parseCSV } from '../../utils/utilFunctions';
 
 function HeaderInscripcionClase({
-  data, setOpenModal, dataPeriodo, handleSelectChange, resetClases
+  data, setOpenModal, dataPeriodo, handleSelectChange, resetClases,
 }) {
   const importFile = () => {
     const input = document.createElement('input');
@@ -34,14 +34,14 @@ function HeaderInscripcionClase({
       };
     };
   };
-  
+
   const sendCSV = async (csv) => {
     const { claseList, profesorList } = parseCSV(csv);
-  
+
     await subirProfes({ profesoresJson: JSON.stringify(profesorList) });
     await subirClases({ clasesJson: JSON.stringify(claseList) });
     resetClases();
-  };  
+  };
 
   return (
     <>
