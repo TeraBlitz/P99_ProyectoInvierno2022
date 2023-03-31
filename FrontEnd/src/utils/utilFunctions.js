@@ -139,3 +139,67 @@ export const mapNiveles = (clase, currentProfesor) => {
   delete claseModificada.niveles;
   return claseModificada;
 };
+
+export const parseCSV = (csv) => {
+  return csv
+    .split('\n')
+    .slice(1)
+    .map((row) => {
+      const [
+        clave,
+        nombre_curso,
+        nivel,
+        area,
+        modalidad,
+        clavePeriodo,
+        cupo_maximo,
+        edad_minima,
+        edad_maxima,
+        lunes,
+        martes,
+        miercoles,
+        jueves,
+        viernes,
+        sabado,
+        nombreProfesor,
+        apellidosProfesor,
+        matriculaProfesor,
+        correoProfesor,
+      ] = row.split(',');
+
+      const clase = {
+        clave,
+        nombre_curso,
+        nivel,
+        area,
+        modalidad,
+        clavePeriodo,
+        cupo_maximo,
+        edad_minima,
+        edad_maxima,
+        lunes,
+        martes,
+        miercoles,
+        jueves,
+        viernes,
+        sabado,
+        cupo_actual: '0',
+        nombreProfesor: nombreProfesor.trim(),
+        apellidosProfesor: apellidosProfesor.trim(),
+        matriculaProfesor,
+      };
+
+      const profesor = {
+        nombre: nombreProfesor.trim(),
+        apellidos: apellidosProfesor.trim(),
+        matricula: matriculaProfesor,
+        correo: correoProfesor,
+        fecha_de_nacimiento: '',
+        num_telefono: '',
+        num_cursos_impartidos: '0',
+        idUser: '',
+      };
+
+      return { clase, profesor };
+    });
+};

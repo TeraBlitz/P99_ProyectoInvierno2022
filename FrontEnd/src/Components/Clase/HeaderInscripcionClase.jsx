@@ -9,6 +9,7 @@ import { InsertDriveFile } from '@mui/icons-material';
 import Select from 'react-select';
 import { CSVLink } from 'react-csv';
 import { subirClases, subirProfes } from '../../api/csv';
+import { parseCSV } from '../../utils/utilFunctions';
 
 function HeaderInscripcionClase({
   data, setOpenModal, dataPeriodo, handleSelectChange, resetClases
@@ -16,82 +17,31 @@ function HeaderInscripcionClase({
   const importFile = () => {
     const input = document.createElement('input');
     input.type = 'file';
-
     input.click();
 
-    input.onchange = (e) => {
+    input.onchange = async (e) => {
       const { target } = e;
       if (!target.files) {
         return;
       }
-      let file;
-      file = target.files[0];
-
+      const file = target.files[0];
       const reader = new FileReader();
       reader.readAsText(file);
-      reader.onload = (e) => {
-        if (file.name.includes('.csv')) {
-          const result = e.target?.result?.toString();
-          result !== undefined ? sendCSV(result) : alert('error');
-        } else {
-          alert('error: el archivo necesita ser tipo markdown o txt');
-        }
+      reader.onload = async (e) => {
+        const result = e.target?.result?.toString();
+        const isCsvFile = file.name.includes('.csv');
+        isCsvFile ? sendCSV(result) : alert('error: el archivo necesita ser tipo markdown o txt');
       };
     };
   };
-
+  
   const sendCSV = async (csv) => {
-    const csvArray = csv.split('\n').slice(1);
-    const clasesJson = [];
-    const profesoresJson = [];
-    const profesorHash = {};
-    
-    csvArray.forEach((iterator, i) => {
-      const iteratorArray = iterator.split(',');
-      const clavePeriodo = iteratorArray[5];
+    const { claseList, profesorList } = parseCSV(csv);
   
-      clasesJson[i] = {
-        clave: iteratorArray[0],
-        nombre_curso: iteratorArray[1],
-        nivel: iteratorArray[2],
-        area: iteratorArray[3],
-        modalidad: iteratorArray[4],
-        clavePeriodo,
-        cupo_maximo: iteratorArray[6],
-        edad_minima: iteratorArray[7],
-        edad_maxima: iteratorArray[8],
-        lunes: iteratorArray[9],
-        martes: iteratorArray[10],
-        miercoles: iteratorArray[11],
-        jueves: iteratorArray[12],
-        viernes: iteratorArray[13],
-        sabado: iteratorArray[14],
-        matriculaProfesor: iteratorArray[17],
-        cupo_actual: '0',
-        nombreProfesor: iteratorArray[15].trim(),
-        apellidosProfesor: iteratorArray[16].trim(),
-      };
-  
-      const profesorMatricula = iteratorArray[17];
-      if (!profesorHash[profesorMatricula]) {
-        profesorHash[profesorMatricula] = true;
-        profesoresJson.push({
-          nombre: iteratorArray[15].trim(),
-          apellidos: iteratorArray[16].trim(),
-          matricula: profesorMatricula,
-          correo: iteratorArray[18],
-          fecha_de_nacimiento: '',
-          num_telefono: '',
-          num_cursos_impartidos: '0',
-          idUser: '',
-        });
-      }
-    });
-  
-    await subirProfes({ profesoresJson: JSON.stringify(profesoresJson) });
-    await subirClases({ clasesJson: JSON.stringify(clasesJson) });
+    await subirProfes({ profesoresJson: JSON.stringify(profesorList) });
+    await subirClases({ clasesJson: JSON.stringify(claseList) });
     resetClases();
-  };
+  };  
 
   return (
     <>
