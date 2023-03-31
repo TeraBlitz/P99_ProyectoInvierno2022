@@ -6,11 +6,36 @@ import {
 } from '@mui/material';
 import WaitList from './WaitList';
 import EditarInscripcion from './EditarInscripcion';
+import { mapNiveles } from '../../utils/utilFunctions';
+import {
+  createClass, deleteClasses, updateClass,
+} from '../../api/classes.js';
 
 function ModalInscripcionClase({
-  clase, currentProfesor, handleChange, profesorList, handleChangeProfesor,
-  modalSubmit, currentOperation, openModal, setOpenModal, currentClase, currentWaitList,
+  resetClases, clase, currentProfesor, handleChange, profesorList, handleChangeProfesor,
+  currentOperation, openModal, setOpenModal, currentClase, currentWaitList,
 }) {
+  const modalSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (currentOperation === 'Eliminar') {
+        await deleteClasses({
+          _id: clase._id,
+        });
+      } else if (currentOperation === 'Crear') {
+        const claseACrear = mapNiveles(classTemplate, currentProfesor);
+        await createClass(claseACrear);
+      } else if (currentOperation === 'Editar') {
+        const claseAModificar = mapNiveles(clase, currentProfesor);
+        await updateClass(claseAModificar);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setOpenModal();
+    resetClases();
+  };
+
   const generateActionModalBody = () => (
     <div
       style={{

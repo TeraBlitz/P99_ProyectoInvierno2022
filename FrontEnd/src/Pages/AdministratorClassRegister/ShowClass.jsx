@@ -3,14 +3,12 @@ import { getWaitList } from '../../api/waitList';
 import { getStudents } from '../../api/students';
 import { getPeriodos } from '../../api/Periodos';
 import { getProfesors } from '../../api/profesors.js';
+import { getClasses } from '../../api/classes.js';
 import {
-  createClass, deleteClasses, getClasses, updateClass,
-} from '../../api/classes.js';
-import {
-  classTemplate, nivelesMapa, claseActualDefault, profesorVacioInscripcion,
+  classTemplate, claseActualDefault, profesorVacioInscripcion,
 } from '../../utils/constants';
+import { mapClaseToData } from '../../utils/utilFunctions';
 import HeaderInscripcionClase from '../../Components/Clase/HeaderInscripcionClase';
-import { mapNiveles } from '../../utils/utilFunctions';
 import BodyInscripcionClase from '../../Components/Clase/BodyInscripcionClase';
 import ModalInscripcionClase from '../../Components/Clase/ModalInscripcionClase';
 
@@ -47,58 +45,13 @@ export default function ShowClass() {
       setProfesorList(newProfList);
     });
   };
-
+  
   const resetClases = async () => {
     try {
       const response = await getClasses();
       const result = await response.json();
-
-      const dataList = result.map((clase) => {
-        let fechas = '';
-        let edades = '';
-        let niveles = '';
-
-        if (clase.lunes !== '') fechas += 'lunes, ';
-        if (clase.martes !== '') fechas += 'martes, ';
-        if (clase.miercoles !== '') fechas += 'miercoles, ';
-        if (clase.jueves !== '') fechas += 'jueves, ';
-        if (clase.viernes !== '') fechas += 'viernes, ';
-        if (clase.sabado !== '') fechas += 'sabado, ';
-
-        edades = clase.edad_maxima === ''
-          ? `${clase.edad_minima} en Adelante`
-          : `${clase.edad_minima}-${clase.edad_maxima}`;
-
-        niveles = nivelesMapa[clase.nivel] || '';
-
-        return {
-          _id: clase._id,
-          clave: clase.clave,
-          nombre_curso: clase.nombre_curso,
-          nivel: clase.nivel,
-          matriculaProfesor: clase.matriculaProfesor,
-          edades,
-          edad_minima: clase.edad_minima,
-          edad_maxima: clase.edad_maxima,
-          cupo_maximo: clase.cupo_maximo,
-          modalidad: clase.modalidad,
-          fechas,
-          lunes: clase.lunes,
-          martes: clase.martes,
-          miercoles: clase.miercoles,
-          jueves: clase.jueves,
-          viernes: clase.viernes,
-          sabado: clase.sabado,
-          clavePeriodo: clase.clavePeriodo,
-          area: clase.area,
-          cupo_actual: clase.cupo_actual,
-          niveles,
-          nombreProfesor: clase.nombreProfesor,
-          apellidosProfesor: clase.apellidosProfesor,
-          nombreCompleto: `${clase.nombreProfesor} ${clase.apellidosProfesor}`,
-        };
-      });
-
+      const dataList = result.map(mapClaseToData);
+  
       setData(dataList);
       getOptions();
     } catch (error) {
@@ -126,27 +79,6 @@ export default function ShowClass() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setClase({ ...clase, [name]: value });
-  };
-
-  const modalSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (currentOperation === 'Eliminar') {
-        await deleteClasses({
-          _id: clase._id,
-        });
-      } else if (currentOperation === 'Crear') {
-        const claseACrear = mapNiveles(classTemplate, currentProfesor);
-        await createClass(claseACrear);
-      } else if (currentOperation === 'Editar') {
-        const claseAModificar = mapNiveles(clase, currentProfesor);
-        await updateClass(claseAModificar);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    abrirCerrarModal();
-    resetClases();
   };
 
   const seleccionarClase = (consola, caso) => {
@@ -221,7 +153,8 @@ export default function ShowClass() {
         getClassWaitList={getClassWaitList}
         seleccionarClase={seleccionarClase}
       />
-      <ModalInscripcionClase 
+      <ModalInscripcionClase
+        resetClases={resetClases}
         clase={clase}
         currentProfesor={currentProfesor}
         handleChange={handleChange}
@@ -232,7 +165,6 @@ export default function ShowClass() {
         currentClase={currentClase}
         currentWaitList={currentWaitList}
         handleChangeProfesor={handleChangeProfesor}
-        modalSubmit={modalSubmit}
       />
     </div>
   );

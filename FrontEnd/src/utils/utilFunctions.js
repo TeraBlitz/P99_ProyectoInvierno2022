@@ -1,3 +1,5 @@
+import { nivelesMapa } from "./constants";
+
 // Funcion para calcular edad, si es menor de 18 se pide
 //  un nombre de Tutor al estudiante
 export const calculateAge = (dateString) => {
@@ -202,4 +204,50 @@ export const parseCSV = (csv) => {
 
       return { clase, profesor };
     });
+};
+
+export const mapClaseToData = (clase) => {
+  let fechas = '';
+  let edades = '';
+  let niveles = '';
+
+  if (clase.lunes !== '') fechas += 'lunes, ';
+  if (clase.martes !== '') fechas += 'martes, ';
+  if (clase.miercoles !== '') fechas += 'miercoles, ';
+  if (clase.jueves !== '') fechas += 'jueves, ';
+  if (clase.viernes !== '') fechas += 'viernes, ';
+  if (clase.sabado !== '') fechas += 'sabado, ';
+
+  edades = clase.edad_maxima === ''
+    ? `${clase.edad_minima} en Adelante`
+    : `${clase.edad_minima}-${clase.edad_maxima}`;
+
+  niveles = nivelesMapa[clase.nivel] || '';
+
+  return {
+    _id: clase._id,
+    clave: clase.clave,
+    nombre_curso: clase.nombre_curso,
+    nivel: clase.nivel,
+    matriculaProfesor: clase.matriculaProfesor,
+    edades,
+    edad_minima: clase.edad_minima,
+    edad_maxima: clase.edad_maxima,
+    cupo_maximo: clase.cupo_maximo,
+    modalidad: clase.modalidad,
+    fechas,
+    lunes: clase.lunes,
+    martes: clase.martes,
+    miercoles: clase.miercoles,
+    jueves: clase.jueves,
+    viernes: clase.viernes,
+    sabado: clase.sabado,
+    clavePeriodo: clase.clavePeriodo,
+    area: clase.area,
+    cupo_actual: clase.cupo_actual,
+    niveles,
+    nombreProfesor: clase.nombreProfesor,
+    apellidosProfesor: clase.apellidosProfesor,
+    nombreCompleto: `${clase.nombreProfesor} ${clase.apellidosProfesor}`,
+  };
 };
