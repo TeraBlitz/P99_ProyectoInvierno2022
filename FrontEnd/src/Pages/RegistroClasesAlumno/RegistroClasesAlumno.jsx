@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import Clase from "../../Components/Clase/Clase";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Alert, Button, Link, AlertTitle } from "@mui/material";
@@ -36,6 +36,8 @@ import ConfirmationDialog from "../../Components/Dialog/ConfirmationDialog";
 import ClaseModal from "../../Components/Clase/ClaseModal";
 import MiRegistro from "../../Components/Registro/MiRegistro";
 import moment from "moment-timezone";
+import { startDateDict, endDateDict, nivelDict } from "../../utils/constants";
+import { traducirDate, calculateAge } from "../../utils/utilFunctions";
 
 function RegistroClasesAlumnos({ changeContent }) {
   const [items, setItems] = useState([]);
@@ -49,13 +51,10 @@ function RegistroClasesAlumnos({ changeContent }) {
   const [openMoreInfo, setOpenMoreInfo] = useState(false);
   const [currentClase, setCurrentClase] = useState();
   const [selectAlertOpen, setSelectAlertOpen] = useState(false);
-  const [nameFilter, setNameFilter] = useState("");
   const [filteredClasses, setFilteredClasses] = useState(null);
   const [dialogAction, setDialogAction] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-  const [inRegistrationTime, setInRegistrationTime] = useState(false);
   const [periodos, setPeriodos] = useState([]);
-  const [currentTerm, setCurrentTerm] = useState(null);
 
   const { user } = useAuth0();
 
@@ -68,23 +67,10 @@ function RegistroClasesAlumnos({ changeContent }) {
             (student) => student.idUser === user.sub
           );
           setStudents(students);
-          //console.log(students)
         });
     };
     getUserStudents();
   }, []);
-
-  const startDateDict = {
-    talleres: "fecha_inicio_insc_talleres",
-    idiomas: "fecha_inicio_insc_idiomas",
-    asesorias: "fecha_inicio_insc_asesorias",
-  };
-
-  const endDateDict = {
-    talleres: "fecha_fin_insc_talleres",
-    idiomas: "fecha_fin_insc_idiomas",
-    asesorias: "fecha_fin_insc_asesorias",
-  };
 
   useEffect(() => {
     const getStudentClasses = () => {
@@ -131,16 +117,11 @@ function RegistroClasesAlumnos({ changeContent }) {
         });
     };
     getStudentClasses();
-    //console.log(clases)
   }, []);
-
-  function traducirDate(raw) {
-    const date = raw.split("T", 2);
-    return date[0];
-  }
 
   function compararFecha(data) {
     let periodos = [];
+    
     for (const element of data) {
       let fecha = traducirDate(element.fecha_inicio);
       let separado = fecha.split("-", 3);
@@ -159,21 +140,6 @@ function RegistroClasesAlumnos({ changeContent }) {
     let clave = String(periodos[0].id);
     return clave;
   }
-
-  // Funcion para calcular edad
-  const calculate_age = (dateString) => {
-    var birthday = +new Date(dateString);
-    // The magic number: 31557600000 is 24 * 3600 * 365.25 * 1000, which is the length of a year
-    const magic_number = 31557600000;
-    return ~~((Date.now() - birthday) / magic_number);
-  };
-
-  const nivelDict = {
-    1: "Desde cero",
-    2: "Con bases",
-    3: "Intermedio",
-    4: "Avanzado",
-  };
 
   const getNivel = (params) => {
     return nivelDict[params.row.nivel];
@@ -318,7 +284,7 @@ function RegistroClasesAlumnos({ changeContent }) {
   };
 
   const filterClasses = (student) => {
-    const age = calculate_age(student.fecha_de_nacimiento);
+    const age = calculateAge(student.fecha_de_nacimiento);
     let waitList = [];
     let myClasses = [];
     const filter = clases.filter(
@@ -442,7 +408,6 @@ function RegistroClasesAlumnos({ changeContent }) {
             }
           })
           .catch((error) => {
-            //console.log(error);
             alert(error);
           });
       });
@@ -485,7 +450,6 @@ function RegistroClasesAlumnos({ changeContent }) {
   };
 
   const handleNameFilter = (value) => {
-    //setNameFilter(value);
     const filteredClasses = clases.filter((clase) =>
       clase.nombre_curso.toLowerCase().includes(value.trim().toLowerCase())
     );
@@ -506,6 +470,7 @@ function RegistroClasesAlumnos({ changeContent }) {
       </Box>
     );
   }
+
   if (students.length === 0 && students !== null) {
     return (
       <Box
@@ -535,6 +500,7 @@ function RegistroClasesAlumnos({ changeContent }) {
       </Box>
     );
   }
+
   return (
     <>
       <Box>
@@ -560,7 +526,6 @@ function RegistroClasesAlumnos({ changeContent }) {
               ))}
             </Select>
           </FormControl>
-
           <Autocomplete
             disablePortal
             options={classNames}
@@ -784,7 +749,6 @@ function RegistroClasesAlumnos({ changeContent }) {
             espera
           </Alert>
         </Snackbar>
-
         <Modal
           open={error}
           onClose={() => setError(!error)}
