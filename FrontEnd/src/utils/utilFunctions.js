@@ -251,3 +251,27 @@ export const mapClaseToData = (clase) => {
     nombreCompleto: `${clase.nombreProfesor} ${clase.apellidosProfesor}`,
   };
 };
+
+export const getNivel = (params) => {
+  return nivelDict[params.row.nivel];
+};
+
+export const getHorario = (params) => {
+  return `${params.row.lunes ? `Lun: ${params.row.lunes}` : ""}
+              ${params.row.martes ? `Mar: ${params.row.martes}` : ""}
+              ${params.row.miercoles ? `Mierc: ${params.row.miercoles}` : ""}
+              ${params.row.jueves ? `Juev: ${params.row.jueves}` : ""}
+              ${params.row.viernes ? `Vier: ${params.row.viernes}` : ""}
+              ${params.row.sabado ? `Sab: ${params.row.sabado}` : ""}`;
+};
+
+export const getProfesor = (params) => {
+  return `${params.row.nombreProfesor} ${params.row.apellidosProfesor}`;
+};
+
+export const getCupo = (params) => {
+  return `${(
+    (Number(params.row.cupo_actual) / Number(params.row.cupo_maximo)) *
+    100
+  ).toFixed()}%`;
+};

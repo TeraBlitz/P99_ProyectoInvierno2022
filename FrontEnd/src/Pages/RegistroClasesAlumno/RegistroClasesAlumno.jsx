@@ -36,8 +36,8 @@ import ConfirmationDialog from "../../Components/Dialog/ConfirmationDialog";
 import ClaseModal from "../../Components/Clase/ClaseModal";
 import MiRegistro from "../../Components/Registro/MiRegistro";
 import moment from "moment-timezone";
-import { startDateDict, endDateDict, nivelDict } from "../../utils/constants";
-import { traducirDate, calculateAge } from "../../utils/utilFunctions";
+import { startDateDict, endDateDict } from "../../utils/constants";
+import { getNivel, getHorario, getProfesor, getCupo, calculateAge, compararFecha } from "../../utils/utilFunctions";
 
 function RegistroClasesAlumnos({ changeContent }) {
   const [items, setItems] = useState([]);
@@ -69,101 +69,37 @@ function RegistroClasesAlumnos({ changeContent }) {
           setStudents(students);
         });
     };
-    getUserStudents();
-  }, []);
-
-  useEffect(() => {
-    const getStudentClasses = () => {
-      let allClassNames = [];
-      let allTermClases = [];
-      let activeTermClases = [];
-      let activeTerm = [];
-      getPeriodos()
-        .then((response) => response.json())
-        .then((data) => {
-          const periodo = compararFecha(data);
-          setPeriodos(data);
-          findTerm({ clave: periodo })
-            .then((response) => response.json())
-            .then((data) => {
-              activeTerm = data;
-              getClasses()
-                .then((response) => response.json())
-                .then((result) => {
-                  for (let i = 0; i < result.length; i++) {
-                    if (activeTerm[0].clave === result[i].clavePeriodo) {
-                      allTermClases.push(result[i]);
-                      allClassNames.push(result[i].nombre_curso);
-                      setClassNames([...new Set(allClassNames)]);
-                    }
-                  }
-                  const currentDate = moment()
-                    .tz("America/Mexico_City")
-                    .format();
-                  for (let j = 0; j < allTermClases.length; j++) {
-                    if (
-                      activeTerm[0][startDateDict[allTermClases[j].area]] <
-                        currentDate &&
-                      activeTerm[0][endDateDict[allTermClases[j].area]] >
-                        currentDate
-                    ) {
-                      activeTermClases.push(allTermClases[j]);
-                    }
-                  }
-                  setClases(activeTermClases);
-                  setFilteredClasses(activeTermClases);
-                });
-            });
-        });
+  
+    const getStudentClasses = async () => {
+      const data = await getPeriodos().then((res) => res.json());
+      const periodo = compararFecha(data);
+      setPeriodos(data);
+  
+      const activeTerm = await findTerm({ clave: periodo }).then((res) =>
+        res.json()
+      );
+      const result = await getClasses().then((res) => res.json());
+  
+      const allTermClases = result.filter(
+        (item) => item.clavePeriodo === activeTerm[0].clave
+      );
+      const allClassNames = allTermClases.map((item) => item.nombre_curso);
+      setClassNames([...new Set(allClassNames)]);
+  
+      const currentDate = moment().tz("America/Mexico_City").format();
+      const activeTermClases = allTermClases.filter(
+        (item) =>
+          activeTerm[0][startDateDict[item.area]] < currentDate &&
+          activeTerm[0][endDateDict[item.area]] > currentDate
+      );
+  
+      setClases(activeTermClases);
+      setFilteredClasses(activeTermClases);
     };
+  
+    getUserStudents();
     getStudentClasses();
   }, []);
-
-  function compararFecha(data) {
-    let periodos = [];
-    
-    for (const element of data) {
-      let fecha = traducirDate(element.fecha_inicio);
-      let separado = fecha.split("-", 3);
-      let valorA = Number(separado[0]);
-      let valorM = Number(separado[1]) / 100;
-      let valorD = Number(separado[2]) / 10000;
-      let valorT = valorA + valorM + valorD;
-      var obj = {
-        id: element.clave,
-        fecha: valorT,
-      };
-      periodos.push(obj);
-    }
-
-    periodos.sort((a, b) => b.fecha - a.fecha);
-    let clave = String(periodos[0].id);
-    return clave;
-  }
-
-  const getNivel = (params) => {
-    return nivelDict[params.row.nivel];
-  };
-
-  const getHorario = (params) => {
-    return `${params.row.lunes ? `Lun: ${params.row.lunes}` : ""}
-                ${params.row.martes ? `Mar: ${params.row.martes}` : ""}
-                ${params.row.miercoles ? `Mierc: ${params.row.miercoles}` : ""}
-                ${params.row.jueves ? `Juev: ${params.row.jueves}` : ""}
-                ${params.row.viernes ? `Vier: ${params.row.viernes}` : ""}
-                ${params.row.sabado ? `Sab: ${params.row.sabado}` : ""}`;
-  };
-
-  const getProfesor = (params) => {
-    return `${params.row.nombreProfesor} ${params.row.apellidosProfesor}`;
-  };
-
-  const getCupo = (params) => {
-    return `${(
-      (Number(params.row.cupo_actual) / Number(params.row.cupo_maximo)) *
-      100
-    ).toFixed()}%`;
-  };
 
   const columns = [
     {
@@ -283,47 +219,38 @@ function RegistroClasesAlumnos({ changeContent }) {
     setOpenMoreInfo(!openMoreInfo);
   };
 
-  const filterClasses = (student) => {
+  const filterClasses = async (student) => {
     const age = calculateAge(student.fecha_de_nacimiento);
     let waitList = [];
     let myClasses = [];
+    
     const filter = clases.filter(
       (clase) =>
         Number(clase.edad_minima) < age &&
         age < (clase.edad_maxima ? Number(clase.edad_maxima) : 99)
-    );
-    filter.map((aClass) => {
-      aClass.status = "";
+    ).map((aClass) => ({ ...aClass, status: "" }));
+  
+    const waitListResponse = await getWaitList();
+    waitList = waitListResponse.json().filter((lista) => lista.idAlumno === student._id);
+  
+    waitList.forEach((inWaitList) => {
+      const classIndex = filter.findIndex((aClass) => aClass._id === inWaitList.idClase);
+      if (classIndex !== -1) {
+        filter[classIndex].status = "ListaEspera";
+      }
     });
-    getWaitList()
-      .then((response) => response.json())
-      .then((data) => {
-        waitList = data.filter((lista) => lista.idAlumno === student._id);
-      })
-      .then(() => {
-        waitList.map((inWaitList) => {
-          for (let i = 0; i < filter.length; i++) {
-            if (inWaitList.idClase === filter[i]._id) {
-              filter[i].status = "ListaEspera";
-            }
-          }
-        });
-      });
-    getClassStudent()
-      .then((response) => response.json())
-      .then((data) => {
-        myClasses = data.filter((clase) => clase.idAlumno === student._id);
-      })
-      .then(() => {
-        myClasses.map((myClass) => {
-          for (let i = 0; i < filter.length; i++) {
-            if (myClass.idClase === filter[i]._id) {
-              filter[i].status = "Inscrito";
-            }
-          }
-        });
-        setFilteredClasses(filter);
-      });
+  
+    const myClassesResponse = await getClassStudent();
+    myClasses = myClassesResponse.json().filter((clase) => clase.idAlumno === student._id);
+  
+    myClasses.forEach((myClass) => {
+      const classIndex = filter.findIndex((aClass) => aClass._id === myClass.idClase);
+      if (classIndex !== -1) {
+        filter[classIndex].status = "Inscrito";
+      }
+    });
+  
+    setFilteredClasses(filter);
   };
 
   const handleChange = (e) => {
@@ -336,108 +263,80 @@ function RegistroClasesAlumnos({ changeContent }) {
     filterClasses(e.target.value);
   };
 
-  const handleListaEspera = (clase) => {
-    let lista = [];
-    getWaitList()
-      .then((response) => response.json())
-      .then((data) => {
-        lista = data.filter((lista) => lista.idAlumno === currentStudent._id);
-      })
-      .then(() => {
-        createWaitList({
-          idAlumno: currentStudent._id,
-          idClase: clase._id,
-          time_stamp: new Date().toISOString(),
-          status: "Espera",
-        });
-        clase.status = "ListaEspera";
+  const handleListaEspera = async (clase) => {
+    const waitListResponse = await getWaitList();
+    const lista = (await waitListResponse.json()).filter(
+      (lista) => lista.idAlumno === currentStudent._id
+    );
+  
+    await createWaitList({
+      idAlumno: currentStudent._id,
+      idClase: clase._id,
+      time_stamp: new Date().toISOString(),
+      status: "Espera",
+    });
+    clase.status = "ListaEspera";
+    handleCloseDialog();
+  };
+
+  const handleSalirListaEspera = async (clase) => {
+    const periodoResponse = await findTerm({ clave: clase.clavePeriodo });
+    const periodo = await periodoResponse.json();
+  
+    const myWaitListResponse = await getWaitList();
+    const myWaitList = (await myWaitListResponse.json()).filter(
+      (aWList) =>
+        aWList.idClase === clase._id &&
+        aWList.idAlumno === currentStudent._id &&
+        aWList.idPeriodo === periodo[0]._id
+    );
+  
+    await deleteWaitList({ _id: myWaitList[0]._id });
+    clase.status = "";
+    handleCloseDialog();
+  };
+
+  const handleClaseRegistrada = async (clase) => {
+    try {
+      const periodoResponse = await findTerm({ clave: clase.clavePeriodo });
+      const periodo = await periodoResponse.json();
+  
+      const response = await createClassStudent({
+        idClase: clase._id,
+        idAlumno: currentStudent._id,
+        idPeriodo: periodo[0]._id,
+      });
+  
+      const data = await response.json();
+  
+      if (data.msg.includes("Un documento fue insertado con el ID")) {
+        clase.status = "Inscrito";
         handleCloseDialog();
-      });
+      } else {
+        handleCloseDialog();
+        setErrorMsg(data.msg);
+        setError(true);
+      }
+    } catch (error) {
+      alert(error);
+    }
   };
 
-  const handleSalirListaEspera = (clase) => {
-    let periodo = [];
-    let myWaitList = [];
-    findTerm({ clave: clase.clavePeriodo })
-      .then((response) => response.json())
-      .then((data) => {
-        periodo = data;
-      })
-      .then(() => {
-        getWaitList()
-          .then((response) => response.json())
-          .then((data) => {
-            myWaitList = data.filter(
-              (aWList) =>
-                aWList.idClase === clase._id &&
-                aWList.idAlumno === currentStudent._id &&
-                aWList.idPeriodo === periodo[0]._id
-            );
-          })
-          .then(() => {
-            deleteWaitList({ _id: myWaitList[0]._id });
-            clase.status = "";
-            handleCloseDialog();
-          });
-      });
-  };
-
-  const handleClaseRegistrada = (clase) => {
-    // Hacer validación de numero de clases disponibles por inscribir
-    let periodo = [];
-    findTerm({ clave: clase.clavePeriodo })
-      .then((response) => response.json())
-      .then((data) => {
-        periodo = data;
-      })
-      .then(() => {
-        createClassStudent({
-          idClase: clase._id,
-          idAlumno: currentStudent._id,
-          idPeriodo: periodo[0]._id,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.msg.includes("Un documento fue insertado con el ID")) {
-              clase.status = "Inscrito";
-              handleCloseDialog();
-            } else {
-              handleCloseDialog();
-              setErrorMsg(data.msg);
-              setError(true);
-            }
-          })
-          .catch((error) => {
-            alert(error);
-          });
-      });
-  };
-
-  const handleCancelarClaseRegistrada = (clase) => {
-    let periodo = [];
-    let myClassStudent = [];
-    findTerm({ clave: clase.clavePeriodo })
-      .then((response) => response.json())
-      .then((result) => {
-        periodo = result;
-      })
-      .then(() => {
-        getClassStudent()
-          .then((response) => response.json())
-          .then((result) => {
-            myClassStudent = result.filter(
-              (aClass) =>
-                aClass.idClase === clase._id &&
-                aClass.idAlumno === currentStudent._id &&
-                aClass.idPeriodo === periodo[0]._id
-            );
-          })
-          .then(() => {
-            deleteClassStudent({ _id: myClassStudent[0]._id });
-            clase.status = "";
-            handleCloseDialog();
-          });
-      });
+  const handleCancelarClaseRegistrada = async (clase) => {
+    const periodoResponse = await findTerm({ clave: clase.clavePeriodo });
+    const periodo = await periodoResponse.json();
+  
+    const myClassStudentResponse = await getClassStudent();
+    const myClassStudent = (await myClassStudentResponse.json()).filter(
+      (aClass) =>
+        aClass.idClase === clase._id &&
+        aClass.idAlumno === currentStudent._id &&
+        aClass.idPeriodo === periodo[0]._id
+    );
+  
+    await deleteClassStudent({ _id: myClassStudent[0]._id });
+    clase.status = "";
+    handleCloseDialog();
   };
 
   const handleOpenDialog = (clase) => {
