@@ -2,11 +2,9 @@ import Box from '@mui/material/Box';
 import React, { useState, useEffect } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import {
-  Alert, Button, Link, AlertTitle,
+  Link,
   Typography,
 } from '@mui/material';
-import Snackbar from '@mui/material/Snackbar';
-import Modal from '@mui/material/Modal';
 import { useAuth0 } from '@auth0/auth0-react';
 import moment from 'moment-timezone';
 import { getStudents } from '../../api/students';
@@ -29,6 +27,7 @@ import {
 } from '../../utils/utilFunctions';
 import RegistroClasesHeader from '../../Components/Registro/RegistroClasesHeader';
 import RegistroClasesBody from '../../Components/Registro/RegistroClasesBody';
+import RegistroClasesError from '../../Components/Registro/RegistroClasesError';
 
 function RegistroClasesAlumnos({ changeContent }) {
   const [students, setStudents] = useState(null);
@@ -42,7 +41,6 @@ function RegistroClasesAlumnos({ changeContent }) {
   const [filteredClasses, setFilteredClasses] = useState(null);
   const [dialogAction, setDialogAction] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
-  const [periodos, setPeriodos] = useState([]);
 
   const { user } = useAuth0();
 
@@ -61,7 +59,6 @@ function RegistroClasesAlumnos({ changeContent }) {
     const getStudentClasses = async () => {
       const data = await getPeriodos().then((res) => res.json());
       const periodo = compararFecha(data);
-      setPeriodos(data);
 
       const activeTerm = await findTerm({ clave: periodo }).then((res) => res.json());
       const result = await getClasses().then((res) => res.json());
@@ -262,54 +259,13 @@ function RegistroClasesAlumnos({ changeContent }) {
         handleListaEspera={handleListaEspera}
         handleSalirListaEspera={handleSalirListaEspera}
       />
-      <Snackbar
-        open={selectAlertOpen}
-        autoHideDuration={8000}
-        onClose={() => setSelectAlertOpen(false)}
-      >
-        <Alert severity="info">
-          Selecciona un alumno para inscribir clases o entrar a la lista de
-          espera
-        </Alert>
-      </Snackbar>
-      <Modal
-        open={error}
-        onClose={() => setError(!error)}
-        sx={{ overflow: 'scroll' }}
-      >
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexWrap: 'wrap',
-            borderRadius: 3,
-            m: 2,
-            p: 2,
-          }}
-        >
-          <Alert
-            sx={{
-              textAlign: 'center',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-            severity="error"
-          >
-            <AlertTitle>Error</AlertTitle>
-            {errorMsg}
-            <br />
-            <Button
-              onClick={() => setError(!error)}
-              sx={{ color: 'error.dark' }}
-            >
-              Cerrar
-            </Button>
-          </Alert>
-        </Box>
-      </Modal>
+      <RegistroClasesError 
+        error={error}
+        selectAlertOpen={selectAlertOpen}
+        setSelectAlertOpen={setSelectAlertOpen}
+        setError={setError}
+        errorMsg={errorMsg}
+      />
     </Box>
   );
 }
