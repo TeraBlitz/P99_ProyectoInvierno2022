@@ -18,6 +18,7 @@ import Clase from '../Clase/Clase';
 import {
   getNivel, getHorario, getProfesor, getCupo,
 } from '../../utils/utilFunctions';
+import ButtonActionsInscripcion from './ButtonActionsInscripcion';
 
 function RegistroClasesBody({
   handleClick, filteredClasses, classNames,
@@ -94,29 +95,7 @@ function RegistroClasesBody({
       headerName: 'Inscripción',
       type: 'actions',
       width: 115,
-      renderCell: (params) => (Number(params.row.cupo_actual) < Number(params.row.cupo_maximo) ? (
-        <Button
-          size="small"
-          onClick={() => handleClick(params.row)}
-          variant="outlined"
-        >
-          {params.row.status === 'Inscrito'
-            && params.row.status !== 'ListaEspera'
-            ? 'Cancelar Registro'
-            : 'Inscribir'}
-        </Button>
-      ) : (
-        <Button
-          size="small"
-          onClick={() => handleClick(params.row)}
-          variant="outlined"
-        >
-          {params.row.status === 'ListaEspera'
-            && params.row.status !== 'Inscrito'
-            ? 'Salir de Lista'
-            : 'Lista Espera'}
-        </Button>
-      )),
+      renderCell: (params) => <ButtonActionsInscripcion {...{params}} />,
     },
   ];
 

@@ -1,24 +1,9 @@
-import Box from '@mui/material/Box';
 import React, { useState, useEffect } from 'react';
-import CircularProgress from '@mui/material/CircularProgress';
-import {
-  Link,
-  Typography,
-} from '@mui/material';
+import Box from '@mui/material/Box';
 import { useAuth0 } from '@auth0/auth0-react';
 import moment from 'moment-timezone';
 import { getStudents } from '../../api/students';
 import { getClasses } from '../../api/classes';
-import {
-  createClassStudent,
-  getClassStudent,
-  deleteClassStudent,
-} from '../../api/classStudent';
-import {
-  createWaitList,
-  getWaitList,
-  deleteWaitList,
-} from '../../api/waitList';
 import { findTerm, getPeriodos } from '../../api/term';
 import ConfirmationDialog from '../../Components/Dialog/ConfirmationDialog';
 import { startDateDict, endDateDict } from '../../utils/constants';
@@ -28,6 +13,7 @@ import {
 import RegistroClasesHeader from '../../Components/Registro/RegistroClasesHeader';
 import RegistroClasesBody from '../../Components/Registro/RegistroClasesBody';
 import RegistroClasesError from '../../Components/Registro/RegistroClasesError';
+import LoadingRegisterData from '../../Components/Registro/LoadingRegisterData';
 
 function RegistroClasesAlumnos({ changeContent }) {
   const [students, setStudents] = useState(null);
@@ -106,80 +92,6 @@ function RegistroClasesAlumnos({ changeContent }) {
     }
   };
 
-  const handleListaEspera = async (clase) => {
-    const waitListResponse = await getWaitList();
-    const lista = (await waitListResponse.json()).filter(
-      (lista) => lista.idAlumno === currentStudent._id,
-    );
-
-    await createWaitList({
-      idAlumno: currentStudent._id,
-      idClase: clase._id,
-      time_stamp: new Date().toISOString(),
-      status: 'Espera',
-    });
-    clase.status = 'ListaEspera';
-    handleCloseDialog();
-  };
-
-  const handleSalirListaEspera = async (clase) => {
-    const periodoResponse = await findTerm({ clave: clase.clavePeriodo });
-    const periodo = await periodoResponse.json();
-
-    const myWaitListResponse = await getWaitList();
-    const myWaitList = (await myWaitListResponse.json()).filter(
-      (aWList) => aWList.idClase === clase._id
-        && aWList.idAlumno === currentStudent._id
-        && aWList.idPeriodo === periodo[0]._id,
-    );
-
-    await deleteWaitList({ _id: myWaitList[0]._id });
-    clase.status = '';
-    handleCloseDialog();
-  };
-
-  const handleClaseRegistrada = async (clase) => {
-    try {
-      const periodoResponse = await findTerm({ clave: clase.clavePeriodo });
-      const periodo = await periodoResponse.json();
-
-      const response = await createClassStudent({
-        idClase: clase._id,
-        idAlumno: currentStudent._id,
-        idPeriodo: periodo[0]._id,
-      });
-
-      const data = await response.json();
-
-      if (data.msg.includes('Un documento fue insertado con el ID')) {
-        clase.status = 'Inscrito';
-        handleCloseDialog();
-      } else {
-        handleCloseDialog();
-        setErrorMsg(data.msg);
-        setError(true);
-      }
-    } catch (error) {
-      alert(error);
-    }
-  };
-
-  const handleCancelarClaseRegistrada = async (clase) => {
-    const periodoResponse = await findTerm({ clave: clase.clavePeriodo });
-    const periodo = await periodoResponse.json();
-
-    const myClassStudentResponse = await getClassStudent();
-    const myClassStudent = (await myClassStudentResponse.json()).filter(
-      (aClass) => aClass.idClase === clase._id
-        && aClass.idAlumno === currentStudent._id
-        && aClass.idPeriodo === periodo[0]._id,
-    );
-
-    await deleteClassStudent({ _id: myClassStudent[0]._id });
-    clase.status = '';
-    handleCloseDialog();
-  };
-
   const handleOpenDialog = (clase) => {
     setClaseRegistrada(clase);
     setOpenConfirmationDialog(true);
@@ -189,85 +101,48 @@ function RegistroClasesAlumnos({ changeContent }) {
     setOpenConfirmationDialog(false);
   };
 
-  if (!students || !clases) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          height: '100vh',
-          justifyContent: 'center',
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (students.length === 0 && students !== null) {
-    return (
-      <Box
-        sx={{
-          height: '100vh',
-          display: 'flex',
-          alignContent: 'center',
-          justifyContent: 'center',
-          flexWrap: 'wrap',
-        }}
-      >
-        <Typography variant="h3" sx={{ mb: 2, color: '#004a98' }}>
-          Registro clases (Inscripción)
-        </Typography>
-        <Typography variant="h3" component="div" textAlign="center">
-          No tienes alumnos registrados, ve a
-          <Link
-            component="button"
-            onClick={() => changeContent('Profile')}
-            variant="h3"
-            sx={{ mx: 2 }}
-          >
-            <i> Perfil </i>
-          </Link>
-          para agregar alumnos.
-        </Typography>
-      </Box>
-    );
-  }
-
   return (
-    <Box>
-      <RegistroClasesHeader
-        classNames={classNames}
-        clases={clases}
-        currentStudent={currentStudent}
-        students={students}
-        setFilteredClasses={setFilteredClasses}
-        setCurrentStudent={setCurrentStudent}
-      />
-      <RegistroClasesBody
-        handleClick={handleClick}
-        filteredClasses={filteredClasses}
-        classNames={classNames}
-      />
-      <ConfirmationDialog
-        action={dialogAction}
-        clase={claseRegistrada}
-        handleClose={handleCloseDialog}
-        open={openConfirmationDialog}
-        handleClaseRegistrada={handleClaseRegistrada}
-        handleCancelarClaseRegistrada={handleCancelarClaseRegistrada}
-        handleListaEspera={handleListaEspera}
-        handleSalirListaEspera={handleSalirListaEspera}
-      />
-      <RegistroClasesError 
-        error={error}
-        selectAlertOpen={selectAlertOpen}
-        setSelectAlertOpen={setSelectAlertOpen}
-        setError={setError}
-        errorMsg={errorMsg}
-      />
-    </Box>
-  );
+    <>
+      {LoadingRegisterData({ changeContent, students, clases })? (
+        <LoadingRegisterData 
+          students={students}
+          changeContent={changeContent}
+          clases={clases}
+        />
+      ) : (
+        <Box>
+          <RegistroClasesHeader
+            classNames={classNames}
+            clases={clases}
+            currentStudent={currentStudent}
+            students={students}
+            setFilteredClasses={setFilteredClasses}
+            setCurrentStudent={setCurrentStudent}
+          />
+          <RegistroClasesBody
+            handleClick={handleClick}
+            filteredClasses={filteredClasses}
+            classNames={classNames}
+          />
+          <ConfirmationDialog
+            action={dialogAction}
+            clase={claseRegistrada}
+            handleClose={handleCloseDialog}
+            open={openConfirmationDialog}
+            setError={setError}
+            setErrorMsg={setErrorMsg}
+          />
+          <RegistroClasesError 
+            error={error}
+            selectAlertOpen={selectAlertOpen}
+            setSelectAlertOpen={setSelectAlertOpen}
+            setError={setError}
+            errorMsg={errorMsg}
+          />
+        </Box>
+      )}
+    </>
+  );  
 }
 
 export default RegistroClasesAlumnos;

@@ -275,3 +275,30 @@ export const getCupo = (params) => {
     100
   ).toFixed()}%`;
 };
+
+export const dialogTitle = (action) => {
+	switch (action) {
+		case 'ListaEspera':
+			return '¿Entrar a lista de espera?'
+		case 'Registrar':
+			return '¿Inscribir esta clase? '
+		case 'CancelarInscripcion':
+			return '¿Cancelar inscripción?'
+		case 'SalirLista':
+			return '¿Salir de lista de espera?'
+	}
+}
+
+export const dialogContent = (clase, action) => {
+  switch (action) {
+    case 'ListaEspera':
+      return `Estas seguro que quieres entrar a la lista de espera de la clase ${clase.clave} ${clase.nombre_curso} ${clase.nivel}.`
+    case 'Registrar':
+      return `Estas seguro que quieres inscribir la clase ${clase.clave} ${clase.nombre_curso} ${clase.nivel}, 
+      recuerda que hay inscripciones limitadas.`
+    case 'CancelarInscripcion':
+      return `Estas seguro que quieres cancelar tu inscripción de la clase ${clase.clave} ${clase.nombre_curso} ${clase.nivel}.`
+    case 'SalirLista':
+      return `Estas seguro que quieres salir de la lista de espera de la clase ${clase.clave} ${clase.nombre_curso} ${clase.nivel}.`
+  }
+}
