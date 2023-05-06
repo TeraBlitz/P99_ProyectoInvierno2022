@@ -1,3 +1,5 @@
+import { nivelesMapa } from "./constants";
+
 // Funcion para calcular edad, si es menor de 18 se pide
 //  un nombre de Tutor al estudiante
 export const calculateAge = (dateString) => {
@@ -139,3 +141,164 @@ export const mapNiveles = (clase, currentProfesor) => {
   delete claseModificada.niveles;
   return claseModificada;
 };
+
+export const parseCSV = (csv) => {
+  return csv
+    .split('\n')
+    .slice(1)
+    .map((row) => {
+      const [
+        clave,
+        nombre_curso,
+        nivel,
+        area,
+        modalidad,
+        clavePeriodo,
+        cupo_maximo,
+        edad_minima,
+        edad_maxima,
+        lunes,
+        martes,
+        miercoles,
+        jueves,
+        viernes,
+        sabado,
+        nombreProfesor,
+        apellidosProfesor,
+        matriculaProfesor,
+        correoProfesor,
+      ] = row.split(',');
+
+      const clase = {
+        clave,
+        nombre_curso,
+        nivel,
+        area,
+        modalidad,
+        clavePeriodo,
+        cupo_maximo,
+        edad_minima,
+        edad_maxima,
+        lunes,
+        martes,
+        miercoles,
+        jueves,
+        viernes,
+        sabado,
+        cupo_actual: '0',
+        nombreProfesor: nombreProfesor.trim(),
+        apellidosProfesor: apellidosProfesor.trim(),
+        matriculaProfesor,
+      };
+
+      const profesor = {
+        nombre: nombreProfesor.trim(),
+        apellidos: apellidosProfesor.trim(),
+        matricula: matriculaProfesor,
+        correo: correoProfesor,
+        fecha_de_nacimiento: '',
+        num_telefono: '',
+        num_cursos_impartidos: '0',
+        idUser: '',
+      };
+
+      return { clase, profesor };
+    });
+};
+
+export const mapClaseToData = (clase) => {
+  let fechas = '';
+  let edades = '';
+  let niveles = '';
+
+  if (clase.lunes !== '') fechas += 'lunes, ';
+  if (clase.martes !== '') fechas += 'martes, ';
+  if (clase.miercoles !== '') fechas += 'miercoles, ';
+  if (clase.jueves !== '') fechas += 'jueves, ';
+  if (clase.viernes !== '') fechas += 'viernes, ';
+  if (clase.sabado !== '') fechas += 'sabado, ';
+
+  edades = clase.edad_maxima === ''
+    ? `${clase.edad_minima} en Adelante`
+    : `${clase.edad_minima}-${clase.edad_maxima}`;
+
+  niveles = nivelesMapa[clase.nivel] || '';
+
+  return {
+    _id: clase._id,
+    clave: clase.clave,
+    nombre_curso: clase.nombre_curso,
+    nivel: clase.nivel,
+    matriculaProfesor: clase.matriculaProfesor,
+    edades,
+    edad_minima: clase.edad_minima,
+    edad_maxima: clase.edad_maxima,
+    cupo_maximo: clase.cupo_maximo,
+    modalidad: clase.modalidad,
+    fechas,
+    lunes: clase.lunes,
+    martes: clase.martes,
+    miercoles: clase.miercoles,
+    jueves: clase.jueves,
+    viernes: clase.viernes,
+    sabado: clase.sabado,
+    clavePeriodo: clase.clavePeriodo,
+    area: clase.area,
+    cupo_actual: clase.cupo_actual,
+    niveles,
+    nombreProfesor: clase.nombreProfesor,
+    apellidosProfesor: clase.apellidosProfesor,
+    nombreCompleto: `${clase.nombreProfesor} ${clase.apellidosProfesor}`,
+  };
+};
+
+export const getNivel = (params) => {
+  return nivelDict[params.row.nivel];
+};
+
+export const getHorario = (params) => {
+  return `${params.row.lunes ? `Lun: ${params.row.lunes}` : ""}
+              ${params.row.martes ? `Mar: ${params.row.martes}` : ""}
+              ${params.row.miercoles ? `Mierc: ${params.row.miercoles}` : ""}
+              ${params.row.jueves ? `Juev: ${params.row.jueves}` : ""}
+              ${params.row.viernes ? `Vier: ${params.row.viernes}` : ""}
+              ${params.row.sabado ? `Sab: ${params.row.sabado}` : ""}`;
+};
+
+export const getProfesor = (params) => {
+  return `${params.row.nombreProfesor} ${params.row.apellidosProfesor}`;
+};
+
+export const getCupo = (params) => {
+  return `${(
+    (Number(params.row.cupo_actual) / Number(params.row.cupo_maximo)) *
+    100
+  ).toFixed()}%`;
+};
+
+export const dialogTitle = (action) => {
+	switch (action) {
+		case 'ListaEspera':
+			return '¿Entrar a lista de espera?'
+		case 'Registrar':
+			return '¿Inscribir esta clase? '
+		case 'CancelarInscripcion':
+			return '¿Cancelar inscripción?'
+		case 'SalirLista':
+			return '¿Salir de lista de espera?'
+	}
+}
+
+export const dialogContent = (clase, action) => {
+  switch (action) {
+    case 'ListaEspera':
+      return `Estas seguro que quieres entrar a la lista de espera de la clase ${clase.clave} ${clase.nombre_curso} ${clase.nivel}.`
+    case 'Registrar':
+      return `Estas seguro que quieres inscribir la clase ${clase.clave} ${clase.nombre_curso} ${clase.nivel}, 
+      recuerda que hay inscripciones limitadas.`
+    case 'CancelarInscripcion':
+      return `Estas seguro que quieres cancelar tu inscripción de la clase ${clase.clave} ${clase.nombre_curso} ${clase.nivel}.`
+    case 'SalirLista':
+      return `Estas seguro que quieres salir de la lista de espera de la clase ${clase.clave} ${clase.nombre_curso} ${clase.nivel}.`
+  }
+}

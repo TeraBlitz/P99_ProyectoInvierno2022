@@ -184,3 +184,22 @@ export const profesorVacioInscripcion = {
   nombreCompleto: '',
   correo: '',
 };
+
+export const nivelDict = {
+  1: 'Desde cero',
+  2: 'Con bases',
+  3: 'Intermedio',
+  4: 'Avanzado',
+};
+
+export const startDateDict = {
+  talleres: "fecha_inicio_insc_talleres",
+  idiomas: "fecha_inicio_insc_idiomas",
+  asesorias: "fecha_inicio_insc_asesorias",
+};
+
+export const endDateDict = {
+  talleres: "fecha_fin_insc_talleres",
+  idiomas: "fecha_fin_insc_idiomas",
+  asesorias: "fecha_fin_insc_asesorias",
+};
