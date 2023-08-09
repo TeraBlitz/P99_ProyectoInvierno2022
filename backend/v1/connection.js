@@ -18,6 +18,7 @@ clientConnect.connect()
 
 // Funcion principal de la conexion.
 async function connection() {
+    console.log('uri', uri)
     try {
         // Conectar el cliente con el server (optional starting in v4.7).
         await clientCon.connect();
