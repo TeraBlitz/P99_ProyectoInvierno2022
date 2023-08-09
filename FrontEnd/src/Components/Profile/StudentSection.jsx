@@ -102,9 +102,9 @@ function StudentSection({
         <Box
           sx={{
             display: {
-              xs: 'none',
+              // xs: 'none',
               md: canAddStudents ? 'flex' : 'none',
-              justifyContent: 'flex-end',
+              // justifyContent: 'flex-end',
             },
           }}
         >
