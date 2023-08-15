@@ -71,6 +71,7 @@ const SignUp = ({ changeHasAccount }) => {
         }
       })
       .catch((error) => {
+        console.log(error)
         if (error.message.includes("Un documen")) {
           //setAlertMessage("Usuario agregado correctamente.");
           setSuccessOpen(true);

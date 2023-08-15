@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 import Box from "@mui/material/Box";
 import React, { useState, useEffect, useContext } from "react";
 import Clase from "../../Components/Clase/Clase";
@@ -104,34 +105,29 @@ function RegistroClasesAlumnos({ changeContent }) {
               getClasses()
                 .then((response) => response.json())
                 .then((result) => {
-                  for (let i = 0; i < result.length; i++) {
-                    if (activeTerm[0].clave === result[i].clavePeriodo) {
-                      allTermClases.push(result[i]);
-                      allClassNames.push(result[i].nombre_curso);
-                      setClassNames([...new Set(allClassNames)]);
-                    }
-                  }
+                  allTermClases = result.filter(
+                    (el) => el.clavePeriodo == activeTerm[0].clave
+                  );
+                  allClassNames = allTermClases.map((el) => el.nombre_curso);
+                  setClassNames([...new Set(allClassNames)]);
                   const currentDate = moment()
                     .tz("America/Mexico_City")
                     .format();
                   for (let j = 0; j < allTermClases.length; j++) {
                     if (
-                      activeTerm[0][startDateDict[allTermClases[j].area]] <
-                        currentDate &&
-                      activeTerm[0][endDateDict[allTermClases[j].area]] >
-                        currentDate
+                      activeTerm[0].fecha_inicio < currentDate &&
+                      activeTerm[0].fecha_fin > currentDate
                     ) {
                       activeTermClases.push(allTermClases[j]);
                     }
                   }
-                  setClases(activeTermClases);
+                  setClases(allTermClases);
                   setFilteredClasses(activeTermClases);
                 });
             });
         });
     };
     getStudentClasses();
-    //console.log(clases)
   }, []);
 
   function traducirDate(raw) {
@@ -266,9 +262,9 @@ function RegistroClasesAlumnos({ changeContent }) {
       renderCell: (params) =>
         Number(params.row.cupo_actual) < Number(params.row.cupo_maximo) ? (
           <Button
-            size='small'
+            size="small"
             onClick={() => handleClick(params.row)}
-            variant='outlined'
+            variant="outlined"
           >
             {params.row.status === "Inscrito" &&
             params.row.status !== "ListaEspera"
@@ -277,9 +273,9 @@ function RegistroClasesAlumnos({ changeContent }) {
           </Button>
         ) : (
           <Button
-            size='small'
+            size="small"
             onClick={() => handleClick(params.row)}
-            variant='outlined'
+            variant="outlined"
           >
             {params.row.status === "ListaEspera" &&
             params.row.status !== "Inscrito"
@@ -442,7 +438,7 @@ function RegistroClasesAlumnos({ changeContent }) {
             }
           })
           .catch((error) => {
-            //console.log(error);
+            console.log(error);
             alert(error);
           });
       });
@@ -517,15 +513,15 @@ function RegistroClasesAlumnos({ changeContent }) {
           flexWrap: "wrap",
         }}
       >
-        <Typography variant='h3' sx={{ mb: 2, color: "#004a98" }}>
+        <Typography variant="h3" sx={{ mb: 2, color: "#004a98" }}>
           Registro clases (Inscripción)
         </Typography>
-        <Typography variant='h3' component='div' textAlign='center'>
+        <Typography variant="h3" component="div" textAlign="center">
           No tienes alumnos registrados, ve a
           <Link
-            component='button'
+            component="button"
             onClick={() => changeContent("Profile")}
-            variant='h3'
+            variant="h3"
             sx={{ mx: 2 }}
           >
             <i> Perfil </i>
@@ -536,20 +532,20 @@ function RegistroClasesAlumnos({ changeContent }) {
     );
   }
   return (
-    <>
+    <div>
       <Box>
-        <Typography variant='h3' sx={{ m: 2, color: "#004a98" }}>
+        <Typography variant="h3" sx={{ m: 2, color: "#004a98" }}>
           Registro clases (Inscripción)
         </Typography>
-        <Box sx={{ m: 2, position: "sticky", top: "10px" }}>
+        <Box sx={{ m: 2, top: "10px" }}>
           <FormControl fullWidth>
             <InputLabel>Estudiantes</InputLabel>
             <Select
               value={currentStudent || ""}
-              label='Estudiantes'
+              label="Estudiantes"
               onChange={handleChange}
             >
-              <MenuItem value=''>
+              <MenuItem value="">
                 <em>Estudiante</em>
               </MenuItem>
               {students.map((student) => (
@@ -571,8 +567,8 @@ function RegistroClasesAlumnos({ changeContent }) {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label='Curso'
-                helperText='Busca tu curso'
+                label="Curso"
+                helperText="Busca tu curso"
               />
             )}
           />
@@ -588,11 +584,11 @@ function RegistroClasesAlumnos({ changeContent }) {
           }}
         >
           {filteredClasses.length !== 0 ? (
-            filteredClasses.map((e) => (
+            filteredClasses.map((e, indx) => (
               <Clase
                 handleClick={handleClick}
                 handleMoreInfo={handleMoreInfo}
-                key={e._id}
+                key={indx}
                 clase={e}
               />
             ))
@@ -606,7 +602,7 @@ function RegistroClasesAlumnos({ changeContent }) {
                 flexWrap: "wrap",
               }}
             >
-              <Typography variant='h3' component='div' textAlign='center'>
+              <Typography variant="h3" component="div" textAlign="center">
                 No hay clases disponibles por el momento.
               </Typography>
             </Box>
@@ -621,7 +617,7 @@ function RegistroClasesAlumnos({ changeContent }) {
           }}
         >
           <Box sx={{ display: "flex" }}>
-            <Card
+            {/* <Card
               sx={{
                 textAlign: "center",
                 ml: 1,
@@ -630,9 +626,9 @@ function RegistroClasesAlumnos({ changeContent }) {
               }}
             >
               <SearchIcon
-                color='primary'
-                width='2em'
-                height='2em'
+                color="primary"
+                width="2em"
+                height="2em"
                 sx={{ alignSelf: "center", ml: 0.5 }}
               />
               <CardContent
@@ -667,12 +663,12 @@ function RegistroClasesAlumnos({ changeContent }) {
                     ]);
                   }}
                   renderInput={(params) => (
-                    <TextField {...params} label='Curso' />
+                    <TextField {...params} label="Curso" />
                   )}
                 />
                 <TextField
                   style={{ fontFamily: "arial" }}
-                  label='Nivel'
+                  label="Nivel"
                   onChange={(e) => {
                     setItems([
                       {
@@ -698,7 +694,7 @@ function RegistroClasesAlumnos({ changeContent }) {
                 </TextField>
                 <TextField
                   style={{ fontFamily: "arial" }}
-                  label='Periodo'
+                  label="Periodo"
                   onChange={(e) => {
                     setItems([
                       {
@@ -711,7 +707,7 @@ function RegistroClasesAlumnos({ changeContent }) {
                 ></TextField>
                 <TextField
                   style={{ fontFamily: "arial" }}
-                  label='Modalidad'
+                  label="Modalidad"
                   onChange={(e) => {
                     setItems([
                       {
@@ -723,7 +719,7 @@ function RegistroClasesAlumnos({ changeContent }) {
                   }}
                 ></TextField>
               </CardContent>
-            </Card>
+            </Card> */}
             <MiRegistro />
           </Box>
           <Box
@@ -779,7 +775,7 @@ function RegistroClasesAlumnos({ changeContent }) {
           autoHideDuration={8000}
           onClose={() => setSelectAlertOpen(false)}
         >
-          <Alert severity='info'>
+          <Alert severity="info">
             Selecciona un alumno para inscribir clases o entrar a la lista de
             espera
           </Alert>
@@ -810,7 +806,7 @@ function RegistroClasesAlumnos({ changeContent }) {
                   alignItems: "center",
                   justifyContent: "space-between",
                 }}
-                severity='error'
+                severity="error"
               >
                 <AlertTitle>Error</AlertTitle>
                 {errorMsg}
@@ -826,7 +822,7 @@ function RegistroClasesAlumnos({ changeContent }) {
           </>
         </Modal>
       </Box>
-    </>
+    </div>
   );
 }
 

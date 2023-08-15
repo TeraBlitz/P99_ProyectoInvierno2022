@@ -46,7 +46,7 @@ function App() {
     useEffect(()=>{
         const getAccessToken =async () => {
             const token = await getAccessTokenSilently()
-            sessionStorage.setItem("p99-auth-token" , token)
+            sessionStorage.setItem("Authorization" , token)
         }
         getAccessToken()
 

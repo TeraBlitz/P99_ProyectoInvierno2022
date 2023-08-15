@@ -45,10 +45,10 @@ export default function Periodos() {
     });
   };
 
-  const getAlumnoClase = async () => {
-    const res = await axios.get('https://p99test.fly.dev/v1/alumnoClases');
-    setDataAlumnoClase(res.data);
-  };
+  // const getAlumnoClase = async () => {
+  //   const res = await axios.get('https://p99test.fly.dev/v1/alumnoClases');
+  //   setDataAlumnoClase(res.data);
+  // };
 
   useEffect(() => {
     getAllPeriodos();

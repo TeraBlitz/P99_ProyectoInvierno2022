@@ -1,6 +1,6 @@
 import { clientConnect } from '../connection.js'
 import { mongodbInf } from '../config.js'
-import mongodb from "mongodb"
+import mongodb, { ObjectId } from "mongodb"
 
 /* 
     ====================================================================
@@ -264,7 +264,7 @@ async function alumnoNoExcedeCursos(req, res, next){
         validator = await collectionAC.find(query).toArray();
         numCursosAlumno = validator.length // Cursos del alumno en el periodo.
 
-        let typeOfClass = database.collection("clases").find({_id: req.body.idClase})
+        let typeOfClass = database.collection("clases").find({_id: ObjectId(req.body.idClase)})
 
 
         // #needs_testing
@@ -610,9 +610,10 @@ async function validateTimeOfRegistration(req, res, next){
         // Comprobar que no existan campos duplicados.
         let query
         query = {
-            _id: req.body.idClase
+            _id: ObjectId(req.body.idClase)
         }
-        let classValidating = await collection.find(query).toArray()[0];
+        let classValidating = await collection.find(query).toArray();
+        classValidating = classValidating[0]
         let typeOfClass = classValidating.area
         let objectAttributeToInspectBegining = `fecha_inicio_insc_${typeOfClass}`
         let objectAttributeToInspectEnd = `fecha_fin_insc_${typeOfClass}`
@@ -620,9 +621,9 @@ async function validateTimeOfRegistration(req, res, next){
         collection = database.collection("periodos");
 
         query = {
-            _id: req.body.idPeriodo
+            _id: ObjectId(req.body.idPeriodo)
         }
-        let termOfClass = await collection.find(query).toArray()[0];
+        let termOfClass = (await collection.find(query).toArray())[0];
         let currentTime = Date.parse(Date())
         if(currentTime < termOfClass[objectAttributeToInspectBegining] || currentTime > termOfClass[objectAttributeToInspectEnd]) {
             return res.status(400).json({

@@ -52,7 +52,7 @@ async function createAlumno(req, res) {
         ];
 
         const result = await collection.insertMany(doc);
-        for (i = 0; i < result.insertedCount; i++)
+        for (let i = 0; i < result.insertedCount; i++)
         res.send(
             `Un documento fue insertado con el ID: ${result.insertedIds[i]}`
         );

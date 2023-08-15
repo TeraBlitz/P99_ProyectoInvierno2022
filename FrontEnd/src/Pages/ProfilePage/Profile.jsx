@@ -64,12 +64,12 @@ const Profile = () => {
         <Box>Mi perfil</Box>
       </Box>
 
-      <UserDataSection 
+      {/* <UserDataSection 
         userInfo={userInfo}
         setSuccessOpen={setSuccessOpen}
         setErrorOpen={setErrorOpen}
         setAlertMessage={setAlertMessage}
-      />
+      /> */}
 
       <StudentSection 
         user={user}

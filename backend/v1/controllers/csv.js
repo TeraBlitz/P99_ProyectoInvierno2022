@@ -39,7 +39,7 @@ async function subirAlumnos(req, res) {
 
         // Estructuracion del mensaje de respuesta.
         let msg = []
-        for (i = 0; i < result.insertedCount; i++){
+        for( let i = 0; i < result.insertedCount; i++){
             msg[i] = {}
             msg[i].msg = `Un documento fue insertado con el ID: ${result.insertedIds[i]}`
         }
@@ -93,7 +93,7 @@ async function subirClases(req, res) {
 
         // Estructuracion del mensaje de respuesta.
         let msg = []
-        for (i = 0; i < result.insertedCount; i++){
+        for( let i = 0; i < result.insertedCount; i++){
             msg[i] = {}
             msg[i].msg = `Un documento fue insertado con el ID: ${result.insertedIds[i]}`
         }
@@ -136,7 +136,7 @@ async function subirProfesores(req, res) {
         
         // Estructuracion del mensaje de respuesta.
         let msg = []
-        for (i = 0; i < result.insertedCount; i++){
+        for (let i = 0; i < result.insertedCount; i++){
             msg[i] = {}
             msg[i].msg = `Documento insertado de manera exitosa. ID: ${result.insertedIds[i]}`
         }
@@ -185,7 +185,7 @@ async function subirPeriodos(req, res) {
 
         // Estructuracion del mensaje de respuesta.
         let msg = []
-        for (i = 0; i < result.insertedCount; i++){
+        for (let i = 0; i < result.insertedCount; i++){
             msg[i] = {}
             msg[i].msg = `Un documento fue insertado con el ID: ${result.insertedIds[i]}`
         }

@@ -8,6 +8,7 @@ import { controlPanelCards } from '../../utils/constants';
 import {
   compararFecha, contarAlumnos, contarClases, contarProfes,
 } from '../../utils/utilFunctions';
+import { host } from '../../utils/requestUtils';
 
 // Possible function to get users, this goes in another file
 
@@ -48,14 +49,14 @@ function ControlPanel({ changeContent }) {
 
   // ----------------------Obtencion de datos de la base de datos
   const getPeriodos = async () => {
-    const res = await axios.get('https://p99test.fly.dev/v1/periodos');
+    const res = await axios.get(host+'/v1/periodos' );
     setData(res.data);
     // console.log('Fetch Periodos', res.data)
     periodoActual = compararFecha(res.data);
   };
 
   const getClase = async () => {
-    const res = await axios.get('https://p99test.fly.dev/v1/clases');
+    const res = await axios.get(host+'/v1/clases');
     setDataClase(res.data);
     // funciones para encontrar stats
     // console.log('Fetch Clase', res.data)

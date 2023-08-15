@@ -14,6 +14,7 @@ async function getAllAlumnoClases(req, res) {
 
         res.send(result);
     } catch (err) {
+        console.log(err)
         return res.status(500).json({
             msg: `ERROR: ${err}`
         });
@@ -39,11 +40,12 @@ async function createAlumnoClases(req, res) {
         ];
 
         const result = await collection.insertMany(doc);
-        for (i = 0; i < result.insertedCount; i++)
+        for (let i = 0; i < result.insertedCount; i++)
         res.json({
             msg: `Un documento fue insertado con el ID: ${result.insertedIds[i]}`
         });
     } catch (err) {
+        console.log(err)
         return res.status(500).json({
             msg: `ERROR: ${err}`
         });
@@ -75,6 +77,7 @@ async function updateAlumnoClases(req, res) {
             msg: `Documento con _id: ${result.value._id} actualizado con exito. Status: ${result.ok}.`
         });
     } catch (err) {
+        console.log(err)
         return res.status(500).json({
             msg: `ERROR: ${err}`
         });
@@ -107,6 +110,7 @@ async function deleteAlumnoClases(req, res) {
             });
         }
     } catch (err) {
+        console.log(err)
         return res.status(500).json({
             msg: `ERROR: ${err}`
         });
