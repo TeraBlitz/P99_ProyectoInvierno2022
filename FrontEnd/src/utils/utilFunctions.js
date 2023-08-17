@@ -28,19 +28,20 @@ export const compararFecha = (data) => {
     const valorD = Number(separado[2]) / 10000;
     const valorT = valorA + valorM + valorD;
     const obj = {
-      id: element.clave,
+      id: element._id,
+      clave: element.clave,
       fecha: valorT,
     };
     periodos.push(obj);
   }
 
   periodos.sort((a, b) => b.fecha - a.fecha);
-  const clave = String(periodos[0].id);
-  return (clave);
+  // const clave = String(periodos[0].id);
+  return periodos[0];
 }
 
 // -------------------Funcion para contar cursos en periodo actual
-export const contarClases = (datos) => {
+export const contarClases = (datos, periodoActual) => {
   console.log('Este es la data inicial', datos);
   let contadorClases = 0;
 
@@ -56,7 +57,7 @@ export const contarClases = (datos) => {
 }
 
 // ---------------------------Funcion para contar profesores actuales
-export const contarProfes = (datos) => {
+export const contarProfes = (datos, periodoActual) => {
   const listaProfes = [];
   datos.forEach((element) => {
     if (element.clavePeriodo === periodoActual) {
@@ -72,14 +73,9 @@ export const contarProfes = (datos) => {
 }
 
 // -------------------- Function para contar alumnos
-export const contarAlumnos = (datos) => {
-  let alumnos = 0;
-  datos.forEach((element) => {
-    if (element.clavePeriodo === periodoActual) {
-      alumnos += Number(element.cupo_actual);
-    }
-  });
-  return (alumnos);
+export const contarAlumnos = (datos, periodoActual) => {
+  const students = datos.filter((element) => element.idPeriodo === periodoActual);
+  return students.length;
 }
 
 // funciones para sacar asociar datos a periodos
