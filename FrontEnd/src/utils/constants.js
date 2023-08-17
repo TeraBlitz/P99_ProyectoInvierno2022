@@ -184,3 +184,10 @@ export const profesorVacioInscripcion = {
   nombreCompleto: '',
   correo: '',
 };
+
+export const nivelDict = {
+  1: 'Desde cero',
+  2: 'Con bases',
+  3: 'Intermedio',
+  4: 'Avanzado',
+};
