@@ -28,9 +28,14 @@ import { Login } from './api/Login.js'
 export const userContext = createContext()
 function App() {
 
-    asdasdasd
-    asdasdasdknkn
-    kmlml
+    const [open, setOpen] = useState(false)
+    const [content, setContent] = useState('Inicio')
+    const [isSignedIn, setIsSignedIn] = useState(false)
+    const [user, setUser] = useState({})
+    const [loginError, setLoginError] = useState('none');
+    const [hasAccount, sethasAccount] = useState(true);
+    const [snack, setSnack] = useState(false)
+
 
     const handleUser = (params) => {
         setUser(params)
