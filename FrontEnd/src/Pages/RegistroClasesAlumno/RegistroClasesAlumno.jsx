@@ -319,8 +319,8 @@ function RegistroClasesAlumnos({ changeContent }) {
     let myClasses = [];
     const filter = clases.filter(
       (clase) =>
-        Number(clase.edad_minima) < age &&
-        age < (clase.edad_maxima ? Number(clase.edad_maxima) : 99)
+        Number(clase.edad_minima) <= age &&
+        age <= (clase.edad_maxima ? Number(clase.edad_maxima) : 99)
     );
     filter.map((aClass) => {
       aClass.status = "";
