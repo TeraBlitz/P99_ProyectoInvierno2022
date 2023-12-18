@@ -65,15 +65,13 @@ function StudentProfile({
         setOpenStudentProfile(!openStudentProfile);
       })
       .then((r) => {
-        let errorMessage = r.replace('ERROR: ', '').replaceAll('data/', '').split('\n');
+        const errorMessage = r.replace('ERROR: ', '').replaceAll('data/', '').split('\n');
         setAlertMessage(`Se produjo un error al agregar al estudiante. ${errorMessage}`);
         setErrorOpen(true);
       })
     } else {
       updateStudent(studentData).then((data) => {
         if (data.status === 400) {
-          setAlertMessage('Se produjo un error al actualizar al estudiante.');
-          setErrorOpen(true);
           return data.text();
         }
 
@@ -87,8 +85,8 @@ function StudentProfile({
         setOpenStudentProfile(!openStudentProfile);
       })
       .then((r) => {
-        let errorMessage = r.replace('ERROR: ', '').replaceAll('data/', '').split('\n');
-        setAlertMessage(`Se produjo un error al actualizar al estudiante: ${errorMessage}`);
+        const errorMessage = r.replace('ERROR: ', '').replaceAll('data/', '').split('\n');
+        setAlertMessage(`Se produjo un error al actualizar al estudiante ${errorMessage}`);
         setErrorOpen(true);
       });
     }
