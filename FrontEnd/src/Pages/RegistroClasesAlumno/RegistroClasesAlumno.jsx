@@ -172,7 +172,7 @@ function RegistroClasesAlumnos({ changeContent }) {
   };
 
   const getNivel = (params) => {
-    return nivelDict[params.row.nivel];
+    return params.row.nivel;
   };
 
   const getHorario = (params) => {
@@ -246,7 +246,6 @@ function RegistroClasesAlumnos({ changeContent }) {
       editable: "false",
       valueGetter: getProfesor,
     },
-    ,
     {
       field: "cupos",
       headerName: "% curso lleno",
