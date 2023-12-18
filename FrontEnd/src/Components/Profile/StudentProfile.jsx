@@ -115,9 +115,14 @@ function StudentProfile({
         {
         !isNewStudent
         && (
-        <IconButton aria-label="edit" color="primary" onClick={() => { setIsEditing(!isEditing); }}>
-          <EditIcon />
-        </IconButton>
+        <Button 
+          variant="contained" 
+          startIcon={<EditIcon />}
+          onClick={() => { setIsEditing(!isEditing); }}
+          size="small"
+        >
+          EDITAR
+        </Button>
         )
       }
       </Box>

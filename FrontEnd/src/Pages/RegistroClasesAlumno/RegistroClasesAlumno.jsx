@@ -164,13 +164,6 @@ function RegistroClasesAlumnos({ changeContent }) {
     return ~~((Date.now() - birthday) / magic_number);
   };
 
-  const nivelDict = {
-    1: "Desde cero",
-    2: "Con bases",
-    3: "Intermedio",
-    4: "Avanzado",
-  };
-
   const getNivel = (params) => {
     return params.row.nivel;
   };
@@ -316,14 +309,17 @@ function RegistroClasesAlumnos({ changeContent }) {
     const age = calculate_age(student.fecha_de_nacimiento);
     let waitList = [];
     let myClasses = [];
-    const filter = clases.filter(
+
+    let filter = clases.filter(
       (clase) =>
         Number(clase.edad_minima) < age &&
         age < (clase.edad_maxima ? Number(clase.edad_maxima) : 99)
     );
+
     filter.map((aClass) => {
       aClass.status = "";
     });
+
     getWaitList()
       .then((response) => response.json())
       .then((data) => {
@@ -338,6 +334,7 @@ function RegistroClasesAlumnos({ changeContent }) {
           }
         });
       });
+
     getClassStudent()
       .then((response) => response.json())
       .then((data) => {

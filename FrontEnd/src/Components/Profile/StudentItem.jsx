@@ -4,6 +4,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import CardActionArea  from '@mui/material/CardActionArea';
@@ -32,9 +33,14 @@ const StudentItem = ({studentInfo, name, first_lastname, second_lastname, editSt
         </CardActionArea>
       </Box>
       <Box>
-        <IconButton aria-label="edit" color="primary" onClick={() => openEdit()}>
-          <EditIcon />
-        </IconButton>
+        <Button 
+          variant="contained" 
+          startIcon={<EditIcon />}
+          onClick={() => openEdit()}
+          size="small"
+        >
+          EDITAR
+        </Button>
         <IconButton aria-label="delete" color="error" onClick={() => openDelete()}>
           <DeleteIcon />
         </IconButton>
