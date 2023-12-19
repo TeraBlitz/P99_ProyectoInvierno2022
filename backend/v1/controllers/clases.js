@@ -2,8 +2,6 @@ import { clientConnect } from "../connection.js"
 import { mongodbInf } from "../config.js"
 import mongodb from "mongodb"
 
-import { getCupoActualClases } from "../helpers/cupoActualClases.js"
-
 const COLLECTION_NAME = "clases"
 
 async function getAllClase(req, res) {
@@ -11,8 +9,7 @@ async function getAllClase(req, res) {
         const database = clientConnect.db(mongodbInf.database);
         const collection = database.collection(COLLECTION_NAME);
         const result = await collection.find().toArray();
-        const _result = await getCupoActualClases(result);
-        res.send(_result);
+        res.send(result);
     } catch (err) {
         res.send(`ERROR: ${err}`);
     }
@@ -183,11 +180,10 @@ async function findClase(req, res) {
         throw "parametros invalidos";
         }
         const result = await collection.find(query).toArray();
-        const _result = await getCupoActualClases(result);
-        if (_result == "") {
+        if (result == "") {
             res.send(`Ninguna clase encontrada con ${key} : ${value}`);
         } else {
-            res.send(_result);
+            res.send(result);
         }
     } catch (err) {
         console.log(`ERROR: ${err}`);
