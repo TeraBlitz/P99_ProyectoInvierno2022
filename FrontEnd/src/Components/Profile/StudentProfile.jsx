@@ -54,9 +54,7 @@ function StudentProfile({
     if (isNewStudent) {
       createStudent(studentData).then((data) => {
         if (data.status === 400) {
-          setAlertMessage('Se produjo un error al agregar al estudiante. Asegurate que el CURP sea valido');
-          setErrorOpen(true);
-          return;
+          return data.text();
         }
         setAlertMessage('Estudiante agregado correctamente.');
         setSuccessOpen(true);
@@ -65,13 +63,16 @@ function StudentProfile({
           setStudents(students);
         });
         setOpenStudentProfile(!openStudentProfile);
-      });
+      })
+      .then((r) => {
+        const errorMessage = r.replace('ERROR: ', '').replaceAll('data/', '').split('\n');
+        setAlertMessage(`Se produjo un error al agregar al estudiante. ${errorMessage}`);
+        setErrorOpen(true);
+      })
     } else {
       updateStudent(studentData).then((data) => {
         if (data.status === 400) {
-          setAlertMessage('Se produjo un error al actualizar al estudiante.');
-          setErrorOpen(true);
-          return;
+          return data.text();
         }
 
         setAlertMessage('Información del estudiante actualizada correctamente.');
@@ -82,6 +83,11 @@ function StudentProfile({
         });
         setIsEditing(!isEditing);
         setOpenStudentProfile(!openStudentProfile);
+      })
+      .then((r) => {
+        const errorMessage = r.replace('ERROR: ', '').replaceAll('data/', '').split('\n');
+        setAlertMessage(`Se produjo un error al actualizar al estudiante ${errorMessage}`);
+        setErrorOpen(true);
       });
     }
   };
@@ -115,9 +121,14 @@ function StudentProfile({
         {
         !isNewStudent
         && (
-        <IconButton aria-label="edit" color="primary" onClick={() => { setIsEditing(!isEditing); }}>
-          <EditIcon />
-        </IconButton>
+        <Button 
+          variant="contained" 
+          startIcon={<EditIcon />}
+          onClick={() => { setIsEditing(!isEditing); }}
+          size="small"
+        >
+          EDITAR
+        </Button>
         )
       }
       </Box>
