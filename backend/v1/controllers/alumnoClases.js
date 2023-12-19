@@ -39,6 +39,19 @@ async function createAlumnoClases(req, res) {
             },
         ];
 
+        const collectionClase = database.collection("clases");
+        const idDoc = {
+            _id: new mongodb.ObjectId(req.body.idClase),
+        };
+        const docClase = await collectionClase.findOne(idDoc);
+        const cupo_actual = Number(docClase.cupo_actual) ?? 0;
+        const docClaseUpdate = {
+            $set: {
+                cupo_actual: cupo_actual + 1,
+            },
+        };
+        await collectionClase.findOneAndUpdate(idDoc, docClaseUpdate);
+
         const result = await collection.insertMany(doc);
         for (let i = 0; i < result.insertedCount; i++)
         res.json({
@@ -96,11 +109,28 @@ async function deleteAlumnoClases(req, res) {
         const idDoc = {
         _id: new mongodb.ObjectId(req.body._id),
         };
+        // Get idClase
+        const doc = await collection.findOne(idDoc);
+        const idClase = doc.idClase;
 
         const result = await collection.deleteMany(idDoc);
         // console.log(JSON.stringify(result))
 
         if (result.deletedCount === 1) {
+
+            const collectionClase = database.collection("clases");
+            const idDocClase = {
+                _id: new mongodb.ObjectId(idClase),
+            };
+            const docClase = await collectionClase.findOne(idDocClase);
+            const cupo_actual = Number(docClase.cupo_actual) ?? 0;
+            const docClaseUpdate = {
+                $set: {
+                    cupo_actual: cupo_actual - 1,
+                },
+            };
+            await collectionClase.findOneAndUpdate(idDocClase, docClaseUpdate);
+
             res.json({
                 msg: `Documento con _id: ${idDoc._id} eliminado con exito.`
             });
