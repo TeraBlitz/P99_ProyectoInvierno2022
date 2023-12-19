@@ -9,6 +9,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 import Link from '@mui/material/Link';
 import Autocomplete from '@mui/material/Autocomplete';
 import { estadosMexico, nivelEscolaridad } from '../../utils/constants';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 function StudentInfo({
   userOriginState, setUserOriginState, userEducation, setUserEducation,
@@ -104,16 +105,21 @@ function StudentInfo({
           />
         ) : null
       }
-      <TextField
-        name="fecha_de_nacimiento"
+      <DatePicker
+        name='fecha_de_nacimiento'
         label="Fecha de nacimiento"
-        type="date"
-        InputProps={{ readOnly: !isEditing }}
-        InputLabelProps={{ shrink: true }}
-        value={studentData.fecha_de_nacimiento || ''}
-        onChange={handleChange}
-        helperText=" "
-        required
+        onChange={(value) => {
+          const day = value['$D'] < 10 ? `0${value['$D']}` : value['$D'];
+          const date = `${value['$y']}-${value['$M']+1}-${day}`;
+
+          handleChange({
+            target: {
+              name: 'fecha_de_nacimiento',
+              value: date,
+            }
+          })
+
+        }}
       />
       <Autocomplete
         readOnly={!isEditing}
