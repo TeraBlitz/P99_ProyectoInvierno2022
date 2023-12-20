@@ -36,6 +36,7 @@ function Clase({handleClick, handleMoreInfo, clase}) {
                     <Typography variant='body1'><strong>Periodo:</strong>  {clase.clavePeriodo}</Typography>
                     <Typography variant='body1'><strong>Modalidad:</strong> {clase.modalidad}</Typography>
                     <Typography variant='body1'><strong>Nivel:</strong> {nivelDict[clase.nivel]}</Typography>
+                    <Typography><strong>Rango de edad:</strong> {`${clase.edad_minima} - ${clase.edad_maxima}`}</Typography>
                         <Typography sx={{ color: clase.cupo_actual / clase.cupo_maximo >= 1 ? "red" : "black" }} variant='body1'>
                             { Number(clase.cupo_actual) / Number(clase.cupo_maximo)  >=1 ? <strong>Lleno</strong>
                                 : <strong>¡Curso  {(Number(clase.cupo_actual) / Number(clase.cupo_maximo) * 100).toFixed()}% lleno!</strong> 
