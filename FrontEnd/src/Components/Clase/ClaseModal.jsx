@@ -31,7 +31,7 @@ const ClaseModal = ({clase}) => {
             <Typography><strong>Periodo:</strong> {clase.clavePeriodo}</Typography>
             <Typography><strong>Area:</strong> {clase.area}</Typography>
             <Typography><strong>Nivel:</strong> {nivelDict[clase.nivel]}</Typography>
-            <Typography><strong>Rango de edad:</strong> {`${clase.edad_minima} - ${clase.edad_maxima}`}</Typography>
+            <Typography><strong>Rango de edad:</strong> {`${clase.edad_minima} - ${clase.edad_maxima === '' ? '99' : clase.edad_maxima}`}</Typography>
             <Typography><strong>Modalidad:</strong> {clase.modalidad}</Typography>
             <Typography><strong>Horario:</strong> </Typography>
             <TableContainer component={Paper} sx={{my: 1}}>
