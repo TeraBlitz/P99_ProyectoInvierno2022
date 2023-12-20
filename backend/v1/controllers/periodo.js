@@ -9,8 +9,9 @@ async function getAllPeriodo(req, res) {
     try {
         const database = clientConnect.db(mongodbInf.database);
         const collection = database.collection(COLLECTION_NAME);
+        //return from the most recent to the oldest
+        const result = await collection.find().sort({fecha_inicio: -1}).toArray();
 
-        const result = await collection.find().toArray();
         // console.log(JSON.stringify(result))
         res.send(result);
     } catch (err) {
