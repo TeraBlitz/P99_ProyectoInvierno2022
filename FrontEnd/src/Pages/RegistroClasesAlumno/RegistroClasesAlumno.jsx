@@ -21,6 +21,7 @@ import Select from "@mui/material/Select";
 import SearchIcon from "@mui/icons-material/Search";
 import { getStudents } from "../../api/students";
 import { getClasses } from "../../api/classes";
+import { get_available_classes } from "../../api/classes";
 import { useAuth0 } from "@auth0/auth0-react";
 import {
   createClassStudent,
@@ -55,12 +56,32 @@ function RegistroClasesAlumnos({ changeContent }) {
   const [dialogAction, setDialogAction] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [inRegistrationTime, setInRegistrationTime] = useState(false);
-  const [periodos, setPeriodos] = useState([]);
+
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [updator, setUpdator] = useState(0);
+
+
+
+
+
   const [currentTerm, setCurrentTerm] = useState(null);
+  const [periodos, setPeriodos] = useState([]);
+  ///
+  const [slelectedPeriod, setSelectedPeriod] = useState(null);
+
+
+  const updateCurrentTime = () => {
+    setCurrentTime(new Date());
+    // Execute your custom function here
+    // e.g., yourCustomFunction();
+  };
+
+
 
   const { user } = useAuth0();
 
   useEffect(() => {
+
     const getUserStudents = () => {
       getStudents()
         .then((response) => response.json())
@@ -72,6 +93,8 @@ function RegistroClasesAlumnos({ changeContent }) {
           //console.log(students)
         });
     };
+
+
     getUserStudents();
   }, []);
 
@@ -87,47 +110,93 @@ function RegistroClasesAlumnos({ changeContent }) {
     asesorias: "fecha_fin_insc_asesorias",
   };
 
+  const getPeriodosstak = () => {
+    getPeriodos()
+      .then((response) => response.json())
+      .then((data) => {
+
+
+        setPeriodos(data);
+
+
+        console.log("periodos", data);
+        setSelectedPeriod(data[data.length - 1]);
+      });
+
+  };
+
+  const getPeriodobyperiodo = (periodo) => {
+    getPeriodos(periodo)
+      .then((response) => response.json())
+      .then((data) => {
+
+        setPeriodos(data);
+        console.log("periodos", data);
+        setSelectedPeriod(data[data.length - 1]);
+      });
+
+  };
+
+
+
   useEffect(() => {
+    // const getStudentClasses = () => {
+    //   let allClassNames = [];
+    //   let allTermClases = [];
+    //   let activeTermClases = [];
+    //   let activeTerm = [];
+    //   getPeriodos()
+    //     .then((response) => response.json())
+    //     .then((data) => {
+    //       const periodo = compararFecha(data);
+    //       setPeriodos(data);
+    //       findTerm({ clave: periodo })
+    //         .then((response) => response.json())
+    //         .then((data) => {
+    //           activeTerm = data;
+    //           getClasses()
+    //             .then((response) => response.json())
+    //             .then((result) => {
+    //               allTermClases = result.filter(
+    //                 (el) => el.clavePeriodo == activeTerm[0].clave
+    //               );
+    //               allClassNames = allTermClases.map((el) => el.nombre_curso);
+    //               setClassNames([...new Set(allClassNames)]);
+    //               const currentDate = moment()
+    //                 .tz("America/Mexico_City")
+    //                 .format();
+    //               for (let j = 0; j < allTermClases.length; j++) {
+    //                 if (
+    //                   activeTerm[0].fecha_inicio < currentDate &&
+    //                   activeTerm[0].fecha_fin > currentDate
+    //                 ) {
+    //                   activeTermClases.push(allTermClases[j]);
+    //                 }
+    //               }
+    //               setClases(allTermClases);
+    //               setFilteredClasses(activeTermClases);
+    //             });
+    //         });
+    //     });
+    // };
+    // getStudentClasses();
+
     const getStudentClasses = () => {
-      let allClassNames = [];
-      let allTermClases = [];
-      let activeTermClases = [];
-      let activeTerm = [];
-      getPeriodos()
+      get_available_classes("null")
         .then((response) => response.json())
         .then((data) => {
-          const periodo = compararFecha(data);
-          setPeriodos(data);
-          findTerm({ clave: periodo })
-            .then((response) => response.json())
-            .then((data) => {
-              activeTerm = data;
-              getClasses()
-                .then((response) => response.json())
-                .then((result) => {
-                  allTermClases = result.filter(
-                    (el) => el.clavePeriodo == activeTerm[0].clave
-                  );
-                  allClassNames = allTermClases.map((el) => el.nombre_curso);
-                  setClassNames([...new Set(allClassNames)]);
-                  const currentDate = moment()
-                    .tz("America/Mexico_City")
-                    .format();
-                  for (let j = 0; j < allTermClases.length; j++) {
-                    if (
-                      activeTerm[0].fecha_inicio < currentDate &&
-                      activeTerm[0].fecha_fin > currentDate
-                    ) {
-                      activeTermClases.push(allTermClases[j]);
-                    }
-                  }
-                  setClases(allTermClases);
-                  setFilteredClasses(activeTermClases);
-                });
-            });
+          console.log("data", data);
+          setClases(data);
+          setFilteredClasses(data);
         });
+
+      getPeriodosstak();
     };
     getStudentClasses();
+
+
+
+
   }, []);
 
   function traducirDate(raw) {
@@ -276,7 +345,7 @@ function RegistroClasesAlumnos({ changeContent }) {
             variant="outlined"
           >
             {params.row.status === "Inscrito" &&
-            params.row.status !== "ListaEspera"
+              params.row.status !== "ListaEspera"
               ? "Cancelar Registro"
               : "Inscribir"}
           </Button>
@@ -287,7 +356,7 @@ function RegistroClasesAlumnos({ changeContent }) {
             variant="outlined"
           >
             {params.row.status === "ListaEspera" &&
-            params.row.status !== "Inscrito"
+              params.row.status !== "Inscrito"
               ? "Salir de Lista"
               : "Lista Espera"}
           </Button>
@@ -371,13 +440,45 @@ function RegistroClasesAlumnos({ changeContent }) {
 
   const handleChange = (e) => {
     if (e.target.value === "") {
-      setFilteredClasses(clases);
+      // setFilteredClasses(clases);
+      setSelectedPeriod(null);
+      return;
+    }
+    setSelectedPeriod(e.target.value);
+
+    get_available_classes(e.target.value.clave)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("data", data);
+        setClases(data);
+        setFilteredClasses(data);
+      });
+  };
+
+  const handleChangeStudent = (e) => {
+
+
+    if (e.target.value === "") {
+      // setFilteredClasses(clases);
       setCurrentStudent(null);
       return;
     }
     setCurrentStudent(e.target.value);
-    filterClasses(e.target.value);
+    // filterClasses(e.target.value);
+
+    console.log("trae el periodo", slelectedPeriod.clave)
+
+
+    get_available_classes(slelectedPeriod.clave)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("data", data);
+        setClases(data);
+        setFilteredClasses(data);
+      });
+
   };
+
 
   const handleListaEspera = (clase) => {
     let lista = [];
@@ -495,13 +596,80 @@ function RegistroClasesAlumnos({ changeContent }) {
 
   const handleNameFilter = (value) => {
     //setNameFilter(value);
+
     const filteredClasses = clases.filter((clase) =>
       clase.nombre_curso.toLowerCase().includes(value.trim().toLowerCase())
     );
     setFilteredClasses(filteredClasses);
+
   };
 
-  if (!students || !clases) {
+  const calculateTimeDifference = (targetTime) => {
+
+    /// new date in  time xzone mex
+    const now = new Date(moment().tz("America/Mexico_City").format());
+    const targetDateTime = new Date(targetTime);
+
+    // If the target time is in the past, set it for the next day
+    if (now >= targetDateTime) {
+      targetDateTime.setDate(targetDateTime.getDate() + 1);
+    }
+
+    // Calculate the time difference until the target time
+    return targetDateTime - now;
+  };
+
+  useEffect(() => {
+    //Update the current time immediately when the component mounts
+    updateCurrentTime();
+
+    //Get the specific times from your selected period
+    const time1 = slelectedPeriod?.fecha_fin_insc_talleres
+    const time2 = slelectedPeriod?.fecha_fin_insc_idiomas
+    const time3 = slelectedPeriod?.fecha_fin_insc_asesorias
+
+    console.log("time1", time1)
+    //Calculate the time differences for each specific time
+    const timeDifference1 = calculateTimeDifference(time1);
+    const timeDifference2 = calculateTimeDifference(time2);
+    const timeDifference3 = calculateTimeDifference(time3);
+
+    //Find the earliest next occurrence among all specific times
+    const earliestNextOccurrence = new Date(
+      Math.min(
+        timeDifference1 || Infinity,
+        timeDifference2 || Infinity,
+        timeDifference3 || Infinity
+      )
+    );
+
+    console.log("earliestNextOccurrence", earliestNextOccurrence)
+
+    //Set up an interval to update the current time and execute your function
+    const intervalId = setInterval(() => {
+      updateCurrentTime();
+
+      if (currentTime == time1 || currentTime == time2 || currentTime == time3) {
+        get_available_classes(slelectedPeriod.clave)
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("data", data);
+            setClases(data);
+            setFilteredClasses(data);
+          }
+          );
+        setUpdator(updator + 1);
+      }
+
+
+    }, earliestNextOccurrence);
+
+    //Clean up the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, [slelectedPeriod]);
+
+
+  if (!students || !clases || !periodos) {
     return (
       <Box
         sx={{
@@ -551,24 +719,54 @@ function RegistroClasesAlumnos({ changeContent }) {
           Registro clases (Inscripción)
         </Typography>
         <Box sx={{ m: 2, top: "10px" }}>
-          <FormControl fullWidth>
-            <InputLabel>Estudiantes</InputLabel>
-            <Select
-              value={currentStudent || ""}
-              label="Estudiantes"
-              onChange={handleChange}
-            >
-              <MenuItem value="">
-                <em>Estudiante</em>
-              </MenuItem>
-              {students.map((student) => (
-                <MenuItem key={student._id} value={student}>
-                  {student.nombre} {student.apellido_paterno}{" "}
-                  {student.apellido_materno}
+
+          <div style={{
+            display: "flex", justifyContent: "space-between",
+            gap: "10px"
+          }}>
+            <FormControl fullWidth>
+              <InputLabel>Estudiantes</InputLabel>
+              <Select
+                value={currentStudent || ""}
+                label="Estudiantes"
+                onChange={handleChangeStudent}
+              >
+                <MenuItem value="">
+                  <em>Estudiante</em>
                 </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+                {students.map((student) => (
+                  <MenuItem key={student._id} value={student}>
+                    {student.nombre} {student.apellido_paterno}{" "}
+                    {student.apellido_materno}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl fullWidth>
+              <InputLabel>Periodo</InputLabel>
+              <Select
+                value={slelectedPeriod || ""}
+                label="Periodo"
+                onChange={handleChange}
+              >
+                <MenuItem value="">
+                  <em>Periodo</em>
+                </MenuItem>
+
+
+
+
+                {periodos.map((periodo) => (
+                  <MenuItem key={periodo.clave} value={periodo}>
+                    {periodo.clave}
+                  </MenuItem>
+                ))}
+
+
+              </Select>
+            </FormControl>
+          </div>
 
           <Autocomplete
             disablePortal
@@ -586,51 +784,70 @@ function RegistroClasesAlumnos({ changeContent }) {
             )}
           />
         </Box>
-        <Box
-          sx={{
-            textAlign: "center",
-            width: "100%",
-            paddingX: "20px",
-            paddingBottom: "10px",
-            overflowY: "scroll",
-            display: { xs: "block", md: "none" },
-          }}
+
+        <div
+
+          key={[currentStudent?._id, slelectedPeriod?.clave, updator]}
+
         >
-          {filteredClasses.length !== 0 ? (
-            filteredClasses.map((e, indx) => (
-              <Clase
-                handleClick={handleClick}
-                handleMoreInfo={handleMoreInfo}
-                key={indx}
-                clase={e}
-              />
-            ))
-          ) : (
-            <Box
-              sx={{
-                height: "100vh",
-                display: "flex",
-                alignContent: "center",
-                justifyContent: "center",
-                flexWrap: "wrap",
-              }}
-            >
-              <Typography variant="h3" component="div" textAlign="center">
-                No hay clases disponibles por el momento.
-              </Typography>
-            </Box>
-          )}
-        </Box>
-        <Box
-          sx={{
-            display: { xs: "none", md: "flex" },
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
-          }}
-        >
-          <Box sx={{ display: "flex" }}>
-            {/* <Card
+
+
+          <Box
+            sx={{
+              textAlign: "center",
+              width: "100%",
+              paddingX: "20px",
+              paddingBottom: "10px",
+              overflowY: "scroll",
+              display: { xs: "block", md: "none" },
+            }}
+          >
+            {
+
+              filteredClasses ? <>
+
+                {filteredClasses.map((e, indx) => (
+                  <Clase
+                    handleClick={handleClick}
+                    handleMoreInfo={handleMoreInfo}
+                    key={indx}
+                    clase={e}
+                  />
+                ))
+                }
+
+              </>
+
+
+
+                : <>
+                  <Box
+                    sx={{
+                      height: "100vh",
+                      display: "flex",
+                      alignContent: "center",
+                      justifyContent: "center",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <Typography variant="h3" component="div" textAlign="center">
+                      No hay clases disponibles por el momento.
+                    </Typography>
+                  </Box>
+                </>
+
+            }
+          </Box>
+          <Box
+            sx={{
+              display: { xs: "none", md: "flex" },
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
+            <Box sx={{ display: "flex" }}>
+              {/* <Card
               sx={{
                 textAlign: "center",
                 ml: 1,
@@ -733,46 +950,50 @@ function RegistroClasesAlumnos({ changeContent }) {
                 ></TextField>
               </CardContent>
             </Card> */}
-            <MiRegistro />
-          </Box>
-          <Box
-            sx={{
-              m: 2,
-              display: "flex",
-              width: "90%",
-              height: 600,
-              minWidth: "548px",
-              "& .theme--ListaEspera": {
-                bgcolor: "lightyellow",
-              },
-              "& .theme--Inscrito": {
-                bgcolor: "lightgreen",
-              },
-            }}
-          >
-            <DataGrid
-              sx={{ flexGrow: 1 }}
-              rows={filteredClasses}
-              columns={columns}
-              disableSelectionOnClick={true}
-              getRowId={(row) => row._id}
-              getRowHeight={() => "auto"}
-              filterModel={{
-                items: items,
+              <MiRegistro />
+            </Box>
+
+
+            <Box
+              sx={{
+                m: 2,
+                display: "flex",
+                width: "90%",
+                height: 600,
+                minWidth: "548px",
+                "& .theme--ListaEspera": {
+                  bgcolor: "lightyellow",
+                },
+                "& .theme--Inscrito": {
+                  bgcolor: "lightgreen",
+                },
               }}
-              getRowClassName={(params) => `theme--${params.row.status}`}
-            />
+            >
+              <DataGrid
+                sx={{ flexGrow: 1 }}
+                rows={filteredClasses}
+                columns={columns}
+                disableSelectionOnClick={true}
+                getRowId={(row) => row._id}
+                getRowHeight={() => "auto"}
+                filterModel={{
+                  items: items,
+                }}
+                getRowClassName={(params) => `theme--${params.row.status}`}
+              />
+            </Box>
+            <Modal
+              open={openMoreInfo}
+              onClose={() => setOpenMoreInfo(!openMoreInfo)}
+              sx={{ overflowY: "scroll" }}
+            >
+              <>
+                <ClaseModal clase={currentClase} />
+              </>
+            </Modal>
           </Box>
-          <Modal
-            open={openMoreInfo}
-            onClose={() => setOpenMoreInfo(!openMoreInfo)}
-            sx={{ overflowY: "scroll" }}
-          >
-            <>
-              <ClaseModal clase={currentClase} />
-            </>
-          </Modal>
-        </Box>
+
+        </div>
         <ConfirmationDialog
           action={dialogAction}
           clase={claseRegistrada}

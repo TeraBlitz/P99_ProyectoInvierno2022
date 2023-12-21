@@ -9,7 +9,7 @@ export const updatePeriodo = (periodo) => {
 }
 
 export const getPeriodos = () => {
-    return getData(`/v1/periodos/`)
+    return getData(`/v1/periodos`)
 }
 
 export const deletePeriodos = (periodo) => {
@@ -18,3 +18,5 @@ export const deletePeriodos = (periodo) => {
 export const findPeriodos = (idPeriodo) =>{
     return postData("/v1/periodos/find" , idPeriodo)
 }
+
+

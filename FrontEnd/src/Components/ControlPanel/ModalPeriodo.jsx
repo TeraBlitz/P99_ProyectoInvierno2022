@@ -44,9 +44,9 @@ function ModalPeriodo({
     >
       <Card sx={style}>
         <Typography variant="h5" component="div">
-          { operation === 'Eliminar'
+          {operation === 'Eliminar'
             ? 'Estas seguro de borrar este periodo?'
-            : 'Ingrese los nuevos datos' }
+            : 'Ingrese los nuevos datos'}
         </Typography>
         <div className="spacer" />
         <div>
@@ -63,14 +63,8 @@ function ModalPeriodo({
             />
           ))}
           <br />
-          <Button
-            color={operation === 'Eliminar' ? 'error' : 'primary'}
-            variant="contained"
-            onClick={onSubmit}
-          >
-            {operation}
-          </Button>
-          <div style={{ width: '30px', display: 'inline-block'}} />
+
+
           <Button
             onClick={setOpenModal}
             color={operation === 'Eliminar' ? 'primary' : 'error'}
@@ -78,6 +72,20 @@ function ModalPeriodo({
           >
             Cancelar
           </Button>
+
+
+
+          <div style={{ width: '30px', display: 'inline-block' }} />
+
+          <Button
+            color={operation === 'Eliminar' ? 'error' : 'primary'}
+            variant="contained"
+            onClick={onSubmit}
+          >
+            {operation === 'Eliminar' ? 'Eliminar' : 'Guardar'}
+          </Button>
+
+
         </div>
       </Card>
     </Modal>

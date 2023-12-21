@@ -15,3 +15,9 @@ export const getClasses = () => {
 export const deleteClasses = (student) => {
     return deleteData(`/v1/clases/delete`, student)
 }
+
+
+
+export const get_available_classes = (periodo) => {
+    return getData(`/v1/clases/getClasesDisp_ByPeriod/${periodo}`)
+}
