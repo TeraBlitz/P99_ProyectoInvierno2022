@@ -273,7 +273,8 @@ async function getClasesDisp_ByPeriod(req, res) {
     } 
 
     if (clases_open.length === 0) {
-        res.send("No hay clases abiertas");
+        res.send([]);
+        return;
     }
 
 
