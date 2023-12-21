@@ -95,9 +95,7 @@ function StudentProfile({
   const handleCancel = () => {
     setStudentInfo(newStudentInfo);
     setIsEditing(!isEditing);
-    if (isNewStudent) {
-      setOpenStudentProfile(!openStudentProfile);
-    }
+    setOpenStudentProfile(!openStudentProfile);
   };
 
   return (

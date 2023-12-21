@@ -164,8 +164,18 @@ function RegistroClasesAlumnos({ changeContent }) {
     return ~~((Date.now() - birthday) / magic_number);
   };
 
+  const nivelDict = {
+    '1' : 'Desde cero',
+    '2' : 'Con bases',
+    '3' : 'Intermedio',
+    '4' : 'Avanzado'
+  };
   const getNivel = (params) => {
-    return params.row.nivel;
+    return nivelDict[params.row.nivel];
+  };
+
+  const getRangoEdad = (params) => {
+    return `${params.row.edad_minima} - ${(params.row.edad_maxima ? Number(params.row.edad_maxima) : 99)}`;
   };
 
   const getHorario = (params) => {
@@ -212,6 +222,13 @@ function RegistroClasesAlumnos({ changeContent }) {
       width: 100,
       editable: false,
       valueGetter: getNivel,
+    },
+    {
+      field: "clase.edad_minima",
+      headerName: "Rango de edad",
+      width: 125,
+      editable: false,
+      valueGetter: getRangoEdad,
     },
     {
       field: "area",

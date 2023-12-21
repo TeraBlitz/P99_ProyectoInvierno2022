@@ -1,3 +1,5 @@
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { Alert, IconButton, Snackbar } from '@mui/material'
 import React, { useState, useEffect, createContext } from 'react'
 import './App.css'
@@ -86,44 +88,49 @@ function App() {
 
     }
 
-    return !isAuthenticated ?
-        <SignIn /> 
-            :
-            <Box id="main" sx={{ display: 'flex' }}>
-                <Sidebar open={open} changeDrawerState={changeDrawerState} changeContent={changeContent}/>
-                <Box sx={{
-                    width: '100%',
-                    position: 'relative',
-                    height: 'auto',
-                    overflow: 'scroll'
-                }}>
-                    <IconButton sx={{ bgcolor: 'primary.light', height: 'fit-content', borderRadius: 1, display: { xs: 'block', sm: 'none' }, position: 'fixed', zIndex: 1000, top: '3px', left: '3px' }} onClick={() => setOpen(!open)}>
+    return (
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+            {
+                !isAuthenticated ? (
+                    <SignIn /> 
+                ) : (
+                    <Box id="main" sx={{ display: 'flex' }}>
+                        <Sidebar open={open} changeDrawerState={changeDrawerState} changeContent={changeContent}/>
+                        <Box sx={{
+                            width: '100%',
+                            position: 'relative',
+                            height: 'auto',
+                            overflow: 'scroll'
+                        }}>
+                            <IconButton sx={{ bgcolor: 'primary.light', height: 'fit-content', borderRadius: 1, display: { xs: 'block', sm: 'none' }, position: 'fixed', zIndex: 1000, top: '3px', left: '3px' }} onClick={() => setOpen(!open)}>
 
-                        <MenuIcon />
-                    </IconButton>
-                    <div style={{ width: 'calc(100vw-240px)', height: '100vh' }}>
-                        {PagesToRender[content]}
-                        <Snackbar open={snack}>
-                            <Alert severity='warning'>
-                                No has creado tu Alumno aun
-                                <IconButton
-                                    size="small"
-                                    aria-label="close"
-                                    color="inherit"
-                                    onClick={() => setSnack(false)}
-                                >
-                                    <CloseIcon fontSize="small" />
-                                </IconButton>
-                                <br />
-                                <Button color="warning" size="small" onClick={() => {changeContent('Profile');setSnack(!snack)}}>
-                                    Crear Alumno
-                                </Button>
-                            </Alert>
-                        </Snackbar>
-                    </div>
-                </Box>
-            </Box>
-
-
+                                <MenuIcon />
+                            </IconButton>
+                            <div style={{ width: 'calc(100vw-240px)', height: '100vh' }}>
+                                {PagesToRender[content]}
+                                <Snackbar open={snack}>
+                                    <Alert severity='warning'>
+                                        No has creado tu Alumno aun
+                                        <IconButton
+                                            size="small"
+                                            aria-label="close"
+                                            color="inherit"
+                                            onClick={() => setSnack(false)}
+                                        >
+                                            <CloseIcon fontSize="small" />
+                                        </IconButton>
+                                        <br />
+                                        <Button color="warning" size="small" onClick={() => {changeContent('Profile');setSnack(!snack)}}>
+                                            Crear Alumno
+                                        </Button>
+                                    </Alert>
+                                </Snackbar>
+                            </div>
+                        </Box>
+                    </Box>
+                )
+            }
+        </LocalizationProvider>
+    )
 }
 export default App
