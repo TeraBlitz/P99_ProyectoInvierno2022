@@ -4,6 +4,8 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import { Typography } from '@mui/material';
+import moment from 'moment';
+
 import {
   traducirDate, traducirTime, encontrarAlumnos, encontrarClases, encontrarProfes,
 } from '../../utils/utilFunctions';
@@ -81,16 +83,56 @@ function PeriodoCard({ dataClase, item, seleccionarConsola }) {
         <Typography sx={{ mb: 1.5 }} color="text.secondary">
           {item.status}
         </Typography>
-        {fields.map((field, index) => (
-          <React.Fragment key={index}>
-            <h5 className="leyendaFaltas">{field.label}</h5>
-            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              {field.date && `Fecha: ${field.date}\n`}
-              {field.time && `Hora: ${field.time}\n`}
-              {field.value}
-            </Typography>
-          </React.Fragment>
-        ))}
+
+          <h5 className="leyendaFaltas">Fecha de inicio:</h5>
+          <Typography sx={{ mb: 1.5 }} color="text.secondary">
+            {moment(item.fecha_inicio).format('DD/MM/YYYY') + ' ' + moment(item.fecha_inicio).format('HH:mm')}
+          </Typography>
+
+
+          <h5 className="leyendaFaltas">Fecha de cierre:</h5>
+          <Typography sx={{ mb: 1.5 }} color="text.secondary">
+            {moment(item.fecha_fin).format('DD/MM/YYYY') + ' ' + moment(item.fecha_fin).format('HH:mm')}
+          </Typography>
+
+
+          <h5 className="leyendaFaltas">Fecha de inicio de inscripciones de talleres:</h5>
+          <Typography sx={{ mb: 1.5 }} color="text.secondary">
+            {moment(item.fecha_inicio_insc_talleres).format('DD/MM/YYYY') + ' ' + moment(item.fecha_inicio_insc_talleres).format('HH:mm')}
+          </Typography>
+
+
+          <h5 className="leyendaFaltas">Fecha de cierre de inscripciones de talleres:</h5>
+          <Typography sx={{ mb: 1.5 }} color="text.secondary">
+            {moment(item.fecha_fin_insc_talleres).format('DD/MM/YYYY') + ' ' + moment(item.fecha_fin_insc_talleres).format('HH:mm')}
+          </Typography>
+
+
+          <h5 className="leyendaFaltas">Fecha de inicio de inscripciones de idiomas:</h5>
+
+          <Typography sx={{ mb: 1.5 }} color="text.secondary">
+            {moment(item.fecha_inicio_insc_idiomas).format('DD/MM/YYYY') + ' ' + moment(item.fecha_inicio_insc_idiomas).format('HH:mm')}
+          </Typography>
+
+          <h5 className="leyendaFaltas">Fecha de cierre de inscripciones de idiomas:</h5>
+          <Typography sx={{ mb: 1.5 }} color="text.secondary">
+            {moment(item.fecha_fin_insc_idiomas).format('DD/MM/YYYY') + ' ' + moment(item.fecha_fin_insc_idiomas).format('HH:mm')}
+          
+          </Typography>
+
+          <h5 className="leyendaFaltas">Fecha de inicio de inscripciones de asesorias:</h5>
+          <Typography sx={{ mb: 1.5 }} color="text.secondary">
+            {moment(item.fecha_inicio_insc_asesorias).format('DD/MM/YYYY') + ' ' + moment(item.fecha_inicio_insc_asesorias).format('HH:mm')}
+          </Typography>
+
+
+
+
+
+          
+
+
+
       </CardContent>
       <CardActions>
         <Button
