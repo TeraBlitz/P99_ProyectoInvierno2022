@@ -18,7 +18,7 @@ const jwtCheck = auth({
     tokenSigningAlg: 'RS256'
 });
 
-v1.use(jwtCheck)
+//v1.use(jwtCheck)
 // Rutas Excels
 v1.use('/csv', csv)
 

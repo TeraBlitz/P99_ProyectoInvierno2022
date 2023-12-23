@@ -51,10 +51,10 @@ async function createClase(req, res) {
         ];
 
         const result = await collection.insertMany(doc);
-        for( let i = 0; i < result.insertedCount; i++)
-        res.send(
-            `Un documento fue insertado con el ID: ${result.insertedIds[i]}`
-        );
+        for (let i = 0; i < result.insertedCount; i++)
+            res.send(
+                `Un documento fue insertado con el ID: ${result.insertedIds[i]}`
+            );
     } catch (err) {
         res.send(`ERROR: ${err}`);
     }
@@ -105,7 +105,7 @@ async function updateClase(req, res) {
         );
     } catch (err) {
         res.send(`updateClase ERROR: ${err}`);
-    } 
+    }
 
 }
 // Test updateClase
@@ -148,36 +148,36 @@ async function findClase(req, res) {
         let key = "";
         let value = "";
         if (req.body.nombre_curso) {
-        key = " nombre_curso";
-        value = req.body.nombre_curso;
-        query = { nombre_curso: value };
+            key = " nombre_curso";
+            value = req.body.nombre_curso;
+            query = { nombre_curso: value };
         } else if (req.body.nivel) {
-        key = "nivel";
-        value = req.body.nivel;
-        id = req.body._id;
-        query = { nivel: value };
+            key = "nivel";
+            value = req.body.nivel;
+            id = req.body._id;
+            query = { nivel: value };
         } else if (req.body.matriculaProfesor) {
-        key = "matriculaProfesor";
-        value = req.body.matriculaProfesor;
-        id = req.body._id;
-        query = { matriculaProfesor: value };
+            key = "matriculaProfesor";
+            value = req.body.matriculaProfesor;
+            id = req.body._id;
+            query = { matriculaProfesor: value };
         } else if (req.body.frecuencia_semanal) {
-        key = "frecuencia_semanal";
-        value = req.body.frecuencia_semanal;
-        id = req.body._id;
-        query = { frecuencia_semanal: value };
+            key = "frecuencia_semanal";
+            value = req.body.frecuencia_semanal;
+            id = req.body._id;
+            query = { frecuencia_semanal: value };
         } else if (req.body.cupo_maximo) {
-        key = "cupo_maximo";
-        value = req.body.cupo_maximo;
-        id = req.body._id;
-        query = { cupo_maximo: value };
+            key = "cupo_maximo";
+            value = req.body.cupo_maximo;
+            id = req.body._id;
+            query = { cupo_maximo: value };
         } else if (req.body.cupo_actual) {
-        key = "cupo_actual";
-        value = req.body.cupo_actual;
-        id = req.body._id;
-        query = { cupo_actual: value };
+            key = "cupo_actual";
+            value = req.body.cupo_actual;
+            id = req.body._id;
+            query = { cupo_actual: value };
         } else {
-        throw "parametros invalidos";
+            throw "parametros invalidos";
         }
         const result = await collection.find(query).toArray();
         if (result == "") {
@@ -190,10 +190,104 @@ async function findClase(req, res) {
     }
 }
 
+
+
+async function getClasesDisp_ByPeriod(req, res) {
+
+    //first filter the clases by period
+    //the in the period extract the intial time and final time o the fecha_inicio_insc_talleres and fecha_fin_insc_talleres  - fecha_inicio_insc_idiomas -fecha_fin_insc_idiomas fecha_inicio_insc_asesorias - fecha_fin_insc_asesorias
+    //yhen oly return te open clases
+
+    let period = req.params.period
+    const database = clientConnect.db(mongodbInf.database);
+    console.log("period params",period);
+
+    if (period == "null") {
+        //get the most recent period
+        console.log("retorna el mas reciente");   
+        const dbPeriodrecent = database.collection("periodos");
+        const resultPeriodrecent = await dbPeriodrecent.find().sort({ _id: -1 }).limit(1).toArray();
+        period = resultPeriodrecent[0].clave;
+        console.log("period",period);
+
+        const collection = database.collection("clases");
+        const clases_from_period = await collection.find({ clave: period }).toArray();
+    
+        res.send(clases_from_period);
+        return;
+
+    }
+
+    const mostRecentPeriod = await database.collection("periodos").find().sort({ _id: -1 }).limit(1).toArray();
+    const mostRecentPeriodClave = mostRecentPeriod[0].clave;
+
+
+    if (period != mostRecentPeriodClave) {
+        console.log("retorna la data de ese periodo");
+
+        const collection = database.collection("clases");
+        const clases_from_period = await collection.find({ clave: period }).toArray();
+
+        res.send(clases_from_period);
+        return;
+
+    }
+
+
+
+    const collection = database.collection("clases");
+    const dbPeriod = database.collection("periodos");
+    const resultPeriod = await dbPeriod.find({ clave: period }).toArray();
+
+    const fecha_inicio_insc_talleres =  new Date(resultPeriod[0].fecha_inicio_insc_talleres).toLocaleString("en-US", { timeZone: "America/Mexico_City" });
+    const fecha_fin_insc_talleres = new Date(resultPeriod[0].fecha_fin_insc_talleres).toLocaleString("en-US", { timeZone: "America/Mexico_City" });
+    const fecha_inicio_insc_idiomas = new Date(resultPeriod[0].fecha_inicio_insc_idiomas).toLocaleString("en-US", { timeZone: "America/Mexico_City" });
+    const fecha_fin_insc_idiomas = new Date(resultPeriod[0].fecha_fin_insc_idiomas).toLocaleString("en-US", { timeZone: "America/Mexico_City" });
+    const fecha_inicio_insc_asesorias = new Date(resultPeriod[0].fecha_inicio_insc_asesorias).toLocaleString("en-US", { timeZone: "America/Mexico_City" });
+    const fecha_fin_insc_asesorias = new Date(resultPeriod[0].fecha_fin_insc_asesorias).toLocaleString("en-US", { timeZone: "America/Mexico_City" });
+
+    const clases_from_period = await collection.find({ clave: period }).toArray();
+
+    const clases_talleres = clases_from_period.filter(clase => clase.area === "talleres");
+    const clases_idiomas = clases_from_period.filter(clase => clase.area === "idiomas");
+    const clases_asesorias = clases_from_period.filter(clase => clase.area === "asesorias");
+
+
+    //set date time mexico city in this format 2023-12-19T16:30:00 
+
+    const currendDate = new Date().toLocaleString("en-US", { timeZone: "America/Mexico_City" });
+    console.log("today",currendDate);
+    console.log("tallers",fecha_inicio_insc_talleres);
+
+    let clases_open = [];
+
+    if (currendDate >= fecha_inicio_insc_talleres && currendDate <= fecha_fin_insc_talleres) {
+        console.log("talleres open");
+        clases_open = clases_open.concat(clases_talleres);
+    } if (currendDate >= fecha_inicio_insc_idiomas && currendDate <= fecha_fin_insc_idiomas) {
+        clases_open = clases_open.concat(clases_idiomas);
+        console.log("idiomas open");
+    } if (currendDate >= fecha_inicio_insc_asesorias && currendDate <= fecha_fin_insc_asesorias) {
+        clases_open = clases_open.concat(clases_asesorias);
+        console.log("asesorias open");
+    } 
+
+    if (clases_open.length === 0) {
+        res.send([]);
+        return;
+    }
+
+
+    res.send(clases_open);
+
+}
+
+
 export {
     getAllClase,
     createClase,
     updateClase,
     deleteClase,
     findClase,
+    getClasesDisp_ByPeriod
 };

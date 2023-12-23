@@ -42,6 +42,8 @@ export default function Periodos() {
   const getAllPeriodos = async () => {
     getPeriodos().then((response) => response.json()).then((result) => {
       setData(result);
+
+      console.log("result", result);
     });
   };
 
@@ -77,6 +79,7 @@ export default function Periodos() {
       [name]: name.includes('fecha') ? `${value}:00` : value,
     }));
   };
+
 
   const modalSubmit = async (e) => {
     e.preventDefault();
@@ -116,13 +119,26 @@ export default function Periodos() {
           cursos_max_por_alumno: consolaSeleccionada.cursos_max_por_alumno,
           idiomas_max_por_alumno: consolaSeleccionada.idiomas_max_por_alumno,
         });
+
       }
+
       abrirCerrarModal();
-      getAllPeriodos();
+
+      getPeriodos().then((response) => response.json()).then((result) => {
+        setData(result);
+  
+        console.log("result", result);
+      });
+ 
+
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    console.log('data', data);
+  }, [data]);
 
   return (
     <div>
@@ -136,7 +152,11 @@ export default function Periodos() {
       >
         Nuevo Periodo
       </Button>
-      <div className="card-grid">
+      <div className="card-grid"
+      
+        key = {openModal}
+      
+      >
         {Array.isArray(data) ? data.map((item) => (
           <PeriodoCard
             dataClase={dataClase}
