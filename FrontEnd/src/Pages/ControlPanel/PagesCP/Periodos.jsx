@@ -9,6 +9,9 @@ import {
 } from '../../../api/Periodos';
 import { getClasses } from '../../../api/classes';
 
+import ClipLoader from "react-spinners/ClipLoader";
+
+
 const periodoVacio = {
   _id: '',
   clave: '',
@@ -28,10 +31,38 @@ const periodoVacio = {
 export default function Periodos() {
   const [data, setData] = useState([]);
   const [dataClase, setDataClase] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+
   const [dataAlumnoClase, setDataAlumnoClase] = useState([]);
-  const [openModal, setOpenModal] = useState(false);
+
+  const [openModal, setOpenModal] = useState({
+    open: false,
+    id: '',
+    type: '',
+  });
+
   const [consolaSeleccionada, setConsolaSeleccionada] = useState(periodoVacio);
+
   const [currentOperation, setCurrentOperation] = useState('');
+
+  const [form_data, setForm_data] = useState({
+
+    clave: '',
+    status: '',
+    fecha_inicio: '',
+    fecha_fin: '',
+    fecha_inicio_insc_talleres: '',
+    fecha_fin_insc_talleres: '',
+    fecha_inicio_insc_idiomas: '',
+    fecha_fin_insc_idiomas: '',
+    fecha_inicio_insc_asesorias: '',
+    fecha_fin_insc_asesorias: '',
+    cursos_max_por_alumno: '',
+    idiomas_max_por_alumno: '',
+
+  })
+
 
   const getClase = async () => {
     await getClasses().then((response) => response.json()).then((result) => {
@@ -40,11 +71,13 @@ export default function Periodos() {
   };
 
   const getAllPeriodos = async () => {
+    setLoading(true);
     getPeriodos().then((response) => response.json()).then((result) => {
       setData(result);
-
       console.log("result", result);
+    setLoading(false);
     });
+    
   };
 
   // const getAlumnoClase = async () => {
@@ -54,30 +87,33 @@ export default function Periodos() {
 
   useEffect(() => {
     getAllPeriodos();
-    getClase();
+    //getClase();
   }, []);
 
-  const abrirCerrarModal = () => {
-    if (openModal) {
-      setConsolaSeleccionada(periodoVacio);
+  useEffect(() => {
+    if (openModal.open == false) {
+      getAllPeriodos();
     }
-    setOpenModal(!openModal);
+  }, [openModal]);
+
+  const abrirCerrarModal = (id) => {
+    if (openModal.open) {
+      setOpenModal({ open: false, id: id });
+    } else {
+      setOpenModal({ open: true, id: id });
+    }
   };
 
   // Funcion para seleccionar el periodo a crear, eliminar o editar
-  const seleccionarConsola = (consola, caso) => {
-    setConsolaSeleccionada(consola);
-    setCurrentOperation(caso);
-    abrirCerrarModal();
-  };
+
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    //fill the form_data
+    setForm_data({
+      ...form_data,
+      [e.target.name]: e.target.value
+    })
 
-    setConsolaSeleccionada((prevState) => ({
-      ...prevState,
-      [name]: name.includes('fecha') ? `${value}:00` : value,
-    }));
   };
 
 
@@ -126,10 +162,10 @@ export default function Periodos() {
 
       getPeriodos().then((response) => response.json()).then((result) => {
         setData(result);
-  
+
         console.log("result", result);
       });
- 
+
 
     } catch (error) {
       console.log(error);
@@ -140,37 +176,63 @@ export default function Periodos() {
     console.log('data', data);
   }, [data]);
 
+  if (loading) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        zIndex: '1000'
+      }}>
+        <ClipLoader color="#004A98" loading={loading} size={80} />
+      </div>
+    );
+  }
+
+
   return (
     <div>
       <h1 className="tittle">Periodos</h1>
       <Button
         variant="contained"
-        onClick={() => { seleccionarConsola(periodoVacio, 'Crear'); }}
+        onClick={() => {
+          setOpenModal({
+            open: true,
+            id: '',
+            type: 'Crear',
+
+          })
+        }
+        }
         sx={{
           marginTop: '-15px',
         }}
       >
         Nuevo Periodo
       </Button>
+
       <div className="card-grid"
-      
-        key = {openModal}
-      
+        key={openModal}
       >
+
+
         {Array.isArray(data) ? data.map((item) => (
           <PeriodoCard
-            dataClase={dataClase}
+            openModal={openModal}
+            setOpenModal={setOpenModal}
             item={item}
-            seleccionarConsola={seleccionarConsola}
+            refreshData={getAllPeriodos}
           />
         )) : null}
+
         <ModalPeriodo
-          periodoActual={consolaSeleccionada}
+          id={openModal.id}
           openModal={openModal}
-          setOpenModal={abrirCerrarModal}
-          handleChange={handleChange}
-          onSubmit={modalSubmit}
-          operation={currentOperation}
+          setOpenModal={setOpenModal}
+          form_data={form_data}
+          setForm_data={setForm_data}
+          refreshData={getAllPeriodos}
         />
         <div className="spacer" />
       </div>
