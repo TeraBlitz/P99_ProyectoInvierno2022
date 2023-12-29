@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -25,9 +25,9 @@ function StudentProfile({
       : nivelEscolaridad[nivelEscolaridad.indexOf(studentInfo.escolaridad)],
   );
 
-  const handleChange = (e) => setStudentInfo(
-    (prevState) => ({ ...prevState, [e.target.name]: e.target.value }),
-  );
+  const handleChange = (e) => {
+    setStudentInfo({...studentData, [e.target.name]: e.target.value})
+  };
 
   const handleSubmit = (e) => {
     // Enviar esta informacion a bd
@@ -77,10 +77,12 @@ function StudentProfile({
 
         setAlertMessage('Información del estudiante actualizada correctamente.');
         setSuccessOpen(true);
+
         getStudents().then((response) => response.json()).then((data) => {
           const students = data.filter((student) => student.idUser === studentInfo.idUser);
           setStudents(students);
         });
+
         setIsEditing(!isEditing);
         setOpenStudentProfile(!openStudentProfile);
       })
@@ -97,6 +99,11 @@ function StudentProfile({
     setIsEditing(!isEditing);
     setOpenStudentProfile(!openStudentProfile);
   };
+
+  useEffect(() => {
+    console.log('e')
+    console.log(studentData)
+  }, [studentData])
 
   return (
     <Box

@@ -10,6 +10,7 @@ import Link from '@mui/material/Link';
 import Autocomplete from '@mui/material/Autocomplete';
 import { estadosMexico, nivelEscolaridad } from '../../utils/constants';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs, { Dayjs } from 'dayjs';
 
 function StudentInfo({
   userOriginState, setUserOriginState, userEducation, setUserEducation,
@@ -106,11 +107,13 @@ function StudentInfo({
         ) : null
       }
       <DatePicker
+        value={dayjs(studentData['fecha_de_nacimiento'])}
         name='fecha_de_nacimiento'
         label="Fecha de nacimiento"
         onChange={(value) => {
           const day = value['$D'] < 10 ? `0${value['$D']}` : value['$D'];
-          const date = `${value['$y']}-${value['$M']+1}-${day}`;
+          const month = value['$M']+1 < 10 ? `0${value['$M']+1}` : value['$M']+1;
+          const date = `${value['$y']}-${month}-${day}`;
 
           handleChange({
             target: {
