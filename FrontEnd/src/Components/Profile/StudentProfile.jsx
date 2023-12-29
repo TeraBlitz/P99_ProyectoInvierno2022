@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -99,11 +99,6 @@ function StudentProfile({
     setIsEditing(!isEditing);
     setOpenStudentProfile(!openStudentProfile);
   };
-
-  useEffect(() => {
-    console.log('e')
-    console.log(studentData)
-  }, [studentData])
 
   return (
     <Box
