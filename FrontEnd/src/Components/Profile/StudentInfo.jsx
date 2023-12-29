@@ -107,7 +107,7 @@ function StudentInfo({
         ) : null
       }
       <DatePicker
-        value={dayjs(studentData['fecha_de_nacimiento'])}
+        value={studentData['fecha_de_nacimiento'] ? dayjs(studentData['fecha_de_nacimiento']) : null}
         name='fecha_de_nacimiento'
         label="Fecha de nacimiento"
         onChange={(value) => {
