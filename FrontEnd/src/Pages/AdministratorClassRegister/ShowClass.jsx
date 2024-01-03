@@ -25,6 +25,7 @@ export default function ShowClass() {
   const [clase, setClase] = useState(claseActual);
   const [openModal, setOpenModal] = useState(false);
   const [currentOperation, setCurrentOperation] = useState('');
+  const [selectedRows, setSelectedRows] = useState([]);
   const [selectedPeriod, setSelectedPeriod] = useState('');
 
   const getAllPeriodos = async () => {
@@ -174,6 +175,27 @@ export default function ShowClass() {
     abrirCerrarModal();
   };
 
+  const eliminarClasesSeleccionadas = async () => {
+    if (selectedRows.length === 0) {
+        alert("No hay filas seleccionadas para eliminar.");
+        return;
+    }
+
+    const confirm = window.confirm(`¿Estás seguro de que quieres eliminar ${selectedRows.length} fila(s)?`);
+    if (!confirm) return;
+
+    try {
+        for (const id of selectedRows) {
+            await deleteClasses({ _id: id });
+        }
+        
+        await resetClases();
+        setSelectedRows([]);
+    } catch (error) {
+        console.error("Error al eliminar clases: ", error);
+    }
+  };
+
   const abrirCerrarModal = () => {
     if (openModal) {
       setClaseActual(classTemplate);
@@ -228,6 +250,9 @@ export default function ShowClass() {
         profesorList={profesorList}
         getClassWaitList={getClassWaitList}
         seleccionarClase={seleccionarClase}
+        selectedRows={selectedRows}
+        setSelectedRows={setSelectedRows}
+        eliminarClasesSeleccionadas={eliminarClasesSeleccionadas}
       />
       <ModalInscripcionClase 
         clase={clase}
