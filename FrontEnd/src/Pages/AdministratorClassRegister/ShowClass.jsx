@@ -25,6 +25,7 @@ export default function ShowClass() {
   const [clase, setClase] = useState(claseActual);
   const [openModal, setOpenModal] = useState(false);
   const [currentOperation, setCurrentOperation] = useState('');
+  const [selectedPeriod, setSelectedPeriod] = useState('');
 
   const getAllPeriodos = async () => {
     getPeriodos().then((response) => response.json()).then((result) => {
@@ -33,9 +34,7 @@ export default function ShowClass() {
   };
 
   const handleSelectChange = (event) => {
-    const filteredData = [data.filter((data) => data.clavePeriodo === event.label)].flat();
-
-    filteredData.length > 0 ? setData(filteredData) : resetClases();
+    setSelectedPeriod(event.label);
   };
 
   const getOptions = async () => {
@@ -54,7 +53,7 @@ export default function ShowClass() {
       const response = await getClasses();
       const result = await response.json();
 
-      const dataList = result.map((clase) => {
+      let dataList = result.map((clase) => {
         let fechas = '';
         let edades = '';
         let niveles = '';
@@ -99,6 +98,10 @@ export default function ShowClass() {
           nombreCompleto: `${clase.nombreProfesor} ${clase.apellidosProfesor}`,
         };
       });
+      
+      if (selectedPeriod !== '') {
+        dataList = [dataList.filter((data) => data.clavePeriodo === selectedPeriod)].flat();
+      }
 
       setData(dataList);
       getOptions();
@@ -114,6 +117,10 @@ export default function ShowClass() {
       }
     });
   };
+
+  useEffect(() => {
+    resetClases();
+  }, [selectedPeriod]);
 
   useEffect(() => {
     setClase(claseActual);
