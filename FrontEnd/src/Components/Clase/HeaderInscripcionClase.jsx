@@ -7,7 +7,6 @@ import {
 } from '@mui/material';
 import { InsertDriveFile } from '@mui/icons-material';
 import Select from 'react-select';
-import { CSVLink } from 'react-csv';
 import { subirClases, subirProfes } from '../../api/csv';
 
 function HeaderInscripcionClase({
@@ -114,15 +113,6 @@ function HeaderInscripcionClase({
           Clases
         </Typography>
       </Box>
-      <CSVLink data={data} filename="alumnos.csv">
-        <Button
-          color="primary"
-          variant="contained"
-          sx={{ position: 'absolute', marginLeft: '400px', marginTop: '52px' }}
-        >
-          Exportar a CSV
-        </Button>
-      </CSVLink>
       <Button
         variant="contained"
         color="success"
