@@ -20,13 +20,13 @@ function Sidebar(props) {
             key: 0,
             title: 'Inicio',
             content: 'Inicio',
-            rol: 'any'
+            rol: 'estudiante'
         },
         {
             key: 1,
             title: 'Perfil',
             content: 'Profile',
-            rol: 'any'
+            rol: 'estudiante'
         },
         {
             key: 2,
