@@ -85,7 +85,6 @@ function Sidebar(props) {
         </List >
     )
 
-
     return (
         <Box>
             <Drawer variant="permanent" sx={{ width: '240px', height: '100vh', display: { xs: 'none', sm: 'block' } }}>
