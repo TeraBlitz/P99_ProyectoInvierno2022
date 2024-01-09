@@ -59,8 +59,21 @@ h1 {
 }
 
 .logo {
-  margin: 3rem;
+  margin: 2rem;
   width: 45%;
+}
+
+@media (max-width: 575px) {
+  .logocol {
+    display: none;
+  }
+  .facebookIcon {
+    display: none;
+  }
+  .buttonOnCollapse{
+    width: 100% !important;
+    margin-bottom: 1rem;
+  }
 }
 
 .headerText {

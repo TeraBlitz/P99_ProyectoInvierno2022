@@ -14,6 +14,7 @@ import {
     ControlOutlined,
     LogoutOutlined,
 } from '@ant-design/icons';
+import { useMediaQuery } from 'react-responsive';
 
 const { Sider } = Layout;
 
@@ -22,6 +23,7 @@ function Sidebar(props) {
     // key: identificador unico (Math.random())
     // title: como va a aparecer en el boton de la sidebar
     // content: nombre del componente renderizado en PagesToRender (app.jsx)
+    const isMobile = useMediaQuery({ maxWidth: 575 });
     const [collapsed, setCollapsed] = useState(false);
     const { user, logout } = useAuth0();
     const role = user?.p99roles ? user?.p99roles[0] == "admin" ? "admin" :  "estudiante" : ""
@@ -112,7 +114,16 @@ function Sidebar(props) {
     
     //Se cambio la lista de MUI por un Menu de Ant Design, mismo concepto con el arreglo de opciones.
     const listItems = (
-        <Sider collapsible collapsed={collapsed} onCollapse={toggleCollapsed} width={240}>
+        <Sider
+            collapsible
+            collapsed={!collapsed}
+            onCollapse={toggleCollapsed}
+            width={240}
+            style={{
+                zIndex: 1,
+                position: (isMobile && collapsed) ? 'absolute' : 'relative',
+            }}
+        >
             <Menu theme="dark" mode="vertical" style={{ height: '100vh', backgroundColor: '#406EB5' }}>
                 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
                     <img src="/logo_p99.png" style={{ width: '80px' }} alt="Logo"></img>
