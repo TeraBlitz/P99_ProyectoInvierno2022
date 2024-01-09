@@ -12,7 +12,7 @@ import CardContent from '@mui/material/CardContent';
 import Actions from './Actions';
 
 function BodyInscripcionClase({
-  data, profesorList, getClassWaitList, seleccionarClase,
+  data, profesorList, getClassWaitList, seleccionarClase, selectedRows, setSelectedRows, eliminarClasesSeleccionadas
 }) {
   const [pageSize, SetPageSize] = useState(5);
   const [items, setItems] = useState([]);
@@ -99,6 +99,15 @@ function BodyInscripcionClase({
         marginLeft: '50px',
       }}
       >
+        <Button
+          variant="contained"
+          color="error"
+          onClick={eliminarClasesSeleccionadas}
+          disabled={selectedRows.length === 0}
+        >
+          Elimanar filas
+        </Button>
+
         <DataGrid
           columns={columns}
           rows={data}
@@ -116,6 +125,11 @@ function BodyInscripcionClase({
               fontFamily: 'arial',
             },
           }}
+          checkboxSelection
+          onSelectionModelChange={(newSelectionModel) => {
+            setSelectedRows(newSelectionModel);
+          }}
+          selectionModel={selectedRows}
           disableSelectionOnClick
           filterModel={{
             items,
