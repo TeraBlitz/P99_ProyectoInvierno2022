@@ -21,7 +21,7 @@ import Select from "@mui/material/Select";
 import SearchIcon from "@mui/icons-material/Search";
 import { getStudents } from "../../api/students";
 import { getClasses } from "../../api/classes";
-import { get_available_classes } from "../../api/classes";
+import { get_available_classes, isClaseAvailable } from "../../api/classes";
 import { useAuth0 } from "@auth0/auth0-react";
 import {
   createClassStudent,
@@ -138,6 +138,37 @@ function RegistroClasesAlumnos({ changeContent }) {
   };
 
 
+  const isClassAvailable = (clase) => {
+    try {
+
+      console.log("slelectedPeriod", slelectedPeriod.clave)
+      isClaseAvailable(slelectedPeriod.clave, clase)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("data", data);
+
+          if (data == true) {
+
+            return true;
+          } else {
+
+            get_available_classes(slelectedPeriod.clave, currentStudent._id)
+              .then((response) => response.json())
+              .then((data) => {
+                console.log("data", data);
+                setClases(data);
+                setFilteredClasses(data);
+              });
+            return false;
+          }
+
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
 
   useEffect(() => {
     // const getStudentClasses = () => {
@@ -182,7 +213,8 @@ function RegistroClasesAlumnos({ changeContent }) {
     // getStudentClasses();
 
     const getStudentClasses = () => {
-      get_available_classes("null")
+
+      get_available_classes("incial", "inicial")
         .then((response) => response.json())
         .then((data) => {
           console.log("data", data);
@@ -191,6 +223,7 @@ function RegistroClasesAlumnos({ changeContent }) {
         });
 
       getPeriodosstak();
+
     };
     getStudentClasses();
 
@@ -234,10 +267,10 @@ function RegistroClasesAlumnos({ changeContent }) {
   };
 
   const nivelDict = {
-    '1' : 'Desde cero',
-    '2' : 'Con bases',
-    '3' : 'Intermedio',
-    '4' : 'Avanzado'
+    '1': 'Desde cero',
+    '2': 'Con bases',
+    '3': 'Intermedio',
+    '4': 'Avanzado'
   };
   const getNivel = (params) => {
     return nivelDict[params.row.nivel];
@@ -365,24 +398,32 @@ function RegistroClasesAlumnos({ changeContent }) {
   ];
 
   const handleClick = (clase) => {
-    if (currentStudent == null) {
-      setSelectAlertOpen(true);
-      return;
-    }
-    switch (clase.status) {
-      case "Inscrito":
-        setDialogAction("CancelarInscripcion");
-        handleOpenDialog(clase);
-        break;
-      case "ListaEspera":
-        setDialogAction("SalirLista");
-        handleOpenDialog(clase);
-        break;
-      case "":
-        Number(clase.cupo_actual) < Number(clase.cupo_maximo)
-          ? setDialogAction("Registrar")
-          : setDialogAction("ListaEspera");
-        handleOpenDialog(clase);
+
+    if (isClassAvailable(clase) == true) {
+
+      if (currentStudent == null) {
+        setSelectAlertOpen(true);
+        return;
+      }
+      switch (clase.status) {
+        case "Inscrito":
+          setDialogAction("CancelarInscripcion");
+          handleOpenDialog(clase);
+          break;
+        case "ListaEspera":
+          setDialogAction("SalirLista");
+          handleOpenDialog(clase);
+          break;
+        case "":
+          Number(clase.cupo_actual) < Number(clase.cupo_maximo)
+            ? setDialogAction("Registrar")
+            : setDialogAction("ListaEspera");
+          handleOpenDialog(clase);
+      }
+    } else {
+      
+      alert("El tiempo de inscripción ha terminado");
+   
     }
   };
 
@@ -446,7 +487,7 @@ function RegistroClasesAlumnos({ changeContent }) {
     }
     setSelectedPeriod(e.target.value);
 
-    get_available_classes(e.target.value.clave)
+    get_available_classes(e.target.value.clave, currentStudent._id)
       .then((response) => response.json())
       .then((data) => {
         console.log("data", data);
@@ -469,7 +510,7 @@ function RegistroClasesAlumnos({ changeContent }) {
     console.log("trae el periodo", slelectedPeriod.clave)
 
 
-    get_available_classes(slelectedPeriod.clave)
+    get_available_classes(slelectedPeriod.clave, e.target.value._id)
       .then((response) => response.json())
       .then((data) => {
         console.log("data", data);
@@ -619,54 +660,54 @@ function RegistroClasesAlumnos({ changeContent }) {
     return targetDateTime - now;
   };
 
-  useEffect(() => {
-    //Update the current time immediately when the component mounts
-    updateCurrentTime();
+  // useEffect(() => {
+  //   //Update the current time immediately when the component mounts
+  //   updateCurrentTime();
 
-    //Get the specific times from your selected period
-    const time1 = slelectedPeriod?.fecha_fin_insc_talleres
-    const time2 = slelectedPeriod?.fecha_fin_insc_idiomas
-    const time3 = slelectedPeriod?.fecha_fin_insc_asesorias
+  //   //Get the specific times from your selected period
+  //   const time1 = slelectedPeriod?.fecha_fin_insc_talleres
+  //   const time2 = slelectedPeriod?.fecha_fin_insc_idiomas
+  //   const time3 = slelectedPeriod?.fecha_fin_insc_asesorias
 
-    console.log("time1", time1)
-    //Calculate the time differences for each specific time
-    const timeDifference1 = calculateTimeDifference(time1);
-    const timeDifference2 = calculateTimeDifference(time2);
-    const timeDifference3 = calculateTimeDifference(time3);
+  //   console.log("time1", time1)
+  //   //Calculate the time differences for each specific time
+  //   const timeDifference1 = calculateTimeDifference(time1);
+  //   const timeDifference2 = calculateTimeDifference(time2);
+  //   const timeDifference3 = calculateTimeDifference(time3);
 
-    //Find the earliest next occurrence among all specific times
-    const earliestNextOccurrence = new Date(
-      Math.min(
-        timeDifference1 || Infinity,
-        timeDifference2 || Infinity,
-        timeDifference3 || Infinity
-      )
-    );
+  //   //Find the earliest next occurrence among all specific times
+  //   const earliestNextOccurrence = new Date(
+  //     Math.min(
+  //       timeDifference1 || Infinity,
+  //       timeDifference2 || Infinity,
+  //       timeDifference3 || Infinity
+  //     )
+  //   );
 
-    console.log("earliestNextOccurrence", earliestNextOccurrence)
+  //   console.log("earliestNextOccurrence", earliestNextOccurrence)
 
-    //Set up an interval to update the current time and execute your function
-    const intervalId = setInterval(() => {
-      updateCurrentTime();
+  //   //Set up an interval to update the current time and execute your function
+  //   const intervalId = setInterval(() => {
+  //     updateCurrentTime();
 
-      if (currentTime == time1 || currentTime == time2 || currentTime == time3) {
-        get_available_classes(slelectedPeriod.clave)
-          .then((response) => response.json())
-          .then((data) => {
-            console.log("data", data);
-            setClases(data);
-            setFilteredClasses(data);
-          }
-          );
-        setUpdator(updator + 1);
-      }
+  //     if (currentTime == time1 || currentTime == time2 || currentTime == time3) {
+  //       get_available_classes(slelectedPeriod.clave)
+  //         .then((response) => response.json())
+  //         .then((data) => {
+  //           console.log("data", data);
+  //           setClases(data);
+  //           setFilteredClasses(data);
+  //         }
+  //         );
+  //       setUpdator(updator + 1);
+  //     }
 
 
-    }, earliestNextOccurrence);
+  //   }, earliestNextOccurrence);
 
-    //Clean up the interval when the component unmounts
-    return () => clearInterval(intervalId);
-  }, [slelectedPeriod]);
+  //   //Clean up the interval when the component unmounts
+  //   return () => clearInterval(intervalId);
+  // }, [slelectedPeriod]);
 
 
   if (!students || !clases || !periodos) {

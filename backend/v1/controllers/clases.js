@@ -197,91 +197,179 @@ async function getClasesDisp_ByPeriod(req, res) {
     //first filter the clases by period
     //the in the period extract the intial time and final time o the fecha_inicio_insc_talleres and fecha_fin_insc_talleres  - fecha_inicio_insc_idiomas -fecha_fin_insc_idiomas fecha_inicio_insc_asesorias - fecha_fin_insc_asesorias
     //yhen oly return te open clases
+    function parseDateString(dateString) {
+        var dateComponents = dateString.split(/[\s,/:]+/);
 
-    let period = req.params.period
+        var year = parseInt(dateComponents[2]);
+        var month = parseInt(dateComponents[0]) - 1;
+        var day = parseInt(dateComponents[1]);
+        var hours = parseInt(dateComponents[3]);
+        var minutes = parseInt(dateComponents[4]);
+        var seconds = parseInt(dateComponents[5]);
+
+        return new Date(year, month, day, hours, minutes, seconds);
+    }
+
+
+    let period = req.params.period || null;
+    let alumno = req.params.alumno || null;
+
     const database = clientConnect.db(mongodbInf.database);
-    console.log("period params",period);
+    console.log("period params", period);
 
-    if (period == "null") {
-        //get the most recent period
-        console.log("retorna el mas reciente");   
-        const dbPeriodrecent = database.collection("periodos");
-        const resultPeriodrecent = await dbPeriodrecent.find().sort({ _id: -1 }).limit(1).toArray();
-        period = resultPeriodrecent[0].clave;
-        console.log("period",period);
+    //if period is null  or undefined return the most recent period
+    if (period == 'inicial' || alumno == 'inicial') {
+        console.log("period is null or undefined");
+        try {
+            // Get the most recent period
+            console.log("Retrieving the most recent period...");
+            const dbPeriodrecent = database.collection("periodos");
+            const resultPeriodrecent = await dbPeriodrecent.find().sort({ _id: -1 }).limit(1).toArray();
+
+            // Update period with the most recent one
+            period = resultPeriodrecent[0].clave;
+            console.log("period", period);
+
+            // Fetch classes for the most recent period
+            const collection = database.collection("clases");
+            const clases_from_period = await collection.find({ clavePeriodo: period }).toArray();
+
+            res.send(clases_from_period);
+        } catch (error) {
+            console.error("Error retrieving classes:", error);
+            res.status(500).send("Internal Server Error");
+        }
+    } else {
 
         const collection = database.collection("clases");
-        const clases_from_period = await collection.find({ clave: period }).toArray();
-    
-        res.send(clases_from_period);
-        return;
+        const dbPeriod = database.collection("periodos");
+        const resultPeriod = await dbPeriod.find({ clave: period }).toArray();
+        const options = { timeZone: 'America/Monterrey', hour12: false };
+
+
+        const fecha_inicio_insc_talleres = new Date(resultPeriod[0].fecha_inicio_insc_talleres).toLocaleString('en-US', options)
+        const fecha_fin_insc_talleres = new Date(resultPeriod[0].fecha_fin_insc_talleres).toLocaleString('en-US', options)
+        const fecha_inicio_insc_idiomas = new Date(resultPeriod[0].fecha_inicio_insc_idiomas).toUTCString().toLocaleString('en-US', options)
+        const fecha_fin_insc_idiomas = new Date(resultPeriod[0].fecha_fin_insc_idiomas).toUTCString().toLocaleString('en-US', options)
+        const fecha_inicio_insc_asesorias = new Date(resultPeriod[0].fecha_inicio_insc_asesorias).toUTCString().toLocaleString('en-US', options)
+        const fecha_fin_insc_asesorias = new Date(resultPeriod[0].fecha_fin_insc_asesorias).toUTCString().toLocaleString('en-US', options)
+
+        const clases_from_period = await collection.find({ clavePeriodo: period }).toArray();
+
+        const clases_talleres = clases_from_period.filter(clase => clase.area === "talleres" || clase.area === "Talleres");
+        const clases_idiomas = clases_from_period.filter(clase => clase.area === "idiomas" || clase.area === "Idiomas");
+        const clases_asesorias = clases_from_period.filter(clase => clase.area === "asesorias" || clase.area === "Asesorias");
+
+
+        //set date time mexico city in this format 2023-12-19T16:30:00 
+        const utcTime = new Date();
+        const currentDate = new Date(utcTime.getTime() - (utcTime.getTimezoneOffset() * 60000));
+
+
+        console.log("currentDate", currentDate)
+        console.log("fecha_inicio_insc_talleres", parseDateString(fecha_inicio_insc_talleres))
+        console.log("fecha_fin_insc_talleres", parseDateString(fecha_fin_insc_talleres))
+
+
+        let clases_open = [];
+
+        if (currentDate >= parseDateString(fecha_inicio_insc_talleres) && currentDate <= parseDateString(fecha_fin_insc_talleres)) {
+            console.log("talleres open");
+
+            clases_open = clases_open.concat(clases_talleres);
+
+        } if (currentDate >= fecha_inicio_insc_idiomas && currentDate <= fecha_fin_insc_idiomas) {
+            clases_open = clases_open.concat(clases_idiomas);
+            console.log("idiomas open");
+        } if (currentDate >= fecha_inicio_insc_asesorias && currentDate <= fecha_fin_insc_asesorias) {
+            clases_open = clases_open.concat(clases_asesorias);
+            console.log("asesorias open");
+        }
+        if (clases_open.length === 0) {
+            console.log("no classes open");
+            res.send([]);
+            return;
+        }
+
+        res.send(clases_open);
+
+
 
     }
 
-    const mostRecentPeriod = await database.collection("periodos").find().sort({ _id: -1 }).limit(1).toArray();
-    const mostRecentPeriodClave = mostRecentPeriod[0].clave;
+    // const mostRecentPeriod = await database.collection("periodos").find().sort({ _id: -1 }).limit(1).toArray();
+
+    // const mostRecentPeriodClave = mostRecentPeriod[0].clavePeriodo;
+
+    // console.log("mostRecentPeriodClave",mostRecentPeriodClave);
+
+    // if (period != mostRecentPeriodClave) {
+    //     console.log("retorna la data de ese periodo");
+
+    //     const collection = database.collection("clases");
+    //     const clases_from_period = await collection.find({ clavePeriodo: period }).toArray();
+
+    //     res.send(clases_from_period);
+    //     return;
+
+    // }
 
 
-    if (period != mostRecentPeriodClave) {
-        console.log("retorna la data de ese periodo");
 
-        const collection = database.collection("clases");
-        const clases_from_period = await collection.find({ clave: period }).toArray();
-
-        res.send(clases_from_period);
-        return;
-
-    }
-
-
-
-    const collection = database.collection("clases");
-    const dbPeriod = database.collection("periodos");
-    const resultPeriod = await dbPeriod.find({ clave: period }).toArray();
-
-    const fecha_inicio_insc_talleres =  new Date(resultPeriod[0].fecha_inicio_insc_talleres).toLocaleString("en-US", { timeZone: "America/Mexico_City" });
-    const fecha_fin_insc_talleres = new Date(resultPeriod[0].fecha_fin_insc_talleres).toLocaleString("en-US", { timeZone: "America/Mexico_City" });
-    const fecha_inicio_insc_idiomas = new Date(resultPeriod[0].fecha_inicio_insc_idiomas).toLocaleString("en-US", { timeZone: "America/Mexico_City" });
-    const fecha_fin_insc_idiomas = new Date(resultPeriod[0].fecha_fin_insc_idiomas).toLocaleString("en-US", { timeZone: "America/Mexico_City" });
-    const fecha_inicio_insc_asesorias = new Date(resultPeriod[0].fecha_inicio_insc_asesorias).toLocaleString("en-US", { timeZone: "America/Mexico_City" });
-    const fecha_fin_insc_asesorias = new Date(resultPeriod[0].fecha_fin_insc_asesorias).toLocaleString("en-US", { timeZone: "America/Mexico_City" });
-
-    const clases_from_period = await collection.find({ clave: period }).toArray();
-
-    const clases_talleres = clases_from_period.filter(clase => clase.area === "talleres");
-    const clases_idiomas = clases_from_period.filter(clase => clase.area === "idiomas");
-    const clases_asesorias = clases_from_period.filter(clase => clase.area === "asesorias");
-
-
-    //set date time mexico city in this format 2023-12-19T16:30:00 
-
-    const currendDate = new Date().toLocaleString("en-US", { timeZone: "America/Mexico_City" });
-    console.log("today",currendDate);
-    console.log("tallers",fecha_inicio_insc_talleres);
-
-    let clases_open = [];
-
-    if (currendDate >= fecha_inicio_insc_talleres && currendDate <= fecha_fin_insc_talleres) {
-        console.log("talleres open");
-        clases_open = clases_open.concat(clases_talleres);
-    } if (currendDate >= fecha_inicio_insc_idiomas && currendDate <= fecha_fin_insc_idiomas) {
-        clases_open = clases_open.concat(clases_idiomas);
-        console.log("idiomas open");
-    } if (currendDate >= fecha_inicio_insc_asesorias && currendDate <= fecha_fin_insc_asesorias) {
-        clases_open = clases_open.concat(clases_asesorias);
-        console.log("asesorias open");
-    } 
-
-    if (clases_open.length === 0) {
-        res.send([]);
-        return;
-    }
-
-
-    res.send(clases_open);
 
 }
 
+
+async function isClaseAvailable(req, res) {
+
+    let clase = req.params.clase || null;
+    let periodo = req.params.periodo || null;
+
+    console.log("clase", clase);
+    console.log("periodo", periodo);
+
+    const database = clientConnect.db(mongodbInf.database);
+    const dbPeriod = database.collection("periodos");
+    const resultPeriod = await dbPeriod.find({ clave: periodo }).toArray();
+    const options = { timeZone: 'America/Monterrey', hour12: false };
+
+
+    const fecha_inicio_insc_talleres = new Date(resultPeriod[0].fecha_inicio_insc_talleres).toLocaleString('en-US', options)
+    const fecha_fin_insc_talleres = new Date(resultPeriod[0].fecha_fin_insc_talleres).toLocaleString('en-US', options)
+    const fecha_inicio_insc_idiomas = new Date(resultPeriod[0].fecha_inicio_insc_idiomas).toUTCString().toLocaleString('en-US', options)
+    const fecha_fin_insc_idiomas = new Date(resultPeriod[0].fecha_fin_insc_idiomas).toUTCString().toLocaleString('en-US', options)
+    const fecha_inicio_insc_asesorias = new Date(resultPeriod[0].fecha_inicio_insc_asesorias).toUTCString().toLocaleString('en-US', options)
+    const fecha_fin_insc_asesorias = new Date(resultPeriod[0].fecha_fin_insc_asesorias).toUTCString().toLocaleString('en-US', options)
+
+    const utcTime = new Date();
+    const currentDate = new Date(utcTime.getTime() - (utcTime.getTimezoneOffset() * 60000));
+
+
+    let tipo_clase = clase.area;
+
+    if (tipo_clase === "talleres" || tipo_clase === "Talleres") {
+        if (currentDate >= parseDateString(fecha_inicio_insc_talleres) && currentDate <= parseDateString(fecha_fin_insc_talleres)) {
+            res.send(true);
+        } else {
+            res.send(false);
+        }
+    } else if (tipo_clase === "idiomas" || tipo_clase === "Idiomas") {
+        if (currentDate >= fecha_inicio_insc_idiomas && currentDate <= fecha_fin_insc_idiomas) {
+            res.send(true);
+        } else {
+            res.send(false);
+        }
+    } else if (tipo_clase === "asesorias" || tipo_clase === "Asesorias") {
+        if (currentDate >= fecha_inicio_insc_asesorias && currentDate <= fecha_fin_insc_asesorias) {
+            res.send(true);
+        } else {
+            res.send(false);
+        }
+    } else {
+        res.send(false);
+    }
+
+}
 
 export {
     getAllClase,
@@ -289,5 +377,6 @@ export {
     updateClase,
     deleteClase,
     findClase,
-    getClasesDisp_ByPeriod
+    getClasesDisp_ByPeriod,
+    isClaseAvailable
 };
