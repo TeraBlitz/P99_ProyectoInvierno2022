@@ -1,26 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
 body {
+  font-family: 'Inter', sans-serif;
   height: 100%;
   overflow-y: hidden;
 }
-a{
+
+h4 {
+  height: 100%;
+  overflow-y: hidden;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+a {
   color: #d5a419;
 }
-p{
-  font-size: 20px;
-  color: #4472c1;
+
+h2 {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  color: black;
+  font-style: italic;
+  padding-top: 2rem;
+}
+
+p {
+  font-family: 'Inter', sans-serif;
+  font-size: 35px;
+  color: black;
   line-height: 1.5;
 }
-.subHeader{
+
+h1 {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: #406EB5;
+  line-height: 1.5;
+}
+
+.subHeader {
   font-size: 30px;
   margin-bottom: 3%;
   color: #d5a419;
 }
 
 .container {
-
   align-items: center;
   justify-content: center;
-
 }
 
 .container2 {
@@ -28,16 +55,16 @@ p{
   align-items: center;
   height: 25vh;
   gap: 40px;
-  grid-template-columns: repeat(auto-fit,minmax(275px,1fr));
+  grid-template-columns: repeat(auto-fit, minmax(275px, 1fr));
 }
 
 .logo {
-  margin-left: 10%;
-  width: 250px;
-
+  margin: 3rem;
+  width: 45%;
 }
-.headerText{
-  font-family:Arial, Helvetica, sans-serif;
+
+.headerText {
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: 100;
   width: 35%;
   font-size: 4vw;
@@ -45,18 +72,20 @@ p{
   text-align: center;
 }
 
-.containerBody{
+.containerBody {
   margin-top: 3%;
   width: 100%;
   display: grid;
   gap: 40px;
-  grid-template-columns: repeat(auto-fit,minmax(275px,1fr));
+  grid-template-columns: repeat(auto-fit, minmax(275px, 1fr));
   margin-bottom: 3%;
 }
-.textColumn{
+
+.textColumn {
   text-align: center;
 }
-.footerContainer{
+
+.footerContainer {
   width: 300px;
   margin-top: 50px;
   margin-bottom: 50px;
@@ -67,17 +96,15 @@ p{
   display: flex;
   text-align: center;
   border: 3px solid #4472c1;
-
 }
 
-.footerText{
+.footerText {
   font-weight: 800;
   line-height: normal;
   width: 32vh;
   margin: auto;
-
-
 }
-.spacerMobile{
+
+.spacerMobile {
   height: 70px;
 }

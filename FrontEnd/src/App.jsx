@@ -94,7 +94,7 @@ function App() {
 
         Profesores: <Profesores />,
 
-        Inicio: <Inicio />,
+        Inicio: <Inicio changeContent = {changeContent}/>,
 
     }
 
@@ -112,10 +112,6 @@ function App() {
                             height: 'auto',
                             overflow: 'scroll'
                         }}>
-                            <IconButton sx={{ bgcolor: 'primary.light', height: 'fit-content', borderRadius: 1, display: { xs: 'block', sm: 'none' }, position: 'fixed', zIndex: 1000, top: '3px', left: '3px' }} onClick={() => setOpen(!open)}>
-
-                                <MenuIcon />
-                            </IconButton>
                             <div style={{ width: 'calc(100vw-240px)', height: '100vh' }}>
                                 {PagesToRender[content]}
                                 <Snackbar open={snack}>

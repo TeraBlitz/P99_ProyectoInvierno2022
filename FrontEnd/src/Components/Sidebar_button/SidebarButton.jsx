@@ -2,6 +2,8 @@ import React from 'react'
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 
+//Este codigo ya no es necesario. Se puede borrar.
+
 function SidebarButton(props) {
     const handleClick = () => {
         props.changeContent(props.content)
