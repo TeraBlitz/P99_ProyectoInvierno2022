@@ -4,6 +4,7 @@ import {
   TextField,
   Box,
   Typography,
+  Autocomplete,
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
@@ -63,14 +64,30 @@ function BodyInscripcionClase({
     [data, profesorList],
   );
 
-  const createTextField = (label, filterState, setFilterState) => (
-    <TextField
+  const cursoOptions = [...new Set(data.map(item => item.nombre_curso))].sort((a, b) => {
+    return a.localeCompare(b);
+  });
+  const nivelOptions = [
+    'desde cero',
+    'con bases',
+    'intermedio',
+    'avanzado'
+  ];
+  const profesorOptions = [...new Set(data.map(item => item.nombreCompleto))].sort((a, b) => {
+    return a.localeCompare(b);
+  });
+
+  const createAutocompleteField = (label, filterState, setFilterState, options) => (
+    <Autocomplete
       style={{
         paddingBottom: '5px', fontFamily: 'arial', width: 330, marginLeft: '30px',
       }}
-      label={label}
       value={filterState}
-      onChange={(e) => setFilterState(e.target.value)}
+      onChange={(event, newValue) => setFilterState(newValue)}
+      freeSolo
+      options={options}
+      getOptionLabel={(option) => option}
+      renderInput={(params) => <TextField {...params} label={label} />}
     />
   );
 
@@ -96,9 +113,11 @@ function BodyInscripcionClase({
           >
             Filtros
           </Typography>
-          {createTextField('Curso', cursoFilter, setCursoFilter)}
-          {createTextField('Nivel', nivelFilter, setNivelFilter)}
-          {createTextField('Profesor', profesorFilter, setProfesorFilter)}
+          <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
+            {createAutocompleteField('Curso', cursoFilter, setCursoFilter, cursoOptions)}
+            {createAutocompleteField('Nivel', nivelFilter, setNivelFilter, nivelOptions)}
+            {createAutocompleteField('Profesor', profesorFilter, setProfesorFilter, profesorOptions)}
+          </Box>
         </CardContent>
       </Card>
       <Box sx={{
