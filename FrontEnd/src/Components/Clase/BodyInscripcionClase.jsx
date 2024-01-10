@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   TextField,
@@ -15,7 +15,18 @@ function BodyInscripcionClase({
   data, profesorList, getClassWaitList, seleccionarClase, selectedRows, setSelectedRows, eliminarClasesSeleccionadas
 }) {
   const [pageSize, SetPageSize] = useState(5);
-  const [items, setItems] = useState([]);
+  const [cursoFilter, setCursoFilter] = useState('');
+  const [nivelFilter, setNivelFilter] = useState('');
+  const [profesorFilter, setProfesorFilter] = useState('');
+
+  const filteredData = data.filter(item => {
+    const cursoMatch = cursoFilter ? item.nombre_curso.toLowerCase().includes(cursoFilter.toLowerCase()) : true;
+    const nivelMatch = nivelFilter ? item.niveles.toLowerCase().includes(nivelFilter.toLowerCase()) : true;
+    const profesorMatch = profesorFilter ? item.nombreCompleto.toLowerCase().includes(profesorFilter.toLowerCase()) : true;
+
+    return cursoMatch && nivelMatch && profesorMatch;
+  });
+
 
   const columns = useMemo(
     () => [
@@ -52,15 +63,14 @@ function BodyInscripcionClase({
     [data, profesorList],
   );
 
-  const createTextField = (label, columnField, operatorValue, setValue) => (
+  const createTextField = (label, filterState, setFilterState) => (
     <TextField
       style={{
         paddingBottom: '5px', fontFamily: 'arial', width: 330, marginLeft: '30px',
       }}
       label={label}
-      onChange={(e) => {
-        setValue([{ columnField, operatorValue, value: e.target.value }]);
-      }}
+      value={filterState}
+      onChange={(e) => setFilterState(e.target.value)}
     />
   );
 
@@ -86,9 +96,9 @@ function BodyInscripcionClase({
           >
             Filtros
           </Typography>
-          {createTextField('Curso', 'nombre_curso', 'contains', setItems)}
-          {createTextField('Nivel', 'niveles', 'contains', setItems)}
-          {createTextField('Profesor', 'nombreCompleto', 'contains', setItems)}
+          {createTextField('Curso', cursoFilter, setCursoFilter)}
+          {createTextField('Nivel', nivelFilter, setNivelFilter)}
+          {createTextField('Profesor', profesorFilter, setProfesorFilter)}
         </CardContent>
       </Card>
       <Box sx={{
@@ -110,7 +120,7 @@ function BodyInscripcionClase({
 
         <DataGrid
           columns={columns}
-          rows={data}
+          rows={filteredData}
           getRowId={(row) => row._id}
           rowsPerPageOptions={[5, 10, 20]}
           pageSize={pageSize}
@@ -131,9 +141,6 @@ function BodyInscripcionClase({
           }}
           selectionModel={selectedRows}
           disableSelectionOnClick
-          filterModel={{
-            items,
-          }}
         />
       </Box>
     </>
