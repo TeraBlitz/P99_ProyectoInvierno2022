@@ -40,42 +40,35 @@ export const compararFecha = (data) => {
   return periodos[0];
 }
 
-// -------------------Funcion para contar cursos en periodo actual
-export const contarClases = (datos, periodoActual) => {
-  console.log('Este es la data inicial', datos);
-  let contadorClases = 0;
-
-  datos.forEach((element) => {
-    // console.log("Periodo: ", element.clavePeriodo)
-    if (element.clavePeriodo === periodoActual) {
-      contadorClases += 1;
-    }
-  });
-
-  // console.log("Clases",contadorClases)
-  return (contadorClases);
+// -------------------- Function para contar alumnos
+export const contarAlumnos = (datos, periodoActual) => {
+  const students = datos.filter((element) => element.idPeriodo === periodoActual);
+  return students.length;
 }
 
 // ---------------------------Funcion para contar profesores actuales
 export const contarProfes = (datos, periodoActual) => {
   const listaProfes = [];
   datos.forEach((element) => {
-    if (element.clavePeriodo === periodoActual) {
-      if (listaProfes.includes(element.matriculaProfesor)) {
-
-      } else {
-        listaProfes.push(element.matriculaProfesor);
-      }
+    if (element.clavePeriodo === periodoActual && !listaProfes.includes(element.matriculaProfesor)) {
+      listaProfes.push(element.matriculaProfesor);
     }
   });
-  console.log(listaProfes);
+  
   return (listaProfes.length);
 }
 
-// -------------------- Function para contar alumnos
-export const contarAlumnos = (datos, periodoActual) => {
-  const students = datos.filter((element) => element.idPeriodo === periodoActual);
-  return students.length;
+// -------------------Funcion para contar cursos en periodo actual
+export const contarClases = (datos, periodoActual) => {
+  let contadorClases = 0;
+
+  datos.forEach((element) => {
+    if (element.clavePeriodo === periodoActual) {
+      contadorClases += 1;
+    }
+  });
+
+  return (contadorClases);
 }
 
 // funciones para sacar asociar datos a periodos

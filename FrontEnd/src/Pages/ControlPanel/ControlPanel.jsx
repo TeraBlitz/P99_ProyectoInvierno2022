@@ -2,107 +2,144 @@ import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import axios from 'axios';
+import Select from 'react-select';
 import PanelCard from '../../Components/ControlPanel/PanelCard';
 import PanelInfo from '../../Components/ControlPanel/PanelInfo';
 import { controlPanelCards } from '../../utils/constants';
 import {
-  compararFecha, contarAlumnos, contarClases, contarProfes,
+  contarAlumnos, contarClases, contarProfes,
 } from '../../utils/utilFunctions';
 import { host } from '../../utils/requestUtils';
 import { getClasses } from '../../api/classes';
-import { getPeriodos as gp } from '../../api/Periodos';
+import { getPeriodos } from '../../api/Periodos';
 import { getClassStudent } from '../../api/classStudent';
-
-// Possible function to get users, this goes in another file
-
-let cursosRegistrados = 0;
-let profesInscritos = 0;
-let alumnosInscritos = 0;
-
-let periodoActual = {
-  id: '1',
-  clave: 'No se encontraron Periodos',
-};
+import { FitScreen } from '@mui/icons-material';
 
 function ControlPanel({ changeContent }) {
-  const [dataAlumno, setDataAlumno] = useState([]);
-  const [dataClase, setDataClase] = useState([]);
-  const [dataProfesor, setDataProfesor] = useState([]);
-  const [data, setData] = useState([]);
-  const panelInfoCards = [
-    {
-      id: '1',
-      title: 'Estudiantes inscritos',
-      data: dataAlumno,
-      color: '#0094DF',
-      num: alumnosInscritos ?? 0,
-    },
-    {
-      id: '2',
-      title: 'Profesores inscritos',
-      data: dataProfesor,
-      color: '#00B8D6',
-      num: profesInscritos ?? 0,
-    },
-    {
-      id: '3',
-      title: 'Cursos Registrados',
-      data: dataClase,
-      color: '#366ac3',
-      num: cursosRegistrados ?? 0,
-    },
-  ];
+  const [dataPeriodo, setDataPeriodo] = useState([]);
+  const [selectedPeriod, setSelectedPeriod] = useState('');
+  const [alumnosInscritos, setAlumnosInscritos] = useState(0);
+  const [profesInscritos, setProfesInscritos] = useState(0);
+  const [cursosRegistrados, setCursosRegistrados] = useState(0);
+  const [panelInfoCards, setPanelInfoCards] = useState([]);
 
-  // ----------------------Obtencion de datos de la base de datos
-  const getPeriodos = async () => {
-    const res = await gp();
+  const getAllPeriodos = async () => {
+    const res = await getPeriodos();
     const response = await res.json();
-    setData(response);
-    // console.log('Fetch Periodos', res.data)
-    periodoActual = compararFecha(response);
+
+    setDataPeriodo(response);
   };
 
-  const getClase = async () => {
-    const res = await getClasses();
-    const response = await res.json();
-    setDataClase(response);
-    // funciones para encontrar stats
-    // console.log('Fetch Clase', res.data)
-    // console.log('Cursos Registrados: ',contarClases(res.data))
-    cursosRegistrados = contarClases(response, periodoActual.clave);
-    // console.log('Profesores Inscritos', contarProfes(res.data))
-    profesInscritos = contarProfes(response, periodoActual.clave);
-  };
-  
-  const getAlumno = async () => {
+  const getNumeroAlumnos = async () => {
     const res = await getClassStudent();
     const response = await res.json();
-    // console.log('Alumnos Inscritos: ', contarAlumnos(res.data))
-    alumnosInscritos = contarAlumnos(response, periodoActual.id);
+  
+    setAlumnosInscritos(contarAlumnos(response, selectedPeriod.id));
+  };
+
+  const getNumeroProfesores = async () => {
+    const res = await getClasses();
+    const response = await res.json();
+
+    setProfesInscritos(contarProfes(response, selectedPeriod.clave));
+
+  };
+
+  const getNumeroClases = async () => {
+    const res = await getClasses();
+    const response = await res.json();
+    
+    setCursosRegistrados(contarClases(response, selectedPeriod.clave));
+  };
+
+  const handleSelectChange = (event) => {
+    const obj = {
+      id: event.value,
+      clave: event.label,
+    };
+  
+    setSelectedPeriod(obj);
   };
 
   useEffect(() => {
-    getAlumno();
-    // getProfesor();
-    getClase();
-    getPeriodos();
+    getAllPeriodos();
   }, []);
+
+  useEffect(() => {
+    if (selectedPeriod && selectedPeriod.id) {
+      getNumeroAlumnos();
+      getNumeroProfesores();
+      getNumeroClases();
+    }
+  }, [selectedPeriod]);
+  
+
+  useEffect(() => {
+    setPanelInfoCards([
+      {
+        id: '1',
+        title: 'Estudiantes inscritos',
+        color: '#0094DF',
+        num: alumnosInscritos,
+      },
+      {
+        id: '2',
+        title: 'Profesores inscritos',
+        color: '#00B8D6',
+        num: profesInscritos,
+      },
+      {
+        id: '3',
+        title: 'Cursos Registrados',
+        color: '#366ac3',
+        num: cursosRegistrados,
+      },
+    ]);
+  }, [alumnosInscritos, profesInscritos, cursosRegistrados]);
 
   return (
     <div>
       <Box sx={{ ml: 1, p: 0 }}>
         <Box sx={{
-          fontFamily: 'default', fontSize: 'h3.fontSize', py: 2, display: 'flex', justifyContent: 'space-between', marginBottom: 0, marginTop: 0,
+          fontFamily: 'default', 
+          fontSize: 'h3.fontSize', 
+          py: 2, display: 'flex', 
+          justifyContent: 'space-between', 
+          marginBottom: 0, marginTop: 0,
         }}
         >
           Panel de control
+          <Box
+              sx={{
+                fontFamily: 'arial',
+                fontSize: 'h6.fontSize', 
+                py: 2, 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                textAlign: 'left', 
+                float: 'right', 
+                marginRight: 0.5,
+                '.my-select': {
+                  minWidth: 150, // Tamaño mínimo por defecto
+                  '@media (min-width: 600px)': {
+                    minWidth: 200, // Tamaño mínimo para pantallas más grandes
+                  },
+                },
+              }}
+            >
+            <Select
+              className="my-select"
+
+              options={dataPeriodo.map((sup) => ({
+                label: sup.clave,
+                value: sup._id,
+              }))}
+
+              onChange={handleSelectChange}
+            />
+          </Box>
         </Box>
-        <Box sx={{
-          fontFamily: 'default', fontSize: 'h5.fontSize', py: 2, display: 'flex', justifyContent: 'space-between', textAlign: 'right', float: 'right', marginRight: 0.5,
-        }}
-        >
-          {periodoActual.clave}
-        </Box>
+
         <Grid container spacing={1.5}>
           {panelInfoCards.map((infoCard) => (
             <Grid item sm={12} md={4} key={infoCard.id}>
