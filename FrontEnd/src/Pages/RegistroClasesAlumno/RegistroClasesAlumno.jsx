@@ -20,9 +20,12 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import SearchIcon from "@mui/icons-material/Search";
 import { getStudents } from "../../api/students";
-import { getClasses } from "../../api/classes";
-import { get_available_classes } from "../../api/classes";
 import { useAuth0 } from "@auth0/auth0-react";
+import { 
+  getClasses,
+  get_available_classes,
+  getClassesByPeriod, 
+} from "../../api/classes";
 import {
   createClassStudent,
   getClassStudent,
@@ -60,28 +63,17 @@ function RegistroClasesAlumnos({ changeContent }) {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [updator, setUpdator] = useState(0);
 
-
-
-
-
   const [currentTerm, setCurrentTerm] = useState(null);
   const [periodos, setPeriodos] = useState([]);
-  ///
   const [slelectedPeriod, setSelectedPeriod] = useState(null);
-
 
   const updateCurrentTime = () => {
     setCurrentTime(new Date());
-    // Execute your custom function here
-    // e.g., yourCustomFunction();
   };
-
-
 
   const { user } = useAuth0();
 
   useEffect(() => {
-
     const getUserStudents = () => {
       getStudents()
         .then((response) => response.json())
@@ -90,10 +82,8 @@ function RegistroClasesAlumnos({ changeContent }) {
             (student) => student.idUser === user.sub
           );
           setStudents(students);
-          //console.log(students)
         });
     };
-
 
     getUserStudents();
   }, []);
@@ -137,50 +127,7 @@ function RegistroClasesAlumnos({ changeContent }) {
 
   };
 
-
-
   useEffect(() => {
-    // const getStudentClasses = () => {
-    //   let allClassNames = [];
-    //   let allTermClases = [];
-    //   let activeTermClases = [];
-    //   let activeTerm = [];
-    //   getPeriodos()
-    //     .then((response) => response.json())
-    //     .then((data) => {
-    //       const periodo = compararFecha(data);
-    //       setPeriodos(data);
-    //       findTerm({ clave: periodo })
-    //         .then((response) => response.json())
-    //         .then((data) => {
-    //           activeTerm = data;
-    //           getClasses()
-    //             .then((response) => response.json())
-    //             .then((result) => {
-    //               allTermClases = result.filter(
-    //                 (el) => el.clavePeriodo == activeTerm[0].clave
-    //               );
-    //               allClassNames = allTermClases.map((el) => el.nombre_curso);
-    //               setClassNames([...new Set(allClassNames)]);
-    //               const currentDate = moment()
-    //                 .tz("America/Mexico_City")
-    //                 .format();
-    //               for (let j = 0; j < allTermClases.length; j++) {
-    //                 if (
-    //                   activeTerm[0].fecha_inicio < currentDate &&
-    //                   activeTerm[0].fecha_fin > currentDate
-    //                 ) {
-    //                   activeTermClases.push(allTermClases[j]);
-    //                 }
-    //               }
-    //               setClases(allTermClases);
-    //               setFilteredClasses(activeTermClases);
-    //             });
-    //         });
-    //     });
-    // };
-    // getStudentClasses();
-
     const getStudentClasses = () => {
       get_available_classes("null")
         .then((response) => response.json())
@@ -193,9 +140,6 @@ function RegistroClasesAlumnos({ changeContent }) {
       getPeriodosstak();
     };
     getStudentClasses();
-
-
-
 
   }, []);
 
@@ -239,6 +183,7 @@ function RegistroClasesAlumnos({ changeContent }) {
     '3' : 'Intermedio',
     '4' : 'Avanzado'
   };
+
   const getNivel = (params) => {
     return nivelDict[params.row.nivel];
   };
@@ -445,6 +390,7 @@ function RegistroClasesAlumnos({ changeContent }) {
       return;
     }
     setSelectedPeriod(e.target.value);
+    // console.log("trae el periodo", slelectedPeriod.clave);
 
     get_available_classes(e.target.value.clave)
       .then((response) => response.json())
@@ -456,8 +402,6 @@ function RegistroClasesAlumnos({ changeContent }) {
   };
 
   const handleChangeStudent = (e) => {
-
-
     if (e.target.value === "") {
       // setFilteredClasses(clases);
       setCurrentStudent(null);
@@ -476,9 +420,8 @@ function RegistroClasesAlumnos({ changeContent }) {
         setClases(data);
         setFilteredClasses(data);
       });
-
+      
   };
-
 
   const handleListaEspera = (clase) => {
     let lista = [];
@@ -754,15 +697,12 @@ function RegistroClasesAlumnos({ changeContent }) {
                   <em>Periodo</em>
                 </MenuItem>
 
-
-
-
                 {periodos.map((periodo) => (
                   <MenuItem key={periodo.clave} value={periodo}>
                     {periodo.clave}
                   </MenuItem>
                 ))}
-
+                
 
               </Select>
             </FormControl>
