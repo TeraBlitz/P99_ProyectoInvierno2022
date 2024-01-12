@@ -5,7 +5,8 @@ import TextField from '@mui/material/TextField';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
-
+import {DateTimePicker} from '@mui/x-date-pickers/DateTimePicker';
+import dayjs from 'dayjs'; 
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import { useState, useEffect } from 'react';
@@ -14,6 +15,8 @@ import moment from 'moment';
 import {
   createPeriodo, deletePeriodos, getPeriodos, updatePeriodo,
 } from '../../api/Periodos';
+
+dayjs.locale('es'); 
 
 function ModalPeriodo({
   openModal,
@@ -288,87 +291,181 @@ function ModalPeriodo({
 
               </TextField>
 
-              <TextField
-                style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 , marginRight: 20}}
+              <DateTimePicker
+                sx={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
                 label="Fecha de inicio"
                 name="fecha_inicio"
-                value={form_data?.fecha_inicio}
-                type="datetime-local"
-                InputLabelProps={{ shrink: true }}
-                onChange={handleChange}
+                value={form_data?.fecha_inicio ? dayjs(form_data.fecha_inicio) : null}
+                textField={(props) => (
+                  <TextField
+                    {...props}
+                    InputLabelProps={{ shrink: true }}
+                    inputProps={{
+                      step: 300, // Intervalo de 5 minutos
+                      style: { textAlign: 'center' }, // Alinear el texto al centro
+                    }}
+                  />
+                )}
+                ampm={false}
+                onChange={(newValue) => {
+                  const formattedDate = dayjs(newValue).format('YYYY-MM-DDTHH:mm');
+                  setForm_data({ ...form_data, fecha_inicio: formattedDate });
+                }}
               />
 
-              <TextField
-                style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
+              <DateTimePicker
+                sx={{ paddingBottom: '15px', fontFamily: 'arial', width: 281, marginLeft: '1.3rem' }}
                 label="Fecha de fin"
                 name="fecha_fin"
-                value={form_data?.fecha_fin}
-                type="datetime-local"
-                InputLabelProps={{ shrink: true }}
-                onChange={handleChange}
+                value={form_data?.fecha_fin ? dayjs(form_data.fecha_fin) : null}
+                textField={(props) => (
+                  <TextField
+                    {...props}
+                    InputLabelProps={{ shrink: true }}
+                    inputProps={{
+                      step: 300, // Intervalo de 5 minutos
+                      style: { textAlign: 'center' }, // Alinear el texto al centro
+                    }}
+                  />
+                )}
+                ampm={false}
+                onChange={(newValue) => {
+                  const formattedDate = dayjs(newValue).format('YYYY-MM-DDTHH:mm');
+                  setForm_data({ ...form_data, fecha_fin: formattedDate });
+                }}
               />
 
-              <TextField
-                style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281  , marginRight: 20}}
-                label="Fecha de inicio de incripciones de talleres"
+              <DateTimePicker
+                sx={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
+                label="Inicio incripciones talleres"
                 name="fecha_inicio_insc_talleres"
-                value={form_data?.fecha_inicio_insc_talleres}
-                type="datetime-local"
-                InputLabelProps={{ shrink: true }}
-                onChange={handleChange}
+                value={form_data?.fecha_inicio_insc_talleres ? dayjs(form_data.fecha_inicio_insc_talleres) : null}
+                textField={(props) => (
+                  <TextField
+                    {...props}
+                    InputLabelProps={{ shrink: true }}
+                    inputProps={{
+                      step: 300, // Intervalo de 5 minutos
+                      style: { textAlign: 'center' }, // Alinear el texto al centro
+                    }}
+                  />
+                )}
+                ampm={false}
+                onChange={(newValue) => {
+                  const formattedDate = dayjs(newValue).format('YYYY-MM-DDTHH:mm');
+                  setForm_data({ ...form_data, fecha_inicio_insc_talleres: formattedDate });
+                }}
               />
 
-              <TextField
-                style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
-                label="Fecha de fin de inscripciones de talleres"
+              <DateTimePicker
+                sx={{ paddingBottom: '15px', fontFamily: 'arial', width: 281, marginLeft: '1.3rem'}}
+                label="Fin inscripciones talleres"
                 name="fecha_fin_insc_talleres"
-                value={form_data?.fecha_fin_insc_talleres}
-                type="datetime-local"
-                InputLabelProps={{ shrink: true }}
-                onChange={handleChange}
+                value={form_data?.fecha_fin_insc_talleres ? dayjs(form_data.fecha_fin_insc_talleres) : null}
+                textField={(props) => (
+                  <TextField
+                    {...props}
+                    InputLabelProps={{ shrink: true }}
+                    inputProps={{
+                      step: 300, // Intervalo de 5 minutos
+                      style: { textAlign: 'center' }, // Alinear el texto al centro
+                    }}
+                  />
+                )}
+                ampm={false}
+                onChange={(newValue) => {
+                  const formattedDate = dayjs(newValue).format('YYYY-MM-DDTHH:mm');
+                  setForm_data({ ...form_data, fecha_fin_insc_talleres: formattedDate });
+                }}
 
               />
 
-              <TextField
-                style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 , marginRight: 20 }}
-                label="Fecha de inicio de incripciones de idiomas"
+              <DateTimePicker
+                sx={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
+                label="Inicio incripciones idiomas"
                 name="fecha_inicio_insc_idiomas"
-                value={form_data?.fecha_inicio_insc_idiomas}
-                type="datetime-local"
-                InputLabelProps={{ shrink: true }}
-                onChange={handleChange}
+                value={form_data?.fecha_inicio_insc_idiomas ? dayjs(form_data.fecha_inicio_insc_idiomas) : null}
+                textField={(props) => (
+                  <TextField
+                    {...props}
+                    InputLabelProps={{ shrink: true }}
+                    inputProps={{
+                      step: 300, // Intervalo de 5 minutos
+                      style: { textAlign: 'center' }, // Alinear el texto al centro
+                    }}
+                  />
+                )}
+                ampm={false}
+                onChange={(newValue) => {
+                  const formattedDate = dayjs(newValue).format('YYYY-MM-DDTHH:mm');
+                  setForm_data({ ...form_data, fecha_inicio_insc_idiomas: formattedDate });
+                }}
               />
 
-              <TextField
-                style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
-                label="Fecha de fin de inscripciones de idiomas"
+              <DateTimePicker
+                sx={{ paddingBottom: '15px', fontFamily: 'arial', width: 281, marginLeft: '1.3rem'}}
+                label="Fin inscripciones idiomas"
                 name="fecha_fin_insc_idiomas"
-                value={form_data?.fecha_fin_insc_idiomas}
-                type="datetime-local"
-                InputLabelProps={{ shrink: true }}
-                onChange={handleChange}
+                value={form_data?.fecha_fin_insc_idiomas ? dayjs(form_data.fecha_fin_insc_idiomas) : null}
+                textField={(props) => (
+                  <TextField
+                    {...props}
+                    InputLabelProps={{ shrink: true }}
+                    inputProps={{
+                      step: 300, // Intervalo de 5 minutos
+                      style: { textAlign: 'center' }, // Alinear el texto al centro
+                    }}
+                  />
+                )}
+                ampm={false}
+                onChange={(newValue) => {
+                  const formattedDate = dayjs(newValue).format('YYYY-MM-DDTHH:mm');
+                  setForm_data({ ...form_data, fecha_inicio_insc_idiomas: formattedDate });
+                }}
               />
 
-              <TextField
-                style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281  , marginRight: 20}}
-                label="Fecha de inicio de incripciones de asesorias"
+              <DateTimePicker
+                sx={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
+                label="Inicio incripciones asesorias"
                 name="fecha_inicio_insc_asesorias"
-                value={form_data?.fecha_inicio_insc_asesorias}
-                type="datetime-local"
-                InputLabelProps={{ shrink: true }}
-                onChange={handleChange}
-
+                value={form_data?.fecha_inicio_insc_asesorias ? dayjs(form_data.fecha_inicio_insc_asesorias) : null}
+                textField={(props) => (
+                  <TextField
+                    {...props}
+                    InputLabelProps={{ shrink: true }}
+                    inputProps={{
+                      step: 300, // Intervalo de 5 minutos
+                      style: { textAlign: 'center' }, // Alinear el texto al centro
+                    }}
+                  />
+                )}
+                ampm={false}
+                onChange={(newValue) => {
+                  const formattedDate = dayjs(newValue).format('YYYY-MM-DDTHH:mm');
+                  setForm_data({ ...form_data, fecha_inicio_insc_asesorias: formattedDate });
+                }}
               />
 
-              <TextField
-                style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 }}
-                label="Fecha de fin de inscripciones de asesorias"
+              <DateTimePicker
+                sx={{ paddingBottom: '15px', fontFamily: 'arial', width: 281, marginLeft: '1.3rem'}}
+                label="Fin inscripciones asesorias"
                 name="fecha_fin_insc_asesorias"
-                value={form_data?.fecha_fin_insc_asesorias}
-                type="datetime-local"
-                InputLabelProps={{ shrink: true }}
-                onChange={handleChange}
-
+                value={form_data?.fecha_fin_insc_asesorias ? dayjs(form_data.fecha_fin_insc_asesorias) : null}
+                textField={(props) => (
+                  <TextField
+                    {...props}
+                    InputLabelProps={{ shrink: true }}
+                    inputProps={{
+                      step: 300, // Intervalo de 5 minutos
+                      style: { textAlign: 'center' }, // Alinear el texto al centro
+                    }}
+                  />
+                )}
+                ampm={false}
+                onChange={(newValue) => {
+                  const formattedDate = dayjs(newValue).format('YYYY-MM-DDTHH:mm');
+                  setForm_data({ ...form_data, fecha_fin_insc_asesorias: formattedDate });
+                }}
               />
 
               <TextField
