@@ -20,6 +20,3 @@ export const get_available_classes = (periodo) => {
     return getData(`/v1/clases/getClasesDisp_ByPeriod/${periodo}`)
 }
 
-export const getClassesByPeriod = (periodo) => {
-    return getData(`/v1/clases/getClassesByPeriod/${periodo}`)
-}

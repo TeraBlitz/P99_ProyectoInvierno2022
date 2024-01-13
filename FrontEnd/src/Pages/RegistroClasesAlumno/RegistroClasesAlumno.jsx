@@ -24,7 +24,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { 
   getClasses,
   get_available_classes,
-  getClassesByPeriod, 
 } from "../../api/classes";
 import {
   createClassStudent,
@@ -65,7 +64,7 @@ function RegistroClasesAlumnos({ changeContent }) {
 
   const [currentTerm, setCurrentTerm] = useState(null);
   const [periodos, setPeriodos] = useState([]);
-  const [slelectedPeriod, setSelectedPeriod] = useState(null);
+  const [selectedPeriod, setSelectedPeriod] = useState(null);
 
   const updateCurrentTime = () => {
     setCurrentTime(new Date());
@@ -171,10 +170,10 @@ function RegistroClasesAlumnos({ changeContent }) {
 
   // Funcion para calcular edad
   const calculate_age = (dateString) => {
-    var birthday = +new Date(dateString);
-    // The magic number: 31557600000 is 24 * 3600 * 365.25 * 1000, which is the length of a year
+    const parts = dateString.split("-");
+    const birthday = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2]));
     const magic_number = 31557600000;
-    return ~~((Date.now() - birthday) / magic_number);
+    return Math.floor((Date.now() - birthday) / magic_number);
   };
 
   const nivelDict = {
@@ -383,6 +382,23 @@ function RegistroClasesAlumnos({ changeContent }) {
       });
   };
 
+  const filterClassesByAge = (prevClases) => {
+    if(currentStudent){
+      const age = calculate_age(currentStudent.fecha_de_nacimiento);
+      const newClasses = prevClases.filter(
+        (clase) =>
+          Number(clase.edad_minima) <= age &&
+          age <= (clase.edad_maxima ? Number(clase.edad_maxima) : 99)
+      );
+      console.log('student', currentStudent, 'age: ', age);
+  
+      return newClasses;
+    }
+
+    console.log('No paso');
+    return prevClases;
+  }
+
   const handleChange = (e) => {
     if (e.target.value === "") {
       // setFilteredClasses(clases);
@@ -390,37 +406,36 @@ function RegistroClasesAlumnos({ changeContent }) {
       return;
     }
     setSelectedPeriod(e.target.value);
-    // console.log("trae el periodo", slelectedPeriod.clave);
+    // console.log("trae el periodo", selectedPeriod.clave);
 
     get_available_classes(e.target.value.clave)
       .then((response) => response.json())
       .then((data) => {
         console.log("data", data);
         setClases(data);
-        setFilteredClasses(data);
+        setFilteredClasses(filterClassesByAge(data));
       });
   };
 
   const handleChangeStudent = (e) => {
-    if (e.target.value === "") {
-      // setFilteredClasses(clases);
+    const studentId = e.target.value;
+    if (studentId === "") {
       setCurrentStudent(null);
-      return;
+    } else {
+      const selectedStudent = students.find(student => student._id === studentId);
+      setCurrentStudent(selectedStudent);
     }
-    setCurrentStudent(e.target.value);
-    // filterClasses(e.target.value);
 
-    console.log("trae el periodo", slelectedPeriod.clave)
+    console.log("trae el periodo", selectedPeriod.clave)
 
 
-    get_available_classes(slelectedPeriod.clave)
+    get_available_classes(selectedPeriod.clave)
       .then((response) => response.json())
       .then((data) => {
         console.log("data", data);
         setClases(data);
-        setFilteredClasses(data);
-      });
-      
+        setFilteredClasses(filterClassesByAge(data));
+      });  
   };
 
   const handleListaEspera = (clase) => {
@@ -567,9 +582,9 @@ function RegistroClasesAlumnos({ changeContent }) {
     updateCurrentTime();
 
     //Get the specific times from your selected period
-    const time1 = slelectedPeriod?.fecha_fin_insc_talleres
-    const time2 = slelectedPeriod?.fecha_fin_insc_idiomas
-    const time3 = slelectedPeriod?.fecha_fin_insc_asesorias
+    const time1 = selectedPeriod?.fecha_fin_insc_talleres
+    const time2 = selectedPeriod?.fecha_fin_insc_idiomas
+    const time3 = selectedPeriod?.fecha_fin_insc_asesorias
 
     console.log("time1", time1)
     //Calculate the time differences for each specific time
@@ -593,12 +608,12 @@ function RegistroClasesAlumnos({ changeContent }) {
       updateCurrentTime();
 
       if (currentTime == time1 || currentTime == time2 || currentTime == time3) {
-        get_available_classes(slelectedPeriod.clave)
+        get_available_classes(selectedPeriod.clave)
           .then((response) => response.json())
           .then((data) => {
             console.log("data", data);
             setClases(data);
-            setFilteredClasses(data);
+            setFilteredClasses(filterClassesByAge(data));
           }
           );
         setUpdator(updator + 1);
@@ -609,7 +624,7 @@ function RegistroClasesAlumnos({ changeContent }) {
 
     //Clean up the interval when the component unmounts
     return () => clearInterval(intervalId);
-  }, [slelectedPeriod]);
+  }, [selectedPeriod, currentStudent]);
 
 
   if (!students || !clases || !periodos) {
@@ -670,7 +685,7 @@ function RegistroClasesAlumnos({ changeContent }) {
             <FormControl fullWidth>
               <InputLabel>Estudiantes</InputLabel>
               <Select
-                value={currentStudent || ""}
+                value={currentStudent ? currentStudent._id : ""}
                 label="Estudiantes"
                 onChange={handleChangeStudent}
               >
@@ -678,18 +693,17 @@ function RegistroClasesAlumnos({ changeContent }) {
                   <em>Estudiante</em>
                 </MenuItem>
                 {students.map((student) => (
-                  <MenuItem key={student._id} value={student}>
-                    {student.nombre} {student.apellido_paterno}{" "}
-                    {student.apellido_materno}
+                  <MenuItem key={student._id} value={student._id}>
+                    {student.nombre} {student.apellido_paterno} {student.apellido_materno}
                   </MenuItem>
                 ))}
-              </Select>
+            </Select>
             </FormControl>
 
             <FormControl fullWidth>
               <InputLabel>Periodo</InputLabel>
               <Select
-                value={slelectedPeriod || ""}
+                value={selectedPeriod || ""}
                 label="Periodo"
                 onChange={handleChange}
               >
@@ -727,7 +741,7 @@ function RegistroClasesAlumnos({ changeContent }) {
 
         <div
 
-          key={[currentStudent?._id, slelectedPeriod?.clave, updator]}
+          key={[currentStudent?._id, selectedPeriod?.clave, updator]}
 
         >
 
