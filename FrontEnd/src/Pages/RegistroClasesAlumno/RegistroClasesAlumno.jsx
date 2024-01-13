@@ -64,7 +64,7 @@ function RegistroClasesAlumnos({ changeContent }) {
 
   const [currentTerm, setCurrentTerm] = useState(null);
   const [periodos, setPeriodos] = useState([]);
-  const [selectedPeriod, setSelectedPeriod] = useState(null);
+  const [slelectedPeriod, setSelectedPeriod] = useState(null);
 
   const updateCurrentTime = () => {
     setCurrentTime(new Date());
@@ -406,7 +406,7 @@ function RegistroClasesAlumnos({ changeContent }) {
       return;
     }
     setSelectedPeriod(e.target.value);
-    // console.log("trae el periodo", selectedPeriod.clave);
+    // console.log("trae el periodo", slelectedPeriod.clave);
 
     get_available_classes(e.target.value.clave)
       .then((response) => response.json())
@@ -418,24 +418,13 @@ function RegistroClasesAlumnos({ changeContent }) {
   };
 
   const handleChangeStudent = (e) => {
-    const studentId = e.target.value;
-    if (studentId === "") {
+    const newStudent = e.target.value;
+    if (newStudent === "") {
       setCurrentStudent(null);
-    } else {
-      const selectedStudent = students.find(student => student._id === studentId);
-      setCurrentStudent(selectedStudent);
+      return;
     }
 
-    console.log("trae el periodo", selectedPeriod.clave)
-
-
-    get_available_classes(selectedPeriod.clave)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("data", data);
-        setClases(data);
-        setFilteredClasses(filterClassesByAge(data));
-      });  
+    setCurrentStudent(newStudent);
   };
 
   const handleListaEspera = (clase) => {
@@ -582,9 +571,9 @@ function RegistroClasesAlumnos({ changeContent }) {
     updateCurrentTime();
 
     //Get the specific times from your selected period
-    const time1 = selectedPeriod?.fecha_fin_insc_talleres
-    const time2 = selectedPeriod?.fecha_fin_insc_idiomas
-    const time3 = selectedPeriod?.fecha_fin_insc_asesorias
+    const time1 = slelectedPeriod?.fecha_fin_insc_talleres
+    const time2 = slelectedPeriod?.fecha_fin_insc_idiomas
+    const time3 = slelectedPeriod?.fecha_fin_insc_asesorias
 
     console.log("time1", time1)
     //Calculate the time differences for each specific time
@@ -608,7 +597,7 @@ function RegistroClasesAlumnos({ changeContent }) {
       updateCurrentTime();
 
       if (currentTime == time1 || currentTime == time2 || currentTime == time3) {
-        get_available_classes(selectedPeriod.clave)
+        get_available_classes(slelectedPeriod.clave)
           .then((response) => response.json())
           .then((data) => {
             console.log("data", data);
@@ -624,9 +613,21 @@ function RegistroClasesAlumnos({ changeContent }) {
 
     //Clean up the interval when the component unmounts
     return () => clearInterval(intervalId);
-  }, [selectedPeriod, currentStudent]);
+  }, [slelectedPeriod]);
 
-
+  useEffect(() => {
+    if (currentStudent) {
+      //console.log(currentStudent)
+      get_available_classes(slelectedPeriod.clave)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("data", data);
+          setClases(data);
+          setFilteredClasses(filterClassesByAge(data));
+        });
+    }
+  }, [currentStudent]);
+  
   if (!students || !clases || !periodos) {
     return (
       <Box
@@ -685,7 +686,7 @@ function RegistroClasesAlumnos({ changeContent }) {
             <FormControl fullWidth>
               <InputLabel>Estudiantes</InputLabel>
               <Select
-                value={currentStudent ? currentStudent._id : ""}
+                value={currentStudent || ""}
                 label="Estudiantes"
                 onChange={handleChangeStudent}
               >
@@ -693,17 +694,18 @@ function RegistroClasesAlumnos({ changeContent }) {
                   <em>Estudiante</em>
                 </MenuItem>
                 {students.map((student) => (
-                  <MenuItem key={student._id} value={student._id}>
-                    {student.nombre} {student.apellido_paterno} {student.apellido_materno}
+                  <MenuItem key={student._id} value={student}>
+                    {student.nombre} {student.apellido_paterno}{" "}
+                    {student.apellido_materno}
                   </MenuItem>
                 ))}
-            </Select>
+              </Select>
             </FormControl>
 
             <FormControl fullWidth>
               <InputLabel>Periodo</InputLabel>
               <Select
-                value={selectedPeriod || ""}
+                value={slelectedPeriod || ""}
                 label="Periodo"
                 onChange={handleChange}
               >
@@ -741,7 +743,7 @@ function RegistroClasesAlumnos({ changeContent }) {
 
         <div
 
-          key={[currentStudent?._id, selectedPeriod?.clave, updator]}
+          key={[currentStudent?._id, slelectedPeriod?.clave, updator]}
 
         >
 
