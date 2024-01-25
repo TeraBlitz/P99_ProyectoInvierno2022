@@ -82,7 +82,7 @@ const Inicio = ({changeContent}) => {
                 <Row style={{ marginBottom: '2rem' }}>
                     <h2 style={{ margin: '.5rem' }}>
                         {`Si tienes dudas sobre cómo usar la página para inscribirte, puedes ver el tutorial en este `}
-                        <a href="https://www.facebook.com/proyecto99mty/" target="_blank" rel="noopener noreferrer">enlace</a>.
+                        <a href="https://drive.google.com/file/d/1MfF_1iroHMV5S8gSC3xGOqm48mIEglcw/view?usp=sharing" target="_blank" rel="noopener noreferrer">enlace</a>.
                     </h2>
                     <h2 style={{ margin: '.5rem' }}>
                         <img className = "facebookIcon" src={FacebookIcon} alt="FacebookIcon" style={{ width: '15px', height: '15px' }} />
