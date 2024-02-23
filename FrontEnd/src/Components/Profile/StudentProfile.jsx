@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
+import CloseIcon from '@mui/icons-material/Close';
 import { createStudent, updateStudent, getStudents } from '../../api/students';
 import ParentInfo from './ParentInfo';
 import { estadosMexico, nivelEscolaridad } from '../../utils/constants';
@@ -129,6 +130,12 @@ function StudentProfile({
         </Button>
         )
       }
+        <button 
+          style={{ padding: 16, backgroundColor: 'transparent', border: 0, outline: 0, cursor: 'pointer' }}
+          onClick={() => { setOpenStudentProfile(!openStudentProfile) }}
+        >
+          <CloseIcon/>
+        </button>
       </Box>
       <StudentInfo
         isNewStudent={isNewStudent}

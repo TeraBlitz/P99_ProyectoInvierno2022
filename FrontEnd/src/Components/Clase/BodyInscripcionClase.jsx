@@ -1,9 +1,10 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   TextField,
   Box,
   Typography,
+  Autocomplete,
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
@@ -15,7 +16,18 @@ function BodyInscripcionClase({
   data, profesorList, getClassWaitList, seleccionarClase, selectedRows, setSelectedRows, eliminarClasesSeleccionadas
 }) {
   const [pageSize, SetPageSize] = useState(5);
-  const [items, setItems] = useState([]);
+  const [cursoFilter, setCursoFilter] = useState('');
+  const [nivelFilter, setNivelFilter] = useState('');
+  const [profesorFilter, setProfesorFilter] = useState('');
+
+  const filteredData = data.filter(item => {
+    const cursoMatch = cursoFilter ? item.nombre_curso.toLowerCase().includes(cursoFilter.toLowerCase()) : true;
+    const nivelMatch = nivelFilter ? item.niveles.toLowerCase().includes(nivelFilter.toLowerCase()) : true;
+    const profesorMatch = profesorFilter ? item.nombreCompleto.toLowerCase().includes(profesorFilter.toLowerCase()) : true;
+
+    return cursoMatch && nivelMatch && profesorMatch;
+  });
+
 
   const columns = useMemo(
     () => [
@@ -52,15 +64,30 @@ function BodyInscripcionClase({
     [data, profesorList],
   );
 
-  const createTextField = (label, columnField, operatorValue, setValue) => (
-    <TextField
+  const cursoOptions = [...new Set(data.map(item => item.nombre_curso))].sort((a, b) => {
+    return a.localeCompare(b);
+  });
+  const nivelOptions = [
+    'desde cero',
+    'con bases',
+    'intermedio',
+    'avanzado'
+  ];
+  const profesorOptions = [...new Set(data.map(item => item.nombreCompleto))].sort((a, b) => {
+    return a.localeCompare(b);
+  });
+
+  const createAutocompleteField = (label, filterState, setFilterState, options) => (
+    <Autocomplete
       style={{
         paddingBottom: '5px', fontFamily: 'arial', width: 330, marginLeft: '30px',
       }}
-      label={label}
-      onChange={(e) => {
-        setValue([{ columnField, operatorValue, value: e.target.value }]);
-      }}
+      value={filterState}
+      onChange={(event, newValue) => setFilterState(newValue)}
+      freeSolo
+      options={options}
+      getOptionLabel={(option) => option}
+      renderInput={(params) => <TextField {...params} label={label} />}
     />
   );
 
@@ -86,9 +113,11 @@ function BodyInscripcionClase({
           >
             Filtros
           </Typography>
-          {createTextField('Curso', 'nombre_curso', 'contains', setItems)}
-          {createTextField('Nivel', 'niveles', 'contains', setItems)}
-          {createTextField('Profesor', 'nombreCompleto', 'contains', setItems)}
+          <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
+            {createAutocompleteField('Curso', cursoFilter, setCursoFilter, cursoOptions)}
+            {createAutocompleteField('Nivel', nivelFilter, setNivelFilter, nivelOptions)}
+            {createAutocompleteField('Profesor', profesorFilter, setProfesorFilter, profesorOptions)}
+          </Box>
         </CardContent>
       </Card>
       <Box sx={{
@@ -110,7 +139,7 @@ function BodyInscripcionClase({
 
         <DataGrid
           columns={columns}
-          rows={data}
+          rows={filteredData}
           getRowId={(row) => row._id}
           rowsPerPageOptions={[5, 10, 20]}
           pageSize={pageSize}
@@ -131,9 +160,6 @@ function BodyInscripcionClase({
           }}
           selectionModel={selectedRows}
           disableSelectionOnClick
-          filterModel={{
-            items,
-          }}
         />
       </Box>
     </>
