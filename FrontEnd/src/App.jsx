@@ -33,6 +33,16 @@ function App() {
     const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
     console.log(isLoading)
 
+    useEffect(() => {
+        if (!isLoading && isAuthenticated && user) {
+            if (user.p99roles.includes('admin')) {
+                setContent('ControlPanel');
+            } else {
+                handleStudent(user);
+            }
+        }
+    }, [isLoading, isAuthenticated, user]);
+
     const handleStudent = async (userObj) => {
         if (userObj?.p99roles.length == 0) {
             findStudents({ idUser: userObj.sub })

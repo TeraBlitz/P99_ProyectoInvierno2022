@@ -33,14 +33,14 @@ function Sidebar(props) {
             key: 0,
             title: 'Inicio',
             content: 'Inicio',
-            rol: 'any',
+            rol: 'estudiante'
             icon: <HomeOutlined />,
         },
         {
             key: 1,
             title: 'Perfil',
             content: 'Profile',
-            rol: 'any',
+            rol: 'estudiante'
             icon: <UserOutlined />,
         },
         {
