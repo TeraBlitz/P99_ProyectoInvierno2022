@@ -10,6 +10,13 @@ import Link from '@mui/material/Link';
 import Autocomplete from '@mui/material/Autocomplete';
 import { estadosMexico, nivelEscolaridad } from '../../utils/constants';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import 'dayjs/locale/es';
+
+
+
 
 function StudentInfo({
   userOriginState, setUserOriginState, userEducation, setUserEducation,
@@ -20,7 +27,17 @@ function StudentInfo({
       ? '' : nivelEscolaridad[nivelEscolaridad.indexOf(userEducation)],
   );
   const [userOriginStateInput, setUserOriginStateInput] = useState('');
-
+  
+  const handleDateChange = (date) => {
+    const formattedDate = date ? date.format('YYYY-MM-DD') : '';
+    handleChange({
+      target: {
+        name: 'fecha_de_nacimiento',
+        value: formattedDate,
+      }
+    });
+  };
+  
   return (
     <>
       <Box
@@ -105,22 +122,29 @@ function StudentInfo({
           />
         ) : null
       }
-      <DatePicker
-        name='fecha_de_nacimiento'
-        label="Fecha de nacimiento"
-        onChange={(value) => {
-          const day = value['$D'] < 10 ? `0${value['$D']}` : value['$D'];
-          const date = `${value['$y']}-${value['$M']+1}-${day}`;
-
-          handleChange({
-            target: {
-              name: 'fecha_de_nacimiento',
-              value: date,
+      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='es'>
+        <DatePicker
+          name="fecha_de_nacimiento"
+          label="Fecha de nacimiento"
+          value={studentData.fecha_de_nacimiento ? dayjs(studentData.fecha_de_nacimiento) : null}
+          onChange={handleDateChange}
+          readOnly={!isEditing}
+          views={["year", "month", "day"]}
+          format="DD/MM/YYYY"
+          slotProps={{
+            textField: {
+              variant: 'outlined', 
+              required: true, 
+              style: { marginTop: 0, alignItems: 'top' }
+            },
+            toolbar: {
+              toolbarPlaceholder: '__',
+              toolbarFormat: 'DD / MM / YYYY',
+              hidden: false,
             }
-          })
-
-        }}
-      />
+          }}
+        />
+      </LocalizationProvider>
       <Autocomplete
         readOnly={!isEditing}
         value={userEducation || ''}

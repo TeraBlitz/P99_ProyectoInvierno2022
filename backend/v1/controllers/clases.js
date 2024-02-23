@@ -211,7 +211,7 @@ async function getClasesDisp_ByPeriod(req, res) {
         console.log("period",period);
 
         const collection = database.collection("clases");
-        const clases_from_period = await collection.find({ clave: period }).toArray();
+        const clases_from_period = await collection.find({ clavePeriodo: period }).toArray();
     
         res.send(clases_from_period);
         return;
@@ -226,7 +226,7 @@ async function getClasesDisp_ByPeriod(req, res) {
         console.log("retorna la data de ese periodo");
 
         const collection = database.collection("clases");
-        const clases_from_period = await collection.find({ clave: period }).toArray();
+        const clases_from_period = await collection.find({ clavePeriodo: period }).toArray();
 
         res.send(clases_from_period);
         return;
@@ -246,7 +246,7 @@ async function getClasesDisp_ByPeriod(req, res) {
     const fecha_inicio_insc_asesorias = new Date(resultPeriod[0].fecha_inicio_insc_asesorias).toLocaleString("en-US", { timeZone: "America/Mexico_City" });
     const fecha_fin_insc_asesorias = new Date(resultPeriod[0].fecha_fin_insc_asesorias).toLocaleString("en-US", { timeZone: "America/Mexico_City" });
 
-    const clases_from_period = await collection.find({ clave: period }).toArray();
+    const clases_from_period = await collection.find({ clavePeriodo: period }).toArray();
 
     const clases_talleres = clases_from_period.filter(clase => clase.area === "talleres");
     const clases_idiomas = clases_from_period.filter(clase => clase.area === "idiomas");
@@ -282,12 +282,11 @@ async function getClasesDisp_ByPeriod(req, res) {
 
 }
 
-
 export {
     getAllClase,
     createClase,
     updateClase,
     deleteClase,
     findClase,
-    getClasesDisp_ByPeriod
+    getClasesDisp_ByPeriod,
 };

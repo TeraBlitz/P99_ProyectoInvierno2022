@@ -40,6 +40,12 @@ function StudentProfile({
 
     setNewStudentInfo(studentData);
 
+    if (!studentData.fecha_de_nacimiento) {
+      setAlertMessage('Por favor, ingresa la fecha de nacimiento.');
+      setInfoOpen(true);
+      return;
+    }
+
     if (studentData.num_telefono.length < 10 || studentData.tutor_num_telefono.length < 10) {
       setAlertMessage('Los numeros telefonicos deben tener al menos 10 digitos');
       setInfoOpen(true);
