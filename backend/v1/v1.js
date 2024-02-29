@@ -8,6 +8,8 @@ import alumno from './routes/alumnos.js'
 import lista from './routes/listas.js'
 import profesor from './routes/profesores.js'
 import alumnoClase from './routes/alumnoClases.js'
+import formulario from './routes/formularios.js'
+import alumnoFormulario from './routes/alumnoFormularios.js'
 import { auth } from 'express-oauth2-jwt-bearer'
 
 const v1 = express.Router()
@@ -31,5 +33,7 @@ v1.use('/alumnos', alumno)
 v1.use('/listas', lista)
 v1.use('/profesores', profesor)
 v1.use('/alumnoClases', alumnoClase)
+v1.use('/formularios', formulario)
+v1.use('/alumnoFormularios', alumnoFormulario)
 
 export default v1
