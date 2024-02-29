@@ -184,3 +184,5 @@ export const profesorVacioInscripcion = {
   nombreCompleto: '',
   correo: '',
 };
+
+export const EXAMEN_SOCIOECONOMICO_ID = '65dfb27b3777fb2a9442b5c2';
