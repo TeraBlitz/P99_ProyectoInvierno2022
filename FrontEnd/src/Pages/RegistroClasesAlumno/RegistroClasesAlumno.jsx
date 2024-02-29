@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import React, { useState, useEffect, useContext } from "react";
 import Clase from "../../Components/Clase/Clase";
 import CircularProgress from "@mui/material/CircularProgress";
-import { Alert, Button, Link, AlertTitle } from "@mui/material";
+import { Alert, Button, Link, AlertTitle, Tooltip } from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
 import Autocomplete from "@mui/material/Autocomplete";
 import {
@@ -40,6 +40,8 @@ import ConfirmationDialog from "../../Components/Dialog/ConfirmationDialog";
 import ClaseModal from "../../Components/Clase/ClaseModal";
 import MiRegistro from "../../Components/Registro/MiRegistro";
 import moment from "moment-timezone";
+import { getAlumnoFormularioById } from "../../api/alumnoFormularios";
+import { EXAMEN_SOCIOECONOMICO_ID } from "../../utils/constants";
 
 function RegistroClasesAlumnos({ changeContent }) {
   const [items, setItems] = useState([]);
@@ -65,6 +67,8 @@ function RegistroClasesAlumnos({ changeContent }) {
   const [currentTerm, setCurrentTerm] = useState(null);
   const [periodos, setPeriodos] = useState([]);
   const [slelectedPeriod, setSelectedPeriod] = useState(null);
+
+  const [formularioCompleto, setFormularioCompleto] = useState(true);
 
   const updateCurrentTime = () => {
     setCurrentTime(new Date());
@@ -283,16 +287,21 @@ function RegistroClasesAlumnos({ changeContent }) {
       width: 115,
       renderCell: (params) =>
         Number(params.row.cupo_actual) < Number(params.row.cupo_maximo) ? (
+          <Tooltip title={formularioCompleto ? "" : "Completa el formulario socioeconómico en 'PERFIL' para inscribirte"}>
+          <span>
           <Button
             size="small"
             onClick={() => handleClick(params.row)}
             variant="outlined"
+            disabled={!formularioCompleto}
           >
             {params.row.status === "Inscrito" &&
               params.row.status !== "ListaEspera"
               ? "Cancelar Registro"
               : "Inscribir"}
           </Button>
+          </span>
+        </Tooltip>
         ) : (
           <Button
             size="small"
@@ -505,6 +514,24 @@ function RegistroClasesAlumnos({ changeContent }) {
       });
   };
 
+  useEffect(() => {
+    if (currentStudent) {
+      try {
+        getAlumnoFormularioById(currentStudent._id, EXAMEN_SOCIOECONOMICO_ID)
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.length > 0) {
+              setFormularioCompleto(true);
+            } else {
+              setFormularioCompleto(false);
+            }
+          });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }, [currentStudent]);
+
   const handleCancelarClaseRegistrada = (clase) => {
     let periodo = [];
     let myClassStudent = [];
@@ -642,6 +669,7 @@ function RegistroClasesAlumnos({ changeContent }) {
       </Box>
     );
   }
+
   if (students.length === 0 && students !== null) {
     return (
       <Box
@@ -666,11 +694,12 @@ function RegistroClasesAlumnos({ changeContent }) {
           >
             <i> Perfil </i>
           </Link>
-          para agregar alumnos.
+          para completarlo.
         </Typography>
       </Box>
     );
   }
+
   return (
     <div>
       <Box>
