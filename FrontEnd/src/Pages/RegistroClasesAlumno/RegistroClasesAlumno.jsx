@@ -64,7 +64,7 @@ function RegistroClasesAlumnos({ changeContent }) {
 
   const [currentTerm, setCurrentTerm] = useState(null);
   const [periodos, setPeriodos] = useState([]);
-  const [slelectedPeriod, setSelectedPeriod] = useState(null);
+  const [selectedPeriod, setSelectedPeriod] = useState(null);
 
   const updateCurrentTime = () => {
     setCurrentTime(new Date());
@@ -131,7 +131,7 @@ function RegistroClasesAlumnos({ changeContent }) {
       get_available_classes("null")
         .then((response) => response.json())
         .then((data) => {
-          console.log("data", data);
+          console.log("data>", data);
           setClases(data);
           setFilteredClasses(data);
         });
@@ -309,6 +309,9 @@ function RegistroClasesAlumnos({ changeContent }) {
   ];
 
   const handleClick = (clase) => {
+    // console.log('>>>>>')
+    console.log(clase.status)
+    console.log(currentStudent)
     if (currentStudent == null) {
       setSelectAlertOpen(true);
       return;
@@ -322,7 +325,7 @@ function RegistroClasesAlumnos({ changeContent }) {
         setDialogAction("SalirLista");
         handleOpenDialog(clase);
         break;
-      case "":
+      case "" || undefined:
         Number(clase.cupo_actual) < Number(clase.cupo_maximo)
           ? setDialogAction("Registrar")
           : setDialogAction("ListaEspera");
@@ -386,11 +389,20 @@ function RegistroClasesAlumnos({ changeContent }) {
     if(currentStudent){
       const age = calculate_age(currentStudent.fecha_de_nacimiento);
       const newClasses = prevClases.filter(
-        (clase) =>
-          Number(clase.edad_minima) <= age &&
+        (clase) => {
+          // console.log('>', clase)
+          console.log(Number(clase.edad_minima),Number(clase.edad_maxima))
+          console.log(Number(clase.edad_minima) <= age, age <=Number(clase.edad_maxima))
+          console.log(Number(clase.edad_minima) <= age && age <=Number(clase.edad_maxima))
+          return Number(clase.edad_minima) <= age &&
           age <= (clase.edad_maxima ? Number(clase.edad_maxima) : 99)
+        }
+          
       );
+      // console.log(Number(newClasses[0].edad_minima) >= Number(age,newClasses[0].edad_maxima)<= age)
+      // console.log(newClasses[0].edad_minima >= age &&newClasses[0].edad_maxima<= age)
       console.log('student', currentStudent, 'age: ', age);
+      console.log(newClasses)
   
       return newClasses;
     }
@@ -533,6 +545,7 @@ function RegistroClasesAlumnos({ changeContent }) {
   };
 
   const handleOpenDialog = (clase) => {
+    console.log('paso 3')
     setClaseRegistrada(clase);
     setOpenConfirmationDialog(true);
   };
@@ -571,9 +584,9 @@ function RegistroClasesAlumnos({ changeContent }) {
     updateCurrentTime();
 
     //Get the specific times from your selected period
-    const time1 = slelectedPeriod?.fecha_fin_insc_talleres
-    const time2 = slelectedPeriod?.fecha_fin_insc_idiomas
-    const time3 = slelectedPeriod?.fecha_fin_insc_asesorias
+    const time1 = selectedPeriod?.fecha_fin_insc_talleres
+    const time2 = selectedPeriod?.fecha_fin_insc_idiomas
+    const time3 = selectedPeriod?.fecha_fin_insc_asesorias
 
     console.log("time1", time1)
     //Calculate the time differences for each specific time
@@ -597,7 +610,7 @@ function RegistroClasesAlumnos({ changeContent }) {
       updateCurrentTime();
 
       if (currentTime == time1 || currentTime == time2 || currentTime == time3) {
-        get_available_classes(slelectedPeriod.clave)
+        get_available_classes(selectedPeriod.clave)
           .then((response) => response.json())
           .then((data) => {
             console.log("data", data);
@@ -613,18 +626,21 @@ function RegistroClasesAlumnos({ changeContent }) {
 
     //Clean up the interval when the component unmounts
     return () => clearInterval(intervalId);
-  }, [slelectedPeriod]);
+  }, [selectedPeriod]);
 
   useEffect(() => {
     if (currentStudent) {
       //console.log(currentStudent)
-      get_available_classes(slelectedPeriod.clave)
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("data", data);
-          setClases(data);
-          setFilteredClasses(filterClassesByAge(data));
-        });
+      // console.log('>>',selectedPeriod)
+      if(!!selectedPeriod){
+        get_available_classes(selectedPeriod.clave)
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("data", data);
+            setClases(data);
+            setFilteredClasses(filterClassesByAge(data));
+          });
+      }
     }
   }, [currentStudent]);
   
@@ -705,7 +721,7 @@ function RegistroClasesAlumnos({ changeContent }) {
             <FormControl fullWidth>
               <InputLabel>Periodo</InputLabel>
               <Select
-                value={slelectedPeriod || ""}
+                value={selectedPeriod || ""}
                 label="Periodo"
                 onChange={handleChange}
               >
@@ -743,7 +759,7 @@ function RegistroClasesAlumnos({ changeContent }) {
 
         <div
 
-          key={[currentStudent?._id, slelectedPeriod?.clave, updator]}
+          key={[currentStudent?._id, selectedPeriod?.clave, updator]}
 
         >
 

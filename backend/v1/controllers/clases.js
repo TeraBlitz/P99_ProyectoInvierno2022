@@ -189,7 +189,25 @@ async function findClase(req, res) {
         console.log(`ERROR: ${err}`);
     }
 }
+// Function to compare two dates in different time zones without external libraries
+function compareDatesInDifferentTimezones(date1, timezone1, date2, timezone2) {
+    // Get the time difference between the time zones in milliseconds
+    const offset1 = new Date(date1.toLocaleString("en-US", { timeZone: timezone1 })).getTimezoneOffset() * 60000;
+    const offset2 = new Date(date2.toLocaleString("en-US", { timeZone: timezone2 })).getTimezoneOffset() * 60000;
 
+    // Adjust the dates based on time zone offsets
+    const adjustedDate1 = new Date(date1.getTime() + offset1);
+    const adjustedDate2 = new Date(date2.getTime() + offset2);
+
+    // Compare the adjusted dates
+    if (adjustedDate1 < adjustedDate2) {
+        return -1;
+    } else if (adjustedDate1 > adjustedDate2) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
 
 
 async function getClasesDisp_ByPeriod(req, res) {
@@ -207,6 +225,10 @@ async function getClasesDisp_ByPeriod(req, res) {
         console.log("retorna el mas reciente");   
         const dbPeriodrecent = database.collection("periodos");
         const resultPeriodrecent = await dbPeriodrecent.find().sort({ _id: -1 }).limit(1).toArray();
+        if (resultPeriodrecent.length === 0) {
+            res.send([]);
+            return;
+        }
         period = resultPeriodrecent[0].clave;
         console.log("period",period);
 
@@ -218,35 +240,36 @@ async function getClasesDisp_ByPeriod(req, res) {
 
     }
 
-    const mostRecentPeriod = await database.collection("periodos").find().sort({ _id: -1 }).limit(1).toArray();
-    const mostRecentPeriodClave = mostRecentPeriod[0].clave;
+    // const mostRecentPeriod = await database.collection("periodos").find().sort({ _id: -1 }).limit(1).toArray();
+    // const mostRecentPeriodClave = mostRecentPeriod[0].clave;
 
 
-    if (period != mostRecentPeriodClave) {
-        console.log("retorna la data de ese periodo");
+    // if (period != mostRecentPeriodClave) {
+    //     console.log("retorna la data de ese periodo");
 
-        const collection = database.collection("clases");
-        const clases_from_period = await collection.find({ clavePeriodo: period }).toArray();
+    //     const collection = database.collection("clases");
+    //     const clases_from_period = await collection.find({ clavePeriodo: period }).toArray();
 
-        res.send(clases_from_period);
-        return;
+    //     res.send(clases_from_period);
+    //     return;
 
-    }
+    // }
 
 
 
     const collection = database.collection("clases");
     const dbPeriod = database.collection("periodos");
     const resultPeriod = await dbPeriod.find({ clave: period }).toArray();
-
-    const fecha_inicio_insc_talleres =  new Date(resultPeriod[0].fecha_inicio_insc_talleres).toLocaleString("en-US", { timeZone: "America/Mexico_City" });
-    const fecha_fin_insc_talleres = new Date(resultPeriod[0].fecha_fin_insc_talleres).toLocaleString("en-US", { timeZone: "America/Mexico_City" });
-    const fecha_inicio_insc_idiomas = new Date(resultPeriod[0].fecha_inicio_insc_idiomas).toLocaleString("en-US", { timeZone: "America/Mexico_City" });
-    const fecha_fin_insc_idiomas = new Date(resultPeriod[0].fecha_fin_insc_idiomas).toLocaleString("en-US", { timeZone: "America/Mexico_City" });
-    const fecha_inicio_insc_asesorias = new Date(resultPeriod[0].fecha_inicio_insc_asesorias).toLocaleString("en-US", { timeZone: "America/Mexico_City" });
-    const fecha_fin_insc_asesorias = new Date(resultPeriod[0].fecha_fin_insc_asesorias).toLocaleString("en-US", { timeZone: "America/Mexico_City" });
+    console.log('>', Intl.DateTimeFormat().resolvedOptions().timeZone)
+    const fecha_inicio_insc_talleres =  new Date(resultPeriod[0].fecha_inicio_insc_talleres)//.toLocaleString("en-US", { timeZone: "America/Mexico_City" });
+    const fecha_fin_insc_talleres = new Date(resultPeriod[0].fecha_fin_insc_talleres)//.toLocaleString("en-US", { timeZone: "America/Mexico_City" });
+    const fecha_inicio_insc_idiomas = new Date(resultPeriod[0].fecha_inicio_insc_idiomas)//.toLocaleString("en-US", { timeZone: "America/Mexico_City" });
+    const fecha_fin_insc_idiomas = new Date(resultPeriod[0].fecha_fin_insc_idiomas)//.toLocaleString("en-US", { timeZone: "America/Mexico_City" });
+    const fecha_inicio_insc_asesorias = new Date(resultPeriod[0].fecha_inicio_insc_asesorias)//.toLocaleString("en-US", { timeZone: "America/Mexico_City" });
+    const fecha_fin_insc_asesorias = new Date(resultPeriod[0].fecha_fin_insc_asesorias)//.toLocaleString("en-US", { timeZone: "America/Mexico_City" });
 
     const clases_from_period = await collection.find({ clavePeriodo: period }).toArray();
+    // console.log('>', clases_from_period)
 
     const clases_talleres = clases_from_period.filter(clase => clase.area === "talleres");
     const clases_idiomas = clases_from_period.filter(clase => clase.area === "idiomas");
@@ -255,19 +278,26 @@ async function getClasesDisp_ByPeriod(req, res) {
 
     //set date time mexico city in this format 2023-12-19T16:30:00 
 
-    const currendDate = new Date().toLocaleString("en-US", { timeZone: "America/Mexico_City" });
+    const currendDate = new Date() //.toLocaleString("en-US", { timeZone: "America/Mexico_City" });
+    const curTz = Intl.DateTimeFormat().resolvedOptions().timeZone
+    const inputTz = 'America/Mexico_City'
     console.log("today",currendDate);
-    console.log("tallers",fecha_inicio_insc_talleres);
+    console.log("tallers",fecha_inicio_insc_talleres,fecha_fin_insc_talleres);
+    console.log("tallers",currendDate>=fecha_inicio_insc_talleres,currendDate<=fecha_fin_insc_talleres);
+    console.log("idiomas",fecha_inicio_insc_idiomas,fecha_fin_insc_idiomas);
+    console.log("idiomas",currendDate>=fecha_inicio_insc_idiomas,currendDate<=fecha_fin_insc_idiomas);
+    console.log("asesorias",fecha_inicio_insc_asesorias,fecha_fin_insc_asesorias);
+    // console.log("asesorias",,compareDatesInDifferentTimezones(currendDate,Intl.DateTimeFormat().resolvedOptions().timeZone,fecha_fin_insc_asesorias,"America/Mexico_City"));
 
     let clases_open = [];
 
-    if (currendDate >= fecha_inicio_insc_talleres && currendDate <= fecha_fin_insc_talleres) {
+    if (compareDatesInDifferentTimezones(currendDate,curTz,fecha_inicio_insc_talleres,inputTz) && compareDatesInDifferentTimezones(currendDate,curTz,fecha_fin_insc_talleres,inputTz)) {
         console.log("talleres open");
         clases_open = clases_open.concat(clases_talleres);
-    } if (currendDate >= fecha_inicio_insc_idiomas && currendDate <= fecha_fin_insc_idiomas) {
+    } if (compareDatesInDifferentTimezones(currendDate,curTz,fecha_inicio_insc_idiomas,inputTz) && compareDatesInDifferentTimezones(currendDate,curTz,fecha_fin_insc_idiomas,inputTz)) {
         clases_open = clases_open.concat(clases_idiomas);
         console.log("idiomas open");
-    } if (currendDate >= fecha_inicio_insc_asesorias && currendDate <= fecha_fin_insc_asesorias) {
+    } if (compareDatesInDifferentTimezones(currendDate,curTz,fecha_inicio_insc_asesorias,inputTz) && compareDatesInDifferentTimezones(currendDate,curTz,fecha_fin_insc_asesorias,inputTz)) {
         clases_open = clases_open.concat(clases_asesorias);
         console.log("asesorias open");
     } 

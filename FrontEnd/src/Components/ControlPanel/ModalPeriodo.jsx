@@ -6,6 +6,8 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import {DateTimePicker} from '@mui/x-date-pickers/DateTimePicker';
+import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs'; 
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
@@ -62,6 +64,7 @@ function ModalPeriodo({
   }
 
   const addPeriodo = async () => {
+    console.log('>>', form_data)
     await createPeriodo({
       clave: form_data.clave,
       status: form_data.status,
@@ -268,6 +271,8 @@ function ModalPeriodo({
             <div
               key={openModal}
             >
+              <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
+
 
               <TextField
                 style={{ paddingBottom: '15px', fontFamily: 'arial', width: 281 , marginRight: 20}}
@@ -420,7 +425,7 @@ function ModalPeriodo({
                 ampm={false}
                 onChange={(newValue) => {
                   const formattedDate = dayjs(newValue).format('YYYY-MM-DDTHH:mm');
-                  setForm_data({ ...form_data, fecha_inicio_insc_idiomas: formattedDate });
+                  setForm_data({ ...form_data, fecha_fin_insc_idiomas: formattedDate });
                 }}
               />
 
@@ -483,7 +488,7 @@ function ModalPeriodo({
                 value={form_data.idiomas_max_por_alumno}
                 onChange={handleChange}
               />
-
+            </ LocalizationProvider>
             </div> : null
           }
           <br />
