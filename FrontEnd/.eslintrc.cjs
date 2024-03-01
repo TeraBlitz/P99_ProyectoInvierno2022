@@ -17,5 +17,7 @@ module.exports = {
     'react',
   ],
   rules: {
+    'no-nested-ternary': 'off',
+    'react/prop-types': 'off',
   },
 };
