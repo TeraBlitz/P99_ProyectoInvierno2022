@@ -7,8 +7,6 @@ import { Alert, Button, Link, AlertTitle, Tooltip } from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
 import Autocomplete from "@mui/material/Autocomplete";
 import {
-  Card,
-  CardContent,
   Typography,
   TextField,
   MenuItem,
@@ -22,8 +20,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { getStudents } from "../../api/students";
 import { useAuth0 } from "@auth0/auth0-react";
 import { 
-  getClasses,
-  get_available_classes,
+  get_available_classes, get_user_classes,
 } from "../../api/classes";
 import {
   createClassStudent,
@@ -47,6 +44,7 @@ function RegistroClasesAlumnos({ changeContent }) {
   const [items, setItems] = useState([]);
   const [students, setStudents] = useState(null);
   const [currentStudent, setCurrentStudent] = useState(null);
+  const [currentStudentClases, setCurrentStudentClases] = useState(null);
   const [error, setError] = useState(false);
   const [clases, setClases] = useState(null);
   const [classNames, setClassNames] = useState([]);
@@ -91,38 +89,11 @@ function RegistroClasesAlumnos({ changeContent }) {
     getUserStudents();
   }, []);
 
-  const startDateDict = {
-    talleres: "fecha_inicio_insc_talleres",
-    idiomas: "fecha_inicio_insc_idiomas",
-    asesorias: "fecha_inicio_insc_asesorias",
-  };
-
-  const endDateDict = {
-    talleres: "fecha_fin_insc_talleres",
-    idiomas: "fecha_fin_insc_idiomas",
-    asesorias: "fecha_fin_insc_asesorias",
-  };
 
   const getPeriodosstak = () => {
     getPeriodos()
       .then((response) => response.json())
       .then((data) => {
-
-
-        setPeriodos(data);
-
-
-        console.log("periodos", data);
-        setSelectedPeriod(data[data.length - 1]);
-      });
-
-  };
-
-  const getPeriodobyperiodo = (periodo) => {
-    getPeriodos(periodo)
-      .then((response) => response.json())
-      .then((data) => {
-
         setPeriodos(data);
         console.log("periodos", data);
         setSelectedPeriod(data[data.length - 1]);
@@ -131,46 +102,22 @@ function RegistroClasesAlumnos({ changeContent }) {
   };
 
   useEffect(() => {
-    const getStudentClasses = () => {
-      get_available_classes("null")
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("data>", data);
-          setClases(data);
-          setFilteredClasses(data);
-        });
+    // const getStudentClasses = () => {
+    //   get_available_classes("null")
+    //     .then((response) => response.json())
+    //     .then((data) => {
+    //       console.log("data>", data);
+    //       setClases(data);
+    //       setFilteredClasses(data);
+    //     });
 
-      getPeriodosstak();
-    };
-    getStudentClasses();
+    //   };
+    getPeriodosstak();
+    setClases([]);
+    setFilteredClasses([]);
+    // getStudentClasses();
 
   }, []);
-
-  function traducirDate(raw) {
-    const date = raw.split("T", 2);
-    return date[0];
-  }
-
-  function compararFecha(data) {
-    let periodos = [];
-    for (const element of data) {
-      let fecha = traducirDate(element.fecha_inicio);
-      let separado = fecha.split("-", 3);
-      let valorA = Number(separado[0]);
-      let valorM = Number(separado[1]) / 100;
-      let valorD = Number(separado[2]) / 10000;
-      let valorT = valorA + valorM + valorD;
-      var obj = {
-        id: element.clave,
-        fecha: valorT,
-      };
-      periodos.push(obj);
-    }
-
-    periodos.sort((a, b) => b.fecha - a.fecha);
-    let clave = String(periodos[0].id);
-    return clave;
-  }
 
   // Funcion para calcular edad
   const calculate_age = (dateString) => {
@@ -319,7 +266,7 @@ function RegistroClasesAlumnos({ changeContent }) {
 
   const handleClick = (clase) => {
     // console.log('>>>>>')
-    console.log(clase.status)
+    console.log('stat', clase.status?.length)
     console.log(currentStudent)
     if (currentStudent == null) {
       setSelectAlertOpen(true);
@@ -334,10 +281,10 @@ function RegistroClasesAlumnos({ changeContent }) {
         setDialogAction("SalirLista");
         handleOpenDialog(clase);
         break;
-      case "" || undefined:
+      default:
         Number(clase.cupo_actual) < Number(clase.cupo_maximo)
           ? setDialogAction("Registrar")
-          : setDialogAction("ListaEspera");
+          : setDialogAction("ListaEspera");  
         handleOpenDialog(clase);
     }
   };
@@ -347,52 +294,54 @@ function RegistroClasesAlumnos({ changeContent }) {
     setOpenMoreInfo(!openMoreInfo);
   };
 
-  const filterClasses = (student) => {
-    const age = calculate_age(student.fecha_de_nacimiento);
-    let waitList = [];
-    let myClasses = [];
+  // const filterClasses = (student) => {
+  //   const age = calculate_age(student.fecha_de_nacimiento);
+  //   let waitList = [];
+  //   let myClasses = [];
 
-    let filter = clases.filter(
-      (clase) =>
-        Number(clase.edad_minima) <= age &&
-        age <= (clase.edad_maxima ? Number(clase.edad_maxima) : 99)
-    );
+  //   let filter = clases.filter(
+  //     (clase) =>
+  //       Number(clase.edad_minima) <= age &&
+  //       age <= (clase.edad_maxima ? Number(clase.edad_maxima) : 99)
+  //   );
 
-    filter.map((aClass) => {
-      aClass.status = "";
-    });
+  //   filter.map((aClass) => {
+  //     aClass.status = "";
+  //   });
 
-    getWaitList()
-      .then((response) => response.json())
-      .then((data) => {
-        waitList = data.filter((lista) => lista.idAlumno === student._id);
-      })
-      .then(() => {
-        waitList.map((inWaitList) => {
-          for (let i = 0; i < filter.length; i++) {
-            if (inWaitList.idClase === filter[i]._id) {
-              filter[i].status = "ListaEspera";
-            }
-          }
-        });
-      });
+  //   getWaitList()
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       waitList = data.filter((lista) => lista.idAlumno === student._id);
+  //     })
+  //     .then(() => {
+  //       waitList.map((inWaitList) => {
+  //         for (let i = 0; i < filter.length; i++) {
+  //           if (inWaitList.idClase === filter[i]._id) {
+  //             filter[i].status = "ListaEspera";
+  //           }
+  //         }
+  //       });
+  //     });
 
-    getClassStudent()
-      .then((response) => response.json())
-      .then((data) => {
-        myClasses = data.filter((clase) => clase.idAlumno === student._id);
-      })
-      .then(() => {
-        myClasses.map((myClass) => {
-          for (let i = 0; i < filter.length; i++) {
-            if (myClass.idClase === filter[i]._id) {
-              filter[i].status = "Inscrito";
-            }
-          }
-        });
-        setFilteredClasses(filter);
-      });
-  };
+  //   getClassStudent()
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log('???', myClasses)
+  //       myClasses = data.filter((clase) => clase.idAlumno === student._id);
+  //     })
+  //     .then(() => {
+  //       myClasses.map((myClass) => {
+  //         for (let i = 0; i < filter.length; i++) {
+  //           if (myClass.idClase === filter[i]._id) {
+  //             filter[i].status = "Inscrito";
+  //           }
+  //         }
+  //       });
+  //       console.
+  //       setFilteredClasses(filter);
+  //     });
+  // };
 
   const filterClassesByAge = (prevClases) => {
     if(currentStudent){
@@ -400,9 +349,9 @@ function RegistroClasesAlumnos({ changeContent }) {
       const newClasses = prevClases.filter(
         (clase) => {
           // console.log('>', clase)
-          console.log(Number(clase.edad_minima),Number(clase.edad_maxima))
-          console.log(Number(clase.edad_minima) <= age, age <=Number(clase.edad_maxima))
-          console.log(Number(clase.edad_minima) <= age && age <=Number(clase.edad_maxima))
+          // console.log(Number(clase.edad_minima),Number(clase.edad_maxima))
+          // console.log(Number(clase.edad_minima) <= age, age <=Number(clase.edad_maxima))
+          // console.log(Number(clase.edad_minima) <= age && age <=Number(clase.edad_maxima))
           return Number(clase.edad_minima) <= age &&
           age <= (clase.edad_maxima ? Number(clase.edad_maxima) : 99)
         }
@@ -432,9 +381,11 @@ function RegistroClasesAlumnos({ changeContent }) {
     get_available_classes(e.target.value.clave)
       .then((response) => response.json())
       .then((data) => {
-        console.log("data", data);
-        setClases(data);
-        setFilteredClasses(filterClassesByAge(data));
+        //should not work like this fix this
+        // setClases(data);
+        // data = data.map((el)=})
+        console.log("data><>", data);
+        // setFilteredClasses(filterClassesByAge(data));
       });
   };
 
@@ -444,8 +395,12 @@ function RegistroClasesAlumnos({ changeContent }) {
       setCurrentStudent(null);
       return;
     }
-
-    setCurrentStudent(newStudent);
+    get_user_classes(newStudent._id).then((clases)=> {
+      clases.json().then((classJson)=>{
+        setCurrentStudentClases(classJson)
+        setCurrentStudent(newStudent);
+      })
+    })
   };
 
   const handleListaEspera = (clase) => {
@@ -587,6 +542,7 @@ function RegistroClasesAlumnos({ changeContent }) {
     const filteredClasses = clases.filter((clase) =>
       clase.nombre_curso.toLowerCase().includes(value.trim().toLowerCase())
     );
+    console.log('este si')
     setFilteredClasses(filteredClasses);
 
   };
@@ -640,7 +596,7 @@ function RegistroClasesAlumnos({ changeContent }) {
         get_available_classes(selectedPeriod.clave)
           .then((response) => response.json())
           .then((data) => {
-            console.log("data", data);
+            console.log("#1", data);
             setClases(data);
             setFilteredClasses(filterClassesByAge(data));
           }
@@ -663,14 +619,23 @@ function RegistroClasesAlumnos({ changeContent }) {
         get_available_classes(selectedPeriod.clave)
           .then((response) => response.json())
           .then((data) => {
-            console.log("data", data);
             setClases(data);
+            console.log('#2>>>>>', )
+            data =  data.map((classEl)=>{
+              console.log(currentStudentClases,classEl._id)
+              if(currentStudentClases.includes(classEl._id)){
+                classEl.status="ListaEspera"
+              }
+              return classEl
+            })
+            
             setFilteredClasses(filterClassesByAge(data));
           });
       }
     }
   }, [currentStudent]);
   
+console.log('?',filteredClasses)
   if (!students || !clases || !periodos) {
     return (
       <Box
@@ -771,7 +736,7 @@ function RegistroClasesAlumnos({ changeContent }) {
 
           <Autocomplete
             disablePortal
-            options={classNames}
+            options={!classNames? [{label:"Loading...", id:0}]: classNames}
             onChange={(e, newvalue) => handleNameFilter(newvalue)}
             onInputChange={(e, newvalue) => handleNameFilter(newvalue)}
             sx={{ display: { xs: "flex", md: "none" }, mt: 1 }}
@@ -818,9 +783,6 @@ function RegistroClasesAlumnos({ changeContent }) {
                 }
 
               </>
-
-
-
                 : <>
                   <Box
                     sx={{
@@ -848,109 +810,6 @@ function RegistroClasesAlumnos({ changeContent }) {
             }}
           >
             <Box sx={{ display: "flex" }}>
-              {/* <Card
-              sx={{
-                textAlign: "center",
-                ml: 1,
-                my: 2,
-                display: "flex",
-              }}
-            >
-              <SearchIcon
-                color="primary"
-                width="2em"
-                height="2em"
-                sx={{ alignSelf: "center", ml: 0.5 }}
-              />
-              <CardContent
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  alignItems: "center",
-                  "& .MuiTextField-root": { m: 1, width: "25ch" },
-                  p: 1,
-                }}
-              >
-                <Autocomplete
-                  disablePortal
-                  options={classNames}
-                  onChange={(e, newvalue) => {
-                    setItems([
-                      {
-                        columnField: "nombre_curso",
-                        operatorValue: "contains",
-                        value: newvalue,
-                      },
-                    ]);
-                  }}
-                  onInputChange={(e, newvalue) => {
-                    setItems([
-                      {
-                        columnField: "nombre_curso",
-                        operatorValue: "contains",
-                        value: newvalue,
-                      },
-                    ]);
-                  }}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Curso" />
-                  )}
-                />
-                <TextField
-                  style={{ fontFamily: "arial" }}
-                  label="Nivel"
-                  onChange={(e) => {
-                    setItems([
-                      {
-                        columnField: "nivel",
-                        operatorValue: "contains",
-                        value: e.target.value,
-                      },
-                    ]);
-                  }}
-                  select
-                >
-                  {[
-                    "",
-                    "Desde cero",
-                    "Con bases",
-                    "Intermedio",
-                    "Avanzado",
-                  ].map((e) => (
-                    <MenuItem value={e} key={e}>
-                      {e}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <TextField
-                  style={{ fontFamily: "arial" }}
-                  label="Periodo"
-                  onChange={(e) => {
-                    setItems([
-                      {
-                        columnField: "clavePeriodo",
-                        operatorValue: "contains",
-                        value: e.target.value,
-                      },
-                    ]);
-                  }}
-                ></TextField>
-                <TextField
-                  style={{ fontFamily: "arial" }}
-                  label="Modalidad"
-                  onChange={(e) => {
-                    setItems([
-                      {
-                        columnField: "modalidad",
-                        operatorValue: "contains",
-                        value: e.target.value,
-                      },
-                    ]);
-                  }}
-                ></TextField>
-              </CardContent>
-            </Card> */}
               <MiRegistro />
             </Box>
 
@@ -972,7 +831,7 @@ function RegistroClasesAlumnos({ changeContent }) {
             >
               <DataGrid
                 sx={{ flexGrow: 1 }}
-                rows={filteredClasses}
+                rows={filteredClasses?filteredClasses:[]}
                 columns={columns}
                 disableSelectionOnClick={true}
                 getRowId={(row) => row._id}

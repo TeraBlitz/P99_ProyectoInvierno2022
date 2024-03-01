@@ -125,6 +125,7 @@ export default function Periodos() {
           _id: consolaSeleccionada._id,
         });
       } else if (currentOperation === 'Crear') {
+        console.log('c>>',consolaSeleccionada.fecha_inicio_insc_talleres)
         await createPeriodo({
           clave: consolaSeleccionada.clave,
           status: consolaSeleccionada.status,
@@ -140,6 +141,8 @@ export default function Periodos() {
           idiomas_max_por_alumno: consolaSeleccionada.idiomas_max_por_alumno,
         });
       } else {
+        console.log('u>>>>',consolaSeleccionada.fecha_inicio_insc_talleres)
+
         updatePeriodo({
           _id: consolaSeleccionada._id,
           clave: consolaSeleccionada.clave,

@@ -1,6 +1,6 @@
 
-export const host = "https://p99test.fly.dev"
-// export const host = "http://127.0.0.1:8080"
+// export const host = "https://p99test.fly.dev"
+export const host = "http://127.0.0.1:8080"
 
 export const login = async (data = {}) => {
     

@@ -1,11 +1,12 @@
 import express from 'express'
-import { getAllAlumnoClases, createAlumnoClases, updateAlumnoClases, deleteAlumnoClases } from '../controllers/alumnoClases.js'
+import { getAllAlumnoClases, createAlumnoClases, updateAlumnoClases, deleteAlumnoClases, getByAlumno } from '../controllers/alumnoClases.js'
 import { validateAlumnoClase } from '../validators/validateAlumnoClases.js'
 import { alumnoExiste, claseExiste, periodoExiste, alumnoClaseNoExiste, alumnoNoExcedeCursos, alumnoNoExcedeIdiomas, claseTieneCupo, validateTimeOfRegistration } from '../helpers/dbValidators.js'
 
 const router = express.Router()
 
 router.get('/', getAllAlumnoClases)
+router.get('/getByAlumno/:idAlumno',alumnoExiste, getByAlumno)
 router.post('/create', [
     validateAlumnoClase, // Schema
     alumnoExiste,
@@ -13,7 +14,7 @@ router.post('/create', [
     periodoExiste,
     alumnoClaseNoExiste,
     alumnoNoExcedeCursos,
-    // alumnoNoExcedeIdiomas,
+    alumnoNoExcedeIdiomas,
     claseTieneCupo,
     validateTimeOfRegistration
 ], createAlumnoClases)

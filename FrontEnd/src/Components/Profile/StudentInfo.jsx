@@ -156,7 +156,7 @@ function StudentInfo({
         onInputChange={(_event, newInputValue) => {
           setUserEducationInput(newInputValue);
         }}
-        options={nivelEscolaridad}
+        options={!nivelEscolaridad? [{label:"Loading...", id:0}]: nivelEscolaridad}
         renderInput={(params) => <TextField {...params} name="escolaridad" label="Escolaridad" helperText="Escolaridad o equivalente" required />}
       />
       <TextField

@@ -92,9 +92,9 @@ function BodyAlumnos({ data, seleccionarConsola }) {
       {
         field: 'actions',
         headerName: 'Acciones',
-        type: 'actions',
+        // type: 'actions',
         width: 200,
-        renderCell: (params) => <Actions {...{ params, seleccionarConsola }} />,
+        getActions: (params) => <Actions {...{ params, seleccionarConsola }} />,
       },
     ],
     [data],
