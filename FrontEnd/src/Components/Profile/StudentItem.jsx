@@ -94,7 +94,7 @@ function StudentItem({
           <DeleteIcon />
         </IconButton>
       </Box>
-      <Button type="button" onClick={() => setSuccessCreateOpen(true)}>opne modal</Button>
+
       <Modal
         open={successCreateOpen}
         onClose={() => setSuccessCreateOpen(false)}
