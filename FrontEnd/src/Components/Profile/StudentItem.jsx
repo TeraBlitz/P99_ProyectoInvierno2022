@@ -13,7 +13,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import Modal from '@mui/material/Modal';
 import CardActionArea from '@mui/material/CardActionArea';
-import ExamenSocioeconomico from '../Formularios/ExamenSocioeconomico';
+import ExamenSocioeconomico from '../Formularios/ExamenSocioeconomico/ExamenSocioeconomico';
 import { getAlumnoFormularioById } from '../../api/alumnoFormularios';
 import { EXAMEN_SOCIOECONOMICO_ID } from '../../utils/constants';
 import { CircularProgress } from '@mui/material';
