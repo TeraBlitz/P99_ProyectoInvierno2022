@@ -280,8 +280,21 @@ async function alumnoNoExcedeCursos(req, res, next){
     // Validating that the user does not try to add more classes than allowed
     try{
         let numCursosAlumno, numCursosPermitidos
+        // Conexion a DB.
+        const database = clientConnect.db(mongodbInf.database);
         
-        numCursosAlumno = res.locals.alumnoClaseCollection.length // Cursos del alumno en el periodo.
+        // Obtener idiomas del Alumno en el Periodo.
+        const collectionAC = database.collection('alumnoClases')
+        let query = {
+            idAlumno: new mongodb.ObjectId(req.body.idAlumno),
+            idPeriodo: new mongodb.ObjectId(req.body.idPeriodo)
+        }
+        
+        let validator = await collectionAC.find(query).toArray();
+
+        validator = validator.filter((ac)=>ac.areaClase != "idiomas");
+        console.log(validator)
+        numCursosAlumno = validator.length // Cursos del alumno en el periodo.
 
         numCursosPermitidos = res.locals.periodoCollection[0].cursos_max_por_alumno // Cursos del alumno en el periodo.
 
@@ -307,32 +320,37 @@ async function alumnoNoExcedeCursos(req, res, next){
 async function alumnoNoExcedeIdiomas(req, res, next){
     // Verificar que el usuario no meta cursos de mas.
     try{
-        let query, validator, numIdiomasAlumno, numIdiomasMax
-        // Conexion a DB.
-        const database = clientConnect.db(mongodbInf.database);
-        
-        // Obtener idiomas del Alumno en el Periodo.
-        const collectionAC = res.locals.alumnoClaseCollection
-        query = {
-            idAlumno: new mongodb.ObjectId(req.body.idAlumno),
-            idPeriodo: new mongodb.ObjectId(req.body.idPeriodo),
-            areaClase: "idiomas"
-        }
-        validator = await collectionAC.filter((ac)=>ac.areaClase == "idiomas");
-        numIdiomasAlumno = validator.length // Cursos del alumno en el periodo.
-
-        // Revisar cursos permitidos en el periodo.
-        const collectionP = res.locals.periodoCollection
-        numIdiomasMax = collectionP[0].idiomas_max_por_alumno // Cursos del alumno en el periodo.
-
-        // Validar correo no diplicado.
-        if(numIdiomasAlumno >= numIdiomasMax) {
-            return res.status(400).json({
-                msg: `Error: El alumno tiene el maximo de idiomas permitidos para el periodo.
-                Periodo: ${collectionP[0].clave}
-                Idiomas Maximos: ${numIdiomasMax}
-                Idiomas del Alumno: ${numIdiomasAlumno}`,
-            })
+        if(res.locals.claseCollection[0].area == 'idiomas') {
+            let query, validator, numIdiomasAlumno, numIdiomasMax
+            // Conexion a DB.
+            const database = clientConnect.db(mongodbInf.database);
+            
+            // Obtener idiomas del Alumno en el Periodo.
+            const collectionAC = database.collection('alumnoClases')
+            query = {
+                idAlumno: new mongodb.ObjectId(req.body.idAlumno),
+                idPeriodo: new mongodb.ObjectId(req.body.idPeriodo),
+                areaClase: "idiomas"
+            }
+            
+            validator = await collectionAC.find(query).toArray();
+    
+            // validator = await collectionAC.filter((ac)=>ac.areaClase == "idiomas");
+            numIdiomasAlumno = validator.length // Cursos del alumno en el periodo.
+    
+            // Revisar cursos permitidos en el periodo.
+            const collectionP = res.locals.periodoCollection
+            numIdiomasMax = collectionP[0].idiomas_max_por_alumno // Cursos del alumno en el periodo.
+    
+            // Validar correo no diplicado.
+            if(numIdiomasAlumno >= numIdiomasMax) {
+                return res.status(400).json({
+                    msg: `Error: El alumno tiene el maximo de idiomas permitidos para el periodo.
+                    Periodo: ${collectionP[0].clave}
+                    Idiomas Maximos: ${numIdiomasMax}
+                    Idiomas del Alumno: ${numIdiomasAlumno}`,
+                })
+            }
         }
 
         next()
