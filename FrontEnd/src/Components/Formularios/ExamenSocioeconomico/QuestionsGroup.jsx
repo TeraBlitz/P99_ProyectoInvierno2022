@@ -35,7 +35,7 @@ function QuestionsGroup({
             control={(
               <Checkbox
                 value={answer}
-                checked={formData[section][question][answer]}
+                checked={formData[section][question].answer[answer]}
                 onChange={(e) => handleChange(e, section)}
                 name={question}
                 sx={{ my: 0, py: 0 }}

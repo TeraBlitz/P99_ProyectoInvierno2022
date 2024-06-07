@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { getFormularioById } from '../../../api/formularios';
-import { insertAlumnoFormulario } from '../../../api/alumnoFormularios';
+import { insertAlumnoFormulario, updateAlumnoFormulario } from '../../../api/alumnoFormularios';
 import { EXAMEN_SOCIOECONOMICO_ID } from '../../../utils/constants';
 import QuestionsGroup from './QuestionsGroup';
 
@@ -19,10 +19,31 @@ const getBackgroundColor = (section) => {
   return 'white'; // Default background color
 };
 
-function ExamenSocioeconomico({ setSuccessCreateOpen, idAlumno, setFormularioCompleto }) {
+function ExamenSocioeconomico({ setSuccessCreateOpen, idAlumno, setFormularioCompleto, formularioData }) {
   const [formulario, setFormulario] = useState(null);
   const [formData, setFormData] = useState({});
   const [otherResponsible, setOtherResponsible] = useState('no');
+
+
+  const parseFormularioData = (data) => {
+    const newFormData = data;
+      for(let section in formularioData) {
+        let sectionResponse = formularioData[section];
+        let index = 0;
+        for(let question in newFormData[section]) {
+          if(newFormData[section][question].type !== 'checkbox') {
+            newFormData[section][question].answer = sectionResponse[index]
+          } else {
+            for(let answer in newFormData[section][question].answer) {
+              let answersSet = new Set(sectionResponse[index]);
+              newFormData[section][question].answer[answer] = answersSet.has(answer);
+            }
+          }
+          index++;
+        }
+      }
+      setFormData(newFormData);
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -56,15 +77,29 @@ function ExamenSocioeconomico({ setSuccessCreateOpen, idAlumno, setFormularioCom
       idFormulario: EXAMEN_SOCIOECONOMICO_ID,
       answers: JSON.stringify(formData),
     };
-    insertAlumnoFormulario(insertData)
-      .then((data) => {
-        if (data.status === 200) {
-          setSuccessCreateOpen(false);
-          setFormularioCompleto(true);
-        }
+    if (!formularioData) {
+      insertAlumnoFormulario(insertData)
+        .then((data) => {
+          if (data.status === 200) {
+            setSuccessCreateOpen(false);
+            setFormularioCompleto(true);
+          }
       });
+    } else {
+      updateAlumnoFormulario(idAlumno, EXAMEN_SOCIOECONOMICO_ID, insertData)
+        .then((data) => {
+          if (data.status === 200) {
+            setSuccessCreateOpen(false);  
+            setFormularioCompleto(true);
+          }
+      });
+    }
+
+
     // setSuccessCreateOpen(false);
     // You can handle form submission logic here
+    window.location.reload();
+    
   };
 
   const handleChange = (e, section) => {
@@ -123,8 +158,10 @@ function ExamenSocioeconomico({ setSuccessCreateOpen, idAlumno, setFormularioCom
                 delete typeAndOptions.options;
               });
             });
-            console.log(formAnswers);
-            setFormData(formAnswers);
+            if (formularioData)
+              parseFormularioData(formAnswers);
+            else
+              setFormData(formAnswers);
           });
       } catch (error) {
         console.error('Error fetching formulario:', error);

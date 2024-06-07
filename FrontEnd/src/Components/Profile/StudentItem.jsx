@@ -23,6 +23,7 @@ function StudentItem({
 }) {
   const [successCreateOpen, setSuccessCreateOpen] = useState(false);
   const [formularioCompleto, setFormularioCompleto] = useState(false);
+  const [formularioData, setFormularioData] = useState(null);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     const getFormulario = async () => {
@@ -33,6 +34,7 @@ function StudentItem({
           .then((data) => {
             if (data.length > 0) {
               setFormularioCompleto(true);
+              setFormularioData(data[0].answers);
             }
             setLoading(false);
           });
@@ -77,10 +79,10 @@ function StudentItem({
           onClick={() => setSuccessCreateOpen(true)}
           size="small"
           color={formularioCompleto ? 'success' : 'warning'}
-          disabled={formularioCompleto || loading}
+          disabled={loading}
           sx={{ mx: 1 }}
         >
-          Examen Socioeconomico
+          {formularioCompleto ? 'EXAMEN SOCIOECONOMICO (EDITAR)' : 'EXAMEN SOCIOECONOMICO'}
         </Button>
         <Button
           variant="contained"
@@ -100,7 +102,7 @@ function StudentItem({
         onClose={() => setSuccessCreateOpen(false)}
         sx={{ overflow: 'scroll' }}
       >
-        <ExamenSocioeconomico setSuccessCreateOpen={setSuccessCreateOpen} idAlumno={studentInfo._id} setFormularioCompleto={setFormularioCompleto}/>
+        <ExamenSocioeconomico setSuccessCreateOpen={setSuccessCreateOpen} idAlumno={studentInfo._id} setFormularioCompleto={setFormularioCompleto} formularioData={formularioData} />
       </Modal>
     </Card>
   );
