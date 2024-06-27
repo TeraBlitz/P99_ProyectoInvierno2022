@@ -47,16 +47,16 @@ function BodyInscripcionClase({
       {
         field: 'actions',
         headerName: 'Acciones',
-        type: 'actions',
+        // type: 'actions',
         width: 125,
-        renderCell: (params) => <Actions {...{ params, seleccionarConsola: seleccionarClase }} />,
+        getActions: (params) => <Actions {...{ params, seleccionarConsola: seleccionarClase }} />,
       },
       {
         field: 'wait_list',
         headerName: 'Lista Espera',
-        type: 'actions',
+        // type: 'actions',
         width: 150,
-        renderCell: (params) => (
+        getActions: (params) => (
           <Button size="small" onClick={() => getClassWaitList(params.row)}>Lista Espera</Button>
         ),
       },
@@ -85,7 +85,7 @@ function BodyInscripcionClase({
       value={filterState}
       onChange={(event, newValue) => setFilterState(newValue)}
       freeSolo
-      options={options}
+      options={!options? [{label:"Loading...", id:0}]: options}
       getOptionLabel={(option) => option}
       renderInput={(params) => <TextField {...params} label={label} />}
     />

@@ -20,3 +20,7 @@ export const get_available_classes = (periodo) => {
     return getData(`/v1/clases/getClasesDisp_ByPeriod/${periodo}`)
 }
 
+export const get_user_classes = (student) => {
+    return getData(`/v1/alumnoClases/getByAlumno/${student}`)
+}
+

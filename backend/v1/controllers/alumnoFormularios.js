@@ -35,6 +35,40 @@ async function insertAlumnoFormularios(req, res) {
     }
 }
 
+async function updateAlumnoFormularios(req, res) {
+    try {
+        const database = clientConnect.db(mongodbInf.database);
+        const collection = database.collection(COLLECTION_NAME);
+
+        const formularioId = req.params.idFormulario;
+        const alumnoId = req.params.idAlumno;
+        const respuestas = JSON.parse(req.body.answers);
+        const formattedRespuestas = {};
+        for (const key in respuestas) {
+            if (Object.hasOwnProperty.call(respuestas, key)) {
+                const originalInnerObject = respuestas[key];
+                // Transform the inner object values into an array
+                const transformedInnerArray = Object.values(originalInnerObject);
+                // Update the transformedObject with the new structure
+                formattedRespuestas[key] = transformedInnerArray;
+            }
+        }
+
+        const doc = {
+            idFormulario: formularioId,
+            idAlumno: alumnoId,
+            answers: formattedRespuestas
+        }
+
+        const result = await collection.updateOne({ idFormulario: formularioId, idAlumno: alumnoId }, { $set: doc });
+        res.json(result);
+    }
+    catch (error) {
+        console.log(`ERROR: ${error}`);
+    }
+}
+
+
 async function getAlumnoFormularios(req, res) {
     try {
         const database = clientConnect.db(mongodbInf.database);
@@ -64,4 +98,4 @@ async function getAlumnoFormularioById(req, res) {
         
 }
 
-export { insertAlumnoFormularios, getAlumnoFormularios, getAlumnoFormularioById };
+export { insertAlumnoFormularios, updateAlumnoFormularios, getAlumnoFormularios, getAlumnoFormularioById };

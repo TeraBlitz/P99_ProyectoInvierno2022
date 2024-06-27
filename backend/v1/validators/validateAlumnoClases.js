@@ -12,6 +12,7 @@ ajvErrors(ajv)
 const validate = ajv.compile(alumnoClaseSchema)
 
 async function validateAlumnoClase(req, res, next){
+	// console.log(req.body)
 	const isValid = validate(req.body)
 
 	if(!isValid){

@@ -1,6 +1,7 @@
 import { clientConnect } from '../connection.js'
 import { mongodbInf } from '../config.js'
 import mongodb, { ObjectId } from "mongodb"
+import { getFixedDate } from './serverDateFix.js';
 
 /* 
     ====================================================================
@@ -109,8 +110,10 @@ async function alumnoExiste(req, res, next){
 
         // Query.
         let query, validator
-        query = {_id: new mongodb.ObjectId(req.body.idAlumno)}
+        query = {_id: new mongodb.ObjectId(req.body.idAlumno?req.body.idAlumno:req.params.idAlumno)}
         validator = await collection.find(query).toArray();
+        res.locals.alumnoCollection = validator
+
         // Validar que exista.
         if(validator.length < 1) {
             return res.status(400).json({
@@ -138,7 +141,10 @@ async function claseExiste(req, res, next){
         // Query.
         let query, validator
         query = {_id: new mongodb.ObjectId(req.body.idClase)}
+        console.log(query)
         validator = await collection.find(query).toArray();
+        res.locals.claseCollection = validator
+
         // Validar que exista.
         if(validator.length < 1) {
             return res.status(400).json({
@@ -170,6 +176,8 @@ async function periodoExiste(req, res, next){
         let query, validator
         query = {_id: new mongodb.ObjectId(req.body.idPeriodo)}
         validator = await collection.find(query).toArray();
+        res.locals.periodoCollection = validator
+
         // Validar que exista.
         if(validator.length < 1) {
             return res.status(400).json({
@@ -229,6 +237,8 @@ async function alumnoClaseNoExiste(req, res, next){
             idClase: new mongodb.ObjectId(req.body.idClase),
         }
         validator = await collection.find(query).toArray();
+        res.locals.alumnoClaseCollection = validator
+
         // Validar que exista.
         if(validator.length > 0) {
             return res.status(400).json({
@@ -247,14 +257,7 @@ async function alumnoClaseNoExiste(req, res, next){
     }
 }
 
-async function alumnoNoExcedeCursos(req, res, next){
-    // Verificar que el usuario no meta cursos de mas.
-    // Validating that the user does not try to add more classes than allowed
-    try{
-        let query, validator, numCursosAlumno, numCursosPermitidos
-        // Conexion a DB.
-        const database = clientConnect.db(mongodbInf.database);
-        
+async function alumnoCreateColections(req, res, next) {
         // Obtener Cursos del Alumno en el Periodo.
         const collectionAC = database.collection("alumnoClases");
         query = {
@@ -262,51 +265,48 @@ async function alumnoNoExcedeCursos(req, res, next){
             idPeriodo: new mongodb.ObjectId(req.body.idPeriodo),
         }
         validator = await collectionAC.find(query).toArray();
+        res.locals.alumnoClaseCollection = validator
+
+        const collectionP = database.collection("periodos")
+        query = {
+            _id: new mongodb.ObjectId(req.body.idPeriodo),
+        }
+        validator = await collectionP.find(query).toArray();
+        res.locals.peridonColletion = validator
+}
+
+async function alumnoNoExcedeCursos(req, res, next){
+    // Verificar que el usuario no meta cursos de mas.
+    // Validating that the user does not try to add more classes than allowed
+    try{
+        let numCursosAlumno, numCursosPermitidos
+        // Conexion a DB.
+        const database = clientConnect.db(mongodbInf.database);
+        
+        // Obtener idiomas del Alumno en el Periodo.
+        const collectionAC = database.collection('alumnoClases')
+        let query = {
+            idAlumno: new mongodb.ObjectId(req.body.idAlumno),
+            idPeriodo: new mongodb.ObjectId(req.body.idPeriodo)
+        }
+        
+        let validator = await collectionAC.find(query).toArray();
+
+        validator = validator.filter((ac)=>ac.areaClase != "idiomas");
+        console.log(validator)
         numCursosAlumno = validator.length // Cursos del alumno en el periodo.
 
-        let typeOfClass = database.collection("clases").find({_id: ObjectId(req.body.idClase)})
+        numCursosPermitidos = res.locals.periodoCollection[0].cursos_max_por_alumno // Cursos del alumno en el periodo.
 
-
-        // #needs_testing
-        if(typeOfClass.area == "idiomas") {
-            // Revisar cursos permitidos en el periodo.
-            const collectionP = database.collection("periodos")
-            query = {
-                _id: new mongodb.ObjectId(req.body.idPeriodo),
-            }
-            validator = await collectionP.find(query).toArray();
-            numIdiomasMax = validator[0].idiomas_max_por_alumno // Cursos del alumno en el periodo.
-
-            // Validar correo no diplicado.
-            if(numIdiomasAlumno >= numIdiomasMax) {
-                return res.status(400).json({
-                    msg: `Error: El alumno tiene el maximo de idiomas permitidos para el periodo.
-                    Periodo: ${validator[0].clave}
-                    Idiomas Maximos: ${numIdiomasMax}
-                    Idiomas del Alumno: ${numIdiomasAlumno}`,
-                })
-            }
+        // Revisar cursos permitidos en el periodo.
+        if(numCursosAlumno >= numCursosPermitidos) {
+            return res.status(400).json({
+                msg: `Error: El alumno tiene el maximo de cursos permitidos para el periodo.
+                Periodo: ${res.locals.periodoCollection[0].clave}
+                Cursos Maximos Permitidos: ${numCursosPermitidos}
+                Cursos del Alumno: ${numCursosAlumno}`,
+            })
         }
-        else {
-            // Revisar cursos permitidos en el periodo.
-            const collectionP = database.collection("periodos")
-            query = {
-                _id: new mongodb.ObjectId(req.body.idPeriodo),
-            }
-            validator = await collectionP.find(query).toArray();
-            numCursosPermitidos = validator[0].cursos_max_por_alumno // Cursos del alumno en el periodo.
-    
-            // Validar correo no diplicado.
-            if(numCursosAlumno >= numCursosPermitidos) {
-                return res.status(400).json({
-                    msg: `Error: El alumno tiene el maximo de cursos permitidos para el periodo.
-                    Periodo: ${validator[0].clave}
-                    Cursos Maximos Permitidos: ${numCursosPermitidos}
-                    Cursos del Alumno: ${numCursosAlumno}`,
-                })
-            }
-        }
-
         next()
 
     }catch(err){
@@ -320,35 +320,37 @@ async function alumnoNoExcedeCursos(req, res, next){
 async function alumnoNoExcedeIdiomas(req, res, next){
     // Verificar que el usuario no meta cursos de mas.
     try{
-        let query, validator, numIdiomasAlumno, numIdiomasMax
-        // Conexion a DB.
-        const database = clientConnect.db(mongodbInf.database);
-        
-        // Obtener idiomas del Alumno en el Periodo.
-        const collectionAC = database.collection("alumnoClases");
-        query = {
-            idAlumno: new mongodb.ObjectId(req.body.idAlumno),
-            idPeriodo: new mongodb.ObjectId(req.body.idPeriodo),
-        }
-        validator = await collectionAC.find(query).toArray();
-        numIdiomasAlumno = validator.length // Cursos del alumno en el periodo.
-
-        // Revisar cursos permitidos en el periodo.
-        const collectionP = database.collection("periodos")
-        query = {
-            _id: new mongodb.ObjectId(req.body.idPeriodo),
-        }
-        validator = await collectionP.find(query).toArray();
-        numIdiomasMax = validator[0].idiomas_max_por_alumno // Cursos del alumno en el periodo.
-
-        // Validar correo no diplicado.
-        if(numIdiomasAlumno >= numIdiomasMax) {
-            return res.status(400).json({
-                msg: `Error: El alumno tiene el maximo de idiomas permitidos para el periodo.
-                Periodo: ${validator[0].clave}
-                Idiomas Maximos: ${numIdiomasMax}
-                Idiomas del Alumno: ${numIdiomasAlumno}`,
-            })
+        if(res.locals.claseCollection[0].area == 'idiomas') {
+            let query, validator, numIdiomasAlumno, numIdiomasMax
+            // Conexion a DB.
+            const database = clientConnect.db(mongodbInf.database);
+            
+            // Obtener idiomas del Alumno en el Periodo.
+            const collectionAC = database.collection('alumnoClases')
+            query = {
+                idAlumno: new mongodb.ObjectId(req.body.idAlumno),
+                idPeriodo: new mongodb.ObjectId(req.body.idPeriodo),
+                areaClase: "idiomas"
+            }
+            
+            validator = await collectionAC.find(query).toArray();
+    
+            // validator = await collectionAC.filter((ac)=>ac.areaClase == "idiomas");
+            numIdiomasAlumno = validator.length // Cursos del alumno en el periodo.
+    
+            // Revisar cursos permitidos en el periodo.
+            const collectionP = res.locals.periodoCollection
+            numIdiomasMax = collectionP[0].idiomas_max_por_alumno // Cursos del alumno en el periodo.
+    
+            // Validar correo no diplicado.
+            if(numIdiomasAlumno >= numIdiomasMax) {
+                return res.status(400).json({
+                    msg: `Error: El alumno tiene el maximo de idiomas permitidos para el periodo.
+                    Periodo: ${collectionP[0].clave}
+                    Idiomas Maximos: ${numIdiomasMax}
+                    Idiomas del Alumno: ${numIdiomasAlumno}`,
+                })
+            }
         }
 
         next()
@@ -369,14 +371,10 @@ async function claseTieneCupo(req, res, next){
         const database = clientConnect.db(mongodbInf.database);
 
         // Obtener cupo de la clase.
-        const collectionC = database.collection("clases");
-        query = { 
-            _id: new mongodb.ObjectId(req.body.idClase) 
-        }
-        validator = await collectionC.find(query).toArray();
-        cupoMaxClase = validator[0].cupo_maximo
-        const periodoClase = validator[0].clavePeriodo
-        const claveClase = validator[0].clave
+        const collectionC = res.locals.claseCollection
+        cupoMaxClase = res.locals.claseCollection[0].cupo_maximo
+        const periodoClase = collectionC[0].clavePeriodo
+        const claveClase = collectionC[0].clave
 
         // Obtener alumnos inscritos en la clase.
         const collectionAC = database.collection("alumnoClases");
@@ -604,28 +602,17 @@ async function validateTimeOfRegistration(req, res, next){
     // Checking if is still valid to registrate classes for the current Period
     try{
         // Conexion a DB y coleccion.
-        const database = clientConnect.db(mongodbInf.database);
-        let collection = database.collection("clases");
-
+        let claseCollection = res.locals.claseCollection;
         // Comprobar que no existan campos duplicados.
-        let query
-        query = {
-            _id: ObjectId(req.body.idClase)
-        }
-        let classValidating = await collection.find(query).toArray();
-        classValidating = classValidating[0]
+
+        let classValidating = claseCollection[0]
         let typeOfClass = classValidating.area
         let objectAttributeToInspectBegining = `fecha_inicio_insc_${typeOfClass}`
         let objectAttributeToInspectEnd = `fecha_fin_insc_${typeOfClass}`
-        
-        collection = database.collection("periodos");
-
-        query = {
-            _id: ObjectId(req.body.idPeriodo)
-        }
-        let termOfClass = (await collection.find(query).toArray())[0];
-        let currentTime = Date.parse(Date())
-        if(currentTime < termOfClass[objectAttributeToInspectBegining] || currentTime > termOfClass[objectAttributeToInspectEnd]) {
+        let periodoCollection = res.locals.periodoCollection
+        let termOfClass = periodoCollection[0];
+        let currentTime = getFixedDate(new Date())
+        if(currentTime < new Date(termOfClass[objectAttributeToInspectBegining]) || currentTime > new Date(termOfClass[objectAttributeToInspectEnd])) {
             return res.status(400).json({
                 msg: 'Error: No es hora de inscripcion.',
             })

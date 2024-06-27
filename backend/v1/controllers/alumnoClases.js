@@ -43,7 +43,7 @@ async function createAlumnoClases(req, res) {
         const idDoc = {
             _id: new mongodb.ObjectId(req.body.idClase),
         };
-        const docClase = await collectionClase.findOne(idDoc);
+        const docClase = res.locals.claseCollection[0];
         const cupo_actual = Number(docClase.cupo_actual) ?? 0;
         const docClaseUpdate = {
             $set: {
@@ -146,13 +146,26 @@ async function deleteAlumnoClases(req, res) {
         });
     }
 }
-// Test deleteAlumnoClases
-// deleteAlumnoClases().catch(console.dir);
+async function getByAlumno(req, res) {
+    try {
+        const database = clientConnect.db(mongodbInf.database);
+        const collection = database.collection(COLLECTION_NAME);
+        const validator = await collection.find({idAlumno: new mongodb.ObjectId(req.params.idAlumno)}).toArray();
+        res.send(validator)
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            msg: `ERROR: ${err}`
+        });
+    }
 
+
+}
 
 export {
     getAllAlumnoClases,
     createAlumnoClases,
     updateAlumnoClases,
     deleteAlumnoClases,
+    getByAlumno,
 };
