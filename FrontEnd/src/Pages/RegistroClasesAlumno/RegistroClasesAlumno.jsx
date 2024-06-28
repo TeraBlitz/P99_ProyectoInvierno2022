@@ -452,7 +452,7 @@ function RegistroClasesAlumnos({ changeContent }) {
           return;        }
       })
       .then(() => {
-        clase.status = "Inscribir";
+        clase.status = "";
         handleCloseDialog(); 
       })
       .catch((error) => {
