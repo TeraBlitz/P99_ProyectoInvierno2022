@@ -429,23 +429,33 @@ function RegistroClasesAlumnos({ changeContent }) {
       .then((response) => response.json())
       .then((data) => {
         periodo = data;
+        console.log("Periodo encontrado:", periodo); // Registro de depuración
       })
       .then(() => {
-        getWaitList()
-          .then((response) => response.json())
-          .then((data) => {
-            myWaitList = data.filter(
-              (aWList) =>
-                aWList.idClase === clase._id &&
-                aWList.idAlumno === currentStudent._id &&
-                aWList.idPeriodo === periodo[0]._id
-            );
-          })
-          .then(() => {
-            deleteWaitList({ _id: myWaitList[0]._id });
-            clase.status = "";
-            handleCloseDialog();
-          });
+        return getWaitList();
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        myWaitList = data.filter(
+          (aWList) =>
+            aWList.idClase === clase._id &&
+            aWList.idAlumno === currentStudent._id &&
+            aWList.idPeriodo === periodo[0]._id
+        );
+        console.log("Mi lista de espera filtrada:", myWaitList);
+        if (myWaitList.length > 0) {
+          return deleteWaitList({ _id: myWaitList[0]._id });
+        } else {
+          throw new Error("No se encontró la lista de espera para eliminar.");
+        }
+      })
+      .then(() => {
+        clase.status = "";
+        handleCloseDialog(); 
+      })
+      .catch((error) => {
+        console.error("Error en handleSalirListaEspera:", error);
+        handleCloseDialog();
       });
   };
 
