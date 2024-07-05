@@ -370,9 +370,10 @@ function RegistroClasesAlumnos({ changeContent }) {
   }
 
   const handleChange = (e) => {
-    if (e.target.value === "") {
+    if (e.target.value === "" || e.target.value === "Periodo") {
       // setFilteredClasses(clases);
       setSelectedPeriod(null);
+      setFilteredClasses([]);
       return;
     }
     setSelectedPeriod(e.target.value);
@@ -391,7 +392,7 @@ function RegistroClasesAlumnos({ changeContent }) {
 
   const handleChangeStudent = (e) => {
     const newStudent = e.target.value;
-    if (newStudent === "") {
+    if (newStudent === "" || newStudent === "Estudiante") {
       setCurrentStudent(null);
       return;
     }
