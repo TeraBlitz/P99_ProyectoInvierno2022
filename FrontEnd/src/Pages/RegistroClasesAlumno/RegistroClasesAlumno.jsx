@@ -430,6 +430,7 @@ function RegistroClasesAlumnos({ changeContent }) {
       .then((response) => response.json())
       .then((data) => {
         periodo = data;
+        console.log("Periodo encontrado:", periodo); // Registro de depuración
       })
       .then(() => {
         return getWaitList();
@@ -458,9 +459,9 @@ function RegistroClasesAlumnos({ changeContent }) {
       })
       .catch((error) => {
         console.error("Error en handleSalirListaEspera:", error);
+      
         alert(error);
         handleCloseDialog();
-
       });
   };
 
