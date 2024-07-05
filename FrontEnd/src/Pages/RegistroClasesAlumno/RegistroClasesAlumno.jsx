@@ -370,9 +370,10 @@ function RegistroClasesAlumnos({ changeContent }) {
   }
 
   const handleChange = (e) => {
-    if (e.target.value === "") {
+    if (e.target.value === "" || e.target.value === "Periodo") {
       // setFilteredClasses(clases);
       setSelectedPeriod(null);
+      setFilteredClasses([]);
       return;
     }
     setSelectedPeriod(e.target.value);
@@ -391,7 +392,7 @@ function RegistroClasesAlumnos({ changeContent }) {
 
   const handleChangeStudent = (e) => {
     const newStudent = e.target.value;
-    if (newStudent === "") {
+    if (newStudent === "" || newStudent === "Estudiante") {
       setCurrentStudent(null);
       return;
     }
@@ -446,8 +447,11 @@ function RegistroClasesAlumnos({ changeContent }) {
         if (myWaitList.length > 0) {
           return deleteWaitList({ _id: myWaitList[0]._id });
         } else {
-          throw new Error("No se encontró la lista de espera para eliminar.");
-        }
+          // Alertar si no se encontró la lista de espera para eliminar
+          console.warn("No se encontró la lista de espera para eliminar. La lista de espera está vacía o no coincide.");
+          // No lanzar un error, simplemente salir de la función
+          handleCloseDialog();
+          return;        }
       })
       .then(() => {
         clase.status = "";
@@ -455,6 +459,8 @@ function RegistroClasesAlumnos({ changeContent }) {
       })
       .catch((error) => {
         console.error("Error en handleSalirListaEspera:", error);
+      
+        alert(error);
         handleCloseDialog();
       });
   };
