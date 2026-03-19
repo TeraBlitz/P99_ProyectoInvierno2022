@@ -54,13 +54,20 @@ function App() {
     }
 
     useEffect(()=>{
-        const getAccessToken =async () => {
-            const token = await getAccessTokenSilently()
-            sessionStorage.setItem("Authorization" , token)
+        const getAccessToken = async () => {
+            try {
+                const token = await getAccessTokenSilently()
+                sessionStorage.setItem("Authorization" , token)
+            } catch (error) {
+                console.error("Error getting access token:", error)
+            }
         }
-        getAccessToken()
+        
+        if (isAuthenticated) {
+            getAccessToken()
+        }
 
-    }, [getAccessTokenSilently])
+    }, [getAccessTokenSilently, isAuthenticated])
 
     useEffect(()=>{
         handleStudent(user)
