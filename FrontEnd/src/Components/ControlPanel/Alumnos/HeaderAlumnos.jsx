@@ -7,7 +7,7 @@ import {
 import Select from 'react-select';
 import { CSVLink } from 'react-csv';
 
-function HeaderAlumnos({ data, dataPeriodo, handleSelectChange }) {
+function HeaderAlumnos({ csvData, dataPeriodo, handleSelectChange }) {
   return (
     <>
       <Box
@@ -32,7 +32,7 @@ function HeaderAlumnos({ data, dataPeriodo, handleSelectChange }) {
         >
           Alumnos Inscritos
         </Typography>
-        <CSVLink data={data} filename="alumnos.csv">
+        <CSVLink data={csvData} filename="alumnos.csv">
           <Button
             color="primary"
             variant="contained"
