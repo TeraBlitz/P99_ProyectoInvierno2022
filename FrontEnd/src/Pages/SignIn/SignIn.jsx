@@ -58,7 +58,7 @@ const SignIn = () => {
             :
             <Button
               fullWidth
-              type="submit"
+              type="button"
               sx={{ backgroundColor: '#57a1f1', color: "white" }}
               onClick={() => loginWithRedirect()}
             >
