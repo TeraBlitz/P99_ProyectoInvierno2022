@@ -1,6 +1,6 @@
 
-// export const host = "https://p99test.fly.dev"
-export const host = "http://127.0.0.1:8080"
+export const host = "https://p99test.fly.dev"
+// export const host = "http://127.0.0.1:8080"
 
 export const login = async (data = {}) => {
     
@@ -61,6 +61,18 @@ export const deleteData = async (url = '', data = {}) => {
             'Authorization':  `Bearer ${sessionStorage.getItem("Authorization")}`
         },
         body: new URLSearchParams(data)
+    });
+    return response
+}
+
+export const getStudents = async (data) => {
+    const response = await fetch(host+"/v1/periodos/getStudents?clave="+data, {
+        method: 'GET', 
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+            "Authorization": `Bearer ${sessionStorage.getItem("Authorization")}`
+
+        },
     });
     return response
 }
