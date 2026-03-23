@@ -49,14 +49,14 @@ function BodyInscripcionClase({
         headerName: 'Acciones',
         // type: 'actions',
         width: 125,
-        getActions: (params) => <Actions {...{ params, seleccionarConsola: seleccionarClase }} />,
+        renderCell: (params) => <Actions {...{ params, seleccionarConsola: seleccionarClase }} />,
       },
       {
         field: 'wait_list',
         headerName: 'Lista Espera',
         // type: 'actions',
         width: 150,
-        getActions: (params) => (
+        renderCell: (params) => (
           <Button size="small" onClick={() => getClassWaitList(params.row)}>Lista Espera</Button>
         ),
       },

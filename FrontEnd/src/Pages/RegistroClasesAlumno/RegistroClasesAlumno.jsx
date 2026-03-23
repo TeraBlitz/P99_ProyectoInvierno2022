@@ -232,35 +232,36 @@ function RegistroClasesAlumnos({ changeContent }) {
       headerName: "Inscripción",
       type: "actions",
       width: 115,
-      renderCell: (params) =>
-        Number(params.row.cupo_actual) < Number(params.row.cupo_maximo) ? (
-          <Tooltip title={formularioCompleto ? "" : "Completa el formulario socioeconómico en 'PERFIL' para inscribirte"}>
-          <span>
-          <Button
-            size="small"
-            onClick={() => handleClick(params.row)}
-            variant="outlined"
-            disabled={!formularioCompleto}
-          >
-            {params.row.status === "Inscrito" &&
-              params.row.status !== "ListaEspera"
-              ? "Cancelar Registro"
-              : "Inscribir"}
-          </Button>
-          </span>
-        </Tooltip>
-        ) : (
-          <Button
-            size="small"
-            onClick={() => handleClick(params.row)}
-            variant="outlined"
-          >
-            {params.row.status === "ListaEspera" &&
-              params.row.status !== "Inscrito"
-              ? "Salir de Lista"
-              : "Lista Espera"}
-          </Button>
-        ),
+      renderCell: (params) => {
+          return Number(params.row.cupo_actual) < Number(params.row.cupo_maximo) ? (
+            <Tooltip title={formularioCompleto ? "" : "Completa el formulario socioeconómico en 'PERFIL' para inscribirte"}>
+            <span>
+            <Button
+              size="small"
+              onClick={() => handleClick(params.row)}
+              variant="outlined"
+              disabled={!formularioCompleto}
+            >
+              {params.row.status === "Inscrito" &&
+                params.row.status !== "ListaEspera"
+                ? "Cancelar Registro"
+                : "Inscribir"}
+            </Button>
+            </span>
+          </Tooltip>
+          ) : (
+            <Button
+              size="small"
+              onClick={() => handleClick(params.row)}
+              variant="outlined"
+            >
+              {params.row.status === "ListaEspera" &&
+                params.row.status !== "Inscrito"
+                ? "Salir de Lista"
+                : "Lista Espera"}
+            </Button>
+          )
+      }
     },
   ];
 
@@ -636,15 +637,15 @@ function RegistroClasesAlumnos({ changeContent }) {
           .then((response) => response.json())
           .then((data) => {
             setClases(data);
-            console.log('#2>>>>>', )
+            console.log('#2>>>>>', currentStudentClases)
             data =  data.map((classEl)=>{
-              console.log(currentStudentClases,classEl._id)
-              if(currentStudentClases.includes(classEl._id)){
-                classEl.status="ListaEspera"
+              if(currentStudentClases.find(el=>el.idClase==classEl._id)){
+                console.log('#2.2')
+                classEl.status="Inscrito"
               }
               return classEl
             })
-            
+            console.log('#2 final',filterClassesByAge(data))
             setFilteredClasses(filterClassesByAge(data));
           });
       }

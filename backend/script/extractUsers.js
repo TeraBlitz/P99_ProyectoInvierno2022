@@ -11,14 +11,16 @@ function ytd(yourDate) {
     return Math.floor(yearsPassed)
 }
 
-async function x() {
+export async function getStudents(clave) {
     const database = clientConnect.db(mongodbInf.database);
     const alumnoClase = database.collection('alumnoClases');
     const clases = database.collection('clases');
     const alumnos = database.collection('alumnos');
+    const periodos = database.collection('periodos');
     
+    let curPeriodo = await periodos.findOne({status:"Activo"})
     let ac =await alumnoClase.find().toArray()
-    let clase =await clases.find().toArray()
+    let clase =await clases.find({clavePeriodo:clave}).toArray()
     let alumno =await alumnos.find().toArray()
 
     let jsonBuilder = {}
@@ -45,19 +47,19 @@ async function x() {
             // console.log('?', csvString.length)
             // console.log(alm)
             if(!alm){
-                console.log(cls)
+                // console.log(cls)
                 return
             }
             csvString = csvString.concat(`${claseInfo.clave},${alm.nombre} ${alm.apellido_paterno} ${alm.apellido_materno},${ytd(alm.fecha_de_nacimiento)},${alm.num_telefono},${alm.tutor_correo} \n`)
         })
-        console.log(typeof csvString)
+        // console.log(typeof csvString)
     })
-    console.log('final ', csvString)
-    writeFile('mycsv.csv', csvString, 'utf8')
+    // console.log('final ', csvString)
+    await writeFile('estudiantes.csv', csvString, 'utf8')
     // console.log(x)
 }
 
-x()
+// getStudents("AD2024")
 
 
 

@@ -1,6 +1,7 @@
 import { clientConnect } from "../connection.js"
 import { mongodbInf } from "../config.js"
 import mongodb from "mongodb"
+import { getStudents } from "../../script/extractUsers.js"
 
 
 const COLLECTION_NAME = "periodos"
@@ -186,10 +187,21 @@ async function findPeriodo(req, res) {
     }
 }
 
+
+async function getAllStudents(req, res) {
+    try {
+        await getStudents(req.query.clave)
+        res.sendFile('/workspace/estudiantes.csv');
+    } catch (err) {
+        res.send(`ERROR: ${err}`);
+    } 
+}
+
 export {
     getAllPeriodo,
     createPeriodo,
     updatePeriodo,
     deletePeriodo,
     findPeriodo,
+    getAllStudents
 };

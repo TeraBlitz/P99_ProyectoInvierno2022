@@ -9,11 +9,12 @@ import { controlPanelCards } from '../../utils/constants';
 import {
   contarAlumnos, contarClases, contarProfes,
 } from '../../utils/utilFunctions';
-import { host } from '../../utils/requestUtils';
+import { getStudents, host } from '../../utils/requestUtils';
 import { getClasses } from '../../api/classes';
 import { getPeriodos } from '../../api/Periodos';
 import { getClassStudent } from '../../api/classStudent';
 import { FitScreen } from '@mui/icons-material';
+import { Button } from '@mui/material';
 
 function ControlPanel({ changeContent }) {
   const [dataPeriodo, setDataPeriodo] = useState([]);
@@ -97,6 +98,15 @@ function ControlPanel({ changeContent }) {
     ]);
   }, [alumnosInscritos, profesInscritos, cursosRegistrados]);
 
+
+  const onClickGetStudents = async () => {
+    console.log('1', selectedPeriod)
+    if(selectedPeriod.clave) {
+        // let x = await getStudents(selectedPeriod.clave)
+        window.open("https://p99test.fly.dev/v1/periodos/getStudents?clave="+selectedPeriod.clave, "_blank")
+    }
+  };
+
   return (
     <div>
       <Box sx={{ ml: 1, p: 0 }}>
@@ -137,6 +147,7 @@ function ControlPanel({ changeContent }) {
 
               onChange={handleSelectChange}
             />
+            <Button style={{marginLeft:"10px",marginRight:"10px"}} variant="contained" onClick={() => onClickGetStudents()}>Descargar</Button>
           </Box>
         </Box>
 
